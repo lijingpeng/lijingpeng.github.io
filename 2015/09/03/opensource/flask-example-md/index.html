@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Flask microframework example | Frank</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢足球">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Flask microframework example | Frank">
+    <meta name="twitter:description" content="喜欢足球">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Flask microframework example | Frank">
+    <meta property="og:description" content="喜欢足球">
+
+    
+    <meta name="author" content="Li Jingpeng">
+    
+    <link rel="stylesheet" href="/css/vno.css" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" type="text/css">
+
+    
+    <link rel="icon" href="/images/favicon.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Frank" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2015/09/03/opensource/flask-example-md/"/>
+
+    
+</head>
+
+<body class="home-template no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Frank 的主页"><img src="/images/logo2.jpg" width="80" alt="Frank logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Frank">Frank</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">Li Jingpeng&#39;s site</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">计算机 网络 互联网</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/">主页</a></li>
+            
+              <li class="navigation__item"><a href="/aboutme">关于我</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+  <li class="navigation__item">
+    <a href="http://weibo.com/329299516" title="我的微博" target="_blank">
+      <i class='social fa fa-weibo'></i>
+      <span class="label">Weibo</span>
+    </a>
+  </li> 
+
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/lijingpeng" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+  <li class="navigation__item">
+    <a href="mailto:me@lijingpeng.org" title="邮件联系我" target="_blank">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-blue"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2015-09-03T03:25:14.000Z" class="post-list__meta--date date">2015-09-03</time> &#8226; <span class="post-meta__tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/falsk-restful/">falsk, restful</a>
+</span>
+    </div>
+    <h1 class="post-title">Flask microframework example</h1>
+  </header>
+
+  <section class="post">
+    <p>NOTE: This article was revised in September 2014 to be in sync with current versions of Python and Flask.<br>If you followed the previous chapter you should have a fully working, yet very simple web application that has the following file structure:<br><figure class="highlight livescript"><table><tr><td class="code"><pre><span class="line">microblog<span class="string">\</span></span><br><span class="line">  flask<span class="string">\</span></span><br><span class="line">    &lt;virtual environment files&gt;</span><br><span class="line">  app<span class="string">\</span></span><br><span class="line">    static<span class="string">\</span></span><br><span class="line">    templates<span class="string">\</span></span><br><span class="line">    __init__.py</span><br><span class="line">    views.py</span><br><span class="line">  tmp<span class="string">\</span></span><br><span class="line">  run.py</span><br></pre></td></tr></table></figure></p>
+<p>To run the application you execute the run.py script and then open the<a href="http://localhost:5000" target="_blank" rel="external">http://localhost:5000</a> URL on your web browser.</p>
+<p>We are picking up exactly from where we left off, so you may want to make sure you have the above application correctly installed and working.</p>
+<h3 id="1-_Why_we_need_templates">1. Why we need templates</h3><p>Let’s consider how we can expand our little application.</p>
+<p>We want the home page of our microblogging app to have a heading that welcomes the logged in user, that’s pretty standard for applications of this kind. Ignore for now the fact that we have no way to log a user in, I’ll present a workaround for this issue in a moment.</p>
+<p>An easy option to output a nice and big heading would be to change our view function to output HTML, maybe something like this:<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> app <span class="keyword">import</span> app</span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/')</span></span><br><span class="line"><span class="decorator">@app.route('/index')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    user = &#123;<span class="string">'nickname'</span>: <span class="string">'Miguel'</span>&#125;  <span class="comment"># fake user</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;title&gt;Home Page&lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;h1&gt;Hello, '''</span> + user[<span class="string">'nickname'</span>] + <span class="string">'''&lt;/h1&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">'''</span></span><br></pre></td></tr></table></figure></p>
+<p>Give the application a try to see how this looks in your browser.</p>
+<p>Since we don’t have support for users yet I have resorted to using a placeholder user object, sometimes called fake or mock object. This allows us to concentrate on certain aspects of our application that depend on parts of the system that haven’t been built yet.</p>
+<p>I hope you agree with me that the solution used above to deliver HTML to the browser is very ugly. Consider how complex the code will become if you have to return a large and complex HTML page with lots of dynamic content. And what if you need to change the layout of your web site in a large app that has dozens of views, each returning HTML directly? This is clearly not a scalable option.</p>
+<h3 id="2-_Templates_to_the_rescue">2. Templates to the rescue</h3><p>If you could keep the logic of your application separate from the layout or presentation of your web pages things would be much better organized, don’t you think? You could even hire a web designer to create a killer web site while you code the site’s behaviors in Python. Templates help implement this separation.</p>
+<p>Let’s write our first template (file app/templates/index.html):<br><br><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>&#123;&#123; title &#125;&#125; - microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Hello, &#123;&#123; user.nickname &#125;&#125;!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>As you see above, we just wrote a mostly standard HTML page, with the only difference that there are some placeholders for the dynamic content enclosed in {{ ... }} sections.<br></p>
+<p>Now let’s see how we use this template from our view function (file app/views.py):<br><br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> render_template</span><br><span class="line"><span class="keyword">from</span> app <span class="keyword">import</span> app</span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/')</span></span><br><span class="line"><span class="decorator">@app.route('/index')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    user = &#123;<span class="string">'nickname'</span>: <span class="string">'Miguel'</span>&#125;  <span class="comment"># fake user</span></span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">'index.html'</span>,</span><br><span class="line">                           title=<span class="string">'Home'</span>,</span><br><span class="line">                           user=user)</span><br></pre></td></tr></table></figure></p>
+<p>Try the application at this point to see how the template works. Once you have the rendered page in your browser you may want to view the source HTML and compare it against the original template.</p>
+<p>To render the template we had to import a new function from the Flask framework calledrender_template. This function takes a template filename and a variable list of template arguments and returns the rendered template, with all the arguments replaced.<br><br>Under the covers, the render_template function invokes the Jinja2 templating engine that is part of the Flask framework. Jinja2 substitutes {{...}} blocks with the corresponding values provided as template arguments.<br><br></p>
+<h3 id="3-_Control_statements_in_templates">3. Control statements in templates</h3><p>The Jinja2 templates also support control statements, given inside {%...%} blocks. Let’s add an if statement to our template (file app/templates/index.html):<br><br><br><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    &#123;% if title %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>&#123;&#123; title &#125;&#125; - microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Welcome to microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Hello, &#123;&#123; user.nickname &#125;&#125;!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Now our template is a bit smarter. If the view function forgets to define a page title then instead of showing an empty title the template will provide its own title. Feel free to remove the titleargument in the render_template call of our view function to see how the conditional statement works.</p>
+<h3 id="4-_Loops_in_templates">4. Loops in templates</h3><p>The logged in user in our microblog application will probably want to see recent posts from followed users in the home page, so let’s see how we can do that.</p>
+<p>To begin, we use our handy fake object trick to create some users and some posts to show (fileapp/views.py):<br><br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    user = &#123;<span class="string">'nickname'</span>: <span class="string">'Miguel'</span>&#125;  <span class="comment"># fake user</span></span><br><span class="line">    posts = [  <span class="comment"># fake array of posts</span></span><br><span class="line">        &#123; </span><br><span class="line">            <span class="string">'author'</span>: &#123;<span class="string">'nickname'</span>: <span class="string">'John'</span>&#125;, </span><br><span class="line">            <span class="string">'body'</span>: <span class="string">'Beautiful day in Portland!'</span> </span><br><span class="line">        &#125;,</span><br><span class="line">        &#123; </span><br><span class="line">            <span class="string">'author'</span>: &#123;<span class="string">'nickname'</span>: <span class="string">'Susan'</span>&#125;, </span><br><span class="line">            <span class="string">'body'</span>: <span class="string">'The Avengers movie was so cool!'</span> </span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">"index.html"</span>,</span><br><span class="line">                           title=<span class="string">'Home'</span>,</span><br><span class="line">                           user=user,</span><br><span class="line">                           posts=posts)</span><br></pre></td></tr></table></figure></p>
+<p>To represent user posts we are using a list, where each element has author and body fields. When we get to implement a real database we will preserve these field names, so we can design and test our template using the fake objects without having to worry about updating it when we move to a database.</p>
+<p>On the template side we have to solve a new problem. The list can have any number of elements, it will be up to the view function to decide how many posts need to be presented. The template cannot make any assumptions about the number of posts, so it needs to be prepared to render as many posts as the view sends.</p>
+<p>So let’s see how we do this using a for control structure (file app/templates/index.html):<br><br><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    &#123;% if title %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>&#123;&#123; title &#125;&#125; - microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Welcome to microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Hi, &#123;&#123; user.nickname &#125;&#125;!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">    &#123;% for post in posts %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>&#123;&#123; post.author.nickname &#125;&#125; says: <span class="tag">&lt;<span class="title">b</span>&gt;</span>&#123;&#123; post.body &#125;&#125;<span class="tag">&lt;/<span class="title">b</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Simple, right? Give it a try, and be sure to play with adding more content to the posts array.</p>
+<h3 id="5-_Template_inheritance">5. Template inheritance</h3><p>We have one more topic to cover before we close for the day. Our microblog web application will need to have a navigation bar at the top of the page with a few links. Here you will get the link to edit your profile, to login, logout, etc.</p>
+<p>We can add a navigation bar to our index.html template, but as our application grows we will be needing to implement more pages, and this navigation bar will have to be copied to all of them. Then you will have to keep all these identical copies of the navigation bar in sync, and that could become a lot of work if you have a lot of pages and templates.</p>
+<p>Instead, we can use Jinja2’s template inheritance feature, which allows us to move the parts of the page layout that are common to all templates and put them in a base template from which all other templates are derived.</p>
+<p>So let’s define a base template that includes the navigation bar and also the bit of title logic we implemented earlier (file app/templates/base.html):<br><br><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &#123;% if title %&#125;</span><br><span class="line">    &lt;title&gt;&#123;&#123; title &#125;&#125; - microblog&lt;/title&gt;</span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">    &lt;title&gt;Welcome to microblog&lt;/title&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;div&gt;Microblog: &lt;a href="/index"&gt;Home&lt;/a&gt;&lt;/div&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &#123;% block content %&#125;&#123;% endblock %&#125;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>In this template we use the block control statement to define the place where the derived templates can insert themselves. Blocks are given a unique name, and their content can be replaced or enhanced in derived templates.</p>
+<p>And now what’s left is to modify our index.html template to inherit from base.html (fileapp/templates/index.html):<br><br><figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;% extends "base.html" %&#125;</span><br><span class="line">&#123;% block content %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Hi, &#123;&#123; user.nickname &#125;&#125;!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">    &#123;% for post in posts %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>&#123;&#123; post.author.nickname &#125;&#125; says: <span class="tag">&lt;<span class="title">b</span>&gt;</span>&#123;&#123; post.body &#125;&#125;<span class="tag">&lt;/<span class="title">b</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">&#123;% endblock %&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Since the base.html template will now take care of the general page structure we have removed those elements from this one and left only the content part. The extends block establishes the inheritance link between the two templates, so that Jinja2 knows that when it needs to renderindex.html it needs to include it inside base.html. The two templates have matching blockstatements with name content, and this is how Jinja2 knows how to combine the two into one. When we get to write new templates we will also create them as extensions to base.html.</p>
+
+  </section>
+
+</article>
+
+
+<section class="post-comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="http://yoursite.com/2015/09/03/opensource/flask-example-md/" data-title="Flask microframework example" data-url="http://yoursite.com/2015/09/03/opensource/flask-example-md/"></div>
+  <!-- 多说评论框 end -->
+  <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2015 - 本站由 <a href="/">@Longbo Ma</a> 创建,
+        使用<a href="https://github.com/lenbo-ma/hexo-theme-vno">hexo-theme-vno</a>主题,
+        修改自<a href="http://github.com/onevcat/vno" target="_blank">Vno</a>
+    </span>
+</footer>
+
+        </div>
+    </div>
+
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+    <script src="/js/main.js" type="text/javascript"></script>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-42596364-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>

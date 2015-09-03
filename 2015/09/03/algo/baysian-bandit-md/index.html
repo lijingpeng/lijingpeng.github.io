@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>Bayesian Bandits – optimizing click throughs with statistics | Frank</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢足球">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Bayesian Bandits – optimizing click throughs with statistics | Frank">
+    <meta name="twitter:description" content="喜欢足球">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Bayesian Bandits – optimizing click throughs with statistics | Frank">
+    <meta property="og:description" content="喜欢足球">
+
+    
+    <meta name="author" content="Li Jingpeng">
+    
+    <link rel="stylesheet" href="/css/vno.css" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" type="text/css">
+
+    
+    <link rel="icon" href="/images/favicon.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Frank" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2015/09/03/algo/baysian-bandit-md/"/>
+
+    
+</head>
+
+<body class="home-template no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Frank 的主页"><img src="/images/logo2.jpg" width="80" alt="Frank logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Frank">Frank</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">Li Jingpeng&#39;s site</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">计算机 网络 互联网</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/">主页</a></li>
+            
+              <li class="navigation__item"><a href="/aboutme">关于我</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+  <li class="navigation__item">
+    <a href="http://weibo.com/329299516" title="我的微博" target="_blank">
+      <i class='social fa fa-weibo'></i>
+      <span class="label">Weibo</span>
+    </a>
+  </li> 
+
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/lijingpeng" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+  <li class="navigation__item">
+    <a href="mailto:me@lijingpeng.org" title="邮件联系我" target="_blank">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-blue"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2015-09-03T05:36:48.000Z" class="post-list__meta--date date">2015-09-03</time> &#8226; <span class="post-meta__tags tags">于&nbsp;</span>
+    </div>
+    <h1 class="post-title">Bayesian Bandits – optimizing click throughs with statistics</h1>
+  </header>
+
+  <section class="post">
+    <p>Great news! A murder victim has been found. No slow news day today! The story is already written, now a title needs to be selected. The clever reporter who wrote the story has come up with two potential titles – “Murder victim found in adult entertainment venue” and “Headless Body found in Topless Bar”. (The latter title is one I’ve shamelessly stolen from the NY Daily News.) Once upon a time, deciding which title to run was a matter for a news editor to decide. Those days are now over – the geeks now rule the earth. Title selection is now primarily an algorithmic problem, not an editorial one.</p>
+<p>One common approach is to display both potential versions of the title on the homepage or news feed, and measure the Click Through Rate (CTR) of each version of the title. At some point, when the measured CTR for one title exceeds that of the other title, you’ll switch to the one with the highest for all users. Algorithms for solving this problem are called bandit algorithms.</p>
+<p>In this blog post I’ll describe one of my favorite bandit algorithms, the Bayesian Bandit, and show why it is an excellent method to use for problems which give us more information than typical bandit algorithms.</p>
+<p>Unless you are already familiar with Bayesian statistics and beta distributions, I strongly recommend reading the previous blog post. That post provides much introductory material, and I’ll depend on it heavily.</p>
+<h2 id="1-_The_problem_to_be_solved,_and_the_underlying_model">1. The problem to be solved, and the underlying model</h2><hr>
+<p>Ultimately the problem we want to solve is the following. Consider an article being published on a website. The author or editor has come up with several possible titles – “Murder victim found in adult entertainment venue”, “Headless Body found in Topless Bar”, etc. We want to choose the title with the best click through rate (CTR). Let us represent each CTR by θi – i.e., θi is the true probability that an individual user will click on the i-th title. As a simplifying assumption, we assume that these rates θi do not change over time. It is important to note that we don’t actually know what θi is – if we did, we could simply choose i for which θi was largest and move on.</p>
+<p>The goal of the bandit algorithm is to do the following. To begin with, it should display all possible titles to a random selection of users, and measure which titles are clicked on more frequently. Over time, it will use these observations to infer which articles have the higher CTR. Then, once the estimation of the CTR becomes more precise, it will preferentially display articles with the higher CTR.</p>
+<h2 id="2-_The_Bayesian_Approach">2. The Bayesian Approach</h2><hr>
+<p>In the model described above, we have N possible story titles, each of which has a click through rate θi. Unfortunately we do not know what θi is. As the astute reader can guess from the title, we are following a Bayesian approach, so we will construct a probability distribution which represents our belief about what the actual value of θi is.<br><img src="/images/bb/beliefs_about_theta.png" alt=""><br>In the figure above, we believe that θi is somewhere between 0.1 and 0.7, with values of 0.3-0.4 being considerably more likely than values of 0.1-0.2 or 0.6-0.7. For those who forgot STATS 101, the area under this curve between the points a and b is the probability thta θi lies between a and b. I.e.:<br><img src="/images/bb/11.png" alt=""><br>The basic idea behind Bayesian methods is to update our beliefs based on evidence. As we gather more data by showing different titles to other users and observing click throughs, we can incrementally narrow the width of the probability distribution.</p>
+<p>As in all Bayesian inference, we need to choose a prior. The prior is something we believe to be true before we have any evidence – i.e., before we have shown the title to any visitors. This is just a starting point – after enough evidence is gathered, our prior will play a very minimal role in what we actually believe. Choosing a good prior is important both for mathematical simplicity, and because if your prior is accurate, you don’t need as much evidence to get the correct answer.</p>
+<p>I’ll follow the approach I described in a previous blog post, and I’ll use a beta distribution as the prior:<br><img src="/images/bb/31.png" alt=""><br>The parameters αi,βi&gt;1 are the prior parameters. One reasonable choice is αi=βi=1, which amounts to the uniform distribution on [0,1]. What this means is that we are assuming that all possible values of θi are equally likely. Depending on the circumstances (which I’ll explain shortly), we might want to choose other possible values.</p>
+<h2 id="3-_Updating_our_beliefs">3. Updating our beliefs</h2><p>Now we address the question of using evidence. After showing title i to ni visitors, we have observed that si of them have actually clicked on the title. We now want to compute theposterior distribution, which is to say the distribution that represents our beliefs after we have evidence.</p>
+<p>I did a little bit of algebra previously, in which I showed that if the prior is fαi,βi(θi), then the posterior distribution is:<br><img src="/images/bb/21.png" alt=""><br>The key idea here is that to update our probability distribution describing θi, we need only update the parameters of our beta distribution.</p>
+<p>So what does this mean in practice? As we run more experiments, our probability distribution on where θi lives becomes sharper:</p>
+<p><img src="/images/bb/beta_distribution_evolution.png" alt=""><br>Before we run any experiments, θi could be anything (as represented by the blue line). Once we have run 700 experiments, yielding 175 click throughs, we are reasonably confident that θi lives roughly between 0.2 and 0.3.</p>
+<p>What we’ve done so far is figured out how to estimate what our click through rates actually are based on empirical evidence. But that doesn’t actually give us a method of optimizing them yet.</p>
+<h2 id="4-_Optimizing_click_throughs">4. Optimizing click throughs</h2><p>Now that we have a method of representing our beliefs about CTRs, it is useful to construct an algorithm to identify the best ones. There are many popular choices – I’ve written about the UCB Algorithm before, and I consider it a good choice.</p>
+<p>But my new favorite method is a Monte Carlo method which I’ll describe now.</p>
+<p>The ultimate goal of the bandit algorithm is to display to the user whichever title has the highest CTR. One method of estimating the CTRs of the articles is to sample the posterior distribution. I.e., suppose we have two possible titles, from which we have drawn n0=200,s0=64and n1=180,n2=40. Then one possible set of samples we might observe is this:</p>
+<p><img src="/images/bb/beta_distribution_sampling1.png" alt=""></p>
+<p>For title 0, our sample of θ0 has worked out to be 0.35, while our sample of θ1 is only 0.28. Since θ0=0.35&gt;θ1=0.28, we will display title 0 to the user.</p>
+<p>However, there was no guarantee that things worked out this way. It was possible, although less likely, that θ1 could come out larger than θ0:<br><img src="/images/bb/beta_distribution_sampling2.png" alt=""><br>In this case, we would have displayed title 1 to the user rather than title 0.</p>
+<p>The net result is that for overlapping probability distributions, we will display the title with the larger expected CTR the majority of the time. But occasionally, we will draw from the other distributions simply because it is within the realm of possibility that they are greater.</p>
+<p>As we gather more data our probability distributions will become narrower and a clear winner will become apparent. When this occurs, we will almost surely choose the winner:<br><img src="/images/bb/beta_distribution_sampling3.png" alt=""><br>In python, the algorithm looks like this:</p>
+<p>The results of this algorithm are exactly what any good bandit algorithm should do. I ran the following simulation, giving the beta bandit two titles – title 0 had a CTR of 0.25, title 1 had a CTR of 0.35. To start with, both titles were displayed to the user with roughly equal probability. Over time, evidence accumulated that title 1 was considerably better than title 0. At this point the algorithm switched to displaying primarily title 1, and the overall CTR of the experiment converged to 0.35 (the optimal CTR).</p>
+<p><img src="/images/bb/beta_bandit_results.png" alt=""></p>
+<p>Source code to generate this graph is available here. This method is called Thompson Sampling and is a a fairly popular method in Bayesian AI techniques. For the remainder of this post, I’ll call this method the Bayesian Bandit.</p>
+<h2 id="5-Incorporating_common_sense">5.Incorporating common sense</h2><p>Anyone with common sense is now scoffing at the geekiness embodied in this post. Even before using statistics, it was fairly obvious that “Headless Body found in Topless Bar” was going to beat “Murder victim found in adult entertainment venue”. The former just sounds catchier and any good editor would run with it.</p>
+<p>The wonderful thing about Bayesian methods is that we can modify them to take into account our prior knowledge. Suppose we believe editors intuition is a real thing – can we quantify it? Certainly. We can do this with a fairly simple experiment. We require editors to rate a collection of titles as “catchy” or “not catchy”, run them on the site, and then measure the CTR of the “catchy” and “not catchy” samples. Suppose we did such an experiment, and observed the following aggregate results:</p>
+<p><img src="/images/bb/empirical_prior.png" alt=""></p>
+<p>This isn’t a solid win for the editor – some catchy titles have low CTRs, and some boring titles have good CTRs. But nevertheless, it’s better for a story to have catchy title than not.</p>
+<p>What we want to do is incorporate this information into our bandit algorithm. The beauty of a Bayesian method is that it gives you a clear and meaningful place to plug this information in, namely the prior. In contrast, for many other methods (e.g., UCB) it’s somewhat difficult to do this – there is no obvious parameter to tune as a result of our prior empirical data.</p>
+<p>The first step is to fit a theoretical distribution to the empirical data. Due to the fact that I chose the “empirical” (i.e., made up) data to be very nice, a beta distribution fits well [1] – specifically beta distributions with (α0,β0)=(9,20) and (α1,β1)=(4,20).<br><img src="/images/bb/theoretical_prior.png" alt=""></p>
+<p>Then the only modification needed to the algorithm is to plug these variables into the prior:<br><img src="/images/bb/41.png" alt=""><br>Everything else remains unchanged. In terms of modifications to source code, this is only a very small change to the previous code – an implementation can be found here.</p>
+<h2 id="6-_Empirics_of_including_priors">6. Empirics of including priors</h2><p>To measure the benefits of incorporating priors into the Bayesian bandit, I ran some numerical experiments, the source code of which is available in this github gist. The methodology was the following.</p>
+<p>To compare the Bayesian bandit with priors to that without, I drew a pair (θ0,θ1) from the prior distribution given above. For each pair, I then ran the Bayes Bandit with and without priors for this pair theta, for k trials. This is modelling the scenario that we have k page views on our homepage, and we can only leave a story on the homepage for 1 day.</p>
+<p>I then repeated the experiment for 1000 different possible days, or equivalently for 1000 different pairs of (θ0,θ1). I then computed the average gain per page view over all trials and all days.</p>
+<p>The result is the following. If we get 50 page views/day (i.e., the Bayes Bandit has very little data to use), the prior gives us a big gain. Without prior knowledge, the Bandit achieved a gain of 0.3749 on average, whereas the bandit with prior knowledge achieved a gain of 0.4274. If we run 150 experiments, the Bayes Bandit improves significantly – it achieves a gain of 0.40. If we run 300 experiments, the Bayes Bandit improves to 0.4146, while the bandit with priors improves to 0.4296. If we get 1000 page views/day, the Bayes Bandit improves to 0.4211, while the bandit with priors gains 0.4249.</p>
+<p>The net result is the following – incorporating priors into the Bayes Bandit is an excellent way to improve your results when you don’t have a large number data points to use to train the bandit. If you have a lot of data points, you don’t need strong priors (but they still help a little).</p>
+<h2 id="7-Conclusion">7.Conclusion</h2><p>Bandit algorithms are a great way of optimizing many factors of your website. There are many good options – I’ve written about UCB before and consider it a great choice. But if you have other information you want to include, consider using the Bayesian Bandit. It’s simple to implement, straightforward to use, and very importantly it’s also straightforward to extend.</p>
+<p>It’s also important to note that the theoretical properties of the Bayesian Bandit (namely logarithmic regret) have been proven. So asymptotically, you lose nothing by using it. There are also attempts at constructing a Bayesian UCB algorithm – I don’t currently understand it well enough to comment.</p>
+<p>I’ve written other articles related to this post. I have one post comparing bandit algorithms to a/b testing. I also I wrote about measuring a changing conversion rate, which provides an alternate algorithm for computing the posterior distribution if your conversion rate is not constant.</p>
+<p>[1] If a single Beta distribution doesn’t fit, one can also use a convex combination of Beta distributions. The math works out just as nicely.</p>
+<p>P.S. After I published this blog post, this related article was also pointed out to me, as was this online simulation of the Bayesian bandit.</p>
+
+  </section>
+
+</article>
+
+
+<section class="post-comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="http://yoursite.com/2015/09/03/algo/baysian-bandit-md/" data-title="Bayesian Bandits – optimizing click throughs with statistics" data-url="http://yoursite.com/2015/09/03/algo/baysian-bandit-md/"></div>
+  <!-- 多说评论框 end -->
+  <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2015 - 本站由 <a href="/">@Longbo Ma</a> 创建,
+        使用<a href="https://github.com/lenbo-ma/hexo-theme-vno">hexo-theme-vno</a>主题,
+        修改自<a href="http://github.com/onevcat/vno" target="_blank">Vno</a>
+    </span>
+</footer>
+
+        </div>
+    </div>
+
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+    <script src="/js/main.js" type="text/javascript"></script>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-42596364-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
