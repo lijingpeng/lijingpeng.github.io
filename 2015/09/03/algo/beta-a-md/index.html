@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    
+    <title>二项分布和Beta分布 | Frank</title>
+    <meta name="renderer" content="webkit">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="description" content="喜欢足球">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="二项分布和Beta分布 | Frank">
+    <meta name="twitter:description" content="喜欢足球">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="二项分布和Beta分布 | Frank">
+    <meta property="og:description" content="喜欢足球">
+
+    
+    <meta name="author" content="Li Jingpeng">
+    
+    <link rel="stylesheet" href="/css/vno.css" type="text/css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" type="text/css">
+
+    
+    <link rel="icon" href="/images/favicon.png">
+    
+
+    <meta name="generator" content="hexo"/>
+    
+    <link rel="alternate" type="application/rss+xml" title="Frank" href="/atom.xml">
+    
+
+    <link rel="canonical" href="http://yoursite.com/2015/09/03/algo/beta-a-md/"/>
+
+    
+</head>
+
+<body class="home-template no-js">
+
+    <span class="mobile btn-mobile-menu">
+        <i class="fa fa-list btn-mobile-menu__icon"></i>
+        <i class="fa fa-angle-up btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+<header class="panel-cover panel-cover--collapsed" style="background-image: url(/images/background-cover.jpg)">
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        <a href="/" title="前往 Frank 的主页"><img src="/images/logo2.jpg" width="80" alt="Frank logo" class="panel-cover__logo logo" /></a>
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage for Frank">Frank</a></h1>
+        
+        <span class="panel-cover__subtitle panel-subtitle">Li Jingpeng&#39;s site</span>
+        
+        <hr class="panel-cover__divider" />
+        <p class="panel-cover__description">计算机 网络 互联网</p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary" />
+
+        <div class="navigation-wrapper">
+          <div>
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item"><a href="/#blog" title="访问博客" class="blog-button">博客</a></li>
+            
+              <li class="navigation__item"><a href="/">主页</a></li>
+            
+              <li class="navigation__item"><a href="/aboutme">关于我</a></li>
+            
+            </ul>
+          </nav>
+          </div>
+          <div>
+          <nav class="cover-navigation navigation--social">
+  <ul class="navigation">
+
+  <!-- Weibo-->
+  
+  <li class="navigation__item">
+    <a href="http://weibo.com/329299516" title="我的微博" target="_blank">
+      <i class='social fa fa-weibo'></i>
+      <span class="label">Weibo</span>
+    </a>
+  </li> 
+
+
+  <!-- Github -->
+  
+  <li class="navigation__item">
+    <a href="https://github.com/lijingpeng" title="查看我的GitHub主页" target="_blank">
+      <i class='social fa fa-github'></i>
+      <span class="label">Github</span>
+    </a>
+  </li>
+
+
+<!-- Stack Overflow -->
+        
+
+  <!-- Google Plus -->
+  
+
+<!-- Facebook -->
+
+  
+<!-- Twitter -->
+
+  
+
+  <li class="navigation__item">
+    <a href="/atom.xml" title="RSS" target="_blank">
+      <i class='social fa fa-rss'></i>
+      <span class="label">RSS</span>
+    </a>
+  </li>
+
+
+  <li class="navigation__item">
+    <a href="mailto:me@lijingpeng.org" title="邮件联系我" target="_blank">
+      <i class='social fa fa-envelope'></i>
+      <span class="label">Email</span>
+    </a>
+  </li>
+
+
+  </ul>
+</nav>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay cover-blue"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner">
+            <article class="post-container post-container--single">
+
+  <header class="post-header">
+    <div class="post-meta">
+      <time datetime="2015-09-03T06:33:26.000Z" class="post-list__meta--date date">2015-09-03</time> &#8226; <span class="post-meta__tags tags">于&nbsp;</span>
+    </div>
+    <h1 class="post-title">二项分布和Beta分布</h1>
+  </header>
+
+  <section class="post">
+    <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pylab <span class="keyword">as</span> pl</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</span><br></pre></td></tr></table></figure>
+<h2 id="二项分布">二项分布</h2><hr>
+<p>　　在概率论和统计学中，二项分布是n个独立的[是/非]试验中成功的次数的离散概率分布，其中每次试验的成功概率为$p$。举两个例子就很容易理解二项分布的含义了：</p>
+<ul>
+<li>抛一次硬币出现正面的概率是0.5($p$)，抛10(n)次硬币，出现k次正面的概率。</li>
+<li>掷一次骰子出现六点的概率是1/6，投掷6次骰子出现k次六点的概率。</li>
+</ul>
+<p>　　在上面的两个例子中，每次抛硬币或者掷骰子都和上次的结果无关，所以每次实验都是独立的。二项分布是一个离散分布，k的取值范围为从0到n，只有n+1种可能的结果。scipy.stats.binom为二项分布，下面用它计算抛十次硬币，出现k次正面的概率分布。</p>
+<h4 id="In_[16]:">In [16]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n = <span class="number">10</span></span><br><span class="line">k = np.arange(n+<span class="number">1</span>)</span><br><span class="line">pcoin = stats.binom.pmf(k, n, <span class="number">0.5</span>)</span><br><span class="line">pcoin</span><br></pre></td></tr></table></figure>
+<h4 id="Out[16]:">Out[16]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">array([ <span class="number">0.00097656</span>,  <span class="number">0.00976563</span>,  <span class="number">0.04394531</span>,  <span class="number">0.1171875</span> ,  <span class="number">0.20507813</span>,</span><br><span class="line">        <span class="number">0.24609375</span>,  <span class="number">0.20507813</span>,  <span class="number">0.1171875</span> ,  <span class="number">0.04394531</span>,  <span class="number">0.00976563</span>,</span><br><span class="line">        <span class="number">0.00097656</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="In_[17]:">In [17]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pl.stem(k, pcoin, basefmt=<span class="string">"k-"</span>)</span><br><span class="line">pl.margins(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/algo/ssss.png" alt=""><br>下面是投掷6次骰子，出现6点的概率分布。</p>
+<h4 id="In_[18]:">In [18]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n = <span class="number">6</span></span><br><span class="line">k = np.arange(n+<span class="number">1</span>)</span><br><span class="line">pdice = stats.binom.pmf(k, n, <span class="number">1.0</span>/<span class="number">6</span>)</span><br><span class="line">pdice</span><br></pre></td></tr></table></figure>
+<h4 id="Out[18]:">Out[18]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">array([  <span class="number">3.34897977e-01</span>,   <span class="number">4.01877572e-01</span>,   <span class="number">2.00938786e-01</span>,</span><br><span class="line">         <span class="number">5.35836763e-02</span>,   <span class="number">8.03755144e-03</span>,   <span class="number">6.43004115e-04</span>,</span><br><span class="line">         <span class="number">2.14334705e-05</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="In_[19]:">In [19]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pl.stem(k, pdice, basefmt=<span class="string">"k-"</span>)</span><br><span class="line">pl.margins(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/algo/ssss1.png" alt=""></p>
+<h2 id="Beta分布">Beta分布</h2><hr>
+<p>　　对于硬币或者骰子这样的简单实验，我们事先能很准确地掌握系统成功的概率。然而通常情况下，系统成功的概率是未知的。为了测试系统的成功概率$p$，我们做n次试验，统计成功的次数k，于是很直观地就可以计算出$p = k/n$。然而由于系统成功的概率是未知的，这个公式计算出的$p$只是系统成功概率的最佳估计。也就是说实际上$p$也可能为其它的值，只是为其它的值的概率较小。</p>
+<p>　　例如有某种特殊的硬币，我们事先完全无法确定它出现正面的概率。然后抛10次硬币，出现5次正面，于是我们认为硬币出现正面的概率最可能是0.5。但是即使硬币出现正面的概率为0.4，也会出现抛10次出现5次正面的情况。因此我们并不能完全确定硬币出现正面的概率就是0.5，所以$p$也是一个随机变量，它符合Beta分布。</p>
+<p>　　Beta分布是一个连续分布，由于它描述概率$p$的分布，因此其取值范围为0到1。 Beta分布有$\alpha$和$\beta$两个参数，其中$\alpha$为成功次数加1，$\beta$为失败次数加1。连续分布用概率密度函数描述，下面绘制实验10次，成功4次和5次时，系统成功概率$p$的分布情况。可以看出$k=5$时，曲线的峰值在$p=0.5$处，而$k=4$时，曲线的峰值在$p=0.4$处。</p>
+<h4 id="In_[20]:">In [20]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n = <span class="number">10</span></span><br><span class="line">k = <span class="number">5</span></span><br><span class="line">p = np.linspace(<span class="number">0</span>, <span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</span><br><span class="line">plot(p, pbeta, label=<span class="string">"k=5"</span>, lw=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">k = <span class="number">4</span></span><br><span class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</span><br><span class="line">plot(p, pbeta, label=<span class="string">"k=4"</span>, lw=<span class="number">2</span>)</span><br><span class="line">xlabel(<span class="string">"$p$"</span>)</span><br><span class="line">legend(loc=<span class="string">"best"</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/algo/ssss3.png" alt=""><br>　　下面绘制$n=10, k=4$和$n=20, k=8$的概率分布。可以看出峰值都在$p=0.4$处，但是$n=20$的山峰更陡峭。也就是说随着实验次数的增加，$p$取其它值的可能就越小，对$p$的估计就更有信心，因此山峰也就更陡峭了。</p>
+<h4 id="In_[30]:">In [30]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n = <span class="number">10</span></span><br><span class="line">k = <span class="number">4</span></span><br><span class="line">p = np.linspace(<span class="number">0</span>, <span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</span><br><span class="line">plot(p, pbeta, label=<span class="string">"n=10"</span>, lw=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">n = <span class="number">20</span></span><br><span class="line">k = <span class="number">8</span></span><br><span class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</span><br><span class="line">plot(p, pbeta, label=<span class="string">"n=20"</span>, lw=<span class="number">2</span>)</span><br><span class="line">xlabel(<span class="string">"$p$"</span>)</span><br><span class="line">legend(loc=<span class="string">"best"</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/algo/ssss4.png" alt=""></p>
+<h2 id="用pymc模拟">用pymc模拟</h2><hr>
+<p>　　假设我们的知识库中没有Beta分布，如何通过模拟实验找出$p$的概率分布呢？pymc是一个用于统计估计的库，它可以通过 先验概率和 观测值 模拟出 后验概率 的分布。下面先解释一下这两个概率：</p>
+<ul>
+<li>先验概率：在贝叶斯统计中，某一不确定量p的先验概率分布是在考虑”观测数据”前，能表达p不确定性的概率分布。</li>
+<li>后验概率：在考虑相关证据或数据后所得到的不确定量p的概率分布。</li>
+</ul>
+<p>　　拿前面抛硬币的实验来说，如果在做实验之前能确信硬币出现正面的概率大概在0.5附近的话，那么它的先验概率就是一个以0.5为中心的山峰波形。而如果是某种特殊的硬币，我们对其出现正面的概率完全不了解，那么它的先验概率就是一个从0到1的平均分布。为了估计这个特殊硬币出现正面的概率，我们做了20次实验，其中出现了8次正面。通过这个实验，硬币出现正面的可能性的后验概率就如上图中的绿色曲线所示。</p>
+<p>　　pymc库可以通过先验概率和观测值模拟出后验概率的分布，这对于一些复杂的系统的估计是很有用的。下面我们看看如何用pymc来对这个特殊硬币出现正面的可能性进行估计：首先pcoin是这个特殊硬币出现正面的概率，由于我们没有任何先验知识，因此它的先验概率是一个从0到1的平均分布(Uniform)。假设我们做了20次实验，其中8次为正面。根据前面的介绍可知，出现正面的次数符合二项分布(Binomial)，并且这个二项分布的概率$p$为pcoin。这个通过value参数指定了实验的结果。因此experiment虽然是一个二项分布，但是它已经不能取其它值了。</p>
+<h4 id="In_[32]:">In [32]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pymc</span><br><span class="line">pcoin = pymc.Uniform(<span class="string">"pcoin"</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">experiment = pymc.Binomial(<span class="string">"experiment"</span>, <span class="number">20</span>, pcoin, value=<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<p>　　接下来通过MCMC对象模拟pcoin的后验概率。MCMC是Markov chain Monte Carlo(马尔科夫蒙特卡洛)的缩写，它是一种用马尔可夫链从随机分布取样的算法。通过调用MCMC对象的sample()，可以对pcoin的后验概率分布进行取样。这里30000为取样次数，5000表示不保存头5000次取样值。这时因为MCMC算法通常有一个收敛过程，我们希望只保留收敛之后的取样值。</p>
+<h4 id="In_[33]:">In [33]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">mc = pymc.MCMC([pcoin])</span><br><span class="line">mc.sample(<span class="number">30000</span>, <span class="number">5000</span>)</span><br></pre></td></tr></table></figure>
+<p>[<strong><strong><strong><em>**</em></strong></strong></strong>100%<strong><strong><strong><strong>**</strong></strong></strong></strong>]  30000 of 30000 complete<br>　　通过MCMC对象trace()可以获得某个不确定量的取样值。下面的程序获得pcoin的25000次取样值，并用hist()显示其分布情况。由结果可知pcoin的分布与前面介绍的Beta分布一致。</p>
+<h4 id="In_[31]:">In [31]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pcoin_trace = mc.trace(<span class="string">"pcoin"</span>)[:]</span><br><span class="line">hist(pcoin_trace, normed=<span class="keyword">True</span>, bins=<span class="number">30</span>);</span><br><span class="line">plot(p, pbeta, <span class="string">"r"</span>, label=<span class="string">"n=20"</span>, lw=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Out[31]:">Out[31]:</h4><p><img src="/images/algo/ssss5.png" alt=""></p>
+<h4 id="In_[34]:">In [34]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">pcoin_trace.shape</span><br></pre></td></tr></table></figure>
+<h4 id="Out[34]:">Out[34]:</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">(<span class="number">25000</span>,)</span><br></pre></td></tr></table></figure>
+<p>链接：<a href="http://hyry.dip.jp/tech/slice/slice.html/42" target="_blank" rel="external">http://hyry.dip.jp/tech/slice/slice.html/42</a></p>
+
+  </section>
+
+</article>
+
+
+<section class="post-comments">
+  <!-- 多说评论框 start -->
+  <div class="ds-thread" data-thread-key="http://yoursite.com/2015/09/03/algo/beta-a-md/" data-title="二项分布和Beta分布" data-url="http://yoursite.com/2015/09/03/algo/beta-a-md/"></div>
+  <!-- 多说评论框 end -->
+  <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+  <script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+
+
+            <footer class="footer">
+    <span class="footer__copyright">
+        本站点采用<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>
+    </span>
+    <span class="footer__copyright">
+        基于 <a href="http://hexo.io">Hexo</a> 搭建，感谢 <a href="https://pages.github.com/">GitHub Pages</a> 提供免费的托管服务
+    </span>
+    <span class="footer__copyright">
+        &copy; 2015 - 本站由 <a href="/">@Longbo Ma</a> 创建,
+        使用<a href="https://github.com/lenbo-ma/hexo-theme-vno">hexo-theme-vno</a>主题,
+        修改自<a href="http://github.com/onevcat/vno" target="_blank">Vno</a>
+    </span>
+</footer>
+
+        </div>
+    </div>
+
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+    <script src="/js/main.js" type="text/javascript"></script>
+
+     
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-42596364-1', 'auto');
+	ga('send', 'pageview');
+</script>
+
+</body>
+</html>
