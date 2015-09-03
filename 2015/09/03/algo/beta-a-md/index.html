@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>二项分布和Beta分布 | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="123import pylab as plimport numpy as npfrom scipy import stats
+二项分布
+　　在概率论和统计学中，二项分布是n个独立的[是/非]试验中成功的次数的离散概率分布，其中每次试验的成功概率为$p$。举两个例子就很容易理解二项分布的含义了：
+
+抛一次硬币出现正面的概率是0.5($p$)，抛10(n)次硬币，出现k次正面的概率。
+掷一次骰子出现六">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二项分布和Beta分布">
+<meta property="og:url" content="http://www.notehub.cn/2015/09/03/algo/beta-a-md/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="123import pylab as plimport numpy as npfrom scipy import stats
+二项分布
+　　在概率论和统计学中，二项分布是n个独立的[是/非]试验中成功的次数的离散概率分布，其中每次试验的成功概率为$p$。举两个例子就很容易理解二项分布的含义了：
+
+抛一次硬币出现正面的概率是0.5($p$)，抛10(n)次硬币，出现k次正面的概率。
+掷一次骰子出现六">
+<meta property="og:image" content="http://www.notehub.cn/images/algo/ssss.png">
+<meta property="og:image" content="http://www.notehub.cn/images/algo/ssss1.png">
+<meta property="og:image" content="http://www.notehub.cn/images/algo/ssss3.png">
+<meta property="og:image" content="http://www.notehub.cn/images/algo/ssss4.png">
+<meta property="og:image" content="http://www.notehub.cn/images/algo/ssss5.png">
+<meta property="og:updated_time" content="2015-09-03T06:49:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二项分布和Beta分布">
+<meta name="twitter:description" content="123import pylab as plimport numpy as npfrom scipy import stats
+二项分布
+　　在概率论和统计学中，二项分布是n个独立的[是/非]试验中成功的次数的离散概率分布，其中每次试验的成功概率为$p$。举两个例子就很容易理解二项分布的含义了：
+
+抛一次硬币出现正面的概率是0.5($p$)，抛10(n)次硬币，出现k次正面的概率。
+掷一次骰子出现六">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        19
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        10
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-algo/beta-a-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      二项分布和Beta分布
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/algo/beta-a-md/">
+      <time datetime="2015-09-03T06:33:26.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pylab <span class="keyword">as</span> pl</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</span><br></pre></td></tr></table></figure>
+<h2 id="二项分布">二项分布</h2><hr>
+<p>　　在概率论和统计学中，二项分布是n个独立的[是/非]试验中成功的次数的离散概率分布，其中每次试验的成功概率为$p$。举两个例子就很容易理解二项分布的含义了：</p>
+<ul>
+<li>抛一次硬币出现正面的概率是0.5($p$)，抛10(n)次硬币，出现k次正面的概率。</li>
+<li>掷一次骰子出现六点的概率是1/6，投掷6次骰子出现k次六点的概率。</li>
+</ul>
+<p>　　在上面的两个例子中，每次抛硬币或者掷骰子都和上次的结果无关，所以每次实验都是独立的。二项分布是一个离散分布，k的取值范围为从0到n，只有n+1种可能的结果。scipy.stats.binom为二项分布，下面用它计算抛十次硬币，出现k次正面的概率分布。</p>
+<h4 id="In_[16]:">In [16]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">10</span></span><br><span class="line">k = np.arange(n+<span class="number">1</span>)</span><br><span class="line">pcoin = stats.binom.pmf(k, n, <span class="number">0.5</span>)</span><br><span class="line">pcoin</span><br></pre></td></tr></table></figure>
+<h4 id="Out[16]:">Out[16]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">array([ <span class="number">0.00097656</span>,  <span class="number">0.00976563</span>,  <span class="number">0.04394531</span>,  <span class="number">0.1171875</span> ,  <span class="number">0.20507813</span>,</span><br><span class="line">        <span class="number">0.24609375</span>,  <span class="number">0.20507813</span>,  <span class="number">0.1171875</span> ,  <span class="number">0.04394531</span>,  <span class="number">0.00976563</span>,</span><br><span class="line">        <span class="number">0.00097656</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="In_[17]:">In [17]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pl.stem(k, pcoin, basefmt=<span class="string">"k-"</span>)</span><br><span class="line">pl.margins(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/algo/ssss.png" alt=""><br>下面是投掷6次骰子，出现6点的概率分布。</p>
+<h4 id="In_[18]:">In [18]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">6</span></span><br><span class="line">k = np.arange(n+<span class="number">1</span>)</span><br><span class="line">pdice = stats.binom.pmf(k, n, <span class="number">1.0</span>/<span class="number">6</span>)</span><br><span class="line">pdice</span><br></pre></td></tr></table></figure>
+<h4 id="Out[18]:">Out[18]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">array([  <span class="number">3.34897977e-01</span>,   <span class="number">4.01877572e-01</span>,   <span class="number">2.00938786e-01</span>,</span><br><span class="line">         <span class="number">5.35836763e-02</span>,   <span class="number">8.03755144e-03</span>,   <span class="number">6.43004115e-04</span>,</span><br><span class="line">         <span class="number">2.14334705e-05</span>])</span><br></pre></td></tr></table></figure>
+<h4 id="In_[19]:">In [19]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pl.stem(k, pdice, basefmt=<span class="string">"k-"</span>)</span><br><span class="line">pl.margins(<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/algo/ssss1.png" alt=""></p>
+<h2 id="Beta分布">Beta分布</h2><hr>
+<p>　　对于硬币或者骰子这样的简单实验，我们事先能很准确地掌握系统成功的概率。然而通常情况下，系统成功的概率是未知的。为了测试系统的成功概率$p$，我们做n次试验，统计成功的次数k，于是很直观地就可以计算出$p = k/n$。然而由于系统成功的概率是未知的，这个公式计算出的$p$只是系统成功概率的最佳估计。也就是说实际上$p$也可能为其它的值，只是为其它的值的概率较小。</p>
+<p>　　例如有某种特殊的硬币，我们事先完全无法确定它出现正面的概率。然后抛10次硬币，出现5次正面，于是我们认为硬币出现正面的概率最可能是0.5。但是即使硬币出现正面的概率为0.4，也会出现抛10次出现5次正面的情况。因此我们并不能完全确定硬币出现正面的概率就是0.5，所以$p$也是一个随机变量，它符合Beta分布。</p>
+<p>　　Beta分布是一个连续分布，由于它描述概率$p$的分布，因此其取值范围为0到1。 Beta分布有$\alpha$和$\beta$两个参数，其中$\alpha$为成功次数加1，$\beta$为失败次数加1。连续分布用概率密度函数描述，下面绘制实验10次，成功4次和5次时，系统成功概率$p$的分布情况。可以看出$k=5$时，曲线的峰值在$p=0.5$处，而$k=4$时，曲线的峰值在$p=0.4$处。</p>
+<h4 id="In_[20]:">In [20]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">10</span></span><br><span class="line">k = <span class="number">5</span></span><br><span class="line">p = np.linspace(<span class="number">0</span>, <span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</span><br><span class="line">plot(p, pbeta, label=<span class="string">"k=5"</span>, lw=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">k = <span class="number">4</span></span><br><span class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</span><br><span class="line">plot(p, pbeta, label=<span class="string">"k=4"</span>, lw=<span class="number">2</span>)</span><br><span class="line">xlabel(<span class="string">"$p$"</span>)</span><br><span class="line">legend(loc=<span class="string">"best"</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/algo/ssss3.png" alt=""><br>　　下面绘制$n=10, k=4$和$n=20, k=8$的概率分布。可以看出峰值都在$p=0.4$处，但是$n=20$的山峰更陡峭。也就是说随着实验次数的增加，$p$取其它值的可能就越小，对$p$的估计就更有信心，因此山峰也就更陡峭了。</p>
+<h4 id="In_[30]:">In [30]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">10</span></span><br><span class="line">k = <span class="number">4</span></span><br><span class="line">p = np.linspace(<span class="number">0</span>, <span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</span><br><span class="line">plot(p, pbeta, label=<span class="string">"n=10"</span>, lw=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">n = <span class="number">20</span></span><br><span class="line">k = <span class="number">8</span></span><br><span class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</span><br><span class="line">plot(p, pbeta, label=<span class="string">"n=20"</span>, lw=<span class="number">2</span>)</span><br><span class="line">xlabel(<span class="string">"$p$"</span>)</span><br><span class="line">legend(loc=<span class="string">"best"</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/algo/ssss4.png" alt=""></p>
+<h2 id="用pymc模拟">用pymc模拟</h2><hr>
+<p>　　假设我们的知识库中没有Beta分布，如何通过模拟实验找出$p$的概率分布呢？pymc是一个用于统计估计的库，它可以通过 先验概率和 观测值 模拟出 后验概率 的分布。下面先解释一下这两个概率：</p>
+<ul>
+<li>先验概率：在贝叶斯统计中，某一不确定量p的先验概率分布是在考虑”观测数据”前，能表达p不确定性的概率分布。</li>
+<li>后验概率：在考虑相关证据或数据后所得到的不确定量p的概率分布。</li>
+</ul>
+<p>　　拿前面抛硬币的实验来说，如果在做实验之前能确信硬币出现正面的概率大概在0.5附近的话，那么它的先验概率就是一个以0.5为中心的山峰波形。而如果是某种特殊的硬币，我们对其出现正面的概率完全不了解，那么它的先验概率就是一个从0到1的平均分布。为了估计这个特殊硬币出现正面的概率，我们做了20次实验，其中出现了8次正面。通过这个实验，硬币出现正面的可能性的后验概率就如上图中的绿色曲线所示。</p>
+<p>　　pymc库可以通过先验概率和观测值模拟出后验概率的分布，这对于一些复杂的系统的估计是很有用的。下面我们看看如何用pymc来对这个特殊硬币出现正面的可能性进行估计：首先pcoin是这个特殊硬币出现正面的概率，由于我们没有任何先验知识，因此它的先验概率是一个从0到1的平均分布(Uniform)。假设我们做了20次实验，其中8次为正面。根据前面的介绍可知，出现正面的次数符合二项分布(Binomial)，并且这个二项分布的概率$p$为pcoin。这个通过value参数指定了实验的结果。因此experiment虽然是一个二项分布，但是它已经不能取其它值了。</p>
+<h4 id="In_[32]:">In [32]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymc</span><br><span class="line">pcoin = pymc.Uniform(<span class="string">"pcoin"</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">experiment = pymc.Binomial(<span class="string">"experiment"</span>, <span class="number">20</span>, pcoin, value=<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+<p>　　接下来通过MCMC对象模拟pcoin的后验概率。MCMC是Markov chain Monte Carlo(马尔科夫蒙特卡洛)的缩写，它是一种用马尔可夫链从随机分布取样的算法。通过调用MCMC对象的sample()，可以对pcoin的后验概率分布进行取样。这里30000为取样次数，5000表示不保存头5000次取样值。这时因为MCMC算法通常有一个收敛过程，我们希望只保留收敛之后的取样值。</p>
+<h4 id="In_[33]:">In [33]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mc = pymc.MCMC([pcoin])</span><br><span class="line">mc.sample(<span class="number">30000</span>, <span class="number">5000</span>)</span><br></pre></td></tr></table></figure>
+<p>[<strong><strong><strong><em>**</em></strong></strong></strong>100%<strong><strong><strong><strong>**</strong></strong></strong></strong>]  30000 of 30000 complete<br>　　通过MCMC对象trace()可以获得某个不确定量的取样值。下面的程序获得pcoin的25000次取样值，并用hist()显示其分布情况。由结果可知pcoin的分布与前面介绍的Beta分布一致。</p>
+<h4 id="In_[31]:">In [31]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pcoin_trace = mc.trace(<span class="string">"pcoin"</span>)[:]</span><br><span class="line">hist(pcoin_trace, normed=<span class="keyword">True</span>, bins=<span class="number">30</span>);</span><br><span class="line">plot(p, pbeta, <span class="string">"r"</span>, label=<span class="string">"n=20"</span>, lw=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Out[31]:">Out[31]:</h4><p><img src="/images/algo/ssss5.png" alt=""></p>
+<h4 id="In_[34]:">In [34]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pcoin_trace.shape</span><br></pre></td></tr></table></figure>
+<h4 id="Out[34]:">Out[34]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">25000</span>,)</span><br></pre></td></tr></table></figure>
+<p>链接：<a href="http://hyry.dip.jp/tech/slice/slice.html/42" target="_blank" rel="external">http://hyry.dip.jp/tech/slice/slice.html/42</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-a-md/" data-id="cie48z7l4000w406welam1ltg" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/algo/beta-a-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/09/03/algo/java-beta-md/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          Java beta distribution
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/09/03/algo/beta-md/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">理解Beta分布和Dirichlet分布</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/09/03/algo/beta-a-md/" data-title="二项分布和Beta分布" data-url="http://www.notehub.cn/2015/09/03/algo/beta-a-md/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/09/03/algo/murmurhash-md/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/09/03/algo/murmurhash-md/" class="title">MurmurHash</a></p>
+              <p class="item-date"><time datetime="2015-09-03T06:55:54.000Z" itemprop="datePublished">2015-09-03</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/09/03/algo/java-beta-md/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/09/03/algo/java-beta-md/" class="title">Java beta distribution</a></p>
+              <p class="item-date"><time datetime="2015-09-03T06:51:59.000Z" itemprop="datePublished">2015-09-03</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/09/03/algo/beta-a-md/" class="thumbnail">
+  
+    <span style="background-image:url(/images/algo/ssss.png
+)" alt="二项分布和Beta分布" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/09/03/algo/beta-a-md/" class="title">二项分布和Beta分布</a></p>
+              <p class="item-date"><time datetime="2015-09-03T06:33:26.000Z" itemprop="datePublished">2015-09-03</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/09/03/algo/beta-md/" class="thumbnail">
+  
+    <span style="background-image:url(/images/algo/j8b261e3942f702b2a36d5221f9a006bf.png
+)" alt="理解Beta分布和Dirichlet分布" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/09/03/algo/beta-md/" class="title">理解Beta分布和Dirichlet分布</a></p>
+              <p class="item-date"><time datetime="2015-09-03T06:18:04.000Z" itemprop="datePublished">2015-09-03</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/09/03/other/nitian-md/" class="thumbnail">
+  
+    <span style="background-image:url(/images/bb/792c43ea9c648c61a22c1a50a6439b15.jpg
+)" alt="忠诚度越高买东西越贵" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/09/03/other/nitian-md/" class="title">忠诚度越高买东西越贵</a></p>
+              <p class="item-date"><time datetime="2015-09-03T06:01:28.000Z" itemprop="datePublished">2015-09-03</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
