@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     
-    <title>图解各种开源许可证 | Frank</title>
+    <title>ldd 命令的介绍和使用方法 | Frank</title>
     <meta name="renderer" content="webkit">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
@@ -15,11 +15,11 @@
     <meta name="description" content="喜欢足球">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="图解各种开源许可证 | Frank">
+    <meta name="twitter:title" content="ldd 命令的介绍和使用方法 | Frank">
     <meta name="twitter:description" content="喜欢足球">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="图解各种开源许可证 | Frank">
+    <meta property="og:title" content="ldd 命令的介绍和使用方法 | Frank">
     <meta property="og:description" content="喜欢足球">
 
     
@@ -37,7 +37,7 @@
     <link rel="alternate" type="application/rss+xml" title="Frank" href="/atom.xml">
     
 
-    <link rel="canonical" href="http://yoursite.com/2014/06/09/opensource/license/"/>
+    <link rel="canonical" href="http://yoursite.com/2014/06/06/system/ldd_usage/"/>
 
     
 </head>
@@ -150,16 +150,17 @@
 
   <header class="post-header">
     <div class="post-meta">
-      <time datetime="2014-06-08T16:00:00.000Z" class="post-list__meta--date date">2014-06-09</time> &#8226; <span class="post-meta__tags tags">于&nbsp;
-  <a class="tag-link" href="/tags/开源，许可/">开源，许可</a>
+      <time datetime="2014-06-05T16:00:00.000Z" class="post-list__meta--date date">2014-06-06</time> &#8226; <span class="post-meta__tags tags">于&nbsp;
+  <a class="tag-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a>
 </span>
     </div>
-    <h1 class="post-title">图解各种开源许可证</h1>
+    <h1 class="post-title">ldd 命令的介绍和使用方法</h1>
   </header>
 
   <section class="post">
-    <p>一张图读懂开源许可证<br><img src="/images/license.png" alt="Open source license"></p>
-<h2 id=""><br></h2><p>图片来自网络</p>
+    <p>ldd 能够显示可执行模块的dependency，其原理是通过设置一系列的环境变量，如下：LD_TRACE_LOADED_OBJECTS、LD_WARN、LD_BIND_NOW、LD_LIBRARY_VERSION、LD_VERBOSE等。当LD_TRACE_LOADED_OBJECTS环境变量不为空时，任何可执行程序在运行时，它都会只显示模块的dependency，而程序并不真正执行。</p>
+<p>它的执行原理就是通过ld-linux.so（elf动态库的装载器）来实现的。我们知道，ld-linux.so模块会先于executable模块程序工作，并获得控制权，因此当上述的那些环境变量被设置时，ld-linux.so选择了显示可执行模块的dependency。<br>例如：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">frank@linux:~/dev$ ldd a.out</span><br><span class="line">	linux-vdso.so.<span class="number">1</span> =&gt;  (<span class="number">0</span>x00007fff3bffe000)</span><br><span class="line">	libstdc++.so.<span class="number">6</span> =&gt; /usr/lib/x86_64-linux-gnu/libstdc++.so.<span class="number">6</span> (<span class="number">0</span>x00007f1faa400000)</span><br><span class="line">	libc.so.<span class="number">6</span> =&gt; /lib/x86_64-linux-gnu/libc.so.<span class="number">6</span> (<span class="number">0</span>x00007f1faa03a000)</span><br><span class="line">	libm.so.<span class="number">6</span> =&gt; /lib/x86_64-linux-gnu/libm.so.<span class="number">6</span> (<span class="number">0</span>x00007f1fa9d33000)</span><br><span class="line">	/lib64/ld-linux-x86-<span class="number">64</span>.so.<span class="number">2</span> (<span class="number">0</span>x00007f1faa72b000)</span><br><span class="line">	libgcc_s.so.<span class="number">1</span> =&gt; /lib/x86_64-linux-gnu/libgcc_s.so.<span class="number">1</span> (<span class="number">0</span>x00007f1fa9b1d000)</span><br></pre></td></tr></table></figure></p>
+<p>实际上可以直接执行ld-linux.so模块，如：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/lib/ld-linux.so.<span class="number">2</span> --list program</span><br></pre></td></tr></table></figure></p>
 
   </section>
 
@@ -168,7 +169,7 @@
 
 <section class="post-comments">
   <!-- 多说评论框 start -->
-  <div class="ds-thread" data-thread-key="http://yoursite.com/2014/06/09/opensource/license/" data-title="图解各种开源许可证" data-url="http://yoursite.com/2014/06/09/opensource/license/"></div>
+  <div class="ds-thread" data-thread-key="http://yoursite.com/2014/06/06/system/ldd_usage/" data-title="ldd 命令的介绍和使用方法" data-url="http://yoursite.com/2014/06/06/system/ldd_usage/"></div>
   <!-- 多说评论框 end -->
   <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
   <script type="text/javascript">
