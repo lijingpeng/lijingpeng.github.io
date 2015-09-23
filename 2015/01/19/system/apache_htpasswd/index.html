@@ -3,17 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: 澳门 | Frank</title>
+  <title>Apache htpasswd命令 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="计算机 网络 互联网">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Frank">
-<meta property="og:url" content="http://www.notehub.cn/tags/澳门/index.html">
+  <meta name="description" content="在Linux主机中，为了保护站点的目录安全，通常会通过htaccess文件对目录添加密码来进行保护，如果忘记密码则可以通过htpasswd命令修改密码。
+apache htpasswd选项参数:1234htpasswd [-cmdpsD] passwordfile usernamehtpasswd -b[cmdpsD] passwordfile username passwordhtpasswd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache htpasswd命令">
+<meta property="og:url" content="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="计算机 网络 互联网">
+<meta property="og:description" content="在Linux主机中，为了保护站点的目录安全，通常会通过htaccess文件对目录添加密码来进行保护，如果忘记密码则可以通过htpasswd命令修改密码。
+apache htpasswd选项参数:1234htpasswd [-cmdpsD] passwordfile usernamehtpasswd -b[cmdpsD] passwordfile username passwordhtpasswd">
+<meta property="og:updated_time" content="2015-09-23T11:24:07.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Frank">
-<meta name="twitter:description" content="计算机 网络 互联网">
+<meta name="twitter:title" content="Apache htpasswd命令">
+<meta name="twitter:description" content="在Linux主机中，为了保护站点的目录安全，通常会通过htaccess文件对目录添加密码来进行保护，如果忘记密码则可以通过htpasswd命令修改密码。
+apache htpasswd选项参数:1234htpasswd [-cmdpsD] passwordfile usernamehtpasswd -b[cmdpsD] passwordfile username passwordhtpasswd">
   
   
     <link rel="icon" href="favicon.png">
@@ -124,50 +128,100 @@
 </aside>
 
       
-      <section id="main">
-    <section class="archives-wrap">
-    <div class="archive-tag-wrap">
-      <span class="archive-tag">#澳门</span>
-    </div>
-    <div class="archives">
+      <section id="main"><article id="post-system/apache_htpasswd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
     
-    <div class="archive-article-thumbnail">
-      <a href="/2014/11/26/travel/macau/" class="thumbnail">
-  
-    <span style="background-image:url(/images/macau/1.jpg
-)" alt="澳门小记" class="thumbnail-image"></span>
-  
-</a>
-    </div>
     
-    <header class="archive-article-header">
-      
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2014/11/26/travel/macau/">澳门小记</a>
+    <h1 class="article-title" itemprop="name">
+      Apache htpasswd命令
     </h1>
   
 
-      
-        
-  <div class="archive-article-date">
+        <div class="article-meta">
+          
+  <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/11/26/travel/macau/">
-      <time datetime="2014-11-25T16:00:00.000Z" itemprop="datePublished">2014 11月 26</time>
+    <a href="/2015/01/19/system/apache_htpasswd/">
+      <time datetime="2015-01-18T16:00:00.000Z" itemprop="datePublished">2015-01-19</time>
     </a>
   </div>
 
 
-      
-    </header>
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/system/">system</a>
   </div>
-</article>
+
+        </div>
+      </header>
     
-    </div></section>
-    </section>
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>在Linux主机中，为了保护站点的目录安全，通常会通过htaccess文件对目录添加密码来进行保护，如果忘记密码则可以通过htpasswd命令修改密码。</p>
+<p>apache htpasswd选项参数:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">htpasswd [-cmdpsD] passwordfile username</span><br><span class="line">htpasswd -b[cmdpsD] passwordfile username password</span><br><span class="line">htpasswd -n[mdps] username</span><br><span class="line">htpasswd -nb[mdps] username password</span><br></pre></td></tr></table></figure></p>
+<p>apache htpasswd命令选项参数说明:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-c 创建一个加密文件</span><br><span class="line">-n 不更新加密文件，只将apache htpasswd命令加密后的用户名密码显示在屏幕上</span><br><span class="line">-m 默认apache htpassswd命令采用MD5算法对密码进行加密</span><br><span class="line"><span class="operator">-d</span> apache htpassswd命令采用CRYPT算法对密码进行加密</span><br><span class="line">-p apache htpassswd命令不对密码进行进行加密，即明文密码</span><br><span class="line"><span class="operator">-s</span> apache htpassswd命令采用SHA算法对密码进行加密</span><br><span class="line">-b 在apache htpassswd命令行中一并输入用户名和密码而不是根据提示输入密码</span><br><span class="line">-D 删除指定的用户</span><br></pre></td></tr></table></figure></p>
+<h2 id="apache_htpasswd例子">apache htpasswd例子</h2><p>1、如何利用htpasswd命令添加用户？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -bc .passwd tonyzhang pass</span><br></pre></td></tr></table></figure></p>
+<p>在bin目录下生成一个.passwd文件，用户名tonyzhang ，密码：pass，默认采用MD5加密方式</p>
+<p>2、如何在原有密码文件中增加下一个用户？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -b .passwd onlyzq pass</span><br></pre></td></tr></table></figure></p>
+<p>去掉c选项，即可在第一个用户之后添加第二个用户，依此类推</p>
+<p>3、如何不更新密码文件，只显示加密后的用户名和密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -nb tonyzhang pass</span><br></pre></td></tr></table></figure></p>
+<p>不更新.passwd文件，只在屏幕上输出用户名和经过加密后的密码</p>
+<p>4、如何利用htpasswd命令删除用户名和密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -D .passwd tonyzhang</span><br></pre></td></tr></table></figure></p>
+<p>5、如何利用htpasswd命令修改密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -D .passwd tonyzhang</span><br><span class="line">htpasswd -b .passwd tonyzhang pass</span><br></pre></td></tr></table></figure></p>
+<p>即先使用htpasswd删除命令删除指定用户，再利用htpasswd添加用户命令创建用户即可实现修改密码的功能。</p>
+<p>文章链接：<a href="http://onlyzq.blog.51cto.com/1228/557593" target="_blank" rel="external">http://onlyzq.blog.51cto.com/1228/557593</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-id="ciewpdptp000lmnpjcx26dmtd" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache/">apache</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/01/27/other/learning_in_university/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          大学没有教给你的最难一课
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2014/11/27/other/ps_auto/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Photoshop自动批处理</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-title="Apache htpasswd命令" data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
       
         <aside id="sidebar">
   
