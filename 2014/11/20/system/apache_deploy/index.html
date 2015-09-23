@@ -3,21 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Shadowsocks 安装配置使用 | Frank</title>
+  <title>Apache禁止IP直接访问并绑定域名 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Debian/Ubuntu安装12apt-get install python-pippip install shadowsocks
-配置:1234567891011&amp;#123;    &quot;server&quot;:&quot;my_server_ip&quot;,    &quot;server_port&quot;:8388,    &quot;local_address&quot;: &quot;127.0.0.1&quot;,    &quot;local_port&quot;:1080,    &quot;">
+  <meta name="description" content="123456789101112131415161718192021&amp;lt;VirtualHost 10.10.20.1:80&amp;gt;   ServerAdmin webmaster@userver   DocumentRoot /var/www   Servername 10.10.20.1   &amp;lt;Location /&amp;gt;     Order Allow,Deny     Deny fr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Shadowsocks 安装配置使用">
-<meta property="og:url" content="http://www.notehub.cn/2015/05/14/other/shadowsocks/index.html">
+<meta property="og:title" content="Apache禁止IP直接访问并绑定域名">
+<meta property="og:url" content="http://www.notehub.cn/2014/11/20/system/apache_deploy/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="Debian/Ubuntu安装12apt-get install python-pippip install shadowsocks
-配置:1234567891011&amp;#123;    &quot;server&quot;:&quot;my_server_ip&quot;,    &quot;server_port&quot;:8388,    &quot;local_address&quot;: &quot;127.0.0.1&quot;,    &quot;local_port&quot;:1080,    &quot;">
-<meta property="og:updated_time" content="2015-09-23T03:42:38.000Z">
+<meta property="og:description" content="123456789101112131415161718192021&amp;lt;VirtualHost 10.10.20.1:80&amp;gt;   ServerAdmin webmaster@userver   DocumentRoot /var/www   Servername 10.10.20.1   &amp;lt;Location /&amp;gt;     Order Allow,Deny     Deny fr">
+<meta property="og:updated_time" content="2015-09-23T03:50:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Shadowsocks 安装配置使用">
-<meta name="twitter:description" content="Debian/Ubuntu安装12apt-get install python-pippip install shadowsocks
-配置:1234567891011&amp;#123;    &quot;server&quot;:&quot;my_server_ip&quot;,    &quot;server_port&quot;:8388,    &quot;local_address&quot;: &quot;127.0.0.1&quot;,    &quot;local_port&quot;:1080,    &quot;">
+<meta name="twitter:title" content="Apache禁止IP直接访问并绑定域名">
+<meta name="twitter:description" content="123456789101112131415161718192021&amp;lt;VirtualHost 10.10.20.1:80&amp;gt;   ServerAdmin webmaster@userver   DocumentRoot /var/www   Servername 10.10.20.1   &amp;lt;Location /&amp;gt;     Order Allow,Deny     Deny fr">
   
   
     <link rel="icon" href="favicon.png">
@@ -96,11 +93,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        23
+        24
         <span>文章</span>
       </div>
       <div class="article-info-block">
-        13
+        14
         <span>标签</span>
       </div>
     </div>
@@ -128,7 +125,7 @@
 </aside>
 
       
-      <section id="main"><article id="post-other/shadowsocks" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-system/apache_deploy" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -137,7 +134,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Shadowsocks 安装配置使用
+      Apache禁止IP直接访问并绑定域名
     </h1>
   
 
@@ -145,8 +142,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/05/14/other/shadowsocks/">
-      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
+    <a href="/2014/11/20/system/apache_deploy/">
+      <time datetime="2014-11-19T16:00:00.000Z" itemprop="datePublished">2014-11-20</time>
     </a>
   </div>
 
@@ -154,7 +151,7 @@
           
   <div class="article-category">
   	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/other/">other</a>
+    <a class="article-category-link" href="/categories/system/">system</a>
   </div>
 
         </div>
@@ -163,23 +160,18 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>Debian/Ubuntu安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
-<p>配置:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"my_server_ip"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:<span class="number">8388</span>,</span><br><span class="line">    <span class="string">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="string">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"mypassword"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line">    <span class="string">"fast_open"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="string">"workers"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>服务器端运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssserver -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
-<p>后台运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ssserver -c /etc/shadowsocks/config.json &gt; /dev/null &amp;</span><br></pre></td></tr></table></figure></p>
-<p>客户端运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
-<p>后台运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup sslocal -c /etc/shadowsocks/config.json &gt; /dev/null &amp;</span><br></pre></td></tr></table></figure></p>
-<p>浏览器配置，推荐使用SwithySharp插件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protocol: socks5</span><br><span class="line">hostname: <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">port:     your <span class="built_in">local</span>_port</span><br></pre></td></tr></table></figure></p>
+        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername <span class="number">10.10</span>.<span class="number">20.1</span></span><br><span class="line">   &lt;Location /&gt; </span><br><span class="line">    Order Allow,Deny </span><br><span class="line">    Deny from all </span><br><span class="line">   &lt;/Location&gt; </span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername www.domain.org</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"> </span><br><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername domain.org</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>第一段配置说明我们禁止所有的直接IP访问<br>第二段配置说明我们允许通过www.domain.org来访问站点<br>第三段配置说明我们允许通过domain.org来访问站点</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/other/shadowsocks/" data-id="ciew94plx0003q7pj0cz55qrn" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2014/11/20/system/apache_deploy/" data-id="ciew9a1b2000grvpjjfrl7yp7" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/05/14/other/shadowsocks/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2014/11/20/system/apache_deploy/#ds-thread" class="article-comment-link">评论</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Apache/">Apache</a></li></ul>
 
     </footer>
   </div>
@@ -187,19 +179,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/09/03/opensource/input-font-md/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/05/03/dev/hash-map-sort-md/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          Input mono字体
+          HashMap的两种排序方式
         
       </div>
     </a>
   
   
-    <a href="/2015/05/03/dev/hash-map-sort-md/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2014/11/14/system/google_api_replace/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">HashMap的两种排序方式</div>
+      <div class="article-nav-title">Wordpress替换fonts.googleapis.com</div>
     </a>
   
 </nav>
@@ -210,7 +202,7 @@
 
 
   <section id="comments">
-    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/05/14/other/shadowsocks/" data-title="Shadowsocks 安装配置使用" data-url="http://www.notehub.cn/2015/05/14/other/shadowsocks/">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2014/11/20/system/apache_deploy/" data-title="Apache禁止IP直接访问并绑定域名" data-url="http://www.notehub.cn/2014/11/20/system/apache_deploy/">
       <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
       </div>
   </section>
@@ -321,7 +313,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -330,7 +322,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -339,7 +331,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 10px;">PPTP, vpn</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a>
     </div>
   </div>
 
@@ -348,7 +340,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

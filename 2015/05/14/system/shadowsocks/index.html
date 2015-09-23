@@ -3,19 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Physicist | Frank</title>
+  <title>Shadowsocks 安装配置使用 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="Debian/Ubuntu安装12apt-get install python-pippip install shadowsocks
+配置:1234567891011&amp;#123;    &quot;server&quot;:&quot;my_server_ip&quot;,    &quot;server_port&quot;:8388,    &quot;local_address&quot;: &quot;127.0.0.1&quot;,    &quot;local_port&quot;:1080,    &quot;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Physicist">
-<meta property="og:url" content="http://www.notehub.cn/2013/11/28/Physicist/index.html">
+<meta property="og:title" content="Shadowsocks 安装配置使用">
+<meta property="og:url" content="http://www.notehub.cn/2015/05/14/system/shadowsocks/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description">
-<meta property="og:image" content="http://www.notehub.cn/images/1.jpg">
-<meta property="og:updated_time" content="2015-09-03T02:57:58.000Z">
+<meta property="og:description" content="Debian/Ubuntu安装12apt-get install python-pippip install shadowsocks
+配置:1234567891011&amp;#123;    &quot;server&quot;:&quot;my_server_ip&quot;,    &quot;server_port&quot;:8388,    &quot;local_address&quot;: &quot;127.0.0.1&quot;,    &quot;local_port&quot;:1080,    &quot;">
+<meta property="og:updated_time" content="2015-09-23T03:50:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Physicist">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Shadowsocks 安装配置使用">
+<meta name="twitter:description" content="Debian/Ubuntu安装12apt-get install python-pippip install shadowsocks
+配置:1234567891011&amp;#123;    &quot;server&quot;:&quot;my_server_ip&quot;,    &quot;server_port&quot;:8388,    &quot;local_address&quot;: &quot;127.0.0.1&quot;,    &quot;local_port&quot;:1080,    &quot;">
   
   
     <link rel="icon" href="favicon.png">
@@ -126,7 +128,7 @@
 </aside>
 
       
-      <section id="main"><article id="post-Physicist" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-system/shadowsocks" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -135,7 +137,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Physicist
+      Shadowsocks 安装配置使用
     </h1>
   
 
@@ -143,8 +145,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2013/11/28/Physicist/">
-      <time datetime="2013-11-27T16:00:00.000Z" itemprop="datePublished">2013-11-28</time>
+    <a href="/2015/05/14/system/shadowsocks/">
+      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
     </a>
   </div>
 
@@ -152,7 +154,7 @@
           
   <div class="article-category">
   	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/Photo/">Photo</a>
+    <a class="article-category-link" href="/categories/system/">system</a>
   </div>
 
         </div>
@@ -161,17 +163,23 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p><img src="/images/1.jpg" alt="Physicist"></p>
+        <p>Debian/Ubuntu安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
+<p>配置:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"my_server_ip"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:<span class="number">8388</span>,</span><br><span class="line">    <span class="string">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="string">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"mypassword"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line">    <span class="string">"fast_open"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="string">"workers"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>服务器端运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssserver -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
+<p>后台运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ssserver -c /etc/shadowsocks/config.json &gt; /dev/null &amp;</span><br></pre></td></tr></table></figure></p>
+<p>客户端运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
+<p>后台运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup sslocal -c /etc/shadowsocks/config.json &gt; /dev/null &amp;</span><br></pre></td></tr></table></figure></p>
+<p>浏览器配置，推荐使用SwithySharp插件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protocol: socks5</span><br><span class="line">hostname: <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">port:     your <span class="built_in">local</span>_port</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2013/11/28/Physicist/" data-id="ciew9a1c9001hrvpj6on8y4gk" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="ciew9a1ak0000rvpjk4fjxkdd" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2013/11/28/Physicist/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/05/14/system/shadowsocks/#ds-thread" class="article-comment-link">评论</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/photo/">photo</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a></li></ul>
 
     </footer>
   </div>
@@ -179,15 +187,20 @@
     
 <nav id="article-nav">
   
-    <a href="/2014/01/01/Hello-World/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/09/03/opensource/input-font-md/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          Hello World
+          Input mono字体
         
       </div>
     </a>
   
+  
+    <a href="/2015/05/14/system/pptp_vpn/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">PPTP VPN搭建</div>
+    </a>
   
 </nav>
 
@@ -197,7 +210,7 @@
 
 
   <section id="comments">
-    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2013/11/28/Physicist/" data-title="Physicist" data-url="http://www.notehub.cn/2013/11/28/Physicist/">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-title="Shadowsocks 安装配置使用" data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/">
       <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
       </div>
   </section>

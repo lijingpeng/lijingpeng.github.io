@@ -395,10 +395,10 @@
   
   <entry>
     <title><![CDATA[Shadowsocks 安装配置使用]]></title>
-    <link href="http://www.notehub.cn/2015/05/14/other/shadowsocks/"/>
-    <id>http://www.notehub.cn/2015/05/14/other/shadowsocks/</id>
+    <link href="http://www.notehub.cn/2015/05/14/system/shadowsocks/"/>
+    <id>http://www.notehub.cn/2015/05/14/system/shadowsocks/</id>
     <published>2015-05-13T16:00:00.000Z</published>
-    <updated>2015-09-23T03:42:38.000Z</updated>
+    <updated>2015-09-23T03:50:47.000Z</updated>
     <content type="html"><![CDATA[<p>Debian/Ubuntu安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
 <p>配置:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"my_server_ip"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:<span class="number">8388</span>,</span><br><span class="line">    <span class="string">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="string">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"mypassword"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line">    <span class="string">"fast_open"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="string">"workers"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>服务器端运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssserver -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
@@ -413,7 +413,27 @@
     
       <category term="Shadowsocks" scheme="http://www.notehub.cn/tags/Shadowsocks/"/>
     
-      <category term="other" scheme="http://www.notehub.cn/categories/other/"/>
+      <category term="system" scheme="http://www.notehub.cn/categories/system/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[PPTP VPN搭建]]></title>
+    <link href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/"/>
+    <id>http://www.notehub.cn/2015/05/14/system/pptp_vpn/</id>
+    <published>2015-05-13T16:00:00.000Z</published>
+    <updated>2015-09-23T03:53:22.000Z</updated>
+    <content type="html"><![CDATA[<p>本文介绍在Linux下搭建VPN的过程<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="keyword">if</span> [ `id -u` <span class="operator">-ne</span> <span class="number">0</span> ] </span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"please run it by root"</span></span><br><span class="line">  <span class="built_in">exit</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">apt-get -y update</span><br><span class="line"></span><br><span class="line">apt-get -y install pptpd || &#123;</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"could not install pptpd"</span> </span><br><span class="line">  <span class="built_in">exit</span> <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/ppp/options.pptpd &lt;&lt;END</span><br><span class="line">name pptpd</span><br><span class="line">refuse-pap</span><br><span class="line">refuse-chap</span><br><span class="line">refuse-mschap</span><br><span class="line">require-mschap-v2</span><br><span class="line">require-mppe-<span class="number">128</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">8.8</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">4.4</span></span><br><span class="line">proxyarp</span><br><span class="line">lock</span><br><span class="line">nobsdcomp </span><br><span class="line">novj</span><br><span class="line">novjccomp</span><br><span class="line">nologfd</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/pptpd.conf &lt;&lt;END</span><br><span class="line">option /etc/ppp/options.pptpd</span><br><span class="line">logwtmp</span><br><span class="line">localip <span class="number">192.168</span>.<span class="number">2.1</span></span><br><span class="line">remoteip <span class="number">192.168</span>.<span class="number">2.10</span>-<span class="number">100</span></span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">cat &gt;&gt; /etc/sysctl.conf &lt;&lt;END</span><br><span class="line">net.ipv4.ip_forward=<span class="number">1</span></span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line">iptables-save &gt; /etc/iptables.down.rules</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">2.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE</span><br><span class="line"></span><br><span class="line">iptables -I FORWARD <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">2.0</span>/<span class="number">24</span> -p tcp --syn -i ppp+ -j TCPMSS --set-mss <span class="number">1300</span></span><br><span class="line"></span><br><span class="line">iptables-save &gt; /etc/iptables.up.rules</span><br><span class="line"></span><br><span class="line">cat &gt;&gt;/etc/ppp/pptpd-options&lt;&lt;EOF</span><br><span class="line">pre-up iptables-restore &lt; /etc/iptables.up.rules</span><br><span class="line">post-down iptables-restore &lt; /etc/iptables.down.rules</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/ppp/chap-secrets &lt;&lt;END</span><br><span class="line"><span class="built_in">test</span> pptpd <span class="built_in">test</span> *</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">service pptpd restart</span><br><span class="line"></span><br><span class="line">netstat -lntp</span><br><span class="line"></span><br><span class="line"><span class="built_in">exit</span> <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>实际使用中需要按照需要修改本地IP地址即可，一般情况自动安装和配置是成功的，但是在我的实际使用中使用手机网络连接的时候是没问题的，但是使用电脑连接的时候还是出现无法连接的情况，查看日志如下：</p>
+<p>Starting negotiation on /dev/pts/1<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""> <endpoint [mac:00:16:3e:d8:d7:39]="">]<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""><br>…<br>LCP: timeout sending Config-Requests<br>Connection terminated.<br>这个可能是学校路由器没有采用PPTP穿透吧</mrru></accomp></pcomp></magic></auth></asyncmap></endpoint></mrru></accomp></pcomp></magic></auth></asyncmap></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>本文介绍在Linux下搭建VPN的过程<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line]]>
+    </summary>
+    
+      <category term="PPTP, vpn" scheme="http://www.notehub.cn/tags/PPTP-vpn/"/>
+    
+      <category term="system" scheme="http://www.notehub.cn/categories/system/"/>
     
   </entry>
   
@@ -433,10 +453,10 @@
   
   <entry>
     <title><![CDATA[Apache禁止IP直接访问并绑定域名]]></title>
-    <link href="http://www.notehub.cn/2014/11/20/other/apache_deploy/"/>
-    <id>http://www.notehub.cn/2014/11/20/other/apache_deploy/</id>
+    <link href="http://www.notehub.cn/2014/11/20/system/apache_deploy/"/>
+    <id>http://www.notehub.cn/2014/11/20/system/apache_deploy/</id>
     <published>2014-11-19T16:00:00.000Z</published>
-    <updated>2015-09-23T03:49:10.000Z</updated>
+    <updated>2015-09-23T03:50:40.000Z</updated>
     <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername <span class="number">10.10</span>.<span class="number">20.1</span></span><br><span class="line">   &lt;Location /&gt; </span><br><span class="line">    Order Allow,Deny </span><br><span class="line">    Deny from all </span><br><span class="line">   &lt;/Location&gt; </span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername www.domain.org</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"> </span><br><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername domain.org</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
 <p>第一段配置说明我们禁止所有的直接IP访问<br>第二段配置说明我们允许通过www.domain.org来访问站点<br>第三段配置说明我们允许通过domain.org来访问站点</p>
 ]]></content>
@@ -446,16 +466,16 @@
     
       <category term="Apache" scheme="http://www.notehub.cn/tags/Apache/"/>
     
-      <category term="other" scheme="http://www.notehub.cn/categories/other/"/>
+      <category term="system" scheme="http://www.notehub.cn/categories/system/"/>
     
   </entry>
   
   <entry>
     <title><![CDATA[Wordpress替换fonts.googleapis.com]]></title>
-    <link href="http://www.notehub.cn/2014/11/14/other/google_api_replace/"/>
-    <id>http://www.notehub.cn/2014/11/14/other/google_api_replace/</id>
+    <link href="http://www.notehub.cn/2014/11/14/system/google_api_replace/"/>
+    <id>http://www.notehub.cn/2014/11/14/system/google_api_replace/</id>
     <published>2014-11-13T16:00:00.000Z</published>
-    <updated>2015-09-23T03:37:33.000Z</updated>
+    <updated>2015-09-23T03:50:42.000Z</updated>
     <content type="html"><![CDATA[<p>在wordpress自动调用fonts.googleapis.com, 这对于国内用户访问来说非常慢，这里推荐使用<br><a href="http://libs.useso.com/" target="_blank" rel="external">360常用前端公共库CDN服务</a></p>
 <p><img src="/images/other/googleapi.png" alt=""></p>
 <p>操作办法：</p>
@@ -468,7 +488,7 @@
     
       <category term="Google" scheme="http://www.notehub.cn/tags/Google/"/>
     
-      <category term="other" scheme="http://www.notehub.cn/categories/other/"/>
+      <category term="system" scheme="http://www.notehub.cn/categories/system/"/>
     
   </entry>
   
@@ -566,24 +586,6 @@
     </summary>
     
       <category term="swift, llvm" scheme="http://www.notehub.cn/tags/swift-llvm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[ldd 命令的介绍和使用方法]]></title>
-    <link href="http://www.notehub.cn/2014/06/06/system/ldd_usage/"/>
-    <id>http://www.notehub.cn/2014/06/06/system/ldd_usage/</id>
-    <published>2014-06-05T16:00:00.000Z</published>
-    <updated>2015-09-03T02:47:08.000Z</updated>
-    <content type="html"><![CDATA[<p>ldd 能够显示可执行模块的dependency，其原理是通过设置一系列的环境变量，如下：LD_TRACE_LOADED_OBJECTS、LD_WARN、LD_BIND_NOW、LD_LIBRARY_VERSION、LD_VERBOSE等。当LD_TRACE_LOADED_OBJECTS环境变量不为空时，任何可执行程序在运行时，它都会只显示模块的dependency，而程序并不真正执行。</p>
-<p>它的执行原理就是通过ld-linux.so（elf动态库的装载器）来实现的。我们知道，ld-linux.so模块会先于executable模块程序工作，并获得控制权，因此当上述的那些环境变量被设置时，ld-linux.so选择了显示可执行模块的dependency。<br>例如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frank@linux:~/dev$ ldd a.out</span><br><span class="line">	linux-vdso.so.<span class="number">1</span> =&gt;  (<span class="number">0</span>x00007fff3bffe000)</span><br><span class="line">	libstdc++.so.<span class="number">6</span> =&gt; /usr/lib/x86_64-linux-gnu/libstdc++.so.<span class="number">6</span> (<span class="number">0</span>x00007f1faa400000)</span><br><span class="line">	libc.so.<span class="number">6</span> =&gt; /lib/x86_64-linux-gnu/libc.so.<span class="number">6</span> (<span class="number">0</span>x00007f1faa03a000)</span><br><span class="line">	libm.so.<span class="number">6</span> =&gt; /lib/x86_64-linux-gnu/libm.so.<span class="number">6</span> (<span class="number">0</span>x00007f1fa9d33000)</span><br><span class="line">	/lib64/ld-linux-x86-<span class="number">64</span>.so.<span class="number">2</span> (<span class="number">0</span>x00007f1faa72b000)</span><br><span class="line">	libgcc_s.so.<span class="number">1</span> =&gt; /lib/x86_64-linux-gnu/libgcc_s.so.<span class="number">1</span> (<span class="number">0</span>x00007f1fa9b1d000)</span><br></pre></td></tr></table></figure></p>
-<p>实际上可以直接执行ld-linux.so模块，如：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/lib/ld-linux.so.<span class="number">2</span> --list program</span><br></pre></td></tr></table></figure></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>ldd 能够显示可执行模块的dependency，其原理是通过设置一系列的环境变量，如下：LD_TRACE_LOADED_OBJECTS、LD_WARN、LD_BIND_NOW、LD_LIBRARY_VERSION、LD_VERBOSE等。当LD_TRACE_LOADED_]]>
-    </summary>
-    
-      <category term="linux, ldd, 依赖关系" scheme="http://www.notehub.cn/tags/linux-ldd-%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB/"/>
     
   </entry>
   
