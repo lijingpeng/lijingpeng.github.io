@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Frank</title>
+  <title>Archives: 2015 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="计算机 网络 互联网">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Frank">
-<meta property="og:url" content="http://www.notehub.cn/page/7/index.html">
+<meta property="og:url" content="http://www.notehub.cn/archives/2015/page/5/index.html">
 <meta property="og:site_name" content="Frank">
 <meta property="og:description" content="计算机 网络 互联网">
 <meta name="twitter:card" content="summary">
@@ -125,198 +125,50 @@
 
       
       <section id="main">
-      <article id="post-config/gitpages" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
+      <div class="archive-year-wrap">
+        <a href="/archives/2015" class="archive-year">2015</a>
+      </div>
+      <section class="archives-wrap">
+        <div class="archives">
     
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
     
+    <div class="archive-article-thumbnail">
+      <a href="/2015/01/19/system/apache_htpasswd/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+    </div>
     
-      <header class="article-header">
-        
+    <header class="archive-article-header">
+      
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2014/06/05/config/gitpages/">Github pages 搭建个人博客并绑定域名</a>
+      <a class="archive-article-title" href="/2015/01/19/system/apache_htpasswd/">Apache htpasswd命令</a>
     </h1>
   
 
-        <div class="article-meta">
-          
-  <div class="article-date">
+      
+        
+  <div class="archive-article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/06/05/config/gitpages/">
-      <time datetime="2014-06-04T16:00:00.000Z" itemprop="datePublished">2014-06-05</time>
+    <a href="/2015/01/19/system/apache_htpasswd/">
+      <time datetime="2015-01-18T16:00:00.000Z" itemprop="datePublished">1月 19</time>
     </a>
   </div>
 
 
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
       
-                
-        <p>目前，github下pelican搭建的极简主义的博客越来越受到大家的欢迎，本文介绍在github中一个仓库同时保存Markdown博客主内容和HTML网页，并绑定域名。 我们将markdown文件保存在仓库的master分支中，将HTML网页保存在gh-pages分支中，并将域名绑定到gh-pages分支，下面是操作步骤：</p>
-<h4 id="1-_首先在github创建仓库">1. 首先在github创建仓库</h4><p>并不局限于username.github.com这种的顶级域名仓库，如果想创建类似blog.example.com的博客，直接创建一个名字为blog的仓库即可。</p>
-<h4 id="2-_克隆到本地：">2. 克隆到本地：</h4><pre><code>git clone git@github<span class="class">.com</span>:yourusername/blog<span class="class">.git</span> 
-</code></pre><h4 id="3-_在克隆后的blog目录中初始化pelican工作目录">3. 在克隆后的blog目录中初始化pelican工作目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog  </span><br><span class="line">pelican-quickstart</span><br></pre></td></tr></table></figure>
-<p>这样，本地blog目录将会有以下目录结构：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">content  </span><br><span class="line">develop_server.sh*  </span><br><span class="line">fabfile.py  </span><br><span class="line">Makefile  </span><br><span class="line">output  </span><br><span class="line">pelicanconf.py  </span><br><span class="line">pelicanconf.pyc   </span><br><span class="line">publishconf.py  </span><br><span class="line">.git</span><br></pre></td></tr></table></figure></p>
-<p>其中.git表示本目录被git所管理，因为我们知道markdown所写的内容必须放到content下，<strong>因此我们可以将.git目录拷贝到content目录</strong></p>
-<pre><code>cp -r <span class="class">.git</span> <span class="attribute">content</span>/
-</code></pre><p>这样就确保我们的md文件将会被同步到github仓库的master分支</p>
-<h4 id="4-_创建分支">4. 创建分支</h4><p>进入content目录，并创建gh-pages分支（必须是这个分支名字）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b gh-pages  </span><br><span class="line">git push -u origin gh-pages  </span><br><span class="line">git checkout master</span><br></pre></td></tr></table></figure></p>
-<p><strong>在这一步骤中，只要我们自己创建gh-pages分支并同步到远端的时候，github会自动为我们建立一个可以访问的URL地址，格式是：<a href="http://username.github.io/blog" target="_blank" rel="external">http://username.github.io/blog</a></strong></p>
-<h4 id="5-_同步静态网站到分支">5. 同步静态网站到分支</h4><p>pelican处理markdown生成的html文件将会放到output目录中，因此我们将gh-pages的checkout到该目录，以后html更新后，只需要在该目录下push即可。</p>
-<p>克隆分支，在blog目录下：</p>
-<pre><code>git clone -<span class="tag">b</span> gh-pages git@github<span class="class">.com</span>:username/blog<span class="class">.git</span> output
-</code></pre><h4 id="6-_测试">6. 测试</h4><ul>
-<li>在content目录下随便写一篇文章，例如example.md<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br><span class="line">git add example.md</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>这将会把该md文件同步到远端主分支，起到一定的备份作用</p>
-<ul>
-<li>退出到blog目录下<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make html</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>生成HTML文件到output目录</p>
-<ul>
-<li>到output目录下<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git push origin gh-pages</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>这样就将网页同步到gh-pages分支了，打开浏览器，访问<br><a href="http://username.github.io/blog" target="_blank" rel="external">http://username.github.io/blog</a><br>看看是不是能访问了</p>
-<h4 id="7-_绑定域名">7. 绑定域名</h4><ul>
-<li>在DNS解析商那设置二级域名，例如本例中的blog，添加CNAME，指向username.github.io.</li>
-<li>在output目录下创建CNAME文件，内容为要指向的域名，例如：blog.example.com，push到远端gh-pages分支即可。</li>
-</ul>
-<h4 id="8-_Notice">8. Notice</h4><ul>
-<li>域名解析需要一定的时间才能在全球生效，设置完域名解析之后请稍后哦</li>
-<li>文中的username和example需要替换成你自己的项目和域名</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/06/05/config/gitpages/" data-id="ciewwg2jy001s4ypj7ckf679n" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2014/06/05/config/gitpages/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a></li></ul>
-
-    </footer>
+    </header>
   </div>
-  
 </article>
-
-
-
-    
-      <article id="post-Hello-World" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/01/01/Hello-World/">Hello World</a>
-    </h1>
+    </div></section>
   
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/01/01/Hello-World/">
-      <time datetime="2014-01-01T05:51:28.000Z" itemprop="datePublished">2014-01-01</time>
-    </a>
-  </div>
-
-
-          
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>从现在开始, 多写点东西吧!</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/01/01/Hello-World/" data-id="ciewwg2ko002k4ypjx5cxwd4j" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2014/01/01/Hello-World/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/开始/">开始</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-Physicist" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2013/11/28/Physicist/">Physicist</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2013/11/28/Physicist/">
-      <time datetime="2013-11-27T16:00:00.000Z" itemprop="datePublished">2013-11-28</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/Photo/">Photo</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><img src="/images/1.jpg" alt="Physicist"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2013/11/28/Physicist/" data-id="ciewwg2kl002f4ypj76x9wv5n" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2013/11/28/Physicist/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/photo/">photo</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/6/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span>
+        <a class="extend prev" rel="prev" href="/archives/2015/page/4/">&laquo; 上一页</a><a class="page-number" href="/archives/2015/">1</a><span class="space">&hellip;</span><a class="page-number" href="/archives/2015/page/3/">3</a><a class="page-number" href="/archives/2015/page/4/">4</a><span class="page-number current">5</span>
       </nav>
     </section>
       
