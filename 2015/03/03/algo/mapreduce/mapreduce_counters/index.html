@@ -3,17 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Frank</title>
+  <title>MapReduce 计数器简介 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="计算机 网络 互联网">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Frank">
-<meta property="og:url" content="http://www.notehub.cn/page/4/index.html">
+  <meta name="description" content="1、计数器 简介
+在许多情况下，一个用户需要了解待分析的数据，尽管这并非所要执行的分析任务 的核心内容。以统计数据集中无效记录数目的任务为例，如果发现无效记录的比例 相当高，那么就需要认真思考为何存在如此多无效记录。是所采用的检测程序存在 缺陷，还是数据集质量确实很低，包含大量无效记录？如果确定是数据集的质量问 题，则可能需要扩大数据集的规模，以增大有效记录的比例，从而进行有意义的分析。
+计数器是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce 计数器简介">
+<meta property="og:url" content="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="计算机 网络 互联网">
+<meta property="og:description" content="1、计数器 简介
+在许多情况下，一个用户需要了解待分析的数据，尽管这并非所要执行的分析任务 的核心内容。以统计数据集中无效记录数目的任务为例，如果发现无效记录的比例 相当高，那么就需要认真思考为何存在如此多无效记录。是所采用的检测程序存在 缺陷，还是数据集质量确实很低，包含大量无效记录？如果确定是数据集的质量问 题，则可能需要扩大数据集的规模，以增大有效记录的比例，从而进行有意义的分析。
+计数器是">
+<meta property="og:updated_time" content="2015-09-23T14:24:56.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Frank">
-<meta name="twitter:description" content="计算机 网络 互联网">
+<meta name="twitter:title" content="MapReduce 计数器简介">
+<meta name="twitter:description" content="1、计数器 简介
+在许多情况下，一个用户需要了解待分析的数据，尽管这并非所要执行的分析任务 的核心内容。以统计数据集中无效记录数目的任务为例，如果发现无效记录的比例 相当高，那么就需要认真思考为何存在如此多无效记录。是所采用的检测程序存在 缺陷，还是数据集质量确实很低，包含大量无效记录？如果确定是数据集的质量问 题，则可能需要扩大数据集的规模，以增大有效记录的比例，从而进行有意义的分析。
+计数器是">
   
   
     <link rel="icon" href="favicon.png">
@@ -124,8 +131,7 @@
 </aside>
 
       
-      <section id="main">
-      <article id="post-algo/mapreduce/mapreduce_counters" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-algo/mapreduce/mapreduce_counters" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -133,8 +139,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/03/03/algo/mapreduce/mapreduce_counters/">MapReduce 计数器简介</a>
+    <h1 class="article-title" itemprop="name">
+      MapReduce 计数器简介
     </h1>
   
 
@@ -205,297 +211,38 @@
     </footer>
   </div>
   
-</article>
-
-
-
     
-      <article id="post-other/learning_in_university" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
+<nav id="article-nav">
+  
+    <a href="/2015/05/03/dev/hash-map-sort-md/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/27/other/learning_in_university/">大学没有教给你的最难一课</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/01/27/other/learning_in_university/">
-      <time datetime="2015-01-26T16:00:00.000Z" itemprop="datePublished">2015-01-27</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/other/">other</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><img src="/images/other/1911552f58dd1c99024581.jpg" alt=""></p>
-<p>「老师，您可以帮我写推荐信吗？ 这是我过去七个学期的成绩单。」最近一位大四女同学来看我，希望我能为她撰写申请研究所的推荐信。</p>
-<p>看了她的成绩，我吓一跳，从大一到大四的过去七个学期，她每学期都是书卷奖得主！ 在卧虎藏龙、会念书的学生比比皆是的台大校园，这并不容易，可见她多么用功！</p>
-<p>但我一开口，却是泼了她一头冷水，「同学，妳能不能不要继续拿第一名？」「为什么？ 追求好成绩有什么不对吗？ 要申请国外的好学校念硕士、博士，难道不应该有好成绩吗？」面对她不解的神情，我请她在研究室坐下来，「让我花一点时间，说个故事给妳听好吗？」</p>
-<p>说实话，在台大教学十八年，我最担心的学生，不是成绩吊车尾的同学，反而恰恰相反，竟是每一科都拿第一名的传统好学生，最让我放心不下……。</p>
-<p>这个故事，就从多年前一个很认真、也常拿书卷奖的台大学生说起。</p>
-<p>曾经，有一个高中念建中、大学读台大，在别人眼中考起试来一帆风顺的台湾年轻人，在长期努力不懈下，终于如愿以偿来到美国麻省理工学院，攻读硕士与博士。当时，在他心中，「成功」的人生像是一条有轨迹可寻的直线，从麻省理工以漂亮成绩毕业，等于拿到「成功」的第一个入门砖。</p>
-<p>他告诉自己：「我来美国可是来读书不是来玩的，好好拚功课吧！」这个台湾学子，从小念理工科，爱运动，爱念书，但对于美国的流行文化、同学间多采多姿的社交生活，格格不入、甚至手足无措。于是他一心向学，果然，念硕士的两年与博士第一年，每一个科目都拿下漂亮的A！</p>
-<p>在麻省理工，A就是最高的分数了，科科都拿A，真是不容易的好成绩。</p>
-<p>他内心不免小小骄傲，颇以自己为荣，也一直以为，自己的指导教授，一定也为他高兴，毕竟置身于一群天才学生中，他的好成绩堪称「第一名」呢。</p>
-<p>全A成绩，终于碰到大铁板了。有一门陌生却又必修的重要课程，他上了几个月后，内心有数，成绩大概不会太理想，虽然及格绝对没问题，但A恐怕拿不到了。这个「好学生」干脆壮士断腕，期末考前，毅然退选这门课，避免成绩单出现B的「恐怖」危机。</p>
-<p>很多美国同学不理解，老师更觉得奇怪，学分费交了，也认真上了几个月，为什么他要退选？只为了避免成绩单不好看？这个理由对美国人来说，太不可思议了！来年，他再度挑战这门必修课，一路稳扎稳打，加倍用心，但期末成绩出炉后，他，竟拿到了第一个不是A的成绩！之前的退选，无异于一场时间与金钱的徒劳无功。</p>
-<p>沮丧的他，有点难为情的去见了美国指导教授，甚至，带着歉意去的。然而，指导教授却十分开心的恭喜他！恭喜他没拿到A！教授语重心长的说：「我真是太替你开心了！ 你从今日起，再也不必为拿A、拿高分而念书，你总算可以放胆，去做更重要、更有价值的事情了！」</p>
-<p>那，什么才是更重要更有价值的事？ 教授笑着回答：「去犯错与创新吧！借着课本教你的基础，然后去有计划的犯错、尝试创新。这才是有价值的！」</p>
-<p>台湾小子，如当头棒喝般醒悟：什么才是追求知识的本质？ 站在前人的肩膀上，不断寻求突破，继续为下一代累积新知，以创新动能造福人类社会，才是知识的本质。好吃的蛋糕是本质；而好成绩，只是装饰的美丽奶油花朵罢了。</p>
-<p>「怕输」心态造成保守的选择</p>
-<p>我，就是那上面故事里的主角、曾经认错方向的台湾小子。</p>
-<p>当我被MIT指导教授，点出求学观念上的根本错误后，其实是非常受用的。在此之前，我把所有的精神力气、大概有九成，都放在完成作业、求取高分，而只拿一分的余力，用以做研究。</p>
-<p>但后来，我大幅度更改比例，变成了两成力气做功课，八成心思做新研究。以前，一拿到作业，就认真埋头苦写，确保尽善尽美以得好成绩，后来却变成了要交作业的前一天，才开始熬夜赶报告。</p>
-<p>这并不是说我偷懒，而是我发觉，做新的研究才是更大的挑战，收获更多，所以我选择先做研究。</p>
-<p>研究的过程，其实是一个无底洞，回报会比较慢，不像考试成绩马上就出来，但这才是真正的学习过程，而且虽然回报慢，收获却是扎扎实实、属于自己的，不是考完试就一半还给老师的表面好成绩。可以说：那个当下椎心刺骨的B，释放我长久以来读书是为了追求漂亮成绩的功利迷思，转向真正的学习本质。</p>
-<p>观念一改变，学习反而突飞猛进。大多数人要念六年方能结束的博士班，我四年就毕业了；因为我把时间与精神，花在对的地方、并做出了新的研究成果，最终得到了教授的肯定，毕业论文顺利通过。</p>
-<p>「怕输」文化造成保守的心态</p>
-<p>回到台湾教书后，这些年来，我对当时的心情又有一层新的体悟。当年我对科科A的追求，除了从小相信认真念书就是为了追求好成绩的迷思，背后，更深的原因是「怕输」。怕输、怕没面子的心理框架，一直到现在，仍然在很多个体、甚至很多企业发展上看到，形成一种保守的文化，妨碍创新的尝试。</p>
-<p>台大管理学院每年都送很多学生到国外著名大学做交换学生。最近一个同学从北欧的大学交换半年回来，与我分享心得。</p>
-<p>她的班上有一半是当地学生，另一半是来自意大利、法国、德国、韩国、印度等全球各地的交换学生，有很多分组讨论和报告要做。她发现，台湾去的学生，理论学得很扎实，程度一点也不输外国学生，但自信心明显比较不足，即使有自己独特的看法与观点，但不那么能够系统化组织与勇于提出思辩讨论。</p>
-<p>相较之下，「欧洲的年轻学生可能理论基础比不上我们，但他们不害怕，很敢说出口，讨论激荡，发现真的有兴趣的地方，再去深入钻研，很有创意和想象力。」</p>
-<p>她的心得我完全了解。因为怕输怕被别人笑的心理，出现在许多层面上，例如阻碍学习新语言（不敢开口怕被笑）、讨论课上沉默者占多数，发言的永远那几个，但下了课大家却七嘴八舌意见多多。</p>
-<p>我曾经反省，为何必须到了美国求学、从别人的文化反射出来，才看清自己的迷思？ 为什么在台湾时，从来没有发现过、从来没有反省过？</p>
-<p>答案很简单。在台湾现有的升学制度下，包含高中基测、大学学测，我们的游戏规则就是，谁会考试，谁就是赢家！30年前，我念书时如此，现在亦然。</p>
-<p>或许，大学前的游戏规则，真是如此，但是，我们的人生，从考完大学起，就再也不是科科得A者保证胜利了。</p>
-<p>唯有能认清环境变化，敢于跨出舒适区，追求本质的创新，才能永保成长动能。从此刻起，挣脱只求第一的魔咒，摆脱怕输的包袱，大步往前走吧！</p>
-<p>最珍贵的一堂课，找寻自己的人生导师</p>
-<p>我的前半生，在别人眼中，该也是标准的「金榜题名」、算得上是超级好学生。先后考取建中、台大，而之后的硕士、博士学位，则都在美国麻省理工学院完成。毕业后，在硅谷找到年薪数百万的工程师职缺，然后娶回了美娇娘、回台大担任教授，也有了两位小朋友。</p>
-<p>我必须承认，有一段时间，我真的觉得自己很幸运，也深信只要自己够努力，无论是「美国梦」、「台湾梦」，我都能美梦成真。</p>
-<p>然而，从人生进入下半场开始，我陆续遭逢变故，终于明白了什么叫做深深的无力感。</p>
-<p>先是我自己在壮年之时，就得了癌症。跟死神第一次拔河，我虽侥幸得胜，却也大伤元气。而没几年后，我又遭逢中年丧妻！失去了最爱的人，心里什么也不剩，只有空空荡荡，整个人浑浑噩噩…… 但却没有太多时间可以自怨自艾，因为我还得拉拔两个正要经历青春期的小男孩长大。</p>
-<p>原来发生在我们意料之外的，才是真实的人生……</p>
-<p>最难的一课，我们却没教给学生</p>
-<p>看看自己走过的人生路，再想一想每一天，我在校园内触目所见，年轻快乐、对未来满怀想象与盼望的学生们。不禁感叹：在我人生的求学过程中，大多时刻，学校只教如何考第一名、如何过关斩将在大小的考试中胜出？ 几乎没有人告诉我，考不上「好」学校、「好」科系之后该怎么办？如何勇敢站起来面对挑战？</p>
-<p>联考制度强调的是，不管喜不喜欢，先抢第一志愿就对了！ 从来没有人认认真真地鼓励我们：寻找自己独特的天赋能力，倾听自己内在的声音，再找出独属自己而非主流价值一致钟爱的「第一志愿」？</p>
-<p>我们从小经常听到的童话故事是，王子好不容易排除万难与公主结婚，然后呢？ 就没了。从没有告诉我们，王子公主可能吵架啊！ 人生的本质就是无常的变动。如果有一天，公主离开了，王子该如何？</p>
-<p>没有人教过我们，我们也从来不会教学生，关于人生，种种的真实与艰难，种种的难堪与不堪。这些，反而是我在历经人生后，最想要献给学生的礼物。</p>
-<p>人生总有悲欢离合，但我希望我的学生，都比我更有能力，去面对课堂以外的人生挑战。</p>
-<p>如何做？ 其实很简单，提前把这些人生问题，丢给学生去想，让他们从年轻时就开始思索、有心理准备；提前为他们灌注一些力量，而不是哪一天他们突然面对了，竟只有手足无措的份。人生不会永远顺遂、悲欢离合总无情，毕业之后的人生更不会有标准答案，我想教会学生的，是他们如何为自己找寻答案？ 甚至是，能不能在犯错后，鼓起勇气选择补考，而不是沮丧放弃，勇敢做唯一的自己。</p>
-<p>人生说穿了，就是由无数的大小考验组合而成，懂得为自己找到「人生导师」，绝对可以为自己的人生加分不少。</p>
-<p>而什么是人生导师？「他」，可能是一份信仰、一场演讲、一部电影、一本好书，重点是里头的精神，能不能让你在历经悲欢离合时，多一点力量与勇气，继续朝能发挥自己最大价值的方向走下去？</p>
-<p>我不是完美无缺的老师，但真心祝福每一位学生，打开心胸、主动出击，每天都能遇见自己的人生导师、每天都能茁壮成长。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/01/27/other/learning_in_university/" data-id="ciewuv0zi0013z0pj1quq823m" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/01/27/other/learning_in_university/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-system/apache_htpasswd" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
+          HashMap的两种排序方式
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/19/system/apache_htpasswd/">Apache htpasswd命令</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/01/19/system/apache_htpasswd/">
-      <time datetime="2015-01-18T16:00:00.000Z" itemprop="datePublished">2015-01-19</time>
+      </div>
     </a>
-  </div>
+  
+  
+    <a href="/2015/01/27/other/learning_in_university/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">大学没有教给你的最难一课</div>
+    </a>
+  
+</nav>
 
 
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/system/">system</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>在Linux主机中，为了保护站点的目录安全，通常会通过htaccess文件对目录添加密码来进行保护，如果忘记密码则可以通过htpasswd命令修改密码。</p>
-<p>apache htpasswd选项参数:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">htpasswd [-cmdpsD] passwordfile username</span><br><span class="line">htpasswd -b[cmdpsD] passwordfile username password</span><br><span class="line">htpasswd -n[mdps] username</span><br><span class="line">htpasswd -nb[mdps] username password</span><br></pre></td></tr></table></figure></p>
-<p>apache htpasswd命令选项参数说明:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-c 创建一个加密文件</span><br><span class="line">-n 不更新加密文件，只将apache htpasswd命令加密后的用户名密码显示在屏幕上</span><br><span class="line">-m 默认apache htpassswd命令采用MD5算法对密码进行加密</span><br><span class="line"><span class="operator">-d</span> apache htpassswd命令采用CRYPT算法对密码进行加密</span><br><span class="line">-p apache htpassswd命令不对密码进行进行加密，即明文密码</span><br><span class="line"><span class="operator">-s</span> apache htpassswd命令采用SHA算法对密码进行加密</span><br><span class="line">-b 在apache htpassswd命令行中一并输入用户名和密码而不是根据提示输入密码</span><br><span class="line">-D 删除指定的用户</span><br></pre></td></tr></table></figure></p>
-<h2 id="apache_htpasswd例子">apache htpasswd例子</h2><p>1、如何利用htpasswd命令添加用户？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -bc .passwd tonyzhang pass</span><br></pre></td></tr></table></figure></p>
-<p>在bin目录下生成一个.passwd文件，用户名tonyzhang ，密码：pass，默认采用MD5加密方式</p>
-<p>2、如何在原有密码文件中增加下一个用户？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -b .passwd onlyzq pass</span><br></pre></td></tr></table></figure></p>
-<p>去掉c选项，即可在第一个用户之后添加第二个用户，依此类推</p>
-<p>3、如何不更新密码文件，只显示加密后的用户名和密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -nb tonyzhang pass</span><br></pre></td></tr></table></figure></p>
-<p>不更新.passwd文件，只在屏幕上输出用户名和经过加密后的密码</p>
-<p>4、如何利用htpasswd命令删除用户名和密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -D .passwd tonyzhang</span><br></pre></td></tr></table></figure></p>
-<p>5、如何利用htpasswd命令修改密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -D .passwd tonyzhang</span><br><span class="line">htpasswd -b .passwd tonyzhang pass</span><br></pre></td></tr></table></figure></p>
-<p>即先使用htpasswd删除命令删除指定用户，再利用htpasswd添加用户命令创建用户即可实现修改密码的功能。</p>
-<p>文章链接：<a href="http://onlyzq.blog.51cto.com/1228/557593" target="_blank" rel="external">http://onlyzq.blog.51cto.com/1228/557593</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-id="ciewuv0z3000lz0pj7yijqhzy" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache/">apache</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
 
 
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/" data-title="MapReduce 计数器简介" data-url="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
 
-    
-      <article id="post-other/ps_auto" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/27/other/ps_auto/">Photoshop自动批处理</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/27/other/ps_auto/">
-      <time datetime="2014-11-26T16:00:00.000Z" itemprop="datePublished">2014-11-27</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/travel/">travel</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <ol>
-<li>首先打开一张图片，然后找到动作窗口，点击录制按钮<br><img src="/images/ps/1.png" alt=""></li>
-<li>接下来就是你所要对图片做的批量操作，记得要最后关闭图片，录制完成后点击结束按钮<br><img src="/images/ps/2.png" alt=""></li>
-<li>所有的动作都已经完成，然后我们将批量处理一些图片，在文件中找到自动-》批处理<br><img src="/images/ps/3.png" alt=""></li>
-<li>在打开的对话框中选择源文件夹，然后点击确定执行该批处理<br><img src="/images/ps/4.png" alt=""></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/27/other/ps_auto/" data-id="ciewuv0z9000tz0pjx75d2otl" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2014/11/27/other/ps_auto/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Photoshop/">Photoshop</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-travel/macau" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/26/travel/macau/">澳门小记</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/26/travel/macau/">
-      <time datetime="2014-11-25T16:00:00.000Z" itemprop="datePublished">2014-11-26</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/travel/">travel</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>最近一直忙着写论文，但是长时间的三点一线实在是太无聊，想到自己的澳门签注马上就要过期了，于是联系同学一起去澳门玩玩，想了很久的澳门之行也终于成行。本来想从深圳经蛇口港直接去澳门来着，不过在珠海的同学说我们直接过去的话就没法联系了，因此还是从蛇口港直接出发去珠海再从珠海港经过拱北口岸过关。图片都是我用手机拍的，没有进行后期的调教。<br>深圳蛇口港，逆光拍的<br><img src="/images/macau/1.jpg" alt=""><br>到珠海了，灯塔<br><img src="/images/macau/2.jpg" alt=""><br>远处是正在修建的港珠澳大桥，记得在《超级工程》记录片中看到过关于港珠澳大桥的介绍，非常震撼。<br><img src="/images/macau/3.jpg" alt=""><br>珠海的拱北口岸，因为是周六的原因，人非常多，过关排队花了3个小时，心情非常不爽，这个效率太低了<br><img src="/images/macau/4.jpg" alt=""><br>终于顺利过关，一出关口就是各大赌场的免费接站巴士，墙上到处都是赌博的广告，赌场的称号名副其实。<br><img src="/images/macau/5.jpg" alt=""><br>我们先去的新普京，直接坐的他们家的车，这张外景图是后来拍的，有点发虚，夜景非常漂亮<br><img src="/images/macau/6.jpg" alt=""><br>出了新葡京来到新马路，人超多，路的两旁全是各种名店，卖吃的也比较多<br><img src="/images/macau/7.jpg" alt=""><br>忘记这个叫啥了，好象是叫玫瑰教堂，天很蓝<br><img src="/images/macau/8.jpg" alt=""><br>人山人海<br><img src="/images/macau/9.jpg" alt=""><br>远处就是大三巴牌坊<br><img src="/images/macau/10.jpg" alt=""><br>大三巴牌坊<br><img src="/images/macau/11.jpg" alt=""><br><img src="/images/macau/12.jpg" alt=""><br><img src="/images/macau/13.jpg" alt=""><br>从大三巴牌坊俯瞰<br><img src="/images/macau/14.jpg" alt=""><br><img src="/images/macau/15.jpg" alt=""><br><img src="/images/macau/16.jpg" alt=""><br>澳门距记手信特别多，很多人都去买，但是我觉得不怎么好吃<br><img src="/images/macau/17.jpg" alt=""><br>葡式蛋挞，非常好吃，澳门特色之一<br><img src="/images/macau/18.jpg" alt=""><br>澳门电信发的各种赌场广告短信<br><img src="/images/macau/19.jpg" alt=""><br>新八百伴，就一个大型商场，进去稍微逛了一下<br><img src="/images/macau/20.jpg" alt=""><br>永利，和拉斯维加斯的永利是一样的建筑<br><img src="/images/macau/21.jpg" alt=""><br>威尼斯人<br><img src="/images/macau/22.jpg" alt=""><br><img src="/images/macau/23.jpg" alt=""><br>赌场内部，偷拍的，赌场内部是不允许拍照的，在威尼斯人的赌场中都是用港币，不支持澳门元和人民币，这让我很诧异，另外赌场的楼顶上是密密麻麻的摄像头，除了老虎机外，赌桌至少要下注300，对此我只能做个看客了。<br><img src="/images/macau/24.jpg" alt=""><br><img src="/images/macau/25.jpg" alt=""><br><img src="/images/macau/26.jpg" alt=""><br>威尼斯人非常大，这是大运河购物中心，人造的天空非常美丽，让你完全忘记外面是什么时间，全球各大品牌在此都有店铺，非常适合购物<br><img src="/images/macau/27.jpg" alt=""><br>小船叫贡多拉，和意大利威尼斯中的小船一样的外形，船夫会用貌似意大利语给你唱歌，反正我是没听懂，票价倒是不贵，100把，不过我是觉得坐在那上面被四周的游客俯视，感觉好诡异<br><img src="/images/macau/28.jpg" alt=""><br><img src="/images/macau/29.jpg" alt=""><br><img src="/images/macau/30.jpg" alt=""><br><img src="/images/macau/31.jpg" alt=""><br>哈苏相机，贵的吓人<br><img src="/images/macau/32.jpg" alt=""><br>回去的路上拍到的夜景<br><img src="/images/macau/33.jpg" alt=""><br>珠海外港码头的黄昏<br><img src="/images/macau/34.jpg" alt=""><br>一路下来感觉还好，就是大部分时间都花到了过关排队上，前前后后四次过关检查，效率低下，影响心情。澳门的博彩业很发达，自从澳门政府开放赌场经营权以来，很多拉斯维加斯的大鳄都来澳门投资赌场，像永利、威尼斯人等等。话说威尼斯人真的好大，酒店、赌场、购物、展会、演唱会等等都可以再酒店内举行，设施非常完善。我去的那天正好赶上邹市明的拳击比赛，在威尼斯人的金光综艺馆。另外威尼斯人也在显著位置宣传罗志祥、蔡琴的演唱会，看来很多大型娱乐活动都把威尼斯人作为首选地点。一天的时间游览是非常短暂的，很多地方都没去，也没有去一些澳门的小街小巷，希望下次有机会再去吧。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/26/travel/macau/" data-id="ciewuv0yb0000z0pjkvz4aunu" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2014/11/26/travel/macau/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/澳门/">澳门</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/3/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/5/">下一页 &raquo;</a>
-      </nav>
-    </section>
+</section>
       
         <aside id="sidebar">
   
