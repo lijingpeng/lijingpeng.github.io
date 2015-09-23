@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        24
+        25
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,85 @@
 
       
       <section id="main">
+      <article id="post-opensource/flask-example-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/opensource/flask-example-md/">Flask microframework example</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/opensource/flask-example-md/">
+      <time datetime="2015-09-03T03:25:14.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>NOTE: This article was revised in September 2014 to be in sync with current versions of Python and Flask.<br>If you followed the previous chapter you should have a fully working, yet very simple web application that has the following file structure:<br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">microblog<span class="string">\</span></span><br><span class="line">  flask<span class="string">\</span></span><br><span class="line">    &lt;virtual environment files&gt;</span><br><span class="line">  app<span class="string">\</span></span><br><span class="line">    static<span class="string">\</span></span><br><span class="line">    templates<span class="string">\</span></span><br><span class="line">    __init__.py</span><br><span class="line">    views.py</span><br><span class="line">  tmp<span class="string">\</span></span><br><span class="line">  run.py</span><br></pre></td></tr></table></figure></p>
+<p>To run the application you execute the run.py script and then open the<a href="http://localhost:5000" target="_blank" rel="external">http://localhost:5000</a> URL on your web browser.</p>
+<p>We are picking up exactly from where we left off, so you may want to make sure you have the above application correctly installed and working.</p>
+<h3 id="1-_Why_we_need_templates">1. Why we need templates</h3><p>Let’s consider how we can expand our little application.</p>
+<p>We want the home page of our microblogging app to have a heading that welcomes the logged in user, that’s pretty standard for applications of this kind. Ignore for now the fact that we have no way to log a user in, I’ll present a workaround for this issue in a moment.</p>
+<p>An easy option to output a nice and big heading would be to change our view function to output HTML, maybe something like this:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> app <span class="keyword">import</span> app</span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/')</span></span><br><span class="line"><span class="decorator">@app.route('/index')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    user = &#123;<span class="string">'nickname'</span>: <span class="string">'Miguel'</span>&#125;  <span class="comment"># fake user</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'''</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;title&gt;Home Page&lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;h1&gt;Hello, '''</span> + user[<span class="string">'nickname'</span>] + <span class="string">'''&lt;/h1&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line">'''</span></span><br></pre></td></tr></table></figure></p>
+<p>Give the application a try to see how this looks in your browser.</p>
+<p>Since we don’t have support for users yet I have resorted to using a placeholder user object, sometimes called fake or mock object. This allows us to concentrate on certain aspects of our application that depend on parts of the system that haven’t been built yet.</p>
+<p>I hope you agree with me that the solution used above to deliver HTML to the browser is very ugly. Consider how complex the code will become if you have to return a large and complex HTML page with lots of dynamic content. And what if you need to change the layout of your web site in a large app that has dozens of views, each returning HTML directly? This is clearly not a scalable option.</p>
+<h3 id="2-_Templates_to_the_rescue">2. Templates to the rescue</h3><p>If you could keep the logic of your application separate from the layout or presentation of your web pages things would be much better organized, don’t you think? You could even hire a web designer to create a killer web site while you code the site’s behaviors in Python. Templates help implement this separation.</p>
+<p>Let’s write our first template (file app/templates/index.html):<br><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>&#123;&#123; title &#125;&#125; - microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Hello, &#123;&#123; user.nickname &#125;&#125;!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>As you see above, we just wrote a mostly standard HTML page, with the only difference that there are some placeholders for the dynamic content enclosed in {{ ... }} sections.<br></p>
+<p>Now let’s see how we use this template from our view function (file app/views.py):<br><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> render_template</span><br><span class="line"><span class="keyword">from</span> app <span class="keyword">import</span> app</span><br><span class="line"></span><br><span class="line"><span class="decorator">@app.route('/')</span></span><br><span class="line"><span class="decorator">@app.route('/index')</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    user = &#123;<span class="string">'nickname'</span>: <span class="string">'Miguel'</span>&#125;  <span class="comment"># fake user</span></span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">'index.html'</span>,</span><br><span class="line">                           title=<span class="string">'Home'</span>,</span><br><span class="line">                           user=user)</span><br></pre></td></tr></table></figure></p>
+<p>Try the application at this point to see how the template works. Once you have the rendered page in your browser you may want to view the source HTML and compare it against the original template.</p>
+<p>To render the template we had to import a new function from the Flask framework calledrender_template. This function takes a template filename and a variable list of template arguments and returns the rendered template, with all the arguments replaced.<br><br>Under the covers, the render_template function invokes the Jinja2 templating engine that is part of the Flask framework. Jinja2 substitutes {{...}} blocks with the corresponding values provided as template arguments.<br><br></p>
+<h3 id="3-_Control_statements_in_templates">3. Control statements in templates</h3><p>The Jinja2 templates also support control statements, given inside {%...%} blocks. Let’s add an if statement to our template (file app/templates/index.html):<br><br><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    &#123;% if title %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>&#123;&#123; title &#125;&#125; - microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Welcome to microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Hello, &#123;&#123; user.nickname &#125;&#125;!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Now our template is a bit smarter. If the view function forgets to define a page title then instead of showing an empty title the template will provide its own title. Feel free to remove the titleargument in the render_template call of our view function to see how the conditional statement works.</p>
+<h3 id="4-_Loops_in_templates">4. Loops in templates</h3><p>The logged in user in our microblog application will probably want to see recent posts from followed users in the home page, so let’s see how we can do that.</p>
+<p>To begin, we use our handy fake object trick to create some users and some posts to show (fileapp/views.py):<br><br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    user = &#123;<span class="string">'nickname'</span>: <span class="string">'Miguel'</span>&#125;  <span class="comment"># fake user</span></span><br><span class="line">    posts = [  <span class="comment"># fake array of posts</span></span><br><span class="line">        &#123; </span><br><span class="line">            <span class="string">'author'</span>: &#123;<span class="string">'nickname'</span>: <span class="string">'John'</span>&#125;, </span><br><span class="line">            <span class="string">'body'</span>: <span class="string">'Beautiful day in Portland!'</span> </span><br><span class="line">        &#125;,</span><br><span class="line">        &#123; </span><br><span class="line">            <span class="string">'author'</span>: &#123;<span class="string">'nickname'</span>: <span class="string">'Susan'</span>&#125;, </span><br><span class="line">            <span class="string">'body'</span>: <span class="string">'The Avengers movie was so cool!'</span> </span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">"index.html"</span>,</span><br><span class="line">                           title=<span class="string">'Home'</span>,</span><br><span class="line">                           user=user,</span><br><span class="line">                           posts=posts)</span><br></pre></td></tr></table></figure></p>
+<p>To represent user posts we are using a list, where each element has author and body fields. When we get to implement a real database we will preserve these field names, so we can design and test our template using the fake objects without having to worry about updating it when we move to a database.</p>
+<p>On the template side we have to solve a new problem. The list can have any number of elements, it will be up to the view function to decide how many posts need to be presented. The template cannot make any assumptions about the number of posts, so it needs to be prepared to render as many posts as the view sends.</p>
+<p>So let’s see how we do this using a for control structure (file app/templates/index.html):<br><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">    &#123;% if title %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>&#123;&#123; title &#125;&#125; - microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">title</span>&gt;</span>Welcome to microblog<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Hi, &#123;&#123; user.nickname &#125;&#125;!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">    &#123;% for post in posts %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>&#123;&#123; post.author.nickname &#125;&#125; says: <span class="tag">&lt;<span class="title">b</span>&gt;</span>&#123;&#123; post.body &#125;&#125;<span class="tag">&lt;/<span class="title">b</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Simple, right? Give it a try, and be sure to play with adding more content to the posts array.</p>
+<h3 id="5-_Template_inheritance">5. Template inheritance</h3><p>We have one more topic to cover before we close for the day. Our microblog web application will need to have a navigation bar at the top of the page with a few links. Here you will get the link to edit your profile, to login, logout, etc.</p>
+<p>We can add a navigation bar to our index.html template, but as our application grows we will be needing to implement more pages, and this navigation bar will have to be copied to all of them. Then you will have to keep all these identical copies of the navigation bar in sync, and that could become a lot of work if you have a lot of pages and templates.</p>
+<p>Instead, we can use Jinja2’s template inheritance feature, which allows us to move the parts of the page layout that are common to all templates and put them in a base template from which all other templates are derived.</p>
+<p>So let’s define a base template that includes the navigation bar and also the bit of title logic we implemented earlier (file app/templates/base.html):<br><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &#123;% if title %&#125;</span><br><span class="line">    &lt;title&gt;&#123;&#123; title &#125;&#125; - microblog&lt;/title&gt;</span><br><span class="line">    &#123;% else %&#125;</span><br><span class="line">    &lt;title&gt;Welcome to microblog&lt;/title&gt;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;div&gt;Microblog: &lt;a href="/index"&gt;Home&lt;/a&gt;&lt;/div&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &#123;% block content %&#125;&#123;% endblock %&#125;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>In this template we use the block control statement to define the place where the derived templates can insert themselves. Blocks are given a unique name, and their content can be replaced or enhanced in derived templates.</p>
+<p>And now what’s left is to modify our index.html template to inherit from base.html (fileapp/templates/index.html):<br><br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;% extends "base.html" %&#125;</span><br><span class="line">&#123;% block content %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Hi, &#123;&#123; user.nickname &#125;&#125;!<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">    &#123;% for post in posts %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="title">div</span>&gt;</span><span class="tag">&lt;<span class="title">p</span>&gt;</span>&#123;&#123; post.author.nickname &#125;&#125; says: <span class="tag">&lt;<span class="title">b</span>&gt;</span>&#123;&#123; post.body &#125;&#125;<span class="tag">&lt;/<span class="title">b</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line">    &#123;% endfor %&#125;</span><br><span class="line">&#123;% endblock %&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Since the base.html template will now take care of the general page structure we have removed those elements from this one and left only the content part. The extends block establishes the inheritance link between the two templates, so that Jinja2 knows that when it needs to renderindex.html it needs to include it inside base.html. The two templates have matching blockstatements with name content, and this is how Jinja2 knows how to combine the two into one. When we get to write new templates we will also create them as extensions to base.html.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/opensource/flask-example-md/" data-id="ciewbgupo000zuspj171sufkh" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/opensource/flask-example-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/falsk-restful/">falsk, restful</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-opensource/input-font-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -162,12 +241,69 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="ciew9a1bd000wrvpjbbjxivxa" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="ciewbgupm000wuspjy7qg2ok6" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/opensource/input-font-md/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/font/">font</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-system/pptp_vpn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/05/14/system/pptp_vpn/">PPTP VPN搭建</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/05/14/system/pptp_vpn/">
+      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/system/">system</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>本文介绍在Linux下搭建VPN的过程<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="keyword">if</span> [ `id -u` <span class="operator">-ne</span> <span class="number">0</span> ] </span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"please run it by root"</span></span><br><span class="line">  <span class="built_in">exit</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">apt-get -y update</span><br><span class="line"></span><br><span class="line">apt-get -y install pptpd || &#123;</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"could not install pptpd"</span> </span><br><span class="line">  <span class="built_in">exit</span> <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/ppp/options.pptpd &lt;&lt;END</span><br><span class="line">name pptpd</span><br><span class="line">refuse-pap</span><br><span class="line">refuse-chap</span><br><span class="line">refuse-mschap</span><br><span class="line">require-mschap-v2</span><br><span class="line">require-mppe-<span class="number">128</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">8.8</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">4.4</span></span><br><span class="line">proxyarp</span><br><span class="line">lock</span><br><span class="line">nobsdcomp </span><br><span class="line">novj</span><br><span class="line">novjccomp</span><br><span class="line">nologfd</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/pptpd.conf &lt;&lt;END</span><br><span class="line">option /etc/ppp/options.pptpd</span><br><span class="line">logwtmp</span><br><span class="line">localip <span class="number">192.168</span>.<span class="number">2.1</span></span><br><span class="line">remoteip <span class="number">192.168</span>.<span class="number">2.10</span>-<span class="number">100</span></span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">cat &gt;&gt; /etc/sysctl.conf &lt;&lt;END</span><br><span class="line">net.ipv4.ip_forward=<span class="number">1</span></span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line">iptables-save &gt; /etc/iptables.down.rules</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">2.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE</span><br><span class="line"></span><br><span class="line">iptables -I FORWARD <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">2.0</span>/<span class="number">24</span> -p tcp --syn -i ppp+ -j TCPMSS --set-mss <span class="number">1300</span></span><br><span class="line"></span><br><span class="line">iptables-save &gt; /etc/iptables.up.rules</span><br><span class="line"></span><br><span class="line">cat &gt;&gt;/etc/ppp/pptpd-options&lt;&lt;EOF</span><br><span class="line">pre-up iptables-restore &lt; /etc/iptables.up.rules</span><br><span class="line">post-down iptables-restore &lt; /etc/iptables.down.rules</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/ppp/chap-secrets &lt;&lt;END</span><br><span class="line"><span class="built_in">test</span> pptpd <span class="built_in">test</span> *</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">service pptpd restart</span><br><span class="line"></span><br><span class="line">netstat -lntp</span><br><span class="line"></span><br><span class="line"><span class="built_in">exit</span> <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>实际使用中需要按照需要修改本地IP地址即可，一般情况自动安装和配置是成功的，但是在我的实际使用中使用手机网络连接的时候是没问题的，但是使用电脑连接的时候还是出现无法连接的情况，查看日志如下：</p>
+<p>Starting negotiation on /dev/pts/1<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""> <endpoint [mac:00:16:3e:d8:d7:39]="">]<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""><br>…<br>LCP: timeout sending Config-Requests<br>Connection terminated.<br>这个可能是学校路由器没有采用PPTP穿透吧</mrru></accomp></pcomp></magic></auth></asyncmap></endpoint></mrru></accomp></pcomp></magic></auth></asyncmap></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="ciewbguoy0005uspjb8ddm56b" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a></li></ul>
 
     </footer>
   </div>
@@ -223,69 +359,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="ciew9a1ak0000rvpjk4fjxkdd" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="ciewbguoo0000uspjtck4sfhw" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/05/14/system/shadowsocks/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-system/pptp_vpn" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/14/system/pptp_vpn/">PPTP VPN搭建</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/05/14/system/pptp_vpn/">
-      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/system/">system</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>本文介绍在Linux下搭建VPN的过程<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line"><span class="keyword">if</span> [ `id -u` <span class="operator">-ne</span> <span class="number">0</span> ] </span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"please run it by root"</span></span><br><span class="line">  <span class="built_in">exit</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">apt-get -y update</span><br><span class="line"></span><br><span class="line">apt-get -y install pptpd || &#123;</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"could not install pptpd"</span> </span><br><span class="line">  <span class="built_in">exit</span> <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/ppp/options.pptpd &lt;&lt;END</span><br><span class="line">name pptpd</span><br><span class="line">refuse-pap</span><br><span class="line">refuse-chap</span><br><span class="line">refuse-mschap</span><br><span class="line">require-mschap-v2</span><br><span class="line">require-mppe-<span class="number">128</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">8.8</span></span><br><span class="line">ms-dns <span class="number">8.8</span>.<span class="number">4.4</span></span><br><span class="line">proxyarp</span><br><span class="line">lock</span><br><span class="line">nobsdcomp </span><br><span class="line">novj</span><br><span class="line">novjccomp</span><br><span class="line">nologfd</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/pptpd.conf &lt;&lt;END</span><br><span class="line">option /etc/ppp/options.pptpd</span><br><span class="line">logwtmp</span><br><span class="line">localip <span class="number">192.168</span>.<span class="number">2.1</span></span><br><span class="line">remoteip <span class="number">192.168</span>.<span class="number">2.10</span>-<span class="number">100</span></span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">cat &gt;&gt; /etc/sysctl.conf &lt;&lt;END</span><br><span class="line">net.ipv4.ip_forward=<span class="number">1</span></span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">sysctl -p</span><br><span class="line"></span><br><span class="line">iptables-save &gt; /etc/iptables.down.rules</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">2.0</span>/<span class="number">24</span> -o eth0 -j MASQUERADE</span><br><span class="line"></span><br><span class="line">iptables -I FORWARD <span class="operator">-s</span> <span class="number">192.168</span>.<span class="number">2.0</span>/<span class="number">24</span> -p tcp --syn -i ppp+ -j TCPMSS --set-mss <span class="number">1300</span></span><br><span class="line"></span><br><span class="line">iptables-save &gt; /etc/iptables.up.rules</span><br><span class="line"></span><br><span class="line">cat &gt;&gt;/etc/ppp/pptpd-options&lt;&lt;EOF</span><br><span class="line">pre-up iptables-restore &lt; /etc/iptables.up.rules</span><br><span class="line">post-down iptables-restore &lt; /etc/iptables.down.rules</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line">cat &gt;/etc/ppp/chap-secrets &lt;&lt;END</span><br><span class="line"><span class="built_in">test</span> pptpd <span class="built_in">test</span> *</span><br><span class="line">END</span><br><span class="line"></span><br><span class="line">service pptpd restart</span><br><span class="line"></span><br><span class="line">netstat -lntp</span><br><span class="line"></span><br><span class="line"><span class="built_in">exit</span> <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
-<p>实际使用中需要按照需要修改本地IP地址即可，一般情况自动安装和配置是成功的，但是在我的实际使用中使用手机网络连接的时候是没问题的，但是使用电脑连接的时候还是出现无法连接的情况，查看日志如下：</p>
-<p>Starting negotiation on /dev/pts/1<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""> <endpoint [mac:00:16:3e:d8:d7:39]="">]<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""><br>…<br>LCP: timeout sending Config-Requests<br>Connection terminated.<br>这个可能是学校路由器没有采用PPTP穿透吧</mrru></accomp></pcomp></magic></auth></asyncmap></endpoint></mrru></accomp></pcomp></magic></auth></asyncmap></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="ciew9a1at0005rvpj3x251309" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a></li></ul>
 
     </footer>
   </div>
@@ -330,67 +409,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/" data-id="ciew9a1bq0016rvpjy8utmoqv" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/" data-id="ciewbgupw0016uspjahvks7di" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-system/apache_deploy" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/20/system/apache_deploy/">Apache禁止IP直接访问并绑定域名</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/20/system/apache_deploy/">
-      <time datetime="2014-11-19T16:00:00.000Z" itemprop="datePublished">2014-11-20</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/system/">system</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername <span class="number">10.10</span>.<span class="number">20.1</span></span><br><span class="line">   &lt;Location /&gt; </span><br><span class="line">    Order Allow,Deny </span><br><span class="line">    Deny from all </span><br><span class="line">   &lt;/Location&gt; </span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername www.domain.org</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"> </span><br><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername domain.org</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
-<p>第一段配置说明我们禁止所有的直接IP访问<br>第二段配置说明我们允许通过www.domain.org来访问站点<br>第三段配置说明我们允许通过domain.org来访问站点</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/20/system/apache_deploy/" data-id="ciew9a1b2000grvpjjfrl7yp7" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2014/11/20/system/apache_deploy/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Apache/">Apache</a></li></ul>
-
     </footer>
   </div>
   
@@ -411,6 +434,24 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/09/23/algo/ml/" class="thumbnail">
+  
+    <span style="background-image:url(/images/other/ml.jpg
+)" alt="机器学习资料大汇总" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2015/09/23/algo/ml/" class="title">机器学习资料大汇总</a></p>
+              <p class="item-date"><time datetime="2015-09-22T16:00:00.000Z" itemprop="datePublished">2015-09-23</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -481,24 +522,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/09/03/algo/beta-md/" class="thumbnail">
-  
-    <span style="background-image:url(/images/algo/j8b261e3942f702b2a36d5221f9a006bf.png
-)" alt="理解Beta分布和Dirichlet分布" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2015/09/03/algo/beta-md/" class="title">理解Beta分布和Dirichlet分布</a></p>
-              <p class="item-date"><time datetime="2015-09-03T06:18:04.000Z" itemprop="datePublished">2015-09-03</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -508,7 +531,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -517,7 +540,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -526,7 +549,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 10px;">PPTP, vpn</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 20px;">PPTP, vpn</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a>
     </div>
   </div>
 
@@ -535,7 +558,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
