@@ -432,6 +432,25 @@
   </entry>
   
   <entry>
+    <title><![CDATA[Apache禁止IP直接访问并绑定域名]]></title>
+    <link href="http://www.notehub.cn/2014/11/20/other/apache_deploy/"/>
+    <id>http://www.notehub.cn/2014/11/20/other/apache_deploy/</id>
+    <published>2014-11-19T16:00:00.000Z</published>
+    <updated>2015-09-23T03:49:10.000Z</updated>
+    <content type="html"><![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername <span class="number">10.10</span>.<span class="number">20.1</span></span><br><span class="line">   &lt;Location /&gt; </span><br><span class="line">    Order Allow,Deny </span><br><span class="line">    Deny from all </span><br><span class="line">   &lt;/Location&gt; </span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"></span><br><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername www.domain.org</span><br><span class="line">&lt;/VirtualHost&gt;</span><br><span class="line"> </span><br><span class="line">&lt;VirtualHost <span class="number">10.10</span>.<span class="number">20.1</span>:<span class="number">80</span>&gt;</span><br><span class="line">   ServerAdmin webmaster@userver</span><br><span class="line">   DocumentRoot /var/www</span><br><span class="line">   Servername domain.org</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>第一段配置说明我们禁止所有的直接IP访问<br>第二段配置说明我们允许通过www.domain.org来访问站点<br>第三段配置说明我们允许通过domain.org来访问站点</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class=]]>
+    </summary>
+    
+      <category term="Apache" scheme="http://www.notehub.cn/tags/Apache/"/>
+    
+      <category term="other" scheme="http://www.notehub.cn/categories/other/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Wordpress替换fonts.googleapis.com]]></title>
     <link href="http://www.notehub.cn/2014/11/14/other/google_api_replace/"/>
     <id>http://www.notehub.cn/2014/11/14/other/google_api_replace/</id>
@@ -565,57 +584,6 @@
     </summary>
     
       <category term="linux, ldd, 依赖关系" scheme="http://www.notehub.cn/tags/linux-ldd-%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Github pages 搭建个人博客并绑定域名]]></title>
-    <link href="http://www.notehub.cn/2014/06/05/config/gitpages/"/>
-    <id>http://www.notehub.cn/2014/06/05/config/gitpages/</id>
-    <published>2014-06-04T16:00:00.000Z</published>
-    <updated>2015-09-03T01:54:20.000Z</updated>
-    <content type="html"><![CDATA[<p>目前，github下pelican搭建的极简主义的博客越来越受到大家的欢迎，本文介绍在github中一个仓库同时保存Markdown博客主内容和HTML网页，并绑定域名。 我们将markdown文件保存在仓库的master分支中，将HTML网页保存在gh-pages分支中，并将域名绑定到gh-pages分支，下面是操作步骤：</p>
-<h4 id="1-_首先在github创建仓库">1. 首先在github创建仓库</h4><p>并不局限于username.github.com这种的顶级域名仓库，如果想创建类似blog.example.com的博客，直接创建一个名字为blog的仓库即可。</p>
-<h4 id="2-_克隆到本地：">2. 克隆到本地：</h4><pre><code>git clone git@github<span class="class">.com</span>:yourusername/blog<span class="class">.git</span> 
-</code></pre><h4 id="3-_在克隆后的blog目录中初始化pelican工作目录">3. 在克隆后的blog目录中初始化pelican工作目录</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> blog  </span><br><span class="line">pelican-quickstart</span><br></pre></td></tr></table></figure>
-<p>这样，本地blog目录将会有以下目录结构：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">content  </span><br><span class="line">develop_server.sh*  </span><br><span class="line">fabfile.py  </span><br><span class="line">Makefile  </span><br><span class="line">output  </span><br><span class="line">pelicanconf.py  </span><br><span class="line">pelicanconf.pyc   </span><br><span class="line">publishconf.py  </span><br><span class="line">.git</span><br></pre></td></tr></table></figure></p>
-<p>其中.git表示本目录被git所管理，因为我们知道markdown所写的内容必须放到content下，<strong>因此我们可以将.git目录拷贝到content目录</strong></p>
-<pre><code>cp -r <span class="class">.git</span> <span class="attribute">content</span>/
-</code></pre><p>这样就确保我们的md文件将会被同步到github仓库的master分支</p>
-<h4 id="4-_创建分支">4. 创建分支</h4><p>进入content目录，并创建gh-pages分支（必须是这个分支名字）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b gh-pages  </span><br><span class="line">git push -u origin gh-pages  </span><br><span class="line">git checkout master</span><br></pre></td></tr></table></figure></p>
-<p><strong>在这一步骤中，只要我们自己创建gh-pages分支并同步到远端的时候，github会自动为我们建立一个可以访问的URL地址，格式是：<a href="http://username.github.io/blog" target="_blank" rel="external">http://username.github.io/blog</a></strong></p>
-<h4 id="5-_同步静态网站到分支">5. 同步静态网站到分支</h4><p>pelican处理markdown生成的html文件将会放到output目录中，因此我们将gh-pages的checkout到该目录，以后html更新后，只需要在该目录下push即可。</p>
-<p>克隆分支，在blog目录下：</p>
-<pre><code>git clone -<span class="tag">b</span> gh-pages git@github<span class="class">.com</span>:username/blog<span class="class">.git</span> output
-</code></pre><h4 id="6-_测试">6. 测试</h4><ul>
-<li>在content目录下随便写一篇文章，例如example.md<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br><span class="line">git add example.md</span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>这将会把该md文件同步到远端主分支，起到一定的备份作用</p>
-<ul>
-<li>退出到blog目录下<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make html</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>生成HTML文件到output目录</p>
-<ul>
-<li>到output目录下<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br><span class="line">git add .</span><br><span class="line">git push origin gh-pages</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>这样就将网页同步到gh-pages分支了，打开浏览器，访问<br><a href="http://username.github.io/blog" target="_blank" rel="external">http://username.github.io/blog</a><br>看看是不是能访问了</p>
-<h4 id="7-_绑定域名">7. 绑定域名</h4><ul>
-<li>在DNS解析商那设置二级域名，例如本例中的blog，添加CNAME，指向username.github.io.</li>
-<li>在output目录下创建CNAME文件，内容为要指向的域名，例如：blog.example.com，push到远端gh-pages分支即可。</li>
-</ul>
-<h4 id="8-_Notice">8. Notice</h4><ul>
-<li>域名解析需要一定的时间才能在全球生效，设置完域名解析之后请稍后哦</li>
-<li>文中的username和example需要替换成你自己的项目和域名</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>目前，github下pelican搭建的极简主义的博客越来越受到大家的欢迎，本文介绍在github中一个仓库同时保存Markdown博客主内容和HTML网页，并绑定域名。 我们将markdown文件保存在仓库的master分支中，将HTML网页保存在gh-pages分支中，]]>
-    </summary>
-    
-      <category term="github, pages, blog, 域名" scheme="http://www.notehub.cn/tags/github-pages-blog-%E5%9F%9F%E5%90%8D/"/>
     
   </entry>
   
