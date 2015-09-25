@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        36
+        37
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,76 @@
 
       
       <section id="main">
+      <article id="post-algo/mapreduce/sql_mapjoin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/02/06/algo/mapreduce/sql_mapjoin/">云梯表Join的倾斜问题以及解决方法</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/02/06/algo/mapreduce/sql_mapjoin/">
+      <time datetime="2015-02-05T16:00:00.000Z" itemprop="datePublished">2015-02-06</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/SQL/">SQL</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h3 id="什么是倾斜问题,_问题症状">什么是倾斜问题, 问题症状</h3><p>写HQL语句的时候常常会遇到表Join的情况，一个简单的Join会被Hive解释成一个MapReduce任务，Map端分别读取两个表的数据，Reduce做真正的Join操作。如果执行的过程中，如果发现有些Reduce任务比其他的Reduce任务慢很多，往往是发生了倾斜问题。</p>
+<h3 id="问题分析">问题分析</h3><p>举个栗子：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">select</span><br><span class="line">    a.*,</span><br><span class="line">    b.cat_name</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">    dim_auction a</span><br><span class="line"><span class="keyword">join</span></span><br><span class="line">    dim_category b</span><br><span class="line"><span class="keyword">on</span> a.cat_id=b.cat_id</span></span><br></pre></td></tr></table></figure></p>
+<p>Join会被Hive解释成一个MapReduce任务时，Map端输出的记录是以Join的条件为Key的，即这些Map生成的Key都是 cat_id。随后，这些cat_id被Hash到多个Reduce任务中，来完成真正Join。所有拥有相同cat_id的记录一定会被分配到同一个 Reducer中。</p>
+<p>但是每个cat_id多对应的记录数是不一样的，连衣裙类目的数据一定很多，钟点工类目的数据就很少。如果某个Reducer比较悲催，分到了连衣裙类目，则其处理的数据量就会很大，最后表现在处理时间拖后腿的情况。</p>
+<h4 id="解决方法1_—_MapJoin">解决方法1 — MapJoin</h4><p>一个常用的解决手段是使用MapJoin，这种手段适合于关联的两个表有一个较小的情况。其原理是，把Join动作提前到Map端，而不是Reduce端。在Map的时候，对于大表，我们还是每个Map装载这个表的一部分，对于小表，我们把它放到每个Map中。这样每个Map都拥有小表的所有记录，可以在本地进行Join操作了。具体的，在SQL中加入这样一个Hint就OK了：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">select <span class="comment">/*\+ MAPJOIN(b) \*/</span></span><br><span class="line">   a.*,</span><br><span class="line">   b.cat_name</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">   dim_auction a</span><br><span class="line"><span class="keyword">join</span></span><br><span class="line">   dim_category b</span><br><span class="line"><span class="keyword">on</span> a.cat_id=b.cat_id</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="解决方法2_—分而治之">解决方法2 —分而治之</h4><p>MapJoin是一个很好用的工具，但是却存在一个致命的弱点，就是其中一个表一定要比较小，能够完全装入单台机器的内存。</p>
+<p>我们看下面一个例子：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">select</span><br><span class="line">   a.*,</span><br><span class="line">   b.property_name</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">   auction_property a</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">outer</span> <span class="keyword">join</span></span><br><span class="line">(</span><br><span class="line">   select</span><br><span class="line">      *</span><br><span class="line">   <span class="keyword">from</span></span><br><span class="line">      dim_base_properties</span><br><span class="line">   <span class="keyword">where</span> ds=<span class="string">'20130620'</span></span><br><span class="line">) b</span><br><span class="line"><span class="keyword">on</span> a.property_id = b.property_id</span></span><br></pre></td></tr></table></figure></p>
+<p>auction_property表存储了每一个商品以及该商品的每一个属性。<br>dim_base_properties存储了每个属性的名称、以及一些其他元数据。<br>我们这次关联是想在auction_property表的基础上，加上每个属性的名称。和类目一样，属性ID是有倾斜的，即有一些很常用的属性，被很多宝贝都引用了。悲剧的事情是，auction_property和dim_base_properties这两个表都很大。。。</p>
+<p>解决这个问题依赖于如下的观察：导致倾斜的Key的个数往往不多，也就是说，常用的属性就那么几个，剩下的大部分属性都不常用。</p>
+<p>下面我们采用分治方法来解决这个问题：<br>第一步，找到的常用的属性。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> lingyun_property_skew</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line">select</span><br><span class="line">    a.property_id,</span><br><span class="line">    a.cnt,</span><br><span class="line">    b.property_name</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">    (</span><br><span class="line">        select</span><br><span class="line">           property_id,</span><br><span class="line">           <span class="keyword">count</span>(*) <span class="keyword">as</span> cnt</span><br><span class="line">        <span class="keyword">from</span></span><br><span class="line">            lingyun_auction_property a</span><br><span class="line">        <span class="keyword">group</span> <span class="keyword">by</span> property_id</span><br><span class="line">        <span class="keyword">order</span> <span class="keyword">by</span> cnt <span class="keyword">desc</span></span><br><span class="line">        <span class="keyword">limit</span> <span class="number">1000</span></span><br><span class="line">    ) a</span><br><span class="line"><span class="keyword">join</span></span><br><span class="line">    (</span><br><span class="line">        select</span><br><span class="line">            *</span><br><span class="line">        <span class="keyword">from</span></span><br><span class="line">            tbdw.dim_base_properties</span><br><span class="line">        <span class="keyword">where</span> ds=<span class="string">'20130620'</span></span><br><span class="line">    ) b</span><br><span class="line"><span class="keyword">on</span> a.property_id = b.property_id;</span></span><br></pre></td></tr></table></figure></p>
+<p>这里我们把auction_property表按照property_id汇总，并且找到最常用的1000个属性ID，并且查到了这些属性ID的名字。这里1000可以扩展到上万个，只要保障能够被装进内存就可以了。</p>
+<p>第二步是先解决常用属性的关联<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> lingyun_auction_property_name_temp</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line">select <span class="comment">/*+ MAPJOIN(b) */</span></span><br><span class="line">    a.*,</span><br><span class="line">    b.property_name</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">    auction_property a</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">outer</span> <span class="keyword">join</span></span><br><span class="line">    lingyun_property_skew b</span><br><span class="line"><span class="keyword">on</span> a.property_id = b.property_id;</span></span><br><span class="line"></span><br><span class="line"><span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> lingyun_auction_property_name_part1</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line">select</span><br><span class="line">    *</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">    lingyun_auction_property_name_temp</span><br><span class="line"><span class="keyword">where</span> property_name <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span>;</span></span><br></pre></td></tr></table></figure></p>
+<p>这一步我们可以使用MAPJOIN是因为lingyun_property_skew是一个小表。</p>
+<p>第三步是解决非常用属性的关联<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> lingyun_auction_property_name_part2</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line">select</span><br><span class="line">    a.auction_id,</span><br><span class="line">    a.property_id,</span><br><span class="line">    a.value_id,</span><br><span class="line">    b.property_name</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">    (</span><br><span class="line">        select</span><br><span class="line">            *</span><br><span class="line">        <span class="keyword">from</span></span><br><span class="line">            lingyun_auction_property_name_temp</span><br><span class="line">        <span class="keyword">where</span> property_name <span class="keyword">is</span> <span class="literal">null</span></span><br><span class="line">    ) a</span><br><span class="line"><span class="keyword">join</span></span><br><span class="line">    (</span><br><span class="line">        select</span><br><span class="line">            *</span><br><span class="line">        <span class="keyword">from</span></span><br><span class="line">            tbdw.dim_base_properties</span><br><span class="line">        <span class="keyword">where</span> ds=<span class="string">'20130620'</span></span><br><span class="line">    ) b</span><br><span class="line"><span class="keyword">on</span> a.property_id=b.property_id;</span></span><br></pre></td></tr></table></figure></p>
+<p>这一步不存在倾斜问题是因为可能导致倾斜的property_id已经从lingyun_auction_property_name_temp里面筛除掉了，剩下的每个property_id对应的商品数不会很多。</p>
+<p>最后把两个表Union到一起，得到最终结果。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">create</span> <span class="keyword">table</span> lingyun_auction_property_name</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line">select</span><br><span class="line">    *</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">(</span><br><span class="line">    select</span><br><span class="line">        auction_id,</span><br><span class="line">        property_id,</span><br><span class="line">        value_id,</span><br><span class="line">        property_name</span><br><span class="line">    <span class="keyword">from</span></span><br><span class="line">        lingyun_auction_property_name_part1</span><br><span class="line"></span><br><span class="line">    <span class="keyword">union</span> all</span><br><span class="line"></span><br><span class="line">    select</span><br><span class="line">        auction_id,</span><br><span class="line">        property_id,</span><br><span class="line">        value_id,</span><br><span class="line">        property_name</span><br><span class="line">    <span class="keyword">from</span></span><br><span class="line">        lingyun_auction_property_name_part2</span><br><span class="line">) a;</span></span><br></pre></td></tr></table></figure></p>
+<p>能不能再给力一点？</p>
+<p>到这里问题就解决了，但是写这些代码太复杂了，能不能再给力一点呢？<br>从上面的代码可以看出，整个流程是有规律可循的，可以被推到幕后的。<br>具体的，可以把这个逻辑放进Hive的执行计划器中，我们只需要声明需要对哪个表分治，分出来的小表有多大就可以了，例如：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">select <span class="comment">/*+ SPLITJOIN(b, 1000) */</span></span><br><span class="line">   a.*,</span><br><span class="line">   b.property_name</span><br><span class="line"><span class="keyword">from</span></span><br><span class="line">   auction_property a</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">outer</span> <span class="keyword">join</span></span><br><span class="line">(</span><br><span class="line">   select</span><br><span class="line">      *</span><br><span class="line">   <span class="keyword">from</span></span><br><span class="line">      dim_base_properties</span><br><span class="line">   <span class="keyword">where</span> ds=<span class="string">'20130620'</span></span><br><span class="line">) b</span><br><span class="line"><span class="keyword">on</span> a.property_id = b.property_id</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/" data-id="ciewwku7o0010fbpjtw8sh6bg" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-other/learning_in_university" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -212,7 +282,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/01/27/other/learning_in_university/" data-id="ciewx29fo00138dpjzk3bl9jq" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/01/27/other/learning_in_university/" data-id="ciewos1xc0006fbpjq4o6v5sm" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/01/27/other/learning_in_university/#ds-thread" class="article-comment-link">评论</a>
       
@@ -277,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-id="ciewx29fa000l8dpjm0l1zxje" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-id="ciewoy8t50008fbpjm7pwvi24" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/#ds-thread" class="article-comment-link">评论</a>
       
@@ -345,7 +415,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/12/10/algo/lift_lr/" data-id="ciewx29gw00288dpj1sczci7y" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2014/12/10/algo/lift_lr/" data-id="ciewwrz9e0013fbpj018ijswd" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2014/12/10/algo/lift_lr/#ds-thread" class="article-comment-link">评论</a>
       
@@ -403,67 +473,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/27/other/ps_auto/" data-id="ciewx29fe000t8dpjbae3u2i1" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2014/11/27/other/ps_auto/" data-id="ciewlyhnw0000fbpj0oq3o217" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2014/11/27/other/ps_auto/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Photoshop/">Photoshop</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-travel/macau" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/26/travel/macau/">澳门小记</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/26/travel/macau/">
-      <time datetime="2014-11-25T16:00:00.000Z" itemprop="datePublished">2014-11-26</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/travel/">travel</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>最近一直忙着写论文，但是长时间的三点一线实在是太无聊，想到自己的澳门签注马上就要过期了，于是联系同学一起去澳门玩玩，想了很久的澳门之行也终于成行。本来想从深圳经蛇口港直接去澳门来着，不过在珠海的同学说我们直接过去的话就没法联系了，因此还是从蛇口港直接出发去珠海再从珠海港经过拱北口岸过关。图片都是我用手机拍的，没有进行后期的调教。<br>深圳蛇口港，逆光拍的<br><img src="/images/macau/1.jpg" alt=""><br>到珠海了，灯塔<br><img src="/images/macau/2.jpg" alt=""><br>远处是正在修建的港珠澳大桥，记得在《超级工程》记录片中看到过关于港珠澳大桥的介绍，非常震撼。<br><img src="/images/macau/3.jpg" alt=""><br>珠海的拱北口岸，因为是周六的原因，人非常多，过关排队花了3个小时，心情非常不爽，这个效率太低了<br><img src="/images/macau/4.jpg" alt=""><br>终于顺利过关，一出关口就是各大赌场的免费接站巴士，墙上到处都是赌博的广告，赌场的称号名副其实。<br><img src="/images/macau/5.jpg" alt=""><br>我们先去的新普京，直接坐的他们家的车，这张外景图是后来拍的，有点发虚，夜景非常漂亮<br><img src="/images/macau/6.jpg" alt=""><br>出了新葡京来到新马路，人超多，路的两旁全是各种名店，卖吃的也比较多<br><img src="/images/macau/7.jpg" alt=""><br>忘记这个叫啥了，好象是叫玫瑰教堂，天很蓝<br><img src="/images/macau/8.jpg" alt=""><br>人山人海<br><img src="/images/macau/9.jpg" alt=""><br>远处就是大三巴牌坊<br><img src="/images/macau/10.jpg" alt=""><br>大三巴牌坊<br><img src="/images/macau/11.jpg" alt=""><br><img src="/images/macau/12.jpg" alt=""><br><img src="/images/macau/13.jpg" alt=""><br>从大三巴牌坊俯瞰<br><img src="/images/macau/14.jpg" alt=""><br><img src="/images/macau/15.jpg" alt=""><br><img src="/images/macau/16.jpg" alt=""><br>澳门距记手信特别多，很多人都去买，但是我觉得不怎么好吃<br><img src="/images/macau/17.jpg" alt=""><br>葡式蛋挞，非常好吃，澳门特色之一<br><img src="/images/macau/18.jpg" alt=""><br>澳门电信发的各种赌场广告短信<br><img src="/images/macau/19.jpg" alt=""><br>新八百伴，就一个大型商场，进去稍微逛了一下<br><img src="/images/macau/20.jpg" alt=""><br>永利，和拉斯维加斯的永利是一样的建筑<br><img src="/images/macau/21.jpg" alt=""><br>威尼斯人<br><img src="/images/macau/22.jpg" alt=""><br><img src="/images/macau/23.jpg" alt=""><br>赌场内部，偷拍的，赌场内部是不允许拍照的，在威尼斯人的赌场中都是用港币，不支持澳门元和人民币，这让我很诧异，另外赌场的楼顶上是密密麻麻的摄像头，除了老虎机外，赌桌至少要下注300，对此我只能做个看客了。<br><img src="/images/macau/24.jpg" alt=""><br><img src="/images/macau/25.jpg" alt=""><br><img src="/images/macau/26.jpg" alt=""><br>威尼斯人非常大，这是大运河购物中心，人造的天空非常美丽，让你完全忘记外面是什么时间，全球各大品牌在此都有店铺，非常适合购物<br><img src="/images/macau/27.jpg" alt=""><br>小船叫贡多拉，和意大利威尼斯中的小船一样的外形，船夫会用貌似意大利语给你唱歌，反正我是没听懂，票价倒是不贵，100把，不过我是觉得坐在那上面被四周的游客俯视，感觉好诡异<br><img src="/images/macau/28.jpg" alt=""><br><img src="/images/macau/29.jpg" alt=""><br><img src="/images/macau/30.jpg" alt=""><br><img src="/images/macau/31.jpg" alt=""><br>哈苏相机，贵的吓人<br><img src="/images/macau/32.jpg" alt=""><br>回去的路上拍到的夜景<br><img src="/images/macau/33.jpg" alt=""><br>珠海外港码头的黄昏<br><img src="/images/macau/34.jpg" alt=""><br>一路下来感觉还好，就是大部分时间都花到了过关排队上，前前后后四次过关检查，效率低下，影响心情。澳门的博彩业很发达，自从澳门政府开放赌场经营权以来，很多拉斯维加斯的大鳄都来澳门投资赌场，像永利、威尼斯人等等。话说威尼斯人真的好大，酒店、赌场、购物、展会、演唱会等等都可以再酒店内举行，设施非常完善。我去的那天正好赶上邹市明的拳击比赛，在威尼斯人的金光综艺馆。另外威尼斯人也在显著位置宣传罗志祥、蔡琴的演唱会，看来很多大型娱乐活动都把威尼斯人作为首选地点。一天的时间游览是非常短暂的，很多地方都没去，也没有去一些澳门的小街小巷，希望下次有机会再去吧。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/26/travel/macau/" data-id="ciewx29ek00008dpjfdihjm7j" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2014/11/26/travel/macau/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/澳门/">澳门</a></li></ul>
 
     </footer>
   </div>
@@ -485,6 +500,24 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/09/25/algo/ml/Feature Processing/" class="thumbnail">
+  
+    <span style="background-image:url(/images/algo/nonlinear_function1.png
+)" alt="特征处理" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2015/09/25/algo/ml/Feature Processing/" class="title">特征处理</a></p>
+              <p class="item-date"><time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -555,24 +588,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/09/03/algo/beta-a-md/" class="thumbnail">
-  
-    <span style="background-image:url(/images/algo/ssss.png
-)" alt="二项分布和Beta分布" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"></p>
-              <p class="item-title"><a href="/2015/09/03/algo/beta-a-md/" class="title">二项分布和Beta分布</a></p>
-              <p class="item-date"><time datetime="2015-09-03T06:33:26.000Z" itemprop="datePublished">2015-09-03</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -582,7 +597,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -609,7 +624,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
