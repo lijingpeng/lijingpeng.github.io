@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Archives | Frank</title>
+  <title>Feature hashing | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="计算机 网络 互联网">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Frank">
-<meta property="og:url" content="http://www.notehub.cn/archives/page/3/index.html">
+  <meta name="description" content="In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into i">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Feature hashing">
+<meta property="og:url" content="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="计算机 网络 互联网">
+<meta property="og:description" content="In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into i">
+<meta property="og:updated_time" content="2015-09-25T14:43:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Frank">
-<meta name="twitter:description" content="计算机 网络 互联网">
+<meta name="twitter:title" content="Feature hashing">
+<meta name="twitter:description" content="In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into i">
   
   
     <link rel="icon" href="favicon.png">
@@ -124,191 +125,100 @@
 </aside>
 
       
-      <section id="main">
-      <div class="archive-year-wrap">
-        <a href="/archives/2015" class="archive-year">2015</a>
+      <section id="main"><article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Feature hashing
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/25/algo/ml/feature_hashing/">
+      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
+<h3 id="Motivating_example">Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
+<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
+<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
+<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Term    Index</span><br><span class="line">John    <span class="number">1</span></span><br><span class="line">likes   <span class="number">2</span></span><br><span class="line">to      <span class="number">3</span></span><br><span class="line">watch   <span class="number">4</span></span><br><span class="line">movies  <span class="number">5</span></span><br><span class="line">Mary    <span class="number">6</span></span><br><span class="line">too     <span class="number">7</span></span><br><span class="line">also    <span class="number">8</span></span><br><span class="line">football9</span><br></pre></td></tr></table></figure></p>
+<p>to the term-document matrix</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> </span><br><span class="line"><span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
+<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
+<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
+<h3 id="Feature_vectorization_using_the_hashing_trick">Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">x :</span>= <span class="keyword">new</span> vector[N]</span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> <span class="string">features:</span></span><br><span class="line">    <span class="string">h :</span>= hash(f)</span><br><span class="line">    x[h mod N] += <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
+<p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x := <span class="keyword">new</span> <span class="built_in">vector</span>[N]</span><br><span class="line"><span class="keyword">for</span> f in features:</span><br><span class="line">    h := hash(f)</span><br><span class="line">    idx := h mod N</span><br><span class="line">    <span class="keyword">if</span> ξ(f) == <span class="number">1</span>:</span><br><span class="line">        x[idx] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        x[idx] -= <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
+<p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="ciezreers0021hjpjmazdqb0b" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/09/25/algo/ml/Feature Processing/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          特征处理
+        
       </div>
-      <section class="archives-wrap">
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    
-    <div class="archive-article-thumbnail">
-      <a href="/2015/09/03/algo/baysian-bandit-md/" class="thumbnail">
-  
-    <span style="background-image:url(/images/bb/beliefs_about_theta.png
-)" alt="Bayesian Bandits – optimizing click throughs with statistics" class="thumbnail-image"></span>
-  
-</a>
-    </div>
-    
-    <header class="archive-article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/03/algo/baysian-bandit-md/">Bayesian Bandits – optimizing click throughs with statistics</a>
-    </h1>
-  
-
-      
-        
-  <div class="archive-article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/algo/baysian-bandit-md/">
-      <time datetime="2015-09-03T05:36:48.000Z" itemprop="datePublished">9月 3</time>
     </a>
-  </div>
-
-
-      
-    </header>
-  </div>
-</article>
   
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    
-    <div class="archive-article-thumbnail">
-      <a href="/2015/09/03/dev/hive-udf-md/" class="thumbnail">
   
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-    </div>
-    
-    <header class="archive-article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/03/dev/hive-udf-md/">Hive UDF开发</a>
-    </h1>
-  
-
-      
-        
-  <div class="archive-article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/dev/hive-udf-md/">
-      <time datetime="2015-09-03T04:49:45.000Z" itemprop="datePublished">9月 3</time>
+    <a href="/2015/09/23/algo/ml/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">机器学习资料大汇总</div>
     </a>
-  </div>
+  
+</nav>
 
 
-      
-    </header>
-  </div>
+  
 </article>
-  
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    
-    <div class="archive-article-thumbnail">
-      <a href="/2015/09/03/opensource/flask-example-md/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-    </div>
-    
-    <header class="archive-article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/03/opensource/flask-example-md/">Flask microframework example</a>
-    </h1>
-  
-
-      
-        
-  <div class="archive-article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/opensource/flask-example-md/">
-      <time datetime="2015-09-03T03:25:14.000Z" itemprop="datePublished">9月 3</time>
-    </a>
-  </div>
 
 
-      
-    </header>
-  </div>
-</article>
-  
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    
-    <div class="archive-article-thumbnail">
-      <a href="/2015/09/03/opensource/input-font-md/" class="thumbnail">
-  
-    <span style="background-image:url(/images/input_mono.png
-)" alt="Input mono字体" class="thumbnail-image"></span>
-  
-</a>
-    </div>
-    
-    <header class="archive-article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/03/opensource/input-font-md/">Input mono字体</a>
-    </h1>
-  
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-title="Feature hashing" data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
 
-      
-        
-  <div class="archive-article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/opensource/input-font-md/">
-      <time datetime="2015-09-03T03:20:50.000Z" itemprop="datePublished">9月 3</time>
-    </a>
-  </div>
-
-
-      
-    </header>
-  </div>
-</article>
-  
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    
-    <div class="archive-article-thumbnail">
-      <a href="/2015/06/06/algo/feature_d/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-    </div>
-    
-    <header class="archive-article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/06/06/algo/feature_d/">机器学习中的数据清洗与特征处理综述</a>
-    </h1>
-  
-
-      
-        
-  <div class="archive-article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/06/06/algo/feature_d/">
-      <time datetime="2015-06-05T16:00:00.000Z" itemprop="datePublished">6月 6</time>
-    </a>
-  </div>
-
-
-      
-    </header>
-  </div>
-</article>
-  
-    </div></section>
-  
-      <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/page/2/">&laquo; 上一页</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/archives/page/4/">4</a><a class="page-number" href="/archives/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/archives/page/8/">8</a><a class="extend next" rel="next" href="/archives/page/4/">下一页 &raquo;</a>
-      </nav>
-    </section>
+</section>
       
         <aside id="sidebar">
   
