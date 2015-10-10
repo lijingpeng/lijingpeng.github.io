@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Li Jingpeng's site]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.notehub.cn/"/>
-  <updated>2015-10-10T06:11:10.000Z</updated>
+  <updated>2015-10-10T06:35:19.000Z</updated>
   <id>http://www.notehub.cn/</id>
   
   <author>
@@ -13,6 +13,63 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[关于Cookie]]></title>
+    <link href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/"/>
+    <id>http://www.notehub.cn/2015/10/10/internet/ad/cookie/</id>
+    <published>2015-10-09T16:00:00.000Z</published>
+    <updated>2015-10-10T06:35:19.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
+<p><img src="/images/other/cookie.jpg" alt=""></p>
+<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
+<h3 id="关于Cookie的一些知识点">关于Cookie的一些知识点</h3><ol>
+<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
+<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
+<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
+<p><img src="/images/other/cookie.jpg" alt=""></p>
+<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中]]>
+    </summary>
+    
+      <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
+    
+      <category term="internet" scheme="http://www.notehub.cn/categories/internet/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[在线广告作弊手段一览]]></title>
+    <link href="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/"/>
+    <id>http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/</id>
+    <published>2015-10-09T16:00:00.000Z</published>
+    <updated>2015-10-10T06:21:42.000Z</updated>
+    <content type="html"><![CDATA[<p>这里提到的在线广告作弊是指媒体为了刷广告流量而进行的作弊。他们的作弊手段很多， 这里介绍常见的几种。</p>
+<p>iframe是广告作弊最常用的技巧，就是在自己的网页上嵌入iframe, 大小为0x0或1×1，也就是用户不可见。通过iframe打开其他页面，在用户看不见的情况下刷流量。别看iframe简单，里面花样很多。</p>
+<h3 id="页面内嵌入本站页面的iframe">页面内嵌入本站页面的iframe</h3><p>iframe打开和当前页一样的页面地址，或本站的其他页面。 这样用户的一个浏览行为，很轻松就从1个pv翻倍变成2个pv。如果嵌入iframe多点， 就能翻3倍，4倍…。但使用这个方法很容易被发现，广告投放方，通过分析UV，独立IP等很容易就发现异常。 这是很老的方法，不过还是有些网站乐此不疲。</p>
+<h3 id="两个站点间互相嵌入对方站点页面的iframe">两个站点间互相嵌入对方站点页面的iframe</h3><p>这是比较巧妙的作弊技巧，UV，独立IP等分析方法是不能发现异常的。</p>
+<h3 id="双层iframe">双层iframe</h3><p>作弊的iframe为了不让人看见，大小只有0x0或1×1，但有些在线广告在显示时会判断浏览窗口大小，如果太小可能就不能显示。这时有些网站就采用了双层iframe技术来刷广告流量。 第一层1×1大小的iframe中又嵌入一个iframe，这个第二层iframe是正常浏览窗口大小，广告代码很难发现异常。</p>
+<p>这种作弊方式使用巧妙的，会让主页面和两个iframe使用三个不同的域名，这样因为跨域的问题， 里面的js不可能得到最外层真正的页面地址， 想抓证据都抓不到。</p>
+<h3 id="IP屏蔽">IP屏蔽</h3><p>有些站点在进行作弊时，会屏蔽北京，上海等大城市的访问，你从这些地区访问时，看不到他们的作弊代码，一切正常。等换用其他地方的代理访问时，你在他们页面里就能看到作弊用iframe代码。 这是因为很多IT，在线广告公司都在这些大城市，这种屏蔽让他们的作弊手段很难被同业发现。</p>
+<h3 id="购买垃圾流量">购买垃圾流量</h3><p>现在来自iframe，木马的垃圾流量都是明码标价在卖的，可以用这些流量来刷页面，刷广告。这种也比较难以发现。网站去刷流量目的往往比较复杂，一是刷广告流量，赚广告商和广告主的钱，二是为了alexa之类的排名，也有是为了给投资人看所谓的“业绩”。 </p>
+<p>上面谈的基本都是CPM广告方式的作弊，下面说说其他的。 </p>
+<h3 id="CPC作弊">CPC作弊</h3><p>CPC作弊其实是很简单的，只要用iframe打开点击链接即可。</p>
+<h3 id="CPA作弊">CPA作弊</h3><p>有些网站广告按CPA结算，比如注册人数等。 这种情况下，有的公司会做专门的自动注册机，保证你的注册人数疯狂上涨。</p>
+<h3 id="CPS作弊">CPS作弊</h3><p>很多人感觉CPS方式是不可能作弊的，其实这也是可以的。 </p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>这里提到的在线广告作弊是指媒体为了刷广告流量而进行的作弊。他们的作弊手段很多， 这里介绍常见的几种。</p>
+<p>iframe是广告作弊最常用的技巧，就是在自己的网页上嵌入iframe, 大小为0x0或1×1，也就是用户不可见。通过iframe打开其他页面，在用户看不见的]]>
+    </summary>
+    
+      <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
+    
+      <category term="internet" scheme="http://www.notehub.cn/categories/internet/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[合福高铁-国庆游]]></title>
@@ -780,77 +837,6 @@
       <category term="PPTP, vpn" scheme="http://www.notehub.cn/tags/PPTP-vpn/"/>
     
       <category term="system" scheme="http://www.notehub.cn/categories/system/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[HashMap的两种排序方式]]></title>
-    <link href="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/"/>
-    <id>http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/</id>
-    <published>2015-05-03T04:57:56.000Z</published>
-    <updated>2015-09-03T05:04:15.000Z</updated>
-    <content type="html"><![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;String, Integer&gt;();</span><br><span class="line">map.put(“d”, <span class="number">2</span>);</span><br><span class="line">map.put(“c”, <span class="number">1</span>);</span><br><span class="line">map.put(“b”, <span class="number">1</span>);</span><br><span class="line">map.put(“a”, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">List&lt;Map.Entry&lt;String, Integer&gt;&gt; infoIds =</span><br><span class="line"><span class="keyword">new</span> ArrayList&lt;Map.Entry&lt;String, Integer&gt;&gt;(map.entrySet());</span><br><span class="line"></span><br><span class="line"><span class="comment">//排序前</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; infoIds.size(); i++) &#123;</span><br><span class="line">String id = infoIds.get(i).toString();</span><br><span class="line">System.out.println(id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//d 2</span></span><br><span class="line"><span class="comment">//c 1</span></span><br><span class="line"><span class="comment">//b 1</span></span><br><span class="line"><span class="comment">//a 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//排序</span></span><br><span class="line">Collections.sort(infoIds, <span class="keyword">new</span> Comparator&lt;Map.Entry&lt;String, Integer&gt;&gt;() &#123;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Map.Entry&lt;String, Integer&gt; o1, Map.Entry&lt;String, Integer&gt; o2)</span> </span>&#123;</span><br><span class="line"><span class="comment">//return (o2.getValue() – o1.getValue());</span></span><br><span class="line"><span class="keyword">return</span> (o1.getKey()).toString().compareTo(o2.getKey());</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//排序后</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; infoIds.size(); i++) &#123;</span><br><span class="line">String id = infoIds.get(i).toString();</span><br><span class="line">System.out.println(id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据key排序</span></span><br><span class="line"><span class="comment">//a 3</span></span><br><span class="line"><span class="comment">//b 1</span></span><br><span class="line"><span class="comment">//c 1</span></span><br><span class="line"><span class="comment">//d 2</span></span><br><span class="line"><span class="comment">//根据value排序</span></span><br><span class="line"><span class="comment">//a 3</span></span><br><span class="line"><span class="comment">//d 2</span></span><br><span class="line"><span class="comment">//b 1</span></span><br><span class="line"><span class="comment">//c 1</span></span><br></pre></td></tr></table></figure>
-]]></content>
-    <summary type="html">
-    <![CDATA[<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class=]]>
-    </summary>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[贝叶斯理论]]></title>
-    <link href="http://www.notehub.cn/2015/04/03/algo/baysian/"/>
-    <id>http://www.notehub.cn/2015/04/03/algo/baysian/</id>
-    <published>2015-04-02T16:00:00.000Z</published>
-    <updated>2015-09-23T14:29:27.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="贝叶斯法则">贝叶斯法则</h2><hr>
-<p>机器学习的任务：在给定训练数据D时，确定假设空间H中的最佳假设。</p>
-<p>最佳假设：一种方法是把它定义为在给定数据D以及H中不同假设的先验概率的有关知识下的最可能假设。贝叶斯理论提供了一种计算假设概率的方法，基于假设的先验概率、给定假设下观察到不同数据的概率以及观察到的数据本身。</p>
-<h2 id="先验概率和后验概率">先验概率和后验概率</h2><hr>
-<p>用P(h)表示在没有训练数据前假设h拥有的初始概率。P(h)被称为h的先验概率。先验概率反映了关于h是一正确假设的机会的背景知识如果没有这一先验知识，可以简单地将每一候选假设赋予相同的先验概率。类似地，P(D)表示训练数据D的先验概率，P(D|h)表示假设h成立时D的概率。机器学习中，我们关心的是P(h|D)，即给定D时h的成立的概率，称为h的后验概率。</p>
-<h2 id="贝叶斯公式">贝叶斯公式</h2><hr>
-<p>贝叶斯公式提供了从先验概率P(h)、P(D)和P(D|h)计算后验概率P(h|D)的方法</p>
-<p>p(h|D)=P(D|H)*P(H)/P(D)</p>
-<p>P(h|D)随着P(h)和P(D|h)的增长而增长，随着P(D)的增长而减少，即如果D独立于h时被观察到的可能性越大，那么D对h的支持度越小。</p>
-<h2 id="极大后验假设">极大后验假设</h2><hr>
-<p>学习器在候选假设集合H中寻找给定数据D时可能性最大的假设h，h被称为极大后验假设（MAP）确定MAP的方法是用贝叶斯公式计算每个候选假设的后验概率，计算式如下:</p>
-<p>h_map=argmax P(h|D)=argmax (P(D|h)<em>P(h))/P(D)=argmax P(D|h)</em>p(h) (h属于集合H)</p>
-<p>最后一步，去掉了P(D)，因为它是不依赖于h的常量。</p>
-<h2 id="极大似然假设">极大似然假设</h2><hr>
-<p>在某些情况下，可假定H中每个假设有相同的先验概率，这样式子可以进一步简化，只需考虑P(D|h)来寻找极大可能假设。</p>
-<p>h_ml = argmax p(D|h)  h属于集合H</p>
-<p>P(D|h)常被称为给定h时数据D的似然度，而使P(D|h)最大的假设被称为极大似然假设。</p>
-<h2 id="举例">举例</h2><hr>
-<p>考虑一个医疗诊断问题，有两种可能的假设：（1）病人有癌症。（2）病人无癌症。样本数据来自某化验测试，它也有两种可能的结果：阳性和阴性。假设我们已经有先验知识：在所有人口中只有0.008的人患病。此外，化验测试对有病的患者有98%的可能返回阳性结果，对无病患者有97%的可能返回阴性结果。</p>
-<p>上面的数据可以用以下概率式子表示：</p>
-<p>P(cancer)=0.008,P(无cancer)=0.992</p>
-<p>P(阳性|cancer)=0.98,P(阴性|cancer)=0.02</p>
-<p>P(阳性|无cancer)=0.03，P(阴性|无cancer)=0.97</p>
-<p>假设现在有一个新病人，化验测试返回阳性，是否将病人断定为有癌症呢？我们可以来计算极大后验假设：</p>
-<p>P(阳性|cancer)p(cancer)=0.98*0.008 = 0.0078</p>
-<p>P(阳性|无cancer)<em>p(无cancer)=0.03</em>0.992 = 0.0298</p>
-<p>因此，应该判断为无癌症。</p>
-<p>贝叶斯推理的结果很大程度上依赖于先验概率，另外不是完全接受或拒绝假设，只是在观察到较多的数据后增大或减小了假设的可能性。</p>
-<h2 id="贝叶斯分类具有如下特点：">贝叶斯分类具有如下特点：</h2><hr>
-<ol>
-<li><p>贝叶斯分类并不把一个对象绝对地指派给某一类，而是通过计算得出属于某一类的概率，具有最大概率的类便是该对象所属的类；</p>
-</li>
-<li><p>一般情况下在贝叶斯分类中所有的属性都潜在地起作用，即并不是一个或几个属性决定分类，而是所有的属性都参与分类；</p>
-</li>
-<li><p>贝叶斯分类对象的属性可以是离散的、连续的，也可以是混合的。</p>
-</li>
-</ol>
-<p>贝叶斯定理给出了最小化误差的最优解决方法，可用于分类和预测。理论上，它看起来很完美，但在实际中，它并不能直接利用，它需要知道证据的确切分布概率，而实际上我们并不能确切的给出证据的分布概率。因此我们在很多分类方法中都会作出某种假设以逼近贝叶斯定理的要求。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="贝叶斯法则">贝叶斯法则</h2><hr>
-<p>机器学习的任务：在给定训练数据D时，确定假设空间H中的最佳假设。</p>
-<p>最佳假设：一种方法是把它定义为在给定数据D以及H中不同假设的先验概率的有关知识下的最可能假设。贝叶斯理论提供了一种计算假设概率的方法，]]>
-    </summary>
-    
-      <category term="贝叶斯" scheme="http://www.notehub.cn/tags/%E8%B4%9D%E5%8F%B6%E6%96%AF/"/>
-    
-      <category term="machine learning" scheme="http://www.notehub.cn/categories/machine-learning/"/>
     
   </entry>
   
