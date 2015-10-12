@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        42
+        43
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,61 @@
 
       
       <section id="main">
+      <article id="post-dev/user_define_hashmap" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/02/13/dev/user_define_hashmap/">使用自定义类型作为HashMap接口的键或值</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/02/13/dev/user_define_hashmap/">
+      <time datetime="2015-02-12T16:00:00.000Z" itemprop="datePublished">2015-02-13</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注意：如果使用了非系统类型作为key,则必须覆写equals()和hashCode()方法，否则无效。</span></span><br><span class="line"><span class="comment">// 使用自定义的类型作为键</span></span><br><span class="line"><span class="keyword">import</span> java.util.Map ;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap ;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name ;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age ;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name ;</span><br><span class="line">        <span class="keyword">this</span>.age = age ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"姓名："</span> + <span class="keyword">this</span>.name + <span class="string">"；年龄："</span> + <span class="keyword">this</span>.age ;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span></span>&#123; <span class="comment">//覆写</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>==obj)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(!(obj <span class="keyword">instanceof</span> Person))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">        Person p = (Person)obj ; <span class="comment">//向下转型</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.name.equals(p.name)&amp;&amp;<span class="keyword">this</span>.age==p.age)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span> ;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>&#123;  <span class="comment">//覆写，实现编码唯一</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name.hashCode() * <span class="keyword">this</span>.age ;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HashMapDemo06</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        Map&lt;String,Person&gt; map = <span class="keyword">null</span> ;</span><br><span class="line">        map = <span class="keyword">new</span> HashMap&lt;String,Person&gt;() ;</span><br><span class="line">        map.put(<span class="string">"zhangsan"</span>,<span class="keyword">new</span> Person(<span class="string">"张三"</span>,<span class="number">30</span>)) ; <span class="comment">//增加内容</span></span><br><span class="line">        System.out.println(map.get(<span class="string">"zhangsan"</span>)) ;</span><br><span class="line"> </span><br><span class="line">        Map&lt;Person,String&gt; map1 = <span class="keyword">null</span> ;</span><br><span class="line">        map1 = <span class="keyword">new</span> HashMap&lt;Person,String&gt;() ;</span><br><span class="line">        Person per = <span class="keyword">new</span> Person(<span class="string">"张三"</span>,<span class="number">30</span>) ;</span><br><span class="line">        map1.put(per,<span class="string">"zhangsan"</span>) ; <span class="comment">//增加内容，使用了per对象</span></span><br><span class="line">        System.out.println(map1.get(per)) ; <span class="comment">//注意是per对象</span></span><br><span class="line">        Map&lt;Person,String&gt; map2 = <span class="keyword">null</span> ;</span><br><span class="line">        map2 = <span class="keyword">new</span> HashMap&lt;Person,String&gt;() ;</span><br><span class="line">        map2.put(<span class="keyword">new</span> Person(<span class="string">"张三"</span>,<span class="number">30</span>),<span class="string">"zhangsan"</span>) ; <span class="comment">//增加内容，使用了匿名对象</span></span><br><span class="line">        System.out.println(map2.get(<span class="keyword">new</span> Person(<span class="string">"张三"</span>,<span class="number">30</span>))) ; <span class="comment">//注意是匿名对象</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/02/13/dev/user_define_hashmap/" data-id="cifnwy7mj001xbspj0ux00e7u" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/02/13/dev/user_define_hashmap/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hashmap/">hashmap</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/mapreduce/sql_mapjoin" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -182,7 +237,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/" data-id="cifkp2ea9002eaypjfud32u95" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/" data-id="cifnwy7n8002lbspjrdp8q7r9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/#ds-thread" class="article-comment-link">评论</a>
       
@@ -282,7 +337,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/01/27/other/learning_in_university/" data-id="cifkp2e990017aypj7ev5kfi3" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/01/27/other/learning_in_university/" data-id="cifnwy7ly0017bspjj4qlwchb" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/01/27/other/learning_in_university/#ds-thread" class="article-comment-link">评论</a>
       
@@ -347,7 +402,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-id="cifkp2e8t000paypj5el7jrat" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-id="cifnwy7ld000pbspjjuneeq8h" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/#ds-thread" class="article-comment-link">评论</a>
       
@@ -415,71 +470,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/12/10/algo/lift_lr/" data-id="cifkp2eaf002laypjhu300aey" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2014/12/10/algo/lift_lr/" data-id="cifnwy7np002sbspje788zhqq" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2014/12/10/algo/lift_lr/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-other/ps_auto" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/27/other/ps_auto/">Photoshop自动批处理</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/27/other/ps_auto/">
-      <time datetime="2014-11-26T16:00:00.000Z" itemprop="datePublished">2014-11-27</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/travel/">travel</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <ol>
-<li>首先打开一张图片，然后找到动作窗口，点击录制按钮<br><img src="/images/ps/1.png" alt=""></li>
-<li>接下来就是你所要对图片做的批量操作，记得要最后关闭图片，录制完成后点击结束按钮<br><img src="/images/ps/2.png" alt=""></li>
-<li>所有的动作都已经完成，然后我们将批量处理一些图片，在文件中找到自动-》批处理<br><img src="/images/ps/3.png" alt=""></li>
-<li>在打开的对话框中选择源文件夹，然后点击确定执行该批处理<br><img src="/images/ps/4.png" alt=""></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/27/other/ps_auto/" data-id="cifkp2e8z000xaypjtggx6hm6" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2014/11/27/other/ps_auto/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Photoshop/">Photoshop</a></li></ul>
-
     </footer>
   </div>
   
@@ -504,6 +499,23 @@
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2015/10/12/dev/maven_assembly/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+              <p class="item-title"><a href="/2015/10/12/dev/maven_assembly/" class="title">Maven 依赖包打包</a></p>
+              <p class="item-date"><time datetime="2015-10-12T12:19:56.000Z" itemprop="datePublished">2015-10-12</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2015/10/12/dev/java_math_stat/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -515,6 +527,23 @@
               <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
               <p class="item-title"><a href="/2015/10/12/dev/java_math_stat/" class="title">Java Math StatExample</a></p>
               <p class="item-date"><time datetime="2015-10-12T04:57:56.000Z" itemprop="datePublished">2015-10-12</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/10/10/internet/ad/ad_cheating/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/internet/">internet</a></p>
+              <p class="item-title"><a href="/2015/10/10/internet/ad/ad_cheating/" class="title">在线广告作弊手段一览</a></p>
+              <p class="item-date"><time datetime="2015-10-09T16:00:00.000Z" itemprop="datePublished">2015-10-10</time></p>
             </div>
           </li>
         
@@ -539,23 +568,6 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2015/10/10/internet/ad/ad_cheating/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/internet/">internet</a></p>
-              <p class="item-title"><a href="/2015/10/10/internet/ad/ad_cheating/" class="title">在线广告作弊手段一览</a></p>
-              <p class="item-date"><time datetime="2015-10-09T16:00:00.000Z" itemprop="datePublished">2015-10-10</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2015/10/07/travel/hefu_travel/" class="thumbnail">
   
     <span style="background-image:url(/images/hefu_train/IMG_4006.jpg
@@ -571,24 +583,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/09/25/algo/ml/Feature Processing/" class="thumbnail">
-  
-    <span style="background-image:url(/images/algo/nonlinear_function1.png
-)" alt="特征处理" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2015/09/25/algo/ml/Feature Processing/" class="title">特征处理</a></p>
-              <p class="item-date"><time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -598,7 +592,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -625,7 +619,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
