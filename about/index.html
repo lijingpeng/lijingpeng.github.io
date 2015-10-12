@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>HashMap的两种排序方式 | Frank</title>
+  <title>about | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1234567891011121314151617181920212223242526272829303132333435363738394041424344Map&amp;lt;String, Integer&amp;gt; map = new HashMap&amp;lt;String, Integer&amp;gt;();map.put(“d”, 2);map.put(“c”, 1);map.put(“b”, 1);map">
-<meta property="og:type" content="article">
-<meta property="og:title" content="HashMap的两种排序方式">
-<meta property="og:url" content="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/index.html">
+  <meta name="description" content="Li Jingpeng">
+<meta property="og:type" content="website">
+<meta property="og:title" content="about">
+<meta property="og:url" content="http://www.notehub.cn/about/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="1234567891011121314151617181920212223242526272829303132333435363738394041424344Map&amp;lt;String, Integer&amp;gt; map = new HashMap&amp;lt;String, Integer&amp;gt;();map.put(“d”, 2);map.put(“c”, 1);map.put(“b”, 1);map">
-<meta property="og:updated_time" content="2015-09-03T05:04:15.000Z">
+<meta property="og:description" content="Li Jingpeng">
+<meta property="og:updated_time" content="2015-10-12T12:42:37.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HashMap的两种排序方式">
-<meta name="twitter:description" content="1234567891011121314151617181920212223242526272829303132333435363738394041424344Map&amp;lt;String, Integer&amp;gt; map = new HashMap&amp;lt;String, Integer&amp;gt;();map.put(“d”, 2);map.put(“c”, 1);map.put(“b”, 1);map">
+<meta name="twitter:title" content="about">
+<meta name="twitter:description" content="Li Jingpeng">
   
   
     <link rel="icon" href="favicon.png">
@@ -125,7 +125,7 @@
 </aside>
 
       
-      <section id="main"><article id="post-dev/hash-map-sort-md" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -134,7 +134,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      HashMap的两种排序方式
+      about
     </h1>
   
 
@@ -142,8 +142,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/05/03/dev/hash-map-sort-md/">
-      <time datetime="2015-05-03T04:57:56.000Z" itemprop="datePublished">2015-05-03</time>
+    <a href="/about/index.html">
+      <time datetime="2015-10-12T12:41:58.000Z" itemprop="datePublished">2015-10-12</time>
     </a>
   </div>
 
@@ -155,46 +155,27 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;String, Integer&gt;();</span><br><span class="line">map.put(“d”, <span class="number">2</span>);</span><br><span class="line">map.put(“c”, <span class="number">1</span>);</span><br><span class="line">map.put(“b”, <span class="number">1</span>);</span><br><span class="line">map.put(“a”, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">List&lt;Map.Entry&lt;String, Integer&gt;&gt; infoIds =</span><br><span class="line"><span class="keyword">new</span> ArrayList&lt;Map.Entry&lt;String, Integer&gt;&gt;(map.entrySet());</span><br><span class="line"></span><br><span class="line"><span class="comment">//排序前</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; infoIds.size(); i++) &#123;</span><br><span class="line">String id = infoIds.get(i).toString();</span><br><span class="line">System.out.println(id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//d 2</span></span><br><span class="line"><span class="comment">//c 1</span></span><br><span class="line"><span class="comment">//b 1</span></span><br><span class="line"><span class="comment">//a 3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//排序</span></span><br><span class="line">Collections.sort(infoIds, <span class="keyword">new</span> Comparator&lt;Map.Entry&lt;String, Integer&gt;&gt;() &#123;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Map.Entry&lt;String, Integer&gt; o1, Map.Entry&lt;String, Integer&gt; o2)</span> </span>&#123;</span><br><span class="line"><span class="comment">//return (o2.getValue() – o1.getValue());</span></span><br><span class="line"><span class="keyword">return</span> (o1.getKey()).toString().compareTo(o2.getKey());</span><br><span class="line">&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//排序后</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; infoIds.size(); i++) &#123;</span><br><span class="line">String id = infoIds.get(i).toString();</span><br><span class="line">System.out.println(id);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据key排序</span></span><br><span class="line"><span class="comment">//a 3</span></span><br><span class="line"><span class="comment">//b 1</span></span><br><span class="line"><span class="comment">//c 1</span></span><br><span class="line"><span class="comment">//d 2</span></span><br><span class="line"><span class="comment">//根据value排序</span></span><br><span class="line"><span class="comment">//a 3</span></span><br><span class="line"><span class="comment">//d 2</span></span><br><span class="line"><span class="comment">//b 1</span></span><br><span class="line"><span class="comment">//c 1</span></span><br></pre></td></tr></table></figure>
+        <p>Li Jingpeng</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/" data-id="cifnxjs6m0028jipjae5khs5u" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/about/index.html" data-id="cifnxjs250000jipj6az84gog" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/about/index.html#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
   </div>
   
     
-<nav id="article-nav">
-  
-    <a href="/2015/05/14/system/pptp_vpn/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          PPTP VPN搭建
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2015/04/03/algo/baysian/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">贝叶斯理论</div>
-    </a>
-  
-</nav>
-
 
   
 </article>
 
 
   <section id="comments">
-    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/" data-title="HashMap的两种排序方式" data-url="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/about/index.html" data-title="about" data-url="http://www.notehub.cn/about/index.html">
       <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
       </div>
   </section>
