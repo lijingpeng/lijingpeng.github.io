@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        44
+        45
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,98 @@
 
       
       <section id="main">
+      <article id="post-algo/baysian" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/04/03/algo/baysian/">贝叶斯理论</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/04/03/algo/baysian/">
+      <time datetime="2015-04-02T16:00:00.000Z" itemprop="datePublished">2015-04-03</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="贝叶斯法则">贝叶斯法则</h2><hr>
+<p>机器学习的任务：在给定训练数据D时，确定假设空间H中的最佳假设。</p>
+<p>最佳假设：一种方法是把它定义为在给定数据D以及H中不同假设的先验概率的有关知识下的最可能假设。贝叶斯理论提供了一种计算假设概率的方法，基于假设的先验概率、给定假设下观察到不同数据的概率以及观察到的数据本身。</p>
+<h2 id="先验概率和后验概率">先验概率和后验概率</h2><hr>
+<p>用P(h)表示在没有训练数据前假设h拥有的初始概率。P(h)被称为h的先验概率。先验概率反映了关于h是一正确假设的机会的背景知识如果没有这一先验知识，可以简单地将每一候选假设赋予相同的先验概率。类似地，P(D)表示训练数据D的先验概率，P(D|h)表示假设h成立时D的概率。机器学习中，我们关心的是P(h|D)，即给定D时h的成立的概率，称为h的后验概率。</p>
+<h2 id="贝叶斯公式">贝叶斯公式</h2><hr>
+<p>贝叶斯公式提供了从先验概率P(h)、P(D)和P(D|h)计算后验概率P(h|D)的方法</p>
+<p>p(h|D)=P(D|H)*P(H)/P(D)</p>
+<p>P(h|D)随着P(h)和P(D|h)的增长而增长，随着P(D)的增长而减少，即如果D独立于h时被观察到的可能性越大，那么D对h的支持度越小。</p>
+<h2 id="极大后验假设">极大后验假设</h2><hr>
+<p>学习器在候选假设集合H中寻找给定数据D时可能性最大的假设h，h被称为极大后验假设（MAP）确定MAP的方法是用贝叶斯公式计算每个候选假设的后验概率，计算式如下:</p>
+<p>h_map=argmax P(h|D)=argmax (P(D|h)<em>P(h))/P(D)=argmax P(D|h)</em>p(h) (h属于集合H)</p>
+<p>最后一步，去掉了P(D)，因为它是不依赖于h的常量。</p>
+<h2 id="极大似然假设">极大似然假设</h2><hr>
+<p>在某些情况下，可假定H中每个假设有相同的先验概率，这样式子可以进一步简化，只需考虑P(D|h)来寻找极大可能假设。</p>
+<p>h_ml = argmax p(D|h)  h属于集合H</p>
+<p>P(D|h)常被称为给定h时数据D的似然度，而使P(D|h)最大的假设被称为极大似然假设。</p>
+<h2 id="举例">举例</h2><hr>
+<p>考虑一个医疗诊断问题，有两种可能的假设：（1）病人有癌症。（2）病人无癌症。样本数据来自某化验测试，它也有两种可能的结果：阳性和阴性。假设我们已经有先验知识：在所有人口中只有0.008的人患病。此外，化验测试对有病的患者有98%的可能返回阳性结果，对无病患者有97%的可能返回阴性结果。</p>
+<p>上面的数据可以用以下概率式子表示：</p>
+<p>P(cancer)=0.008,P(无cancer)=0.992</p>
+<p>P(阳性|cancer)=0.98,P(阴性|cancer)=0.02</p>
+<p>P(阳性|无cancer)=0.03，P(阴性|无cancer)=0.97</p>
+<p>假设现在有一个新病人，化验测试返回阳性，是否将病人断定为有癌症呢？我们可以来计算极大后验假设：</p>
+<p>P(阳性|cancer)p(cancer)=0.98*0.008 = 0.0078</p>
+<p>P(阳性|无cancer)<em>p(无cancer)=0.03</em>0.992 = 0.0298</p>
+<p>因此，应该判断为无癌症。</p>
+<p>贝叶斯推理的结果很大程度上依赖于先验概率，另外不是完全接受或拒绝假设，只是在观察到较多的数据后增大或减小了假设的可能性。</p>
+<h2 id="贝叶斯分类具有如下特点：">贝叶斯分类具有如下特点：</h2><hr>
+<ol>
+<li><p>贝叶斯分类并不把一个对象绝对地指派给某一类，而是通过计算得出属于某一类的概率，具有最大概率的类便是该对象所属的类；</p>
+</li>
+<li><p>一般情况下在贝叶斯分类中所有的属性都潜在地起作用，即并不是一个或几个属性决定分类，而是所有的属性都参与分类；</p>
+</li>
+<li><p>贝叶斯分类对象的属性可以是离散的、连续的，也可以是混合的。</p>
+</li>
+</ol>
+<p>贝叶斯定理给出了最小化误差的最优解决方法，可用于分类和预测。理论上，它看起来很完美，但在实际中，它并不能直接利用，它需要知道证据的确切分布概率，而实际上我们并不能确切的给出证据的分布概率。因此我们在很多分类方法中都会作出某种假设以逼近贝叶斯定理的要求。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/04/03/algo/baysian/" data-id="cig38i2300035hepj3zf61yfx" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/04/03/algo/baysian/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/贝叶斯/">贝叶斯</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/mapreduce/mapreduce_counters" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -195,7 +287,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/" data-id="cifnxmxr7002pofpjzfltf2ch" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/" data-id="cig38i22m002uhepjdnnnddse" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/#ds-thread" class="article-comment-link">评论</a>
       
@@ -250,7 +342,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/02/13/dev/user_define_hashmap/" data-id="cifnxmxpa001yofpjyyqking1" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/02/13/dev/user_define_hashmap/" data-id="cig38i21b001yhepjjryjguln" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/02/13/dev/user_define_hashmap/#ds-thread" class="article-comment-link">评论</a>
       
@@ -322,7 +414,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/" data-id="cifnxmxr4002mofpjzm9470vh" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/" data-id="cig38i22j002rhepjo89mgb0c" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/#ds-thread" class="article-comment-link">评论</a>
       
@@ -422,78 +514,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/01/27/other/learning_in_university/" data-id="cifnxmxop0018ofpji7olre2t" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/01/27/other/learning_in_university/" data-id="cig38i20l0018hepjuiqtszl3" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/01/27/other/learning_in_university/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-system/apache_htpasswd" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/01/19/system/apache_htpasswd/">Apache htpasswd命令</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/01/19/system/apache_htpasswd/">
-      <time datetime="2015-01-18T16:00:00.000Z" itemprop="datePublished">2015-01-19</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/system/">system</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>在Linux主机中，为了保护站点的目录安全，通常会通过htaccess文件对目录添加密码来进行保护，如果忘记密码则可以通过htpasswd命令修改密码。</p>
-<p>apache htpasswd选项参数:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">htpasswd [-cmdpsD] passwordfile username</span><br><span class="line">htpasswd -b[cmdpsD] passwordfile username password</span><br><span class="line">htpasswd -n[mdps] username</span><br><span class="line">htpasswd -nb[mdps] username password</span><br></pre></td></tr></table></figure></p>
-<p>apache htpasswd命令选项参数说明:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-c 创建一个加密文件</span><br><span class="line">-n 不更新加密文件，只将apache htpasswd命令加密后的用户名密码显示在屏幕上</span><br><span class="line">-m 默认apache htpassswd命令采用MD5算法对密码进行加密</span><br><span class="line"><span class="operator">-d</span> apache htpassswd命令采用CRYPT算法对密码进行加密</span><br><span class="line">-p apache htpassswd命令不对密码进行进行加密，即明文密码</span><br><span class="line"><span class="operator">-s</span> apache htpassswd命令采用SHA算法对密码进行加密</span><br><span class="line">-b 在apache htpassswd命令行中一并输入用户名和密码而不是根据提示输入密码</span><br><span class="line">-D 删除指定的用户</span><br></pre></td></tr></table></figure></p>
-<h2 id="apache_htpasswd例子">apache htpasswd例子</h2><p>1、如何利用htpasswd命令添加用户？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -bc .passwd tonyzhang pass</span><br></pre></td></tr></table></figure></p>
-<p>在bin目录下生成一个.passwd文件，用户名tonyzhang ，密码：pass，默认采用MD5加密方式</p>
-<p>2、如何在原有密码文件中增加下一个用户？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -b .passwd onlyzq pass</span><br></pre></td></tr></table></figure></p>
-<p>去掉c选项，即可在第一个用户之后添加第二个用户，依此类推</p>
-<p>3、如何不更新密码文件，只显示加密后的用户名和密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -nb tonyzhang pass</span><br></pre></td></tr></table></figure></p>
-<p>不更新.passwd文件，只在屏幕上输出用户名和经过加密后的密码</p>
-<p>4、如何利用htpasswd命令删除用户名和密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -D .passwd tonyzhang</span><br></pre></td></tr></table></figure></p>
-<p>5、如何利用htpasswd命令修改密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -D .passwd tonyzhang</span><br><span class="line">htpasswd -b .passwd tonyzhang pass</span><br></pre></td></tr></table></figure></p>
-<p>即先使用htpasswd删除命令删除指定用户，再利用htpasswd添加用户命令创建用户即可实现修改密码的功能。</p>
-<p>文章链接：<a href="http://onlyzq.blog.51cto.com/1228/557593" target="_blank" rel="external">http://onlyzq.blog.51cto.com/1228/557593</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-id="cifnxmxoc000qofpjt7krrk5m" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache/">apache</a></li></ul>
-
     </footer>
   </div>
   
@@ -518,7 +543,7 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2015/10/21/dev/cpp_dev/" class="thumbnail">
+              <a href="/2015/10/23/dev/CPP/cpp_string/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -527,7 +552,24 @@
             
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/c/">c++</a></p>
-              <p class="item-title"><a href="/2015/10/21/dev/cpp_dev/" class="title">C++ 编程环境</a></p>
+              <p class="item-title"><a href="/2015/10/23/dev/CPP/cpp_string/" class="title">标准C++中的string类的用法总结</a></p>
+              <p class="item-date"><time datetime="2015-10-23T12:19:56.000Z" itemprop="datePublished">2015-10-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/10/21/dev/CPP/cpp_dev/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/c/">c++</a></p>
+              <p class="item-title"><a href="/2015/10/21/dev/CPP/cpp_dev/" class="title">C++ 编程环境</a></p>
               <p class="item-date"><time datetime="2015-10-21T12:19:56.000Z" itemprop="datePublished">2015-10-21</time></p>
             </div>
           </li>
@@ -569,23 +611,6 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2015/10/10/internet/ad/ad_cheating/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/internet/">internet</a></p>
-              <p class="item-title"><a href="/2015/10/10/internet/ad/ad_cheating/" class="title">在线广告作弊手段一览</a></p>
-              <p class="item-date"><time datetime="2015-10-09T16:00:00.000Z" itemprop="datePublished">2015-10-10</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2015/10/10/internet/ad/cookie/" class="thumbnail">
   
     <span style="background-image:url(/images/other/cookie.jpg
@@ -610,7 +635,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -637,7 +662,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
