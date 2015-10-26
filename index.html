@@ -92,11 +92,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        46
+        47
         <span>文章</span>
       </div>
       <div class="article-info-block">
-        23
+        24
         <span>标签</span>
       </div>
     </div>
@@ -125,6 +125,84 @@
 
       
       <section id="main">
+      <article id="post-dev/about_nio" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/26/dev/about_nio/">一个故事讲清楚 NIO</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/10/26/dev/about_nio/">
+      <time datetime="2015-10-26T08:19:56.000Z" itemprop="datePublished">2015-10-26</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>假设某银行只有10个职员, 该银行的业务流程分为以下4个步骤：</p>
+<p>1） 顾客填申请表（5分钟）；<br>2） 职员审核（1分钟）；<br>3） 职员叫保安去金库取钱（3分钟）；<br>4） 职员打印票据，并将钱和票据返回给顾客（1分钟）。<br>我们看看银行不同的工作方式对其工作效率到底有何影响。</p>
+<h3 id="1_BIO方式">1 BIO方式</h3><p>每来一个顾客，马上由一位职员来接待处理，并且这个职员需要负责以上4个完整流程。当超过10个顾客时，剩余的顾客需要排队等候。</p>
+<p>我们算算这个银行一个小时到底能处理多少顾客？一个职员处理一个顾客需要10分钟（5+1+3+1）时间，一个小时（60分钟）能处理6个顾客，一共10个职员，那就是只能处理60个顾客。</p>
+<p>可以看到银行职员的工作状态并不饱和，比如在第1步，其实是处于等待中。</p>
+<p>这种工作其实就是BIO，每次来一个请求（顾客），就分配到线程池中由一个线程（职员）处理，如果超出了线程池的最大上限（10个），就扔到队列等待 。</p>
+<h3 id="2_NIO方式">2 NIO方式</h3><p>如何提高银行的吞吐量呢？</p>
+<p>思路：分而治之，将任务拆分开来，由专门的人负责专门的任务。</p>
+<p>具体来讲，银行专门指派一名职员A，A的工作就是每当有顾客到银行，他就递上表格让顾客填写，每当有顾客填好表后，A就将其随机指派给剩余的9名职员完成后续步骤。</p>
+<p>我们计算下这种工作方式下银行一个小时到底能处理多少顾客？</p>
+<p>假设顾客非常多，职员A的工作处于饱和中，他不断的将填好表的顾客带到柜台处理，柜台一个职员5分钟能处理完一个顾客，一个小时9名职员能处理：9*（60/5）=108。</p>
+<p>可见工作方式的转变能带来效率的极大提升。</p>
+<p>这种工作方式其实就NIO的思路。下图是非常经典的NIO说明图，mainReactor线程负责监听server socket，accept新连接，并将建立的socket分派给subReactor；subReactor可以是一个线程，也可以是线程池（一般可以设置为CPU核数），负责多路分离已连接的socket，读写网络数据，这里的读写网络数据可类比顾客填表这一耗时动作，对具体的业务处理功能，其扔给worker线程池完成。</p>
+<p>可以看到典型NIO有三类线程，分别是mainReactor线程、subReactor线程、work线程。不同的线程干专业的事情，最终每个线程都没空着，系统的吞吐量自然就上去了。</p>
+<h3 id="3_异步方式">3 异步方式</h3><p>第二种工作方式有没有什么可以提高的地方呢？</p>
+<p>仔细查看可发现第3步骤这3分钟柜台职员是在等待中度过的，那怎么能让柜台职员保持满负荷呢？</p>
+<p>还是分而治之的思路，指派1个职员B来专门负责第3步骤。每当柜台员工完成第2步时，就通知职员B来负责与保安沟通取钱。这时候柜台员工可以继续处理下一个顾客。当职员B拿到钱之后，他会怎么办呢？他会通知顾客钱已经到柜台了，让顾客重新排队处理，当柜台职员再次服务该顾客时，发现该顾客前3步已经完成，直接执行第4步即可。</p>
+<p>我们可以算算通过这种方法，银行的吞吐量能提高到多少。</p>
+<p>假设职员B的工作非常饱和，柜台一个职员现在2分钟能处理完一个顾客，一个小时8名职员能处理：8*（60/2）=240。</p>
+<p>在当今web服务中，经常需要通过RPC或者Http等方式调用第三方服务，这里对应的就是第3步，如果这步耗时较长，通过异步方式将能极大降低资源使用率。</p>
+<p>jetty Continuations 就实现了上述异步方式，有兴趣的同学可以去尝试下（<a href="http://wiki.eclipse.org/Jetty/Feature/Continuations）。" target="_blank" rel="external">http://wiki.eclipse.org/Jetty/Feature/Continuations）。</a></p>
+<p>NIO+异步的方式能让少量的线程（资源）做大量的事情，这适用于很多应用场景，比如代理服务、api服务、长连接服务等等，这些应用如果用同步方式将耗费大量机器资源。尽管NIO+异步能提高系统吞吐量，但其并不能让一个请求的等待时间下降，相反可能会增加等待时间。</p>
+<h3 id="4_小结">4 小结</h3><p>总结就一句：“分而治之，将任务拆分开来，由专门的人负责专门的任务”，这不仅在计算机领域生效，在整个社会领域都生效。</p>
+<p>src: <a href="http://blog.jobbole.com/88984/" target="_blank" rel="external">http://blog.jobbole.com/88984/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/10/26/dev/about_nio/" data-id="cig7pniyu002e4upjyypn6lb5" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/10/26/dev/about_nio/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/CPP/cpp_string" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -182,7 +260,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/23/dev/CPP/cpp_string/" data-id="cig39aq95002fkspjadt0le53" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/23/dev/CPP/cpp_string/" data-id="cig7pniyy002j4upjfv71kcfy" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/23/dev/CPP/cpp_string/#ds-thread" class="article-comment-link">评论</a>
       
@@ -492,7 +570,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/23/dev/blade/" data-id="cig39aq8y0029kspjkall40kg" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/23/dev/blade/" data-id="cig7pniys00294upj85gvxg1t" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/23/dev/blade/#ds-thread" class="article-comment-link">评论</a>
       
@@ -546,11 +624,13 @@
 <h3 id="Use_cpplint_to_check_your_style">Use cpplint to check your style</h3><h3 id="Protocol_Buffers">Protocol Buffers</h3><p><a href="https://developers.google.com/protocol-buffers/" target="_blank" rel="external">https://developers.google.com/protocol-buffers/</a><br>(proto2): <a href="https://developers.google.com/protocol-buffers/docs/proto" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/proto</a><br>C++ related: <a href="https://developers.google.com/protocol-buffers/docs/cpptutorial" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/cpptutorial</a>,<br>Style guide: <a href="https://developers.google.com/protocol-buffers/docs/style" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/style</a></p>
 <h3 id="Compile_code:_Blade">Compile code: Blade</h3><p><a href="https://github.com/chen3feng/typhoon-blade" target="_blank" rel="external">https://github.com/chen3feng/typhoon-blade</a></p>
 <h3 id="Unit_test_your_code:_gtest">Unit test your code: gtest</h3><p><a href="https://github.com/google/googletest/blob/master/googletest/docs/Documentation.md" target="_blank" rel="external">https://github.com/google/googletest/blob/master/googletest/docs/Documentation.md</a><br>Run unit tests with BLADE<br>Every public method should be covered</p>
-<h3 id="Post_your_code_review:_ReviewBoard">Post your code review: ReviewBoard</h3>
+<h3 id="Post_your_code_review:_ReviewBoard">Post your code review: ReviewBoard</h3><h3 id="gflags">gflags</h3><p>gflags支持方便的解析和获取命令行参数<br><a href="https://github.com/gflags/gflags" target="_blank" rel="external">https://github.com/gflags/gflags</a></p>
+<h3 id="glog">glog</h3><p><a href="https://github.com/google/glog" target="_blank" rel="external">https://github.com/google/glog</a></p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/" data-id="cig39aq99002ikspjbhvto98q" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/" data-id="cig7pniz1002m4upjmx7x4hlr" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/#ds-thread" class="article-comment-link">评论</a>
       
@@ -603,62 +683,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/12/dev/maven_assembly/" data-id="cig39aq8o0023kspjxzynitnr" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/maven_assembly/" data-id="cig7pniyk00234upjqk9d2ik1" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/12/dev/maven_assembly/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/java_math_stat" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/12/dev/java_math_stat/">Java Math StatExample</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/12/dev/java_math_stat/">
-      <time datetime="2015-10-12T04:57:56.000Z" itemprop="datePublished">2015-10-12</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/java/">java</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.StatUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.GeometricMean;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Kurtosis;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Mean;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Skewness;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.StandardDeviation;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Variance;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Max;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Min;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Percentile;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.summary.Product;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.summary.Sum;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StatExample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span>[] values = <span class="keyword">new</span> <span class="keyword">double</span>[] &#123; <span class="number">2.3</span>, <span class="number">5.4</span>, <span class="number">6.2</span>, <span class="number">7.3</span>, <span class="number">23.3</span> &#125;;</span><br><span class="line"></span><br><span class="line">        System.out.println( <span class="string">"min: "</span> + StatUtils.min( values ) );</span><br><span class="line">        System.out.println( <span class="string">"max: "</span> + StatUtils.max( values ) );</span><br><span class="line">        System.out.println( <span class="string">"mean: "</span> + StatUtils.mean( values ) );</span><br><span class="line">        System.out.println( <span class="string">"product: "</span> + StatUtils.product( values ) );</span><br><span class="line">        System.out.println( <span class="string">"sum: "</span> + StatUtils.sum( values ) );</span><br><span class="line">        System.out.println( <span class="string">"variance: "</span> + StatUtils.variance( values ) );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Measures from previous example</span></span><br><span class="line">        Min min = <span class="keyword">new</span> Min();</span><br><span class="line">        System.out.println( <span class="string">"min: "</span> + min.evaluate( values ) );</span><br><span class="line">        Max max = <span class="keyword">new</span> Max();</span><br><span class="line">        System.out.println( <span class="string">"max: "</span> + max.evaluate( values ) );</span><br><span class="line">        Mean mean = <span class="keyword">new</span> Mean();</span><br><span class="line">        System.out.println( <span class="string">"mean: "</span> + mean.evaluate( values ) );</span><br><span class="line">        Product product = <span class="keyword">new</span> Product();</span><br><span class="line">        System.out.println( <span class="string">"product: "</span> + product.evaluate( values ) );</span><br><span class="line">        Sum sum = <span class="keyword">new</span> Sum();</span><br><span class="line">        System.out.println( <span class="string">"sum: "</span> + sum.evaluate( values ) );</span><br><span class="line">        Variance variance = <span class="keyword">new</span> Variance();</span><br><span class="line">        System.out.println( <span class="string">"variance: "</span> + variance.evaluate( values ) );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// New measures</span></span><br><span class="line">        Percentile percentile = <span class="keyword">new</span> Percentile();</span><br><span class="line">        System.out.println( <span class="string">"80 percentile value: "</span> + percentile.evaluate( values, <span class="number">80.0</span> ) );</span><br><span class="line">        GeometricMean geoMean = <span class="keyword">new</span> GeometricMean();</span><br><span class="line">        System.out.println( <span class="string">"geometric mean: "</span> + geoMean.evaluate( values ) );</span><br><span class="line">        StandardDeviation stdDev = <span class="keyword">new</span> StandardDeviation();</span><br><span class="line">        System.out.println( <span class="string">"standard dev: "</span> + stdDev.evaluate( values ) );</span><br><span class="line">        Skewness skewness = <span class="keyword">new</span> Skewness();</span><br><span class="line">        System.out.println( <span class="string">"skewness: "</span> + skewness.evaluate( values ) );</span><br><span class="line">        Kurtosis kurtosis = <span class="keyword">new</span> Kurtosis();</span><br><span class="line">        System.out.println( <span class="string">"kurtosis: "</span> + kurtosis.evaluate( values ) );</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="cig39aq8q0025kspjmmf10e89" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/12/dev/java_math_stat/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -681,6 +708,23 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/10/26/dev/about_nio/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2015/10/26/dev/about_nio/" class="title">一个故事讲清楚 NIO</a></p>
+              <p class="item-date"><time datetime="2015-10-26T08:19:56.000Z" itemprop="datePublished">2015-10-26</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -750,23 +794,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/10/12/dev/java_math_stat/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
-              <p class="item-title"><a href="/2015/10/12/dev/java_math_stat/" class="title">Java Math StatExample</a></p>
-              <p class="item-date"><time datetime="2015-10-12T04:57:56.000Z" itemprop="datePublished">2015-10-12</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -776,7 +803,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -785,7 +812,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -794,7 +821,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 20px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/" style="font-size: 10px;">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a> <a href="/tags/广告/" style="font-size: 20px;">广告</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 20px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/" style="font-size: 10px;">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a> <a href="/tags/广告/" style="font-size: 20px;">广告</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -803,7 +830,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
