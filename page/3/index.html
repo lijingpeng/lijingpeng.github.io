@@ -92,11 +92,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        51
+        55
         <span>文章</span>
       </div>
       <div class="article-info-block">
-        25
+        27
         <span>标签</span>
       </div>
     </div>
@@ -125,7 +125,7 @@
 
       
       <section id="main">
-      <article id="post-internet/ad/ad_cheating" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-dev/blade" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -134,7 +134,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/10/internet/ad/ad_cheating/">在线广告作弊手段一览</a>
+      <a class="article-title" href="/2015/10/23/dev/blade/">Blade用户手册</a>
     </h1>
   
 
@@ -142,8 +142,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/10/10/internet/ad/ad_cheating/">
-      <time datetime="2015-10-09T16:00:00.000Z" itemprop="datePublished">2015-10-10</time>
+    <a href="/2015/10/23/dev/blade/">
+      <time datetime="2015-10-23T06:19:56.000Z" itemprop="datePublished">2015-10-23</time>
     </a>
   </div>
 
@@ -151,7 +151,7 @@
           
   <div class="article-category">
   	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/internet/">internet</a>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
   </div>
 
         </div>
@@ -160,29 +160,439 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>这里提到的在线广告作弊是指媒体为了刷广告流量而进行的作弊。他们的作弊手段很多， 这里介绍常见的几种。</p>
-<p>iframe是广告作弊最常用的技巧，就是在自己的网页上嵌入iframe, 大小为0x0或1×1，也就是用户不可见。通过iframe打开其他页面，在用户看不见的情况下刷流量。别看iframe简单，里面花样很多。</p>
-<h3 id="页面内嵌入本站页面的iframe">页面内嵌入本站页面的iframe</h3><p>iframe打开和当前页一样的页面地址，或本站的其他页面。 这样用户的一个浏览行为，很轻松就从1个pv翻倍变成2个pv。如果嵌入iframe多点， 就能翻3倍，4倍…。但使用这个方法很容易被发现，广告投放方，通过分析UV，独立IP等很容易就发现异常。 这是很老的方法，不过还是有些网站乐此不疲。</p>
-<h3 id="两个站点间互相嵌入对方站点页面的iframe">两个站点间互相嵌入对方站点页面的iframe</h3><p>这是比较巧妙的作弊技巧，UV，独立IP等分析方法是不能发现异常的。</p>
-<h3 id="双层iframe">双层iframe</h3><p>作弊的iframe为了不让人看见，大小只有0x0或1×1，但有些在线广告在显示时会判断浏览窗口大小，如果太小可能就不能显示。这时有些网站就采用了双层iframe技术来刷广告流量。 第一层1×1大小的iframe中又嵌入一个iframe，这个第二层iframe是正常浏览窗口大小，广告代码很难发现异常。</p>
-<p>这种作弊方式使用巧妙的，会让主页面和两个iframe使用三个不同的域名，这样因为跨域的问题， 里面的js不可能得到最外层真正的页面地址， 想抓证据都抓不到。</p>
-<h3 id="IP屏蔽">IP屏蔽</h3><p>有些站点在进行作弊时，会屏蔽北京，上海等大城市的访问，你从这些地区访问时，看不到他们的作弊代码，一切正常。等换用其他地方的代理访问时，你在他们页面里就能看到作弊用iframe代码。 这是因为很多IT，在线广告公司都在这些大城市，这种屏蔽让他们的作弊手段很难被同业发现。</p>
-<h3 id="购买垃圾流量">购买垃圾流量</h3><p>现在来自iframe，木马的垃圾流量都是明码标价在卖的，可以用这些流量来刷页面，刷广告。这种也比较难以发现。网站去刷流量目的往往比较复杂，一是刷广告流量，赚广告商和广告主的钱，二是为了alexa之类的排名，也有是为了给投资人看所谓的“业绩”。 </p>
-<p>上面谈的基本都是CPM广告方式的作弊，下面说说其他的。 </p>
-<h3 id="CPC作弊">CPC作弊</h3><p>CPC作弊其实是很简单的，只要用iframe打开点击链接即可。</p>
-<h3 id="CPA作弊">CPA作弊</h3><p>有些网站广告按CPA结算，比如注册人数等。 这种情况下，有的公司会做专门的自动注册机，保证你的注册人数疯狂上涨。</p>
-<h3 id="CPS作弊">CPS作弊</h3><p>很多人感觉CPS方式是不可能作弊的，其实这也是可以的。 </p>
+        <h2 id="Blade是什么">Blade是什么</h2><p>软件项目用各种工具来构建代码，最常用的恐怕是GNU Make。但是 GNU Make 虽然本身功能比较强，但是要直接使用的话，也是比较难的。</p>
+<p>很多人还在手工编写 Makefile，又没有去写正确的依赖，导致每次不得不先 make clean 才放心，Make的意义大打折扣。这在几个文件的小项目下是没什么问题的，对于大的项目就很不方便了。</p>
+<p>Autotools 号称auto，但是还是需要人工写很多东西，运行一系列命令，用起来还是比较复杂，开发人员的学习和使用的门槛很高。</p>
+<p>Blade 就是针对这些问题，为腾讯公司基础架构部的[<a href="http://storage.it168.com/a2011/1203/1283/000001283196.shtml" target="_blank" rel="external">http://storage.it168.com/a2011/1203/1283/000001283196.shtml</a> “台风”云计算平台]项目而开发的新一代构建工具，希望能成为开发者手中的“瑞士军刀”。我们现在把它开源出来，希望能让更多的人得到方便。</p>
+<h2 id="Blade_解决的问题">Blade 解决的问题</h2><ul>
+<li>源文件更新导致需要重新构建。这个 gnu make 都能解决得很好。</li>
+<li>头文件更新，所以以来这个头文件的源文件都需要重新构建。这个 gnu make 不直接支持，需要搭配 gcc 来生成和更新依赖。</li>
+<li>库文件更新，所依赖的库文件更新后，程序应该重新连接，GNU Make 可以做到。</li>
+<li>即使我只构建自己的目标，如果库的源代码变了，库应该重新生成，GNU Make 用递归 Make 无法做到。</li>
+<li>库文件之间的依赖自动传递，一个库依赖另一个库，库的最终用户不需要关心。</li>
+<li>构建过程中的警告和错误应该醒目地显示出来。</li>
+<li>能自动支持台风系统大量使用的 proto buffer，以及方便扩充以支持外来可能引入的新工具。</li>
+<li>应该能集成自动测试，代码检查等开发常用的功能。</li>
+</ul>
+<h2 id="Blade运行条件">Blade运行条件</h2><p>Blade 运行时需要以下条件：</p>
+<ul>
+<li>SCons v2.0 or later   (required)</li>
+<li>Python v2.6 or later  (required)</li>
+<li>ccache v3.1 or later  (optional)</li>
+</ul>
+<p>Blade 编译项目时可能需要到：</p>
+<ul>
+<li>swig   v2.0 or later  (required for swig_library)</li>
+<li>flex v2.5 or later    (required for lex_yacc)</li>
+<li>bison v2.1 or later   (required for lex_yacc)</li>
+</ul>
+<h2 id="源代码树的组织">源代码树的组织</h2><p>Blade要求项目源代码有一个明确的根目录，C++ 中的 #include 的路径也需要从这个目录开始写起，这样有几点好处：</p>
+<ul>
+<li>有效地避免头文件重名造成的问题。</li>
+<li>有效地避免库文件的重名。</li>
+<li>更容易找到需要的文件。</li>
+<li>提高构建速度。</li>
+</ul>
+<p>Blade并不从某个配置文件或者环境变量读取这个信息，因为开发人员往往需要同时有多个目录树并存。Blade获取源代码根的方法是，无论当前从哪一级子目录运行，都从当前目录开始向上查找BLADE_ROOT文件，有这个文件的目录即为源代码树的根。</p>
+<p>目前源代码目录需要自己拉取，将来我们会集成到 Blade 中。BLADE_ROOT 文件也需要用户自己创建。方法：<br> $ touch BLADE_ROOT</p>
+<p>一个源代码树的根目录看起来的样子如下：<br> BLADE_ROOT<br> common<br> thirdparty<br> xfs<br> xcube<br> torca<br> your_project<br> …</p>
+<h2 id="BUILD文件">BUILD文件</h2><p>Blade 通过一系列的名字为 “BUILD” 的文件（文件名全大写），这些文件需要开发者去编写。每个 BUILD文件通过一组目标描述函数描述了一个目标的源文件，所依赖的其他目标，以及其他一些属性。</p>
+<h3 id="BUILD文件的示例">BUILD文件的示例</h3><p>构建脚本很简单：</p>
+<p>范例：common/base/string/BUILD<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cc_library(</span><br><span class="line">    name = <span class="string">'string'</span>,</span><br><span class="line">    srcs = [</span><br><span class="line">        <span class="string">'algorithm.cpp'</span>,</span><br><span class="line">        <span class="string">'string_number.cpp'</span>,</span><br><span class="line">        <span class="string">'string_piece.cpp'</span>,</span><br><span class="line">        <span class="string">'format.cpp'</span>,</span><br><span class="line">        <span class="string">'concat.cpp'</span></span><br><span class="line">    ],</span><br><span class="line">    deps = [<span class="string">'//common/base:int'</span>]</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>也是说明式的，只需要列出目标名，源文件名和依赖名（可以没有）即可。</p>
+<h2 id="风格建议">风格建议</h2><ul>
+<li>四空格缩进，不要用tab字符</li>
+<li>总是用单引号</li>
+<li>目标名用小写</li>
+<li>src 里的文件名按字母顺序排列</li>
+<li>deps 里先写本目录内的依赖（:target），后写其他目录内的（//dir:name），分别按字母顺序排列。</li>
+<li>不同目标之间空一行，前面可以加注释</li>
+<li>注释的 # 后面空一格，比如 # This is a comment</li>
+</ul>
+<h3 id="描述目标">描述目标</h3><p>Blade用一组target函数来定义目标，这些target的通用属性有：</p>
+<ul>
+<li>name: 字符串，和路径一起成为target的唯一标识，也决定了构建的输出命名</li>
+<li>srcs: 列表或字符串，构建该对象需要的源文件，一般在当前目录，或相对于当前目录的子目录中</li>
+<li>deps: 列表或字符串，该对象所依赖的其它targets</li>
+</ul>
+<p>deps的允许的格式：</p>
+<ul>
+<li>“//path/to/dir/:name” 其他目录下的target，path为从BLADE_ROOT出发的路径，name为被依赖的目标名。看见就知道在哪里。</li>
+<li>“:name” 当前目录下的target， path可以省略。</li>
+<li>“#pthread” 系统库。直接写#跟名字即可。</li>
+</ul>
+<p>cc_<code>*</code> 目标<br>包括 cc_test, cc_binary, cc_library，CC 目标均支持的参数为：</p>
+<ul>
+<li>srcs 源文件列表</li>
+<li>deps 依赖列表</li>
+<li>incs 头文件路径列表</li>
+<li>defs 宏定义列表</li>
+<li>warning 警告设置</li>
+<li>optimize 优化设置</li>
+</ul>
+<ul>
+<li>注：thirdparty是我们代码库里的一个特殊目录，里面的代码都是一些第三方库，按照台风系统的代码规范，只允许对这里的代码用incs, defs和warnings，自己开发的代码要按照规范组织。Blade会对这个目录之外的代码使用这些参数发出警告。</li>
+</ul>
+<p>|| <em>字段</em> || <em>解释</em> || <em>举例</em> || <em>备注</em> ||<br>|| warning || 是否屏蔽warning  || warning=’no’ || 默认不屏蔽 warning=’yes’ , 默认不用写，已开启 ||<br>|| defs || 用户定义的宏加入编译中 || defs=[‘_MT’] || 如果用户定义C++关键字，报warning ||<br>|| incs || 用户定义的include || incs=[‘poppy/myinc’] || 用户通常不要使用 ||<br>|| optimize || 用户定义的optimize flags || optimize=[‘O3’] || 适用于 cc_library cc_binary cc_test proto_library swig_library  cc_plugin resource_library ||</p>
+<h4 id="cc_library">cc_library</h4><p>用于描述C++库目标。<br>cc_library同时用于构建静态和动态库，默认只构建静态库，只有被dynamic_link=1的cc_binary依赖时或者命令行指定<br>–generate-dynamic 才生成动态链接库。</p>
+<p>举例：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cc_library(</span><br><span class="line">    name=<span class="string">'lowercase'</span>,</span><br><span class="line">    srcs=[<span class="string">'./src/lower/plowercase.cpp'</span>],</span><br><span class="line">    deps=[<span class="string">'#pthread'</span>],</span><br><span class="line">    link_all_symbols=<span class="keyword">False</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>参数：</p>
+<ul>
+<li>link_all_symbols=True<br>库在被静态链接时，确保库里所有的符号都被链接，以保证依赖全局对象构造函数，比如自动注册器的代码能够正常工作。<br>需要全部链接的部分最好单独拆分出来做成全部链接的库，而不是整个库全都全部链接，否则会无端增大可执行文件的大小。 需要注意的是，link_all_symbols是库自身的属性，不是使用库时的属性。Blade是为大型项目设计的，基于以下因素，我们提倡任何模块都应该有自己的 cc_library，用户程序都应该在deps里写全直接依赖，不提倡创建像boost那样的全头文件的库。<ul>
+<li>编译速度</li>
+<li>将来未知的改变，比如某库一开始只需要头文件就能使用，不依赖标准库之外的任何库，但是后来依赖了MD5，所有使用这个库的代码都要加上新产生的依赖，这与我们设计Blade的初衷是违背的。</li>
+</ul>
+</li>
+</ul>
+<p>要强制用户这样使用，可以在编写代码时，总是编写 .h 对应的 .cpp 文件，并把一部分必然要用到的符号（函数，静态变量）的实现写在里面，即使对于模板库，可以引入一个非模板的基类，或者把非模板部分的实现放到 .cpp 里。</p>
+<ul>
+<li><p>always_optimize<br>True: 不论debug版本还是release版本总是被优化。<br>False: debug版本不作优化。<br>默认为False。目前只对cc_library有效。</p>
+</li>
+<li><p>prebuilt=True<br>主要应用在thirdparty中从rpm包解来的库，使用这个参数表示不从源码构建。对应的二进制文件必须存在 lib{32,64}_{release,debug} 这样的子目录中。不区分debug/release时可以只有两个实际的目录。</p>
+</li>
+</ul>
+<p>####cc_binary<br>定义C++可执行文件目标<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cc_binary(</span><br><span class="line">    name=<span class="string">'prstr'</span>,</span><br><span class="line">    srcs=[<span class="string">'./src/mystr_main/mystring.cpp'</span>],</span><br><span class="line">    deps=[<span class="string">'#pthread'</span>,<span class="string">':lowercase'</span>,<span class="string">':uppercase'</span>,<span class="string">'#dl'</span>],</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>dynamic_link=True<br>目前我们的binary默认为全静态编译以适应云计算平台使用。<br>如果有应用需要动态编译方式，可以使用此参数指定，此时被此target依赖的所有库都会自动生成对应的动态库供链接。<br>需要注意的是，dynamic_link只适用于可执行文件，不适用于库。</p>
+</li>
+<li><p>export_dynamic=True<br>常规情况下，so中只引用所依赖的so中的符号，但是对于应用特殊的场合，需要在so中引用宿主可执行文件中的符号，就需要这个选项。<br>这个选项告诉连接器在可执行文件的动态符号表中加入所有的符号，而不只是用到的其他动态库中的符号。这样就使得在dlopen方式加载的so中可以调用可执行文件中的这些符号。<br>详情请参考 man ld(1) 中查找 –export-dynamic 的说明。</p>
+</li>
+</ul>
+<p>####cc_test<br>相当于cc_binary，再加上自动链接gtest和gtest_main<br>还支持testdata参数， 列表或字符串，文件会被链接到输出所在目录name.runfiles子目录下，比如：testdata/a.txt =&gt;name.runfiles/testdata/a.txt<br>用blade test子命令，会在成功构建后到name.runfiles目录下自动运行，并输出总结信息。</p>
+<ul>
+<li><p>testdata=[]<br>在name.runfiles里建立symbolic link指向工程目录的文件，目前支持<br>以下几种形式</p>
+<ul>
+<li>‘file’<br>在测试程序中使用这个名字本身的形式来访问</li>
+<li>‘//your_proj/path/file’<br>在测试程序中用”your_proj/path/file”来访问。</li>
+<li>(‘//your_proj/path/file’, “new_name”)<br>在测试程序中用”new_name”来访问</li>
+</ul>
+</li>
+</ul>
+<p>可以根据需要自行选择，这些路径都也可以是目录。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cc_test(</span><br><span class="line">    name = <span class="string">'textfile_test'</span>,</span><br><span class="line">    srcs = <span class="string">'textfile_test.cpp'</span>,</span><br><span class="line">    deps = <span class="string">':io'</span>,</span><br><span class="line">    testdata = [</span><br><span class="line">        <span class="string">'test_dos.txt'</span>,</span><br><span class="line">        <span class="string">'//your_proj/path/file'</span>,</span><br><span class="line">        (<span class="string">'//your_proj/path/file'</span>, <span class="string">'new_name'</span>)</span><br><span class="line">    ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<h4 id="proto_library">proto_library</h4><p>用于定义protobuf目标<br>deps 为import所涉及的其他proto_library<br>自动依赖protobuf，使用者不需要再显式指定。<br>构建时自动调用protoc生成cc和h，并且编译成对应的cc_library<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">proto_library(</span><br><span class="line">    name = <span class="string">'rpc_meta_info_proto'</span>,</span><br><span class="line">    srcs = <span class="string">'rpc_meta_info.proto'</span>,</span><br><span class="line">    deps = <span class="string">':rpc_option_proto'</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>Blade支持proto_library，使得在项目中使用protobuf十分方便。</p>
+<p>要引用某 proto 文件生成的头文件，需要从 BLADE_ROOT 的目录开始，只是把 proto 扩展名改为 pb.h 扩展名。<br>比如 //common/base/string_test.proto 生成的头文件，路径为 “common/base/string_test.pb.h”。</p>
+<h4 id="thrift_library">thrift_library</h4><p>用于定义thrift库目标<br>deps 为import所涉及的其他thrift_library<br>自动依赖thrift，使用者不需要再显式指定。<br>构建时自动调用thrift命令生成cpp和h，并且编译成对应的cc_library</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">thrift_library(</span><br><span class="line">    name = <span class="string">'shared_thrift'</span>,</span><br><span class="line">    srcs = <span class="string">'shared.thrift'</span>,</span><br><span class="line">)</span><br><span class="line">thrift_library(</span><br><span class="line">    name = <span class="string">'tutorial_thrift'</span>,</span><br><span class="line">    srcs = <span class="string">'tutorial.thrift'</span>,</span><br><span class="line">    deps = <span class="string">':shared_thrift'</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>C++中使用生成的头文件时，规则类似proto，需要带上相对BLADE_ROOT的目录前缀。</p>
+<ul>
+<li>thrift 0.9版（之前版本未测）有个[<a href="https://issues.apache.org/jira/browse/THRIFT-1859" target="_blank" rel="external">https://issues.apache.org/jira/browse/THRIFT-1859</a> bug]，需要修正才能使用，此bug已经在开发版本中[<a href="https://builds.apache.org/job/Thrift/633/changes#detail13" target="_blank" rel="external">https://builds.apache.org/job/Thrift/633/changes#detail13</a> 修正]</li>
+</ul>
+<h4 id="lex_yacc_library">lex_yacc_library</h4><p>srcs 必须为二元列表，后缀分别为ll和yy<br>构建时自动调用flex和bison, 并且编译成对应的cc_library</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">lex_yacc_library(</span><br><span class="line">     name = <span class="string">'parser'</span>,</span><br><span class="line">     srcs = [</span><br><span class="line">         <span class="string">'line_parser.ll'</span>,</span><br><span class="line">         <span class="string">'line_parser.yy'</span></span><br><span class="line">     ],</span><br><span class="line">     deps = [</span><br><span class="line">         <span class="string">":xcubetools"</span>,</span><br><span class="line">     ],</span><br><span class="line">     recursive = <span class="keyword">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>recursive=True<br>生成可重入的C scanner.</li>
+</ul>
+<h4 id="gen_rule">gen_rule</h4><p>用于定制自己的目标<br>outs = []，表示输出的文件列表，需要填写这个域gen_rule才会被执行<br>cmd, 字符串，表示被调用的命令行<br>cmd中可含有如下变量，运行时会被替换成srcs和outs中的对应值<br>$SRCS<br>$OUTS<br>$FIRST_SRC<br>$FIRST_OUT<br>$BUILD<em>DIR – 可被替换为 build[64,32]</em>[release,debug] 输出目录</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gen_rule(</span><br><span class="line">    name=<span class="string">'test_gen_target'</span>,</span><br><span class="line">    cmd=<span class="string">'echo what_a_nice_day;touch test2.c'</span>,</span><br><span class="line">    deps=[<span class="string">':test_gen'</span>],                         <span class="comment"># 可以有deps , 也可以被别的target依赖</span></span><br><span class="line">    outs=[<span class="string">'test2.c'</span>]</span><br><span class="line">)</span><br><span class="line">`</span><br></pre></td></tr></table></figure>
+<p>很多用户使用gen_rule动态生成代码文件然后和某个cc_library或者cc_binary一起编译，<br>需要注意应该尽量在输出目录生成代码文件,如build64_debug下，并且文件的路径名要写对，<br>如 outs = [‘websearch2/project_example/module_1/file_2.cc’], 这样使用<br>gen_rule生成的文件和库一起编译时就不会发生找不到动态生成的代码文件问题了。</p>
+<p>####swig_library</p>
+<p>根据.i文件生成相应的python, java 和php cxx模块代码，并且生成对应语言的代码。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">swig_library(</span><br><span class="line">    name = <span class="string">'poppy_client'</span>,</span><br><span class="line">    srcs = [</span><br><span class="line">        <span class="string">'poppy_client.i'</span></span><br><span class="line">    ],</span><br><span class="line">    deps = [</span><br><span class="line">        <span class="string">':poppy_swig_wrap'</span></span><br><span class="line">    ],</span><br><span class="line">    warning=<span class="string">'yes'</span>,</span><br><span class="line">    java_package=<span class="string">'com.soso.poppy.swig'</span>,   <span class="comment"># 生成的java文件的所在package名称</span></span><br><span class="line">    java_lib_packed=<span class="number">1</span>, <span class="comment"># 表示把生成的libpoppy_client_java.so打包到依赖者的jar包里，如java_jar依赖这个swig_library</span></span><br><span class="line">    optimize=[<span class="string">'O3'</span>]    <span class="comment"># 编译优化选项</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>warning<br>这里的warning仅仅指swig编译参数cpperraswarn是否被指定了，swig_library默认使用非标准编译告警级别（没有那么严格）。</li>
+</ul>
+<h4 id="cc_plugin">cc_plugin</h4><p>支持生成target所依赖的库都是静态库.a的so库，即plugin。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cc_plugin(</span><br><span class="line">    name=<span class="string">'mystring'</span>,</span><br><span class="line">    srcs=[<span class="string">'./src/mystr/mystring.cpp'</span>],</span><br><span class="line">    deps=[<span class="string">'#pthread'</span>,<span class="string">':lowercase'</span>,<span class="string">':uppercase'</span>,<span class="string">'#dl'</span>],</span><br><span class="line">    warning=<span class="string">'no'</span>,</span><br><span class="line">    defs=[<span class="string">'_MT'</span>],</span><br><span class="line">    optimize=[<span class="string">'O3'</span>]</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>cc_plugin 是为 JNI，python 扩展等需要动态库的场合设计的，不应该用于其他目的。</p>
+<h4 id="resource_library">resource_library</h4><p>编译静态资源。</p>
+<p>大家都遇到过部署一个可执行程序，还要附带一堆辅助文件才能运行起来的情况吧？<br>blade通过resource_library，支持把程序运行所需要的数据文件也打包到可执行文件里，<br>比如poppy下的BUILD文件里用的静态资源：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">resource_library(</span><br><span class="line">    name = <span class="string">'static_resource'</span>,</span><br><span class="line">    srcs = [</span><br><span class="line">        <span class="string">'static/favicon.ico'</span>,</span><br><span class="line">        <span class="string">'static/forms.html'</span>,</span><br><span class="line">        <span class="string">'static/forms.js'</span>,</span><br><span class="line">        <span class="string">'static/jquery-1.4.2.min.js'</span>,</span><br><span class="line">        <span class="string">'static/jquery.json-2.2.min.js'</span>,</span><br><span class="line">        <span class="string">'static/methods.html'</span>,</span><br><span class="line">        <span class="string">'static/poppy.html'</span></span><br><span class="line">    ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>生成  和 libstatic_resource.a 或者 libstatic_resource.so。<br>就像一样protobuf那样，编译后后生成一个库libstatic_resource.a，和一个相应的头文件static_resource.h，带路径包含进来即可使用。</p>
+<p>在程序中需要包含static_resource.h（带上相对于BLADE_ROOT的路径）和”common/base/static_resource.hpp”，<br>用 STATIC_RESOURCE 宏来引用数据：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">StringPiece data = STATIC_RESOURCE(poppy_static_favicon_ico);</span><br></pre></td></tr></table></figure></p>
+<p>STATIC_RESOURCE 的参数是从BLADE<em>ROOT目录开始的数据文件的文件名，把所有非字母数字和下划线的字符都替换为</em>。</p>
+<p>得到的 data 在程序运行期间一直存在，只可读取，不可写入。</p>
+<p>用 static resource 在某些情况下也有一点不方便：就是不能在运行期间更新，因此是否使用，需要根据具体场景自己权衡。</p>
+<h4 id="java_jar">java_jar</h4><p>编译java源代码。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">java_jar(</span><br><span class="line">    name = <span class="string">'poppy_java_client'</span>,</span><br><span class="line">    srcs = [</span><br><span class="line">        <span class="string">'src/com/soso/poppy'</span>                 <span class="comment"># 这里只需要指定java文件所在目录，不要写上具体java文件列表</span></span><br><span class="line">    ],</span><br><span class="line">    deps = [</span><br><span class="line">        <span class="string">'//poppy:rpc_meta_info_proto'</span>,       <span class="comment"># 可以依赖proto_library生成的java文件一起编译打包</span></span><br><span class="line">        <span class="string">'//poppy:rpc_option_proto'</span>,</span><br><span class="line">        <span class="string">'//poppy:rpc_message_proto'</span>,</span><br><span class="line">        <span class="string">'//poppy:poppy_client'</span>,              <span class="comment"># 可以依赖swig_library生成的java文件一起编译打包</span></span><br><span class="line">        <span class="string">'./lib:protobuf-java'</span>,               <span class="comment"># 可以依赖别的jar包</span></span><br><span class="line">        <span class="string">'./lib:junit'</span>,</span><br><span class="line">    ]</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>prebuilt=True<br>主要应用在已经编译打包好的java jar 包。</li>
+</ul>
+<h2 id="Blade的输出">Blade的输出</h2><p>构建过程是彩色高亮的<br>出错信息是彩色的，方便定位错误。</p>
+<p>默认生成 native arch 的可执行文件，指定生成 32/64 位结果也很简单，加上 -m32/64即可。<br>默认生成 release 版本的结果，如果生成 debug 版的，加上 -p debug 即可。<br>默认构建当前目录，如果当前目录依赖的外面的模块需要重新构建，也会被连带构建起来（Make很难做到）。如果要从当前目录构建所有子目录的目标，也很简单：blade … 即可。</p>
+<p>不同构建选项的结果放在不同的目录下，生成的文件一律按层次也放在这个目录里，不会污染源代码目录。</p>
+<p>要清除构建结果（一般不需要），blade clean 即可。</p>
+<h2 id="Blade_Cache">Blade Cache</h2><p>blade 支持 cache，可以大幅度加快构建速度。<br>blade 支持两种cache</p>
+<ul>
+<li>ccache , cache配置使用ccache的配置, 如通过配置 CCACHE_DIR 环境变量指定ccache目录。</li>
+<li>ccache 没有安装，则使用scons cache, 配置细节如下</li>
+</ul>
+<p>scons cache需要一个目录，依次按以下顺序检测：</p>
+<ul>
+<li>命令行参数–cache-dir</li>
+<li>环境变量BLADE_CACHE_DIR</li>
+<li>如果均未配置，则不启用cache。</li>
+<li>空的BLADE_CACHE_DIR变量或者不带参数值的–cache-dir=, 则会禁止cache。</li>
+</ul>
+<p>–cache-size 如不指定，则默认为2G，如指定，则使用用户指定的以Gigabyte为单位的大小的cache。<br>如 –cache-dir=’~/user_cache’ –cache-size=16 (16 G)大小cache。<br>用户可以根据需要配置大小，超出大小blade会执行清理工作，限制cache大小在用户指定的cache大小，<br>请谨慎设置这个大小，因为涉及到构建速度和机器磁盘空间的占用。</p>
+<h2 id="测试支持">测试支持</h2><p>Blade test支持增量测试 ，可以加快tests的执行。<br>已经Pass 的tests 在下一次构建和测试时不需要再跑，除非：</p>
+<ul>
+<li>tests 的任何依赖变化导致其重新生成。</li>
+<li>tests 依赖的测试数据改变，这种依赖为显式依赖，用户需要使用BUILD文件指定，如testdata。</li>
+<li>tests 所在环境变量发生改变。</li>
+<li>test arguments 改变。</li>
+<li>Fail 的test cases ，每次都重跑。</li>
+</ul>
+<p>如果需要使用全量测试，使用–full-test option, 如 blade test common/… –full-test ， 全部测试都需要跑。<br>另外，cc_test 支持了 always_run 属性，用于在增量测试时，不管上次的执行结果，每次总是要跑。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cc_test(</span><br><span class="line">    name = <span class="string">'zookeeper_test'</span>,</span><br><span class="line">    srcs = <span class="string">'zookeeper_test.cc'</span>,</span><br><span class="line">    always_run = <span class="keyword">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>Blade test支持并行测试，并行测试把这一次构建后需要跑的test cases并发地run。<br>blade test [targets] –test-jobs N<br>-t, –test-jobs N 设置并发测试的并发数，Blade会让N个测试进程并行执行</p>
+<p>对于某些因为可能相互干扰而不能并行跑的测试，可以加上 exclusive 属性<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cc_test(</span><br><span class="line">    name = <span class="string">'zookeeper_test'</span>,</span><br><span class="line">    srcs = <span class="string">'zookeeper_test.cc'</span>,</span><br><span class="line">    exclusive = <span class="keyword">True</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<h2 id="命令行参考">命令行参考</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">blade `[`action`]` `[`options`]` `[`targets`]`</span><br></pre></td></tr></table></figure>
+<p>action是一个动作，目前有</p>
+<ul>
+<li>build 表示构建项目</li>
+<li>test  表示构建并且跑单元测试</li>
+<li>clean 表示清除目标的构建结果</li>
+<li>query 查询目标的依赖项与被依赖项</li>
+<li>run   构建并run一个单一目标</li>
+</ul>
+<p>targets是一个列表，支持的格式：</p>
+<ul>
+<li>path:name 表示path中的某个target</li>
+<li>path表示path中所有targets</li>
+<li>path/… 表示path中所有targets，并递归包括所有子目录</li>
+<li>:name表示当前目录下的某个target<br>默认表示当前目录</li>
+</ul>
+<p>参数列表：</p>
+<ul>
+<li>-m32,-m64            指定构建目标位数，默认为自动检测</li>
+<li>-p PROFILE           指定debug/release，默认release</li>
+<li>-k, –keep-going     构建过程中遇到错误继续执行（如果是致命错误不能继续）</li>
+<li>-j N,–jobs=N        N路并行编译，多CPU机器上适用</li>
+<li>-t N,–test-jobs=N   N路并行测试，多CPU机器上适用</li>
+<li>–cache-dir=DIR      指定一个cache目录</li>
+<li>–cache-size=SZ      指定cache大小，以G为单位</li>
+<li>–verbose            完整输出所运行的每条命令行</li>
+<li>–h, –help           显示帮助</li>
+<li>–color=yes/no/auto  是否开启彩色</li>
+<li>–generate-dynamic   强制生成动态库</li>
+<li>–generate-java      为proto_library 和 swig_library 生成java文件</li>
+<li>–generate-php       为proto_library 和 swig_library 生成php文件</li>
+<li>–gprof              支持 GNU gprof</li>
+<li>–gcov               支持 GNU gcov 做覆盖率测试</li>
+</ul>
+<h2 id="配置">配置</h2><p>Blade 支持三个配置文件</p>
+<ul>
+<li>blade.zip 同一个目录下的 blade.conf，这是全局配置。</li>
+<li>~/.bladerc 用户 HOME 目录下的 .bladerc 文件，这是用户级的配置。</li>
+<li>BLADE_ROOT 其实也是个配置文件，写在这里的是项目级配置。</li>
+</ul>
+<p>后面描述的所有多个参数的配置的每个配置参数都有默认值，并不需要全部写出，也没有顺序要求。</p>
+<h3 id="cc_config">cc_config</h3><p>所有c/c++目标的公共配置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cc_config(</span><br><span class="line">    extra_incs = [<span class="string">'thirdparty'</span>],  <span class="comment"># 额外的 -I，比如 thirdparty</span></span><br><span class="line">    warnings = [<span class="string">'-Wall'</span>, <span class="string">'-Wextra'</span>...], <span class="comment"># C/C++公用警告</span></span><br><span class="line">    c_warnings = [<span class="string">'-Wall'</span>, <span class="string">'-Wextra'</span>...], <span class="comment"># C专用警告</span></span><br><span class="line">    cxx_warnings = [<span class="string">'-Wall'</span>, <span class="string">'-Wextra'</span>...], <span class="comment"># C++专用警告</span></span><br><span class="line">    optimize = <span class="string">'-O2'</span>, <span class="comment"># 优化级别</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>所有选项均为可选，如果不存在，则保持先前值。发布带的blade.conf中的警告选项均经过精心挑选，建议保持。</p>
+<h3 id="cc_test_config">cc_test_config</h3><p>构建和运行测试所需的配置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cc_test_config(</span><br><span class="line">    dynamic_link=<span class="keyword">True</span>,   <span class="comment"># 测试程序是否默认动态链接，可以减少磁盘开销，默认为 False</span></span><br><span class="line">    heap_check=<span class="string">'strict'</span>, <span class="comment"># 开启 gperftools 的 HEAPCHECK，具体取值请参考 gperftools 的文档</span></span><br><span class="line">    gperftools_libs=<span class="string">'//thirdparty/perftools:tcmalloc'</span>,  <span class="comment"># tcmclloc 库，blade deps 格式</span></span><br><span class="line">    gperftools_debug_libs=<span class="string">'//thirdparty/perftools:tcmalloc_debug'</span>, <span class="comment"># tcmalloc_debug 库，blade deps 格式</span></span><br><span class="line">    gtest_libs=<span class="string">'//thirdparty/gtest:gtest'</span>,  <span class="comment"># gtest 的库，blade deps 格式</span></span><br><span class="line">    gtest_main_libs=<span class="string">'//thirdparty/gtest:gtest_main'</span> <span class="comment"># gtest_main 的库路径，blade deps 格式</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>所有的 config 的列表类型的选项均支持追加模式，用法如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cc_config(</span><br><span class="line">    append = config_items(</span><br><span class="line">        warnings = [...]</span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>注意:</p>
+<ul>
+<li>gtest 1.6开始，去掉了 make install，但是可以绕过[<a href="http://blog.csdn.net/chengwenyao18/article/details/7181514" target="_blank" rel="external">http://blog.csdn.net/chengwenyao18/article/details/7181514</a> gtest1.6.0安装方法]。</li>
+<li>gtest 库还依赖 pthread，因此gtest_libs需要写成 [‘#gtest’, ‘#pthread’]</li>
+<li>或者把源码纳入你的源码树，比如thirdparty下，就可以写成gtest_libs=’//thirdparty/gtest:gtest’。</li>
+</ul>
+<h3 id="proto_library_config">proto_library_config</h3><p>编译protobuf需要的配置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">proto_library_config(</span><br><span class="line">    protoc=<span class="string">'protoc'</span>,  <span class="comment"># protoc编译器的路径</span></span><br><span class="line">    protobuf_libs=<span class="string">'//thirdparty/protobuf:protobuf'</span>, <span class="comment"># protobuf库的路径，Blade deps 格式</span></span><br><span class="line">    protobuf_path=<span class="string">'thirdparty'</span>, <span class="comment"># import 时的 proto 搜索路径，相对于 BLADE_ROOT</span></span><br><span class="line">    protobuf_include_path = <span class="string">'thirdparty'</span>,  <span class="comment"># 编译 pb.cc 时额外的 -I 路径</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<h3 id="thrift_library_config">thrift_library_config</h3><p>编译thrift需要的配置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">thrift_library_config(</span><br><span class="line">    thrift=<span class="string">'thrift'</span>,  <span class="comment"># protoc编译器的路径</span></span><br><span class="line">    thrift_libs=<span class="string">'//thirdparty/thrift:thrift'</span>, <span class="comment"># thrift库的路径，Blade deps 格式</span></span><br><span class="line">    thrift_path=<span class="string">'thirdparty'</span>, <span class="comment"># thrift中include时的thrift文件的搜索路径，相对于 BLADE_ROOT</span></span><br><span class="line">    thrift_incs = <span class="string">'thirdparty'</span>,  <span class="comment"># 编译 thrift生成的.cpp 时额外的 -I 路径</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>所有这些配置项都有默认值，如果不需要覆盖就无需列入相应的参数。默认值都是假设安装到系统目录下，如果你的项目中把这些库放进进了自己的代码中（比如我们内部），请修改相应的配置。</p>
+<h2 id="环境变量">环境变量</h2><p>Blade还支持以下环境变量：</p>
+<ul>
+<li>TOOLCHAIN_DIR，默认为空</li>
+<li>CPP，默认为cpp</li>
+<li>CXX，默认为c++</li>
+<li>CC，默认为gcc</li>
+<li>LD，默认为c++</li>
+</ul>
+<p>TOOLCHAIN_DIR和CPP等组合起来，构成调用工具的完整路径，例如：</p>
+<p>调用/usr/bin下的gcc（开发机上的原版gcc）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TOOLCHAIN_DIR=/usr/bin blade</span><br></pre></td></tr></table></figure></p>
+<p>使用clang<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CPP=<span class="string">'clang -E'</span> CC=clang CXX=clang++ ld=clang++ blade</span><br></pre></td></tr></table></figure></p>
+<p>如同所有的环境变量设置规则，放在命令行前的环境变量，只对这一次调用起作用，如果要后续起作用，用 export，要持久生效，放入 ~/.profile 中。</p>
+<p>环境变量的支持将来考虑淘汰，改为配置编译器版本的方式，因此建议暂时不要使用。</p>
+<h2 id="辅助命令">辅助命令</h2><h3 id="install">install</h3><p>blade命令的符号链接会被安装下面的命令到~/bin 下。</p>
+<h3 id="lsrc">lsrc</h3><p>列出当前目录下指定的源文件，以blade的srcs列表格式输出。</p>
+<h3 id="genlibbuild">genlibbuild</h3><p>自动生成以目录名为库名的cc_library，以测试文件的名为名的cc_test，proto的BUILD文件，并假设这些测试都依赖这个库</p>
+<h3 id="vim集成">vim集成</h3><p>我们编写了vim的blade语法文件，高亮显示blade关键字，install后就会自动生效。</p>
+<p>我们编写了 Blade 命令，使得可以在 vim 中直接执行 blade，并快速跳转到出错行（得益于 vim 的 <a href="ttp://easwy.com/blog/archives/advanced-vim-skills-quickfix-mode/" target="_blank" rel="external">hquickfix</a> 特性）。</p>
+<p>使用时直接在 vim 的 : 模式输入（可带参数）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Blade</span><br></pre></td></tr></table></figure>
+<p>即可构建。</p>
+<p>这个命令的源代码在 tools/.vimrc 中。</p>
+<h3 id="alt">alt</h3><p>在源代码目录和构建目标目录之间跳转</p>
+<h2 id="安装">安装</h2><p>执行install脚本即可安装到~/bin下，目前因还在开发阶段，变化还比较快，以软链方式安装，install后不能删除checkout出来的原始目录。<br>目前blade生成scons脚本，因此还需要安装scons 2.0以上版本。<br>Blade 需要支持 Python 2.4-2.7.x，不支持 python3。</p>
+<p>install使得可以在任何目录下直接执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ blade</span><br></pre></td></tr></table></figure>
+<p>命令。<br>如果不行，确保~/bin在你的PATH环境变量里，否则修改 ~/.profile，加入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=~/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<p>然后重新登录即可。</p>
+<p>From: <a href="https://github.com/chen3feng/typhoon-blade/blob/master/doc/user_manual_zh_CN.md" target="_blank" rel="external">https://github.com/chen3feng/typhoon-blade/blob/master/doc/user_manual_zh_CN.md</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="cigbojkmp001vbbpjehtdhnf5" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/23/dev/blade/" data-id="cih4emdsm002lptpjnq93e7si" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/10/23/dev/blade/#ds-thread" class="article-comment-link">评论</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/blade/">blade</a></li></ul>
 
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/CPP/cpp_dev" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/21/dev/CPP/cpp_dev/">C++ 编程环境</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/10/21/dev/CPP/cpp_dev/">
+      <time datetime="2015-10-21T12:19:56.000Z" itemprop="datePublished">2015-10-21</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/c/">c++</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h3 id="C++_code_with_Google_style">C++ code with Google style</h3><p><a href="http://google.github.io/styleguide/cppguide.html" target="_blank" rel="external">http://google.github.io/styleguide/cppguide.html</a></p>
+<h3 id="Use_cpplint_to_check_your_style">Use cpplint to check your style</h3><h3 id="Protocol_Buffers">Protocol Buffers</h3><p><a href="https://developers.google.com/protocol-buffers/" target="_blank" rel="external">https://developers.google.com/protocol-buffers/</a><br>(proto2): <a href="https://developers.google.com/protocol-buffers/docs/proto" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/proto</a><br>C++ related: <a href="https://developers.google.com/protocol-buffers/docs/cpptutorial" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/cpptutorial</a>,<br>Style guide: <a href="https://developers.google.com/protocol-buffers/docs/style" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/style</a></p>
+<h3 id="Compile_code:_Blade">Compile code: Blade</h3><p><a href="https://github.com/chen3feng/typhoon-blade" target="_blank" rel="external">https://github.com/chen3feng/typhoon-blade</a></p>
+<h3 id="Unit_test_your_code:_gtest">Unit test your code: gtest</h3><p><a href="https://github.com/google/googletest/blob/master/googletest/docs/Documentation.md" target="_blank" rel="external">https://github.com/google/googletest/blob/master/googletest/docs/Documentation.md</a><br>Run unit tests with BLADE<br>Every public method should be covered</p>
+<h3 id="Post_your_code_review:_ReviewBoard">Post your code review: ReviewBoard</h3><h3 id="gflags">gflags</h3><p>gflags支持方便的解析和获取命令行参数<br><a href="https://github.com/gflags/gflags" target="_blank" rel="external">https://github.com/gflags/gflags</a></p>
+<h3 id="glog">glog</h3><p><a href="https://github.com/google/glog" target="_blank" rel="external">https://github.com/google/glog</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/" data-id="cih4emdsz0030ptpj22pthj3q" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/maven_assembly" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/12/dev/maven_assembly/">Maven 依赖包打包</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/10/12/dev/maven_assembly/">
+      <time datetime="2015-10-12T12:19:56.000Z" itemprop="datePublished">2015-10-12</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">version</span>&gt;</span>2.4<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.travelsky.tdp.pkgstock<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>stock-assembly-descriptor<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.0.0<span class="tag">&lt;/<span class="title">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">execution</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 绑定到maven的package命令 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="title">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="title">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="title">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="title">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="title">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">executions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">ignoreMissingDescriptor</span>&gt;</span>true<span class="tag">&lt;/<span class="title">ignoreMissingDescriptor</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">descriptorRefs</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">descriptorRef</span>&gt;</span>zipAll<span class="tag">&lt;/<span class="title">descriptorRef</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">descriptorRef</span>&gt;</span>zipFilterConf<span class="tag">&lt;/<span class="title">descriptorRef</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">descriptorRef</span>&gt;</span>zipJsCssOnly<span class="tag">&lt;/<span class="title">descriptorRef</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="title">descriptorRef</span>&gt;</span>zipPicOnly<span class="tag">&lt;/<span class="title">descriptorRef</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="title">descriptorRefs</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">configuration</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/maven_assembly/" data-id="cih4emdse002fptpjxhj2gt9s" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/10/12/dev/maven_assembly/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/java_math_stat" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/12/dev/java_math_stat/">Java Math StatExample</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/10/12/dev/java_math_stat/">
+      <time datetime="2015-10-12T04:57:56.000Z" itemprop="datePublished">2015-10-12</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.StatUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.GeometricMean;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Kurtosis;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Mean;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Skewness;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.StandardDeviation;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Variance;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Max;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Min;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Percentile;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.summary.Product;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.summary.Sum;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StatExample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">double</span>[] values = <span class="keyword">new</span> <span class="keyword">double</span>[] &#123; <span class="number">2.3</span>, <span class="number">5.4</span>, <span class="number">6.2</span>, <span class="number">7.3</span>, <span class="number">23.3</span> &#125;;</span><br><span class="line"></span><br><span class="line">        System.out.println( <span class="string">"min: "</span> + StatUtils.min( values ) );</span><br><span class="line">        System.out.println( <span class="string">"max: "</span> + StatUtils.max( values ) );</span><br><span class="line">        System.out.println( <span class="string">"mean: "</span> + StatUtils.mean( values ) );</span><br><span class="line">        System.out.println( <span class="string">"product: "</span> + StatUtils.product( values ) );</span><br><span class="line">        System.out.println( <span class="string">"sum: "</span> + StatUtils.sum( values ) );</span><br><span class="line">        System.out.println( <span class="string">"variance: "</span> + StatUtils.variance( values ) );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Measures from previous example</span></span><br><span class="line">        Min min = <span class="keyword">new</span> Min();</span><br><span class="line">        System.out.println( <span class="string">"min: "</span> + min.evaluate( values ) );</span><br><span class="line">        Max max = <span class="keyword">new</span> Max();</span><br><span class="line">        System.out.println( <span class="string">"max: "</span> + max.evaluate( values ) );</span><br><span class="line">        Mean mean = <span class="keyword">new</span> Mean();</span><br><span class="line">        System.out.println( <span class="string">"mean: "</span> + mean.evaluate( values ) );</span><br><span class="line">        Product product = <span class="keyword">new</span> Product();</span><br><span class="line">        System.out.println( <span class="string">"product: "</span> + product.evaluate( values ) );</span><br><span class="line">        Sum sum = <span class="keyword">new</span> Sum();</span><br><span class="line">        System.out.println( <span class="string">"sum: "</span> + sum.evaluate( values ) );</span><br><span class="line">        Variance variance = <span class="keyword">new</span> Variance();</span><br><span class="line">        System.out.println( <span class="string">"variance: "</span> + variance.evaluate( values ) );</span><br><span class="line"></span><br><span class="line">        <span class="comment">// New measures</span></span><br><span class="line">        Percentile percentile = <span class="keyword">new</span> Percentile();</span><br><span class="line">        System.out.println( <span class="string">"80 percentile value: "</span> + percentile.evaluate( values, <span class="number">80.0</span> ) );</span><br><span class="line">        GeometricMean geoMean = <span class="keyword">new</span> GeometricMean();</span><br><span class="line">        System.out.println( <span class="string">"geometric mean: "</span> + geoMean.evaluate( values ) );</span><br><span class="line">        StandardDeviation stdDev = <span class="keyword">new</span> StandardDeviation();</span><br><span class="line">        System.out.println( <span class="string">"standard dev: "</span> + stdDev.evaluate( values ) );</span><br><span class="line">        Skewness skewness = <span class="keyword">new</span> Skewness();</span><br><span class="line">        System.out.println( <span class="string">"skewness: "</span> + skewness.evaluate( values ) );</span><br><span class="line">        Kurtosis kurtosis = <span class="keyword">new</span> Kurtosis();</span><br><span class="line">        System.out.println( <span class="string">"kurtosis: "</span> + kurtosis.evaluate( values ) );</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="cih4emdsf002hptpj3sdkxv7a" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/10/12/dev/java_math_stat/#ds-thread" class="article-comment-link">评论</a>
+      
+      
     </footer>
   </div>
   
@@ -238,264 +648,13 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="cigbojkmk001qbbpjm31ekge7" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="cih4emdrz001qptpj611xaluo" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-travel/hefu_travel" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/07/travel/hefu_travel/">合福高铁-国庆游</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/07/travel/hefu_travel/">
-      <time datetime="2015-10-06T16:00:00.000Z" itemprop="datePublished">2015-10-07</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/travel/">travel</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>国庆本来自己没什么计划，后来同学一起计划沿着合福高铁沿线的景点游一圈，合福高铁将黄山、三清山、武夷山、福州、厦门等联系在了一起，横跨三个省份，当真是中国最美的高铁线路。由于人在杭州，因此打算从杭州出发，六天的行程计划去三清山、武夷山、福州和厦门。正所谓计划赶不上变化，再加上国庆人比较多导致早已经买好的票都改签了，预约的酒店很多也没有住成。</p>
-<h3 id="首站：杭州-武夷山东">首站：杭州-武夷山东</h3><hr>
-<p>晚上6:30发车，9:00就到武夷山东站了，武夷山东站是刚刚开通的车站，周围的交通配套设施都很不完善，另外武夷山东站虽然名字中带着『武夷山』，但是离武夷山景区的距离实在是太长了，坐大巴车要两个小时。</p>
-<p>到了景区后住了一个青年旅店，六人间，遇到了两个福州来的漂亮妹子，住的地方很潮湿，可能是因为刚刚来台风的原因，一晚上没有怎么睡好，青年旅店的环境还是挺好的，老板非常文艺，微信发的状态都是繁体字的。</p>
-<hr>
-<p><img src="/images/hefu_train/IMG_4006.jpg" alt=""><br><img src="/images/hefu_train/IMG_4010.jpg" alt=""></p>
-<p>第二天吃了点早饭，为了逃票，直接找了个当地人把我们带到景区去爬大王峰了，大王峰不算是最知名的武夷山景点，不过丹霞地貌的还是挺美的。</p>
-<hr>
-<p><img src="/images/hefu_train/IMG_4021.jpg" alt=""><br>我觉得逃票这个决定可能是这次旅行最坏得决定了，大王峰倒是没什么特色，但是下午打算去其他景点的时候就发现再买票有点不划算了，本来定的是10月2号离开武夷山的，结果最后只能提前走了。再附几张武夷山的图。</p>
-<hr>
-<p><img src="/images/hefu_train/IMG_4048.jpg" alt=""><br><img src="/images/hefu_train/IMG_4115.jpg" alt=""></p>
-<h3 id="第二站：三清山">第二站：三清山</h3><hr>
-<p>『三清山又名少华山、丫山，位于中国江西省上饶市玉山县与德兴市交界处。因玉京、玉虚、玉华三峰宛如道教玉清、上清、太清三位尊神列坐山巅而得名。其中玉京峰为最高，海拔1819.9米，是江西第五高峰和怀玉山脉的最高峰，也是信江的源头。三清山是道教名山，世界自然遗产地、世界地质公园、国家自然遗产、国家地质公园。』</p>
-<p>三清山比较热门的路线是南线索道和东线索道，要想徒步上山的话只能从南部走。我们是从东部的金沙索道上山的，国庆假期索道还要叫号按序上山，上去之后已经是海拔1000米以上了，之后所有的景点都在1000米之上。</p>
-<hr>
-<p><img src="/images/hefu_train/IMG_4192.jpg" alt=""><br><img src="/images/hefu_train/IMG_4213.jpg" alt=""><br><img src="/images/hefu_train/IMG_4257.jpg" alt=""></p>
-<center>云雾缭绕的三清山</center><br><img src="/images/hefu_train/IMG_4265.jpg" alt=""><br><img src="/images/hefu_train/IMG_4269.jpg" alt=""><br><img src="/images/hefu_train/IMG_4276.jpg" alt=""><br><center>猴王观宝</center><br><img src="/images/hefu_train/IMG_4287.jpg" alt=""><br><center>如诗如画</center><br><img src="/images/hefu_train/IMG_4296.jpg" alt=""><br><img src="/images/hefu_train/IMG_4299.jpg" alt=""><br><center>三清山主峰</center>
-
-<h3 id="第三站：福州">第三站：福州</h3><hr>
-<p>福州整体没有很深得印象，就去了三坊七巷，还买了原价120一人的票，逛的过程中发现票价非常不值啊，收费的小景点都是一些古宅什么的，作为一个北方人，看过了也就那样了，都是类似的。另外三坊七巷和厦门的曾厝垵和鼓浪屿比也没有什么特色，被完爆的节奏。</p>
-<hr>
-<p><img src="/images/hefu_train/IMG_4346.jpg" alt=""><br><img src="/images/hefu_train/IMG_4355.jpg" alt=""><br><img src="/images/hefu_train/IMG_4523.jpg" alt=""></p>
-<center>非常喜欢林则徐纪念馆的牌子的设计</center>
-
-<h3 id="第四站：厦门">第四站：厦门</h3><hr>
-<p>上次去厦门是元旦的时候，那个时候是十几个人一起去的，离现在还不到半年的时间。每次去厦门都是不同的感受，总的来说厦门是一个让人放松的城市，非常的文艺。</p>
-<hr>
-<p><img src="/images/hefu_train/IMG_4364.jpg" alt=""></p>
-<center>『烤酸奶』其实是冷冻的，第一次吃，味道还不错</center><br><img src="/images/hefu_train/IMG_4428.jpg" alt=""><br><br><img src="/images/hefu_train/IMG_4497.jpg" alt=""><br><img src="/images/hefu_train/IMG_4518.jpg" alt=""><br><img src="/images/hefu_train/IMG_4519.jpg" alt=""><br><img src="/images/hefu_train/IMG_4520.jpg" alt=""><br><center>鼓浪屿</center><br>鼓浪屿上面的欧式风格的建筑，文艺的小店，小吃等非常多，龙头路非常热闹。<br><img src="/images/hefu_train/IMG_4541.jpg" alt=""><br><center>最后附上行程的所有火车票</center>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/07/travel/hefu_travel/" data-id="cigbojkl80006bbpjyxjftz2c" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/07/travel/hefu_travel/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/25/algo/ml/feature_hashing/">
-      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
-<h3 id="Motivating_example">Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
-<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
-<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
-<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Term    Index</span><br><span class="line">John    <span class="number">1</span></span><br><span class="line">likes   <span class="number">2</span></span><br><span class="line">to      <span class="number">3</span></span><br><span class="line">watch   <span class="number">4</span></span><br><span class="line">movies  <span class="number">5</span></span><br><span class="line">Mary    <span class="number">6</span></span><br><span class="line">too     <span class="number">7</span></span><br><span class="line">also    <span class="number">8</span></span><br><span class="line">football9</span><br></pre></td></tr></table></figure></p>
-<p>to the term-document matrix</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> </span><br><span class="line"><span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
-<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
-<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
-<h3 id="Feature_vectorization_using_the_hashing_trick">Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">x :</span>= <span class="keyword">new</span> vector[N]</span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> <span class="string">features:</span></span><br><span class="line">    <span class="string">h :</span>= hash(f)</span><br><span class="line">    x[h mod N] += <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
-<p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x := <span class="keyword">new</span> <span class="built_in">vector</span>[N]</span><br><span class="line"><span class="keyword">for</span> f in features:</span><br><span class="line">    h := hash(f)</span><br><span class="line">    idx := h mod N</span><br><span class="line">    <span class="keyword">if</span> ξ(f) == <span class="number">1</span>:</span><br><span class="line">        x[idx] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        x[idx] -= <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
-<p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="cigbojknp0030bbpjxs9x1gp8" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/ml/Feature Processing" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/25/algo/ml/Feature Processing/">特征处理</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/25/algo/ml/Feature Processing/">
-      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>特征工程（Feature Engineering）经常被说为机器学习中的black art，这里面包含了很多不可言说的方面。怎么处理好特征，最重要的当然还是对要解决问题的了解。但是，它其实也有很多科学的地方。这篇文章我之所以命名为特征处理（Feature Processing），是因为这里面要介绍的东西只是特征工程中的一小部分。这部分比较基础，比较容易说，所以由此开始。单个原始特征（或称为变量）通常属于以下几类之一：</p>
-<ul>
-<li>连续（continuous）特征；</li>
-<li>无序类别（categorical）特征；</li>
-<li>有序类别（ordinal）特征。</li>
-</ul>
-<p>本文中我主要介绍针对单个特征的处理方法，虽然也会附带介绍基础的特征组合方法。同时处理多个特征，以及更复杂的特征处理方法介绍，以后我再另外细说。下面我由浅入深地逐渐说明针对这三类特征的常用处理方法。</p>
-<h2 id="初级篇">初级篇</h2><hr>
-<h3 id="连续特征">连续特征</h3><p>除了归一化（去中心，方差归一），不用做太多特殊处理，可以直接把连续特征扔到模型里使用。</p>
-<h3 id="无序特征">无序特征</h3><p>可以使用One-hot（也叫One-of-k）的方法把每个无序特征转化为一个数值向量。比如一个无序特征color有三种取值：red，green，blue。那么可以用一个长度为3的向量来表示它，向量中的各个值分别对应于red，green，blue。如：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">color取值 向量表示</span><br><span class="line">red     (<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">green   (<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">blue    (<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>这种方法在NLP里用的很多，就是所谓的词向量模型。变换后的向量长度对于词典长度，每个词对应于向量中的一个元素。</p>
-<p>机器学习书籍里在讲这个的时候介绍的处理方法可能跟我上面说的有点差别。上面说的表达方式里有一个维度是可以省略的。既然我们知道color一定是取3个值中的一个，那么我们知道向量的前两个元素值，就能推断第3个值是多少。所以，其实用下面的方式就可以表达到底是哪种颜色：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">color取值 向量表示</span><br><span class="line">red     (<span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">green   (<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">blue    (<span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
-<p>这样表达的好处是少用了一个维度，降低了转化后特征之间的相关性。但在实际问题中特征基本都或多或少会有些缺失。使用第一种表达方式就可以用全0的向量来表示值缺失，而第二种表达方式是没法表达缺失的。</p>
-<h3 id="有序特征">有序特征</h3><p>有些特征虽然也像无序特征那样只取限定的几个值，但是这些值之间有顺序的含义。例如一个人的状态status有三种取值：bad, normal, good，显然bad &lt; normal &lt; good。</p>
-<p>当然，对有序特征最简单的处理方式是忽略其中的顺序关系，把它看成无序的，这样我们就可以使用处理无序特征的方式来处理它。在实际问题中，这种处理方式其实用的很多。</p>
-<p>当然有些问题里有序可能会很重要，这时候就不应该把其中的顺序关系丢掉。一般的表达方式如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">status取值    向量表示</span><br><span class="line">bad     (<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">normal  (<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">good    (<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>上面这种表达方式很巧妙地利用递进表达了值之间的顺序关系。</p>
-<h2 id="中级篇">中级篇</h2><hr>
-<p>最容易让人掉以轻心的，往往就是大家觉得最简单的事。在特征处理中，最容易让刚入门同学忽略的，是对连续特征的处理方式。</p>
-<p>以线性分类器Linear Regression (LinearReg)为例，它是通过特征的线性加权来预测因变量y：<br><figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">y</span>=<span class="string">wTx</span></span><br></pre></td></tr></table></figure></p>
-<p>但大部分实际情况下，y与x都不会是这么简单的线性关系，甚至连单调关系都不会有。举个只有一个特征的例子，如果y与x的实际关系如下图：</p>
-<p><img src="/images/algo/nonlinear_function1.png" alt=""></p>
-<p>那么直接把x扔进LinearReg模型是怎么也得不到好结果的。很多人会想着既然线性分类器搞不定，那就直接找个非线性的好了，比如高斯核的SVM。我们确实可以通过这种简单换算法的方式解决这个简单的问题。但对于很多实际问题（如广告点击率预测），往往特征非常多，这时候时间约束通常不允许我们使用很复杂的非线性分类器。这也是为什么算法发展这么多年，广告点击率预测最常用的方法还是Logistic Regression (LogisticReg)。</p>
-<p>对于上面这个问题，有没有什么办法使得LinearReg也能处理得不错？当然是有，就是对原始特征x做转化，把原来的非线性关系转化为线性关系。</p>
-<h3 id="方法一：离散化">方法一：离散化</h3><p>最常用的转化方式是对x做离散化(discretization)，也就是把原来的值分段，转化成一个取值为0或1的向量。原始值落在某个段里，向量中此段对应的元素就为1，否则为0。</p>
-<p>离散化的目标是y与转化后向量里的每个元素都保持比较好的线性关系。<br>比如取离散点{0.5,1.5,2.5}，通过判断x属于(−∞,0.5)，[0.5,1.5)，[1.5,2.5)，[2.5,+∞)中哪段来把它离散化为4维的向量。下面是一些例子的离散结果：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">原始值x    离散化后的值</span><br><span class="line"><span class="number">0.1</span>     (<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"><span class="number">1.3</span>     (<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"><span class="number">3.2</span>     (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"><span class="number">5.8</span>     (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>离散化方法的关键是怎么确定分段中的离散点。下面是常用的选取离散点的方法：</p>
-<p>a. 等距离离散：顾名思义，就是离散点选取等距点。我们上面对x取离散点{0.5,1.5,2.5}就是一种等距离散，见下图。图中垂直的灰线代表离散点。</p>
-<p><img src="/images/algo/nonlinear_function2.png" alt=""></p>
-<p>b. 等样本点离散：选取的离散点保证落在每段里的样本点数量大致相同，见下图。</p>
-<p><img src="/images/algo/nonlinear_function3.png" alt=""></p>
-<p>c. 画图观察趋势：以x为横坐标，y为纵坐标，画图，看曲线的趋势和拐点。通过观察下面的图我们发现可以利用3条直线（红色直线）来逐段近似原来的曲线。把离散点设为两条直线相交的各个点，我们就可以把x离散化为长度为3的向量。</p>
-<p><img src="/images/algo/nonlinear_function4.png" alt=""></p>
-<p>上面介绍的这种离散化为0/1向量的方法有个问题，它在离散时不会考虑到具体的x到离散边界的距离。比如等距离散中取离散点为{0.5,1.5,2.5}，那么1.499，1.501和2.49分别会离散为(0, 1, 0, 0)，(0, 0, 1, 0)和(0, 0, 1, 0)。1.499和1.501很接近，可是就因为这种强制分段的离散导致它们离散的结果差距很大。</p>
-<p>针对上面这种硬离散的一种改进就是使用软离散，也就是在离散时考虑到x与附近离散点的距离，离散出来的向量元素值可以是0/1之外的其他值。有兴趣的同学可以去ESL1这本书中找点感觉。</p>
-<h3 id="方法二：函数变换">方法二：函数变换</h3><p>函数变换直接把原来的特征通过非线性函数做变换，然后把原来的特征，以及变换后的特征一起加入模型进行训练。常用的变换函数见下表，不过其实你可以尝试任何函数。<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">常用非线性函数f<span class="params">(x)</span> x的取值范围</span><br><span class="line">xα; α∈<span class="params">(−∞,+∞)</span>   <span class="params">(−∞,+∞)</span></span><br><span class="line"><span class="built_in">log</span><span class="params">(x)</span>          <span class="params">(<span class="number">0</span>,+∞)</span></span><br><span class="line"><span class="built_in">log</span><span class="params">(x1−x)</span>       <span class="params">(<span class="number">0</span>,<span class="number">1</span>)</span></span><br></pre></td></tr></table></figure></p>
-<p>这个方法操作起来很简单，但记得对新加入的特征做归一化。</p>
-<p>对于我们前面的问题，只要把x2，x3也作为特征加入即可，因为实际上y就是x的一个三次多项式。</p>
-<h2 id="高级篇">高级篇</h2><hr>
-<h3 id="笛卡尔乘积">笛卡尔乘积</h3><p>我们可以使用笛卡尔乘积的方式来组合2个或更多个特征。比如有两个类别特征color和light，它们分别可以取值为red，green，blue和on, off。这两个特征各自可以离散化为3维和2维的向量。对它们做笛卡尔乘积转化，就可以组合出长度为6的特征，它们分别对应着原始值对(red, on)，(red, off)，(green, on)，(green, off)，(blue, on)，(blue, off)。下面的矩阵表达方式更清楚地说明了这种组合。<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">X</span>       <span class="built_in">on</span>  <span class="built_in">off</span></span><br><span class="line">red      </span><br><span class="line">green        </span><br><span class="line">blue</span><br></pre></td></tr></table></figure></p>
-<p>对于3个特征的笛卡尔乘积组合，可以表达为立方的形式。更多特征的组合依次类推。 这个方法也可以直接用于连续特征与类别特征之间的组合，只要把连续特征看成是1维的类别特征就好了，这时候组合后特征对应的值就不是0/1了，而是连续特征的取值。</p>
-<h3 id="离散化续篇">离散化续篇</h3><p>在上节中我已经介绍了一些常用的离散化单个连续特征的方法，其中一个是画图观察趋势。画图观察趋势的好处是直观、可解释性强，坏处是很麻烦。当要离散化的特征很多时，这种方法可操作性较差。</p>
-<p>机器学习中有个很好解释，速度也不错的模型——决策树模型。大白话说决策树模型就是一大堆的if else。它天生就可以对连续特征分段，所以把它用于离散化连续特征合情合理。我称这种方法为决策树离散化方法。例如Gmail在对信件做重要性排序时就使用了决策树离散化方法2。</p>
-<p>决策树离散化方法通常也是每次离散化一个连续特征，做法如下：</p>
-<p>单独用此特征和目标值y训练一个决策树模型，然后把训练获得的模型内的特征分割点作为离散化的离散点。<br>这种方法当然也可以同时离散化多个连续特征，但是操作起来就更复杂了，实际用的不多。</p>
-<h3 id="核方法">核方法</h3><p>核方法经常作为线性模型的一种推广出现。以线性回归模型为例，它对应的核方法如下：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fθ(x)=∑θ<span class="function"><span class="title">iK</span><span class="params">(x,xi)</span></span></span><br></pre></td></tr></table></figure></p>
-<p>其中{xi}=1为训练样本点，K(xi,xj)为核函数，比如常用的高斯核函数为：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">K</span><span class="params">(xi,xj)</span></span>=<span class="function"><span class="title">exp</span><span class="params">(−exp(∥xi−xj∥, <span class="number">2</span>)</span></span>/<span class="number">2</span>*<span class="function"><span class="title">exp</span><span class="params">(h,<span class="number">2</span>)</span></span>)</span><br></pre></td></tr></table></figure></p>
-<p>如果我们把上面模型里的{K(x,xi)}=1看成特征，而θ看成模型参数的话，上面的模型仍旧是个线性模型。所以可以认为核方法只是特征函数变换的一种方式。</p>
-<p>当然，如果把核函数K(xi,xj)看成一种相似度的话，那上面的模型就是kNN模型了，或者叫做加权平均模型也可以。因为核方法在预测时也要用到训练样本点，耗内存且计算量大，所以在数据量较大的实际问题中用的并不多。到此，我已经介绍了不少针对单个特征的处理方法。这些处理方法很难说哪个好哪个不好。有些问题这个好，有些问题那个好，也没什么绝招能直接判断出哪种方法能适合哪些问题。唯一的招就是：</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="cigbojknr0032bbpj00n44fd7" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/#ds-thread" class="article-comment-link">评论</a>
-      
-      
     </footer>
   </div>
   
@@ -520,6 +679,74 @@
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2015/11/18/dev/web/ui_base/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2015/11/18/dev/web/ui_base/" class="title">关于前端</a></p>
+              <p class="item-date"><time datetime="2015-11-18T05:20:56.000Z" itemprop="datePublished">2015-11-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/11/18/dev/web/python_cgi_bin/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2015/11/18/dev/web/python_cgi_bin/" class="title">Python CGI-BIN</a></p>
+              <p class="item-date"><time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/11/18/dev/web/python_http_server/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2015/11/18/dev/web/python_http_server/" class="title">Python HTTP server</a></p>
+              <p class="item-date"><time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/11/15/dev/CPP/cpp_big_number/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/c/">c++</a></p>
+              <p class="item-title"><a href="/2015/11/15/dev/CPP/cpp_big_number/" class="title">C++ string实现加减乘除</a></p>
+              <p class="item-date"><time datetime="2015-11-15T12:19:56.000Z" itemprop="datePublished">2015-11-15</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2015/10/29/ads/skip_the_ad/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -534,76 +761,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/10/28/algo/granger_causality/" class="thumbnail">
-  
-    <span style="background-image:url(/images/gc1.png
-)" alt="Granger causality" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2015/10/28/algo/granger_causality/" class="title">Granger causality</a></p>
-              <p class="item-date"><time datetime="2015-10-28T02:23:16.000Z" itemprop="datePublished">2015-10-28</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/10/27/dev/CPP/cpp_smart_pointer/" class="thumbnail">
-  
-    <span style="background-image:url(/images/cpp/sp1.jpg
-)" alt="C++智能指针(Smart Pointer)" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2015/10/27/dev/CPP/cpp_smart_pointer/" class="title">C++智能指针(Smart Pointer)</a></p>
-              <p class="item-date"><time datetime="2015-10-27T12:47:00.000Z" itemprop="datePublished">2015-10-27</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/10/26/dev/CPP/cpp11/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/c/">c++</a></p>
-              <p class="item-title"><a href="/2015/10/26/dev/CPP/cpp11/" class="title">开发者都应该使用的10个C++11特性</a></p>
-              <p class="item-date"><time datetime="2015-10-26T12:19:56.000Z" itemprop="datePublished">2015-10-26</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/10/26/dev/about_nio/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2015/10/26/dev/about_nio/" class="title">一个故事讲清楚 NIO</a></p>
-              <p class="item-date"><time datetime="2015-10-26T08:19:56.000Z" itemprop="datePublished">2015-10-26</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -613,7 +770,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -622,7 +779,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -631,7 +788,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 20px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/" style="font-size: 10px;">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a> <a href="/tags/广告/" style="font-size: 20px;">广告</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 20px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/" style="font-size: 10px;">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a> <a href="/tags/广告/" style="font-size: 20px;">广告</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -640,7 +797,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
