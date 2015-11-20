@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>FlatBuffers使用简介 | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="概述
+Google在今年6月份发布了跨平台序列化工具FlatBuffers，提供了C++/Java/Go/C#接口支持，这是一个注重性能和资源使用的序列化类库。相较于Protocol Buffers，其更适用于移动设备，FlatBuffers提供更高的性能以及更低的资源需求。
+特点
+
+不需要打包/解包。它的结构化数据都以二进制形式保存，不需要数据解析过程，数据也可以方便传递
+省内存、性能好
+强类型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FlatBuffers使用简介">
+<meta property="og:url" content="http://www.notehub.cn/2015/11/20/dev/flatbuffers/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="概述
+Google在今年6月份发布了跨平台序列化工具FlatBuffers，提供了C++/Java/Go/C#接口支持，这是一个注重性能和资源使用的序列化类库。相较于Protocol Buffers，其更适用于移动设备，FlatBuffers提供更高的性能以及更低的资源需求。
+特点
+
+不需要打包/解包。它的结构化数据都以二进制形式保存，不需要数据解析过程，数据也可以方便传递
+省内存、性能好
+强类型">
+<meta property="og:updated_time" content="2015-11-20T02:06:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FlatBuffers使用简介">
+<meta name="twitter:description" content="概述
+Google在今年6月份发布了跨平台序列化工具FlatBuffers，提供了C++/Java/Go/C#接口支持，这是一个注重性能和资源使用的序列化类库。相较于Protocol Buffers，其更适用于移动设备，FlatBuffers提供更高的性能以及更低的资源需求。
+特点
+
+不需要打包/解包。它的结构化数据都以二进制形式保存，不需要数据解析过程，数据也可以方便传递
+省内存、性能好
+强类型">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        56
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        29
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-dev/flatbuffers" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      FlatBuffers使用简介
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/20/dev/flatbuffers/">
+      <time datetime="2015-11-20T02:01:56.000Z" itemprop="datePublished">2015-11-20</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h3 id="概述">概述</h3><hr>
+<p>Google在今年6月份发布了跨平台序列化工具FlatBuffers，提供了C++/Java/Go/C#接口支持，这是一个注重性能和资源使用的序列化类库。相较于Protocol Buffers，其更适用于移动设备，FlatBuffers提供更高的性能以及更低的资源需求。</p>
+<p>特点</p>
+<ul>
+<li>不需要打包/解包。它的结构化数据都以二进制形式保存，不需要数据解析过程，数据也可以方便传递</li>
+<li>省内存、性能好</li>
+<li>强类型系统，在编译阶段就能预防一些bug的产生</li>
+<li>跨平台（C++11/Java/Go/C#）</li>
+</ul>
+<h3 id="FlatBuffers和Protocol_Buffers以及Json的比较：">FlatBuffers和Protocol Buffers以及Json的比较：</h3><ul>
+<li>FlatBuffers的功能和Protocol Buffers很像，他们的最大不同点是在使用具体的数据之前，FlatBuffers不需要解析/解包的过程。同时，在工程中使用时，FlatBuffers的引用比Protocol Buffers方便很多，只需要包含两三个头文件即可</li>
+<li>JSON作为数据交换格式，被广泛用户各种动态语言之间（当然也包括静态语言）。它的优点是易于理解（可读性好），同时它的最大的缺点那就是解析时的性能问题了。而且因为它的动态类型特点，你的代码可能还需要多写好多类型、数据检查逻辑。</li>
+</ul>
+<h3 id="FlatBuffers的使用步骤">FlatBuffers的使用步骤</h3><p>编写一个用来定义数据结构的schema(IDL，接口定义)文件，如下所示：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//flatbuffers test struct&#10;&#10;namespace Jason.Flat.Test;&#10;&#10;enum Color : byte &#123; Red = 1, Green, Blue &#125;&#10;&#10;union Any &#123; TextureData, Texture &#125;&#10;&#10;table TestAppend &#123;&#10;    test_num:int;&#10;    test_num2:int;&#10;&#125;&#10;&#10;table TextureData &#123;&#10;    image_size:int (id:0);&#10;    image_data:[ubyte] (id:1);&#10;    image_test:short(id:3);&#10;    test_num2:int(id:2);&#10;&#125;&#10;&#10;table Texture &#123;&#10;    num_textures:short;&#10;    textures:[TextureData];&#10;    num_test:short = 30;&#10;    num_test1:short (deprecated);&#10;        num_test2:short;&#10;    test_append:TestAppend;&#10;&#125;&#10;&#10;root_type Texture;</span><br></pre></td></tr></table></figure>
+<p>将上述代码保存为TestFlat.fbs文件之后，即可用flatc来编译了</p>
+<ul>
+<li><p>使用FlatBuffer编译器flatc生成数据结构源代码（C++头文件或者Java类）<br>登录GitHub，下载所需版本的源码及工程文件，在build目录下有VS2010的工程文件（当然，你也可以选择利用CMake自己本地创建工程），打开配置好flatc工程的传入参数，如下：<br>-c -o ./ ./TestFlat.fbs<br>运行flatc工程，即可在当前工程目录下生成TestFlat_generated.h头文件，这个头文件中包含了我们所需的所有结构体、枚举类型等以及相应的存取方法和验证方法</p>
+</li>
+<li><p>使用FlatBufferBuilder类创建flat的二进制buffer<br>以下代码展示了如何利用FlatBufferBuilder创建相应buffer：</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//read serialized buffer</span></span><br><span class="line">flatbuffers::FlatBufferBuilder builder_data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> test_append = <span class="number">300</span>;</span><br><span class="line"><span class="keyword">auto</span> name_test = builder_data.CreateString(<span class="string">"TestAppend"</span>);</span><br><span class="line"><span class="keyword">auto</span> testApp = CreateTestAppend(builder_data, test_append, test_append);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> image_size = <span class="number">12</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> inv_data[] = &#123; <span class="number">11</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">3</span>, <span class="number">5</span> ,<span class="number">7</span>, <span class="number">10</span>, <span class="number">39</span>, <span class="number">45</span>, <span class="number">23</span> &#125;;</span><br><span class="line"><span class="keyword">auto</span> name = builder_data.CreateString(<span class="string">"TextureData"</span>);</span><br><span class="line"><span class="keyword">auto</span> image_data = builder_data.CreateVector(inv_data, image_size);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> image_test = <span class="number">900</span>;</span><br><span class="line"><span class="keyword">auto</span> texture_data = CreateTextureData(builder_data, image_size, image_data, image_test, image_test);</span><br><span class="line"></span><br><span class="line"><span class="comment">//flatbuffers::FlatBufferBuilder builder_tex;</span></span><br><span class="line"><span class="keyword">int</span> texture_num = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> name_tex = builder_data.CreateString(<span class="string">"Texture"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">vector</span>&lt;flatbuffers::Offset&lt;TextureData&gt;&gt; tex_vec;</span><br><span class="line">tex_vec.push_back(texture_data);</span><br><span class="line"><span class="keyword">auto</span> tex_data = builder_data.CreateVector(tex_vec);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> num_text = <span class="number">100</span>, num_text2 = <span class="number">200</span>, num_text3 = <span class="number">300</span>;</span><br><span class="line"><span class="keyword">auto</span> texture = CreateTexture(builder_data, texture_num, tex_data, num_text, num_text2, testApp);</span><br><span class="line">builder_data.Finish(texture);</span><br></pre></td></tr></table></figure>
+<p>要使上述正确运行，除了引用C++基本库之外，需在文件头部添加以下代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"flatbuffers/flatbuffers.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"idl.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"util.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"TestFlat_generated.h"</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> Jason::Flat::Test;</span><br></pre></td></tr></table></figure>
+<p>上述代码的编写中规中矩，其中CreateString和CreateVector都是FlatBufferBuilder类的成员函数，分别用于创建适用于FlatBuffer内存结构的字符串数据以及向量数据。其余的方法，如CreateTextureData、CreateTexture均是由flatc根据IDL文件（TestFlat.fbs）自动生成的头文件中用于创建相应结构体的函数。最后一句builder_data.Finish(texture)用于优化对齐写入builder_data的内存结构。</p>
+<ul>
+<li>保存buffer到本地或者直接通过网络发送<br>保存buffer到本地的代码，如下：</li>
+</ul>
+<p>std::cout &lt;&lt; builder_data.GetSize() &lt;&lt; std::endl;<br>flatbuffers::SaveFile(“texture.bin”, reinterpret_cast<char *="">(builder_data.GetBufferPointer()), builder_data.GetSize(), true);<br>将数据保存到名为texture.bin的二进制文件中，其中通过builder_data.GetBufferPointer()获取内存指针，builder_data.GetSize()获取内存大小，最后一个参数用于制定是否生成二进制文件。</char></p>
+<ul>
+<li>接收并buffer并读取数据内容<br>读取二进制文件的代码如下：</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> binaryfile;</span><br><span class="line"><span class="keyword">bool</span> ok = flatbuffers::LoadFile(<span class="string">"texture.bin"</span>, <span class="literal">false</span>, &amp;binaryfile);</span><br><span class="line"></span><br><span class="line">flatbuffers::<span class="function">Verifier <span class="title">tex_verify</span><span class="params">(builderOut.GetBufferPointer()</span>, builderOut.<span class="title">GetSize</span><span class="params">()</span>)</span>;</span><br><span class="line"><span class="keyword">bool</span> verify_flag = VerifyTextureBuffer(tex_verify);</span><br><span class="line"></span><br><span class="line">flatbuffers::FlatBufferBuilder builderOut;</span><br><span class="line">TextureBuilder* texBuilder = <span class="keyword">new</span> TextureBuilder(builderOut);</span><br><span class="line">builderOut.PushBytes(<span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">unsigned</span> <span class="keyword">char</span>*&gt;(<span class="keyword">const_cast</span>&lt;<span class="keyword">char</span> *&gt;(binaryfile.c_str())), binaryfile.size());</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; builderOut.GetSize() &lt;&lt; <span class="built_in">std</span>::endl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> model = GetTexture(builderOut.GetBufferPointer());</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> outNum = model-&gt;num_textures();</span><br><span class="line"><span class="keyword">const</span> flatbuffers::Vector&lt;flatbuffers::Offset&lt;TextureData&gt;&gt;* outTex = model-&gt;textures();</span><br><span class="line">TextureData* outTexData = (TextureData *)outTex-&gt;Get(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">int</span> outSize = outTexData-&gt;image_size();</span><br><span class="line"><span class="keyword">const</span> flatbuffers::Vector&lt;<span class="keyword">unsigned</span> <span class="keyword">char</span>&gt;* outData = outTexData-&gt;image_data();</span><br><span class="line"><span class="keyword">int</span> x = outData-&gt;Get(<span class="number">5</span>);</span><br><span class="line"><span class="keyword">int</span> len = outData-&gt;Length();</span><br><span class="line"><span class="keyword">delete</span> texBuilder;</span><br></pre></td></tr></table></figure>
+<p>上述代码中VerifyTextureBuffer用于验证读取的内存是否为FlatBuffers的内存块，是则返回true，不是则返回false。通过GetTexture获取指针之后，结构体中的变量均可以通过相应方法（各方法名请查看自动生成的头文件）获取。</p>
+<h3 id="总结">总结</h3><p>利用FlatBuffers来进行数据保存及传输的优点显而易见，它利用自身特殊的编码格式，能一定程度上减少内存的占用，优化读取的性能。更重要的是，对于数据结构的向前向后兼容提供了很好的扩展性，方便又高效：</p>
+<ul>
+<li>要想让数据结构具有可扩展性，需将数据结构定义为table，它是数据扩展的基础，FlatBuffers中的struct类型不支持扩展</li>
+<li>如果想在后续的版本中删除数据结构中的某些字段，只要在将要删除的字段后面添加(deprecated)即可，当然需要保证删除的字段在之前版本的程序中不会引起程序崩溃（该删掉的字段在上一版本的程序中获取到的会是个空指针或空值，只需保证程序在获取到空值或空指针之后不会出现异常即可）</li>
+<li>如果想在后续版本中向数据结构中添加某些字段，需添加到table中最后一个字段的后面，若是想table中随意位置添加字段，需如上面TextureData 的定义，给每个字段指明添加id:n（n从0开始）<br>目前FlatBuffers还不是很完善，碰到问题可以到FlatBuffers Issues Tracker去提交或则寻找答案。</li>
+</ul>
+<p>From: <a href="http://www.jianshu.com/p/6eb04a149cd8" target="_blank" rel="external">http://www.jianshu.com/p/6eb04a149cd8</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="cih710xdh0000k2pjqsznx3wc" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/20/dev/flatbuffers/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/11/18/dev/web/ui_base/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">关于前端</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-title="FlatBuffers使用简介" data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/11/20/dev/flatbuffers/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2015/11/20/dev/flatbuffers/" class="title">FlatBuffers使用简介</a></p>
+              <p class="item-date"><time datetime="2015-11-20T02:01:56.000Z" itemprop="datePublished">2015-11-20</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/11/18/dev/web/ui_base/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2015/11/18/dev/web/ui_base/" class="title">关于前端</a></p>
+              <p class="item-date"><time datetime="2015-11-18T05:20:56.000Z" itemprop="datePublished">2015-11-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/11/18/dev/web/python_cgi_bin/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2015/11/18/dev/web/python_cgi_bin/" class="title">Python CGI-BIN</a></p>
+              <p class="item-date"><time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/11/18/dev/web/python_http_server/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2015/11/18/dev/web/python_http_server/" class="title">Python HTTP server</a></p>
+              <p class="item-date"><time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/11/15/dev/CPP/cpp_big_number/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/c/">c++</a></p>
+              <p class="item-title"><a href="/2015/11/15/dev/CPP/cpp_big_number/" class="title">C++ string实现加减乘除</a></p>
+              <p class="item-date"><time datetime="2015-11-15T12:19:56.000Z" itemprop="datePublished">2015-11-15</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github-pages-blog-域名/">github, pages, blog, 域名</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开始/">开始</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 20px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github-pages-blog-域名/" style="font-size: 10px;">github, pages, blog, 域名</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/合福高铁-三清山-武夷山-福州-三坊七巷-厦门-鼓浪屿/" style="font-size: 10px;">合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿</a> <a href="/tags/广告/" style="font-size: 20px;">广告</a> <a href="/tags/开始/" style="font-size: 10px;">开始</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
