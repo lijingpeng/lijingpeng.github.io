@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Li Jingpeng's site]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.notehub.cn/"/>
-  <updated>2015-11-20T02:06:48.000Z</updated>
+  <updated>2015-11-21T06:52:31.000Z</updated>
   <id>http://www.notehub.cn/</id>
   
   <author>
@@ -13,6 +13,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Go中的make和new]]></title>
+    <link href="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/"/>
+    <id>http://www.notehub.cn/2015/11/21/dev/go/go_make_new/</id>
+    <published>2015-11-21T06:19:56.000Z</published>
+    <updated>2015-11-21T06:52:31.000Z</updated>
+    <content type="html"><![CDATA[<p>1、make用于内建类型（map、slice 和channel）的内存分配。new用于各种类型的内存分配。</p>
+<p>2、new本质上说跟其它语言中的同名函数功能一样：new(T)分配了零值填充的T类型的内存空间，并且返回其地址，即一个*T类型的值。用Go的术语说，它返回了一个指针，指向新分配的类型T的零值。有一点非常重要：new返回指针。</p>
+<p>3、make(T, args)与new(T)有着不同的功能，make只能创建slice、map和channel，并且返回一个有初始值(非零)的T类型（引用），而不是*T。</p>
+<p>4、本质来讲，导致这三个内建类型有所不同的原因是：引用在使用前必须被初始化。例如，一个slice，是一个包含指向数据（内部array）的指针、长度和容量的三项描述符；在这些项目被初始化之前，slice为nil。对于slice、map和channel来说，make初始化了内部的数据结构，填充适当的值。make返回初始化后的（非零）值。</p>
+<p>5、故make 是内建类型初始化的方法，例如：s :=make([]int,len,cap)  //这个切片在元素在超过10个时，底层将会发生至少一次的内存移动动作<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建一个初始元素个数为5的数组切片，元素初始值为0，并预留10个元素的存储空间  </span></span><br><span class="line">b := <span class="built_in">make</span>([]<span class="typename">int</span>, <span class="number">5</span>, <span class="number">10</span>) <span class="comment">// len(b)=5, cap(b)=10  </span></span><br><span class="line"><span class="comment">//继续切片，注意len和cap的变化  </span></span><br><span class="line">b = b[:<span class="built_in">cap</span>(b)] <span class="comment">// len(b)=5, cap(b)=5  </span></span><br><span class="line">b = b[<span class="number">1</span>:]      <span class="comment">// len(b)=4, cap(b)=4</span></span><br></pre></td></tr></table></figure></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>1、make用于内建类型（map、slice 和channel）的内存分配。new用于各种类型的内存分配。</p>
+<p>2、new本质上说跟其它语言中的同名函数功能一样：new(T)分配了零值填充的T类型的内存空间，并且返回其地址，即一个*T类型的值。用Go的术语说，它返]]>
+    </summary>
+    
+      <category term="go" scheme="http://www.notehub.cn/tags/go/"/>
+    
+      <category term="dev" scheme="http://www.notehub.cn/categories/dev/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[FlatBuffers使用简介]]></title>
@@ -827,33 +850,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[关于Cookie]]></title>
-    <link href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/"/>
-    <id>http://www.notehub.cn/2015/10/10/internet/ad/cookie/</id>
-    <published>2015-10-09T16:00:00.000Z</published>
-    <updated>2015-10-10T06:35:19.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
-<p><img src="/images/other/cookie.jpg" alt=""></p>
-<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
-<h3 id="关于Cookie的一些知识点">关于Cookie的一些知识点</h3><ol>
-<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
-<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
-<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
-</ol>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
-<p><img src="/images/other/cookie.jpg" alt=""></p>
-<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中]]>
-    </summary>
-    
-      <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
-    
-      <category term="internet" scheme="http://www.notehub.cn/categories/internet/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[在线广告作弊手段一览]]></title>
     <link href="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/"/>
     <id>http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/</id>
@@ -875,6 +871,33 @@
     <summary type="html">
     <![CDATA[<p>这里提到的在线广告作弊是指媒体为了刷广告流量而进行的作弊。他们的作弊手段很多， 这里介绍常见的几种。</p>
 <p>iframe是广告作弊最常用的技巧，就是在自己的网页上嵌入iframe, 大小为0x0或1×1，也就是用户不可见。通过iframe打开其他页面，在用户看不见的]]>
+    </summary>
+    
+      <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
+    
+      <category term="internet" scheme="http://www.notehub.cn/categories/internet/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[关于Cookie]]></title>
+    <link href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/"/>
+    <id>http://www.notehub.cn/2015/10/10/internet/ad/cookie/</id>
+    <published>2015-10-09T16:00:00.000Z</published>
+    <updated>2015-10-10T06:35:19.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
+<p><img src="/images/other/cookie.jpg" alt=""></p>
+<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
+<h3 id="关于Cookie的一些知识点">关于Cookie的一些知识点</h3><ol>
+<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
+<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
+<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
+<p><img src="/images/other/cookie.jpg" alt=""></p>
+<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中]]>
     </summary>
     
       <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
@@ -987,36 +1010,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[<p>特征工程（Feature Engineering）经常被说为机器学习中的black art，这里面包含了很多不可言说的方面。怎么处理好特征，最重要的当然还是对要解决问题的了解。但是，它其实也有很多科学的地方。这篇文章我之所以命名为特征处理（Feature Processin]]>
-    </summary>
-    
-      <category term="machine learning" scheme="http://www.notehub.cn/categories/machine-learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Feature hashing]]></title>
-    <link href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/"/>
-    <id>http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/</id>
-    <published>2015-09-24T16:00:00.000Z</published>
-    <updated>2015-09-25T14:43:22.000Z</updated>
-    <content type="html"><![CDATA[<p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
-<h3 id="Motivating_example">Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
-<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
-<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
-<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Term    Index</span><br><span class="line">John    <span class="number">1</span></span><br><span class="line">likes   <span class="number">2</span></span><br><span class="line">to      <span class="number">3</span></span><br><span class="line">watch   <span class="number">4</span></span><br><span class="line">movies  <span class="number">5</span></span><br><span class="line">Mary    <span class="number">6</span></span><br><span class="line">too     <span class="number">7</span></span><br><span class="line">also    <span class="number">8</span></span><br><span class="line">football9</span><br></pre></td></tr></table></figure></p>
-<p>to the term-document matrix</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> </span><br><span class="line"><span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> </span><br><span class="line"><span class="number">1</span> &amp; <span class="number">1</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">0</span> &amp; <span class="number">1</span> &amp; <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
-<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
-<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
-<h3 id="Feature_vectorization_using_the_hashing_trick">Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">x :</span>= <span class="keyword">new</span> vector[N]</span><br><span class="line"><span class="keyword">for</span> f <span class="keyword">in</span> <span class="string">features:</span></span><br><span class="line">    <span class="string">h :</span>= hash(f)</span><br><span class="line">    x[h mod N] += <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
-<p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">x := <span class="keyword">new</span> <span class="built_in">vector</span>[N]</span><br><span class="line"><span class="keyword">for</span> f in features:</span><br><span class="line">    h := hash(f)</span><br><span class="line">    idx := h mod N</span><br><span class="line">    <span class="keyword">if</span> ξ(f) == <span class="number">1</span>:</span><br><span class="line">        x[idx] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        x[idx] -= <span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> x</span><br></pre></td></tr></table></figure></p>
-<p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way ]]>
     </summary>
     
       <category term="machine learning" scheme="http://www.notehub.cn/categories/machine-learning/"/>
