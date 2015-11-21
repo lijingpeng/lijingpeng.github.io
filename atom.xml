@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Li Jingpeng's site]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.notehub.cn/"/>
-  <updated>2015-11-21T06:52:31.000Z</updated>
+  <updated>2015-11-21T07:28:17.000Z</updated>
   <id>http://www.notehub.cn/</id>
   
   <author>
@@ -13,6 +13,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[在Golang中使用json]]></title>
+    <link href="http://www.notehub.cn/2015/11/21/dev/go/go_json/"/>
+    <id>http://www.notehub.cn/2015/11/21/dev/go/go_json/</id>
+    <published>2015-11-21T07:19:56.000Z</published>
+    <updated>2015-11-21T07:28:17.000Z</updated>
+    <content type="html"><![CDATA[<p>包引用<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"encoding/json"</span></span><br><span class="line">    <span class="string">"github.com/bitly/go-simplejson"</span> <span class="comment">// for json get</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>用于存放数据的结构体<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyData <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name   <span class="typename">string</span>    <span class="string">`json:"item"`</span></span><br><span class="line">    Other  <span class="typename">float32</span>   <span class="string">`json:"amount"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意的就是后面单引号中的内容。</p>
+<p><code>json:&quot;item&quot;</code><br>这个的作用，就是Name字段在从结构体实例编码到JSON数据格式的时候，使用item作为名字。算是一种重命名的方式吧。</p>
+<p>编码JSON<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> detail MyData</span><br><span class="line"></span><br><span class="line">detail.Name  = <span class="string">"1"</span></span><br><span class="line">detail.Other = <span class="string">"2"</span></span><br><span class="line"></span><br><span class="line">body, err := json.Marshal(detail)</span><br><span class="line"><span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">    <span class="built_in">panic</span>(err.Error())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们使用Golang自带的encoding/json包对结构体进行编码到JSON数据。</p>
+<p>json.Marshal(…)<br>JSON解码<br>由于Golang自带的json包处理解码的过程较为复杂，所以这里使用一个第三方的包simplejson进行json数据的解码操作。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">js, err := simplejson.NewJson(body)</span><br><span class="line"><span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">    <span class="built_in">panic</span>(err.Error())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Println(js)</span><br></pre></td></tr></table></figure></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>包引用<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><spa]]>
+    </summary>
+    
+      <category term="go" scheme="http://www.notehub.cn/tags/go/"/>
+    
+      <category term="dev" scheme="http://www.notehub.cn/categories/dev/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Go中的make和new]]></title>
@@ -120,33 +144,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[Python CGI-BIN]]></title>
-    <link href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/"/>
-    <id>http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/</id>
-    <published>2015-11-18T05:19:56.000Z</published>
-    <updated>2015-11-18T06:06:30.000Z</updated>
-    <content type="html"><![CDATA[<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> BaseHTTPServer</span><br><span class="line"><span class="keyword">import</span> CGIHTTPServer</span><br><span class="line"><span class="keyword">import</span> cgitb; cgitb.enable()  <span class="comment">## This line enables CGI error reporting</span></span><br><span class="line"></span><br><span class="line">server = BaseHTTPServer.HTTPServer</span><br><span class="line">handler = CGIHTTPServer.CGIHTTPRequestHandler</span><br><span class="line">server_address = (<span class="string">"0.0.0.0"</span>, <span class="number">8082</span>)</span><br><span class="line">handler.cgi_directories = [<span class="string">"/cgi-bin"</span>]</span><br><span class="line"></span><br><span class="line">httpd = server(server_address, handler)</span><br><span class="line">httpd.serve_forever()</span><br></pre></td></tr></table></figure>
-<p>CGI-BIN下的py文件要有执行权限。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cgi</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">form = cgi.FieldStorage()</span><br><span class="line"></span><br><span class="line">query_str = form.getvalue(<span class="string">'query'</span>)</span><br><span class="line">query = <span class="string">"http://0.0.0.0:9999/query?query=%s"</span> % query_str</span><br><span class="line"></span><br><span class="line">exec_query = urllib.urlopen(query)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Status: 200 OK"</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"Content-Type: application/json"</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">""</span></span><br><span class="line"><span class="keyword">print</span> exec_query.read()</span><br></pre></td></tr></table></figure>
-<p>HTML:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"content-type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>test<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"></span><br><span class="line">            $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span><br><span class="line">            </span>&#123;</span><br><span class="line">                $(<span class="string">'#clickme'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                    alert(<span class="string">'Im going to start processing'</span>);</span><br><span class="line"></span><br><span class="line">                    $.ajax(&#123;</span><br><span class="line">                        url: <span class="string">"/scripts/ajaxpost.py"</span>,</span><br><span class="line">                        type: <span class="string">"post"</span>,</span><br><span class="line">                        datatype:<span class="string">"json"</span>,</span><br><span class="line">                        data: &#123;<span class="string">'key'</span>:<span class="string">'value'</span>,<span class="string">'key2'</span>:<span class="string">'value2'</span>&#125;,</span><br><span class="line">                        success: <span class="function"><span class="keyword">function</span>(<span class="params">response</span>)</span>&#123;</span><br><span class="line">                            alert(response.message);</span><br><span class="line">                            alert(response.keys);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">button</span> <span class="attribute">id</span>=<span class="value">"clickme"</span>&gt;</span> click me <span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>参考： </p>
-<ul>
-<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
-<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
-<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span clas]]>
-    </summary>
-    
-      <category term="python" scheme="http://www.notehub.cn/tags/python/"/>
-    
-      <category term="web" scheme="http://www.notehub.cn/categories/web/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[Python HTTP server]]></title>
     <link href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/"/>
     <id>http://www.notehub.cn/2015/11/18/dev/web/python_http_server/</id>
@@ -169,6 +166,33 @@
     <![CDATA[<ol>
 <li><p>HTTP GET</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="lin]]>
+    </summary>
+    
+      <category term="python" scheme="http://www.notehub.cn/tags/python/"/>
+    
+      <category term="web" scheme="http://www.notehub.cn/categories/web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Python CGI-BIN]]></title>
+    <link href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/"/>
+    <id>http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/</id>
+    <published>2015-11-18T05:19:56.000Z</published>
+    <updated>2015-11-18T06:06:30.000Z</updated>
+    <content type="html"><![CDATA[<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> BaseHTTPServer</span><br><span class="line"><span class="keyword">import</span> CGIHTTPServer</span><br><span class="line"><span class="keyword">import</span> cgitb; cgitb.enable()  <span class="comment">## This line enables CGI error reporting</span></span><br><span class="line"></span><br><span class="line">server = BaseHTTPServer.HTTPServer</span><br><span class="line">handler = CGIHTTPServer.CGIHTTPRequestHandler</span><br><span class="line">server_address = (<span class="string">"0.0.0.0"</span>, <span class="number">8082</span>)</span><br><span class="line">handler.cgi_directories = [<span class="string">"/cgi-bin"</span>]</span><br><span class="line"></span><br><span class="line">httpd = server(server_address, handler)</span><br><span class="line">httpd.serve_forever()</span><br></pre></td></tr></table></figure>
+<p>CGI-BIN下的py文件要有执行权限。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cgi</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">form = cgi.FieldStorage()</span><br><span class="line"></span><br><span class="line">query_str = form.getvalue(<span class="string">'query'</span>)</span><br><span class="line">query = <span class="string">"http://0.0.0.0:9999/query?query=%s"</span> % query_str</span><br><span class="line"></span><br><span class="line">exec_query = urllib.urlopen(query)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Status: 200 OK"</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"Content-Type: application/json"</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">""</span></span><br><span class="line"><span class="keyword">print</span> exec_query.read()</span><br></pre></td></tr></table></figure>
+<p>HTML:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"content-type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>test<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"></span><br><span class="line">            $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span><br><span class="line">            </span>&#123;</span><br><span class="line">                $(<span class="string">'#clickme'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                    alert(<span class="string">'Im going to start processing'</span>);</span><br><span class="line"></span><br><span class="line">                    $.ajax(&#123;</span><br><span class="line">                        url: <span class="string">"/scripts/ajaxpost.py"</span>,</span><br><span class="line">                        type: <span class="string">"post"</span>,</span><br><span class="line">                        datatype:<span class="string">"json"</span>,</span><br><span class="line">                        data: &#123;<span class="string">'key'</span>:<span class="string">'value'</span>,<span class="string">'key2'</span>:<span class="string">'value2'</span>&#125;,</span><br><span class="line">                        success: <span class="function"><span class="keyword">function</span>(<span class="params">response</span>)</span>&#123;</span><br><span class="line">                            alert(response.message);</span><br><span class="line">                            alert(response.keys);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">button</span> <span class="attribute">id</span>=<span class="value">"clickme"</span>&gt;</span> click me <span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>参考： </p>
+<ul>
+<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
+<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
+<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span clas]]>
     </summary>
     
       <category term="python" scheme="http://www.notehub.cn/tags/python/"/>
@@ -850,6 +874,33 @@
   </entry>
   
   <entry>
+    <title><![CDATA[关于Cookie]]></title>
+    <link href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/"/>
+    <id>http://www.notehub.cn/2015/10/10/internet/ad/cookie/</id>
+    <published>2015-10-09T16:00:00.000Z</published>
+    <updated>2015-10-10T06:35:19.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
+<p><img src="/images/other/cookie.jpg" alt=""></p>
+<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
+<h3 id="关于Cookie的一些知识点">关于Cookie的一些知识点</h3><ol>
+<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
+<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
+<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
+<p><img src="/images/other/cookie.jpg" alt=""></p>
+<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中]]>
+    </summary>
+    
+      <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
+    
+      <category term="internet" scheme="http://www.notehub.cn/categories/internet/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[在线广告作弊手段一览]]></title>
     <link href="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/"/>
     <id>http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/</id>
@@ -871,33 +922,6 @@
     <summary type="html">
     <![CDATA[<p>这里提到的在线广告作弊是指媒体为了刷广告流量而进行的作弊。他们的作弊手段很多， 这里介绍常见的几种。</p>
 <p>iframe是广告作弊最常用的技巧，就是在自己的网页上嵌入iframe, 大小为0x0或1×1，也就是用户不可见。通过iframe打开其他页面，在用户看不见的]]>
-    </summary>
-    
-      <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
-    
-      <category term="internet" scheme="http://www.notehub.cn/categories/internet/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[关于Cookie]]></title>
-    <link href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/"/>
-    <id>http://www.notehub.cn/2015/10/10/internet/ad/cookie/</id>
-    <published>2015-10-09T16:00:00.000Z</published>
-    <updated>2015-10-10T06:35:19.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
-<p><img src="/images/other/cookie.jpg" alt=""></p>
-<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
-<h3 id="关于Cookie的一些知识点">关于Cookie的一些知识点</h3><ol>
-<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
-<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
-<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
-</ol>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
-<p><img src="/images/other/cookie.jpg" alt=""></p>
-<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中]]>
     </summary>
     
       <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
@@ -949,70 +973,6 @@
       <category term="合福高铁,三清山,武夷山,福州,三坊七巷,厦门,鼓浪屿" scheme="http://www.notehub.cn/tags/%E5%90%88%E7%A6%8F%E9%AB%98%E9%93%81-%E4%B8%89%E6%B8%85%E5%B1%B1-%E6%AD%A6%E5%A4%B7%E5%B1%B1-%E7%A6%8F%E5%B7%9E-%E4%B8%89%E5%9D%8A%E4%B8%83%E5%B7%B7-%E5%8E%A6%E9%97%A8-%E9%BC%93%E6%B5%AA%E5%B1%BF/"/>
     
       <category term="travel" scheme="http://www.notehub.cn/categories/travel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[特征处理]]></title>
-    <link href="http://www.notehub.cn/2015/09/25/algo/ml/Feature%20Processing/"/>
-    <id>http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/</id>
-    <published>2015-09-24T16:00:00.000Z</published>
-    <updated>2015-09-25T14:37:04.000Z</updated>
-    <content type="html"><![CDATA[<p>特征工程（Feature Engineering）经常被说为机器学习中的black art，这里面包含了很多不可言说的方面。怎么处理好特征，最重要的当然还是对要解决问题的了解。但是，它其实也有很多科学的地方。这篇文章我之所以命名为特征处理（Feature Processing），是因为这里面要介绍的东西只是特征工程中的一小部分。这部分比较基础，比较容易说，所以由此开始。单个原始特征（或称为变量）通常属于以下几类之一：</p>
-<ul>
-<li>连续（continuous）特征；</li>
-<li>无序类别（categorical）特征；</li>
-<li>有序类别（ordinal）特征。</li>
-</ul>
-<p>本文中我主要介绍针对单个特征的处理方法，虽然也会附带介绍基础的特征组合方法。同时处理多个特征，以及更复杂的特征处理方法介绍，以后我再另外细说。下面我由浅入深地逐渐说明针对这三类特征的常用处理方法。</p>
-<h2 id="初级篇">初级篇</h2><hr>
-<h3 id="连续特征">连续特征</h3><p>除了归一化（去中心，方差归一），不用做太多特殊处理，可以直接把连续特征扔到模型里使用。</p>
-<h3 id="无序特征">无序特征</h3><p>可以使用One-hot（也叫One-of-k）的方法把每个无序特征转化为一个数值向量。比如一个无序特征color有三种取值：red，green，blue。那么可以用一个长度为3的向量来表示它，向量中的各个值分别对应于red，green，blue。如：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">color取值 向量表示</span><br><span class="line">red     (<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">green   (<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">blue    (<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>这种方法在NLP里用的很多，就是所谓的词向量模型。变换后的向量长度对于词典长度，每个词对应于向量中的一个元素。</p>
-<p>机器学习书籍里在讲这个的时候介绍的处理方法可能跟我上面说的有点差别。上面说的表达方式里有一个维度是可以省略的。既然我们知道color一定是取3个值中的一个，那么我们知道向量的前两个元素值，就能推断第3个值是多少。所以，其实用下面的方式就可以表达到底是哪种颜色：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">color取值 向量表示</span><br><span class="line">red     (<span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">green   (<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">blue    (<span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
-<p>这样表达的好处是少用了一个维度，降低了转化后特征之间的相关性。但在实际问题中特征基本都或多或少会有些缺失。使用第一种表达方式就可以用全0的向量来表示值缺失，而第二种表达方式是没法表达缺失的。</p>
-<h3 id="有序特征">有序特征</h3><p>有些特征虽然也像无序特征那样只取限定的几个值，但是这些值之间有顺序的含义。例如一个人的状态status有三种取值：bad, normal, good，显然bad &lt; normal &lt; good。</p>
-<p>当然，对有序特征最简单的处理方式是忽略其中的顺序关系，把它看成无序的，这样我们就可以使用处理无序特征的方式来处理它。在实际问题中，这种处理方式其实用的很多。</p>
-<p>当然有些问题里有序可能会很重要，这时候就不应该把其中的顺序关系丢掉。一般的表达方式如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">status取值    向量表示</span><br><span class="line">bad     (<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">normal  (<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>)</span><br><span class="line">good    (<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>上面这种表达方式很巧妙地利用递进表达了值之间的顺序关系。</p>
-<h2 id="中级篇">中级篇</h2><hr>
-<p>最容易让人掉以轻心的，往往就是大家觉得最简单的事。在特征处理中，最容易让刚入门同学忽略的，是对连续特征的处理方式。</p>
-<p>以线性分类器Linear Regression (LinearReg)为例，它是通过特征的线性加权来预测因变量y：<br><figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">y</span>=<span class="string">wTx</span></span><br></pre></td></tr></table></figure></p>
-<p>但大部分实际情况下，y与x都不会是这么简单的线性关系，甚至连单调关系都不会有。举个只有一个特征的例子，如果y与x的实际关系如下图：</p>
-<p><img src="/images/algo/nonlinear_function1.png" alt=""></p>
-<p>那么直接把x扔进LinearReg模型是怎么也得不到好结果的。很多人会想着既然线性分类器搞不定，那就直接找个非线性的好了，比如高斯核的SVM。我们确实可以通过这种简单换算法的方式解决这个简单的问题。但对于很多实际问题（如广告点击率预测），往往特征非常多，这时候时间约束通常不允许我们使用很复杂的非线性分类器。这也是为什么算法发展这么多年，广告点击率预测最常用的方法还是Logistic Regression (LogisticReg)。</p>
-<p>对于上面这个问题，有没有什么办法使得LinearReg也能处理得不错？当然是有，就是对原始特征x做转化，把原来的非线性关系转化为线性关系。</p>
-<h3 id="方法一：离散化">方法一：离散化</h3><p>最常用的转化方式是对x做离散化(discretization)，也就是把原来的值分段，转化成一个取值为0或1的向量。原始值落在某个段里，向量中此段对应的元素就为1，否则为0。</p>
-<p>离散化的目标是y与转化后向量里的每个元素都保持比较好的线性关系。<br>比如取离散点{0.5,1.5,2.5}，通过判断x属于(−∞,0.5)，[0.5,1.5)，[1.5,2.5)，[2.5,+∞)中哪段来把它离散化为4维的向量。下面是一些例子的离散结果：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">原始值x    离散化后的值</span><br><span class="line"><span class="number">0.1</span>     (<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"><span class="number">1.3</span>     (<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line"><span class="number">3.2</span>     (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"><span class="number">5.8</span>     (<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>离散化方法的关键是怎么确定分段中的离散点。下面是常用的选取离散点的方法：</p>
-<p>a. 等距离离散：顾名思义，就是离散点选取等距点。我们上面对x取离散点{0.5,1.5,2.5}就是一种等距离散，见下图。图中垂直的灰线代表离散点。</p>
-<p><img src="/images/algo/nonlinear_function2.png" alt=""></p>
-<p>b. 等样本点离散：选取的离散点保证落在每段里的样本点数量大致相同，见下图。</p>
-<p><img src="/images/algo/nonlinear_function3.png" alt=""></p>
-<p>c. 画图观察趋势：以x为横坐标，y为纵坐标，画图，看曲线的趋势和拐点。通过观察下面的图我们发现可以利用3条直线（红色直线）来逐段近似原来的曲线。把离散点设为两条直线相交的各个点，我们就可以把x离散化为长度为3的向量。</p>
-<p><img src="/images/algo/nonlinear_function4.png" alt=""></p>
-<p>上面介绍的这种离散化为0/1向量的方法有个问题，它在离散时不会考虑到具体的x到离散边界的距离。比如等距离散中取离散点为{0.5,1.5,2.5}，那么1.499，1.501和2.49分别会离散为(0, 1, 0, 0)，(0, 0, 1, 0)和(0, 0, 1, 0)。1.499和1.501很接近，可是就因为这种强制分段的离散导致它们离散的结果差距很大。</p>
-<p>针对上面这种硬离散的一种改进就是使用软离散，也就是在离散时考虑到x与附近离散点的距离，离散出来的向量元素值可以是0/1之外的其他值。有兴趣的同学可以去ESL1这本书中找点感觉。</p>
-<h3 id="方法二：函数变换">方法二：函数变换</h3><p>函数变换直接把原来的特征通过非线性函数做变换，然后把原来的特征，以及变换后的特征一起加入模型进行训练。常用的变换函数见下表，不过其实你可以尝试任何函数。<br><figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">常用非线性函数f<span class="params">(x)</span> x的取值范围</span><br><span class="line">xα; α∈<span class="params">(−∞,+∞)</span>   <span class="params">(−∞,+∞)</span></span><br><span class="line"><span class="built_in">log</span><span class="params">(x)</span>          <span class="params">(<span class="number">0</span>,+∞)</span></span><br><span class="line"><span class="built_in">log</span><span class="params">(x1−x)</span>       <span class="params">(<span class="number">0</span>,<span class="number">1</span>)</span></span><br></pre></td></tr></table></figure></p>
-<p>这个方法操作起来很简单，但记得对新加入的特征做归一化。</p>
-<p>对于我们前面的问题，只要把x2，x3也作为特征加入即可，因为实际上y就是x的一个三次多项式。</p>
-<h2 id="高级篇">高级篇</h2><hr>
-<h3 id="笛卡尔乘积">笛卡尔乘积</h3><p>我们可以使用笛卡尔乘积的方式来组合2个或更多个特征。比如有两个类别特征color和light，它们分别可以取值为red，green，blue和on, off。这两个特征各自可以离散化为3维和2维的向量。对它们做笛卡尔乘积转化，就可以组合出长度为6的特征，它们分别对应着原始值对(red, on)，(red, off)，(green, on)，(green, off)，(blue, on)，(blue, off)。下面的矩阵表达方式更清楚地说明了这种组合。<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">X</span>       <span class="built_in">on</span>  <span class="built_in">off</span></span><br><span class="line">red      </span><br><span class="line">green        </span><br><span class="line">blue</span><br></pre></td></tr></table></figure></p>
-<p>对于3个特征的笛卡尔乘积组合，可以表达为立方的形式。更多特征的组合依次类推。 这个方法也可以直接用于连续特征与类别特征之间的组合，只要把连续特征看成是1维的类别特征就好了，这时候组合后特征对应的值就不是0/1了，而是连续特征的取值。</p>
-<h3 id="离散化续篇">离散化续篇</h3><p>在上节中我已经介绍了一些常用的离散化单个连续特征的方法，其中一个是画图观察趋势。画图观察趋势的好处是直观、可解释性强，坏处是很麻烦。当要离散化的特征很多时，这种方法可操作性较差。</p>
-<p>机器学习中有个很好解释，速度也不错的模型——决策树模型。大白话说决策树模型就是一大堆的if else。它天生就可以对连续特征分段，所以把它用于离散化连续特征合情合理。我称这种方法为决策树离散化方法。例如Gmail在对信件做重要性排序时就使用了决策树离散化方法2。</p>
-<p>决策树离散化方法通常也是每次离散化一个连续特征，做法如下：</p>
-<p>单独用此特征和目标值y训练一个决策树模型，然后把训练获得的模型内的特征分割点作为离散化的离散点。<br>这种方法当然也可以同时离散化多个连续特征，但是操作起来就更复杂了，实际用的不多。</p>
-<h3 id="核方法">核方法</h3><p>核方法经常作为线性模型的一种推广出现。以线性回归模型为例，它对应的核方法如下：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fθ(x)=∑θ<span class="function"><span class="title">iK</span><span class="params">(x,xi)</span></span></span><br></pre></td></tr></table></figure></p>
-<p>其中{xi}=1为训练样本点，K(xi,xj)为核函数，比如常用的高斯核函数为：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">K</span><span class="params">(xi,xj)</span></span>=<span class="function"><span class="title">exp</span><span class="params">(−exp(∥xi−xj∥, <span class="number">2</span>)</span></span>/<span class="number">2</span>*<span class="function"><span class="title">exp</span><span class="params">(h,<span class="number">2</span>)</span></span>)</span><br></pre></td></tr></table></figure></p>
-<p>如果我们把上面模型里的{K(x,xi)}=1看成特征，而θ看成模型参数的话，上面的模型仍旧是个线性模型。所以可以认为核方法只是特征函数变换的一种方式。</p>
-<p>当然，如果把核函数K(xi,xj)看成一种相似度的话，那上面的模型就是kNN模型了，或者叫做加权平均模型也可以。因为核方法在预测时也要用到训练样本点，耗内存且计算量大，所以在数据量较大的实际问题中用的并不多。到此，我已经介绍了不少针对单个特征的处理方法。这些处理方法很难说哪个好哪个不好。有些问题这个好，有些问题那个好，也没什么绝招能直接判断出哪种方法能适合哪些问题。唯一的招就是：</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>特征工程（Feature Engineering）经常被说为机器学习中的black art，这里面包含了很多不可言说的方面。怎么处理好特征，最重要的当然还是对要解决问题的了解。但是，它其实也有很多科学的地方。这篇文章我之所以命名为特征处理（Feature Processin]]>
-    </summary>
-    
-      <category term="machine learning" scheme="http://www.notehub.cn/categories/machine-learning/"/>
     
   </entry>
   

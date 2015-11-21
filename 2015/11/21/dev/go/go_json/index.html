@@ -3,17 +3,21 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Tag: PPTP, vpn | Frank</title>
+  <title>在Golang中使用json | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="计算机 网络 互联网">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Frank">
-<meta property="og:url" content="http://www.notehub.cn/tags/PPTP-vpn/index.html">
+  <meta name="description" content="包引用1234import (    &quot;encoding/json&quot;    &quot;github.com/bitly/go-simplejson&quot; // for json get)
+用于存放数据的结构体1234type MyData struct &amp;#123;    Name   string    `json:&quot;item&quot;`    Other  float32   `json:&quot;amount&quot;`&amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Golang中使用json">
+<meta property="og:url" content="http://www.notehub.cn/2015/11/21/dev/go/go_json/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="计算机 网络 互联网">
+<meta property="og:description" content="包引用1234import (    &quot;encoding/json&quot;    &quot;github.com/bitly/go-simplejson&quot; // for json get)
+用于存放数据的结构体1234type MyData struct &amp;#123;    Name   string    `json:&quot;item&quot;`    Other  float32   `json:&quot;amount&quot;`&amp;#1">
+<meta property="og:updated_time" content="2015-11-21T07:28:17.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Frank">
-<meta name="twitter:description" content="计算机 网络 互联网">
+<meta name="twitter:title" content="在Golang中使用json">
+<meta name="twitter:description" content="包引用1234import (    &quot;encoding/json&quot;    &quot;github.com/bitly/go-simplejson&quot; // for json get)
+用于存放数据的结构体1234type MyData struct &amp;#123;    Name   string    `json:&quot;item&quot;`    Other  float32   `json:&quot;amount&quot;`&amp;#1">
   
   
     <link rel="icon" href="favicon.png">
@@ -124,84 +128,85 @@
 </aside>
 
       
-      <section id="main">
-    <section class="archives-wrap">
-    <div class="archive-tag-wrap">
-      <span class="archive-tag">#PPTP, vpn</span>
-    </div>
-    <div class="archives">
+      <section id="main"><article id="post-dev/go/go_json" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
     
-    <div class="archive-article-thumbnail">
-      <a href="/2015/09/23/algo/ml/" class="thumbnail">
-  
-    <span style="background-image:url(/images/other/ml.jpg
-)" alt="机器学习资料大汇总" class="thumbnail-image"></span>
-  
-</a>
-    </div>
     
-    <header class="archive-article-header">
-      
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/09/23/algo/ml/">机器学习资料大汇总</a>
+    <h1 class="article-title" itemprop="name">
+      在Golang中使用json
     </h1>
   
 
-      
-        
-  <div class="archive-article-date">
+        <div class="article-meta">
+          
+  <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/09/23/algo/ml/">
-      <time datetime="2015-09-22T16:00:00.000Z" itemprop="datePublished">2015 9月 23</time>
+    <a href="/2015/11/21/dev/go/go_json/">
+      <time datetime="2015-11-21T07:19:56.000Z" itemprop="datePublished">2015-11-21</time>
     </a>
   </div>
 
 
-      
-    </header>
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
   </div>
-</article>
+
+        </div>
+      </header>
     
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    
-    <div class="archive-article-thumbnail">
-      <a href="/2015/05/14/system/pptp_vpn/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>包引用<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"encoding/json"</span></span><br><span class="line">    <span class="string">"github.com/bitly/go-simplejson"</span> <span class="comment">// for json get</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<p>用于存放数据的结构体<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyData <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name   <span class="typename">string</span>    <span class="string">`json:"item"`</span></span><br><span class="line">    Other  <span class="typename">float32</span>   <span class="string">`json:"amount"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意的就是后面单引号中的内容。</p>
+<p><code>json:&quot;item&quot;</code><br>这个的作用，就是Name字段在从结构体实例编码到JSON数据格式的时候，使用item作为名字。算是一种重命名的方式吧。</p>
+<p>编码JSON<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> detail MyData</span><br><span class="line"></span><br><span class="line">detail.Name  = <span class="string">"1"</span></span><br><span class="line">detail.Other = <span class="string">"2"</span></span><br><span class="line"></span><br><span class="line">body, err := json.Marshal(detail)</span><br><span class="line"><span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">    <span class="built_in">panic</span>(err.Error())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们使用Golang自带的encoding/json包对结构体进行编码到JSON数据。</p>
+<p>json.Marshal(…)<br>JSON解码<br>由于Golang自带的json包处理解码的过程较为复杂，所以这里使用一个第三方的包simplejson进行json数据的解码操作。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">js, err := simplejson.NewJson(body)</span><br><span class="line"><span class="keyword">if</span> err != <span class="constant">nil</span> &#123;</span><br><span class="line">    <span class="built_in">panic</span>(err.Error())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Println(js)</span><br></pre></td></tr></table></figure></p>
+
+      
     </div>
-    
-    <header class="archive-article-header">
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="cih8rxua1002qebpjfmay517i" class="article-share-link">分享到</a>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2015/05/14/system/pptp_vpn/">PPTP VPN搭建</a>
-    </h1>
-  
+        <a href="http://www.notehub.cn/2015/11/21/dev/go/go_json/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
 
-      
-        
-  <div class="archive-article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/05/14/system/pptp_vpn/">
-      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015 5月 14</time>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/11/21/dev/go/go_make_new/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Go中的make和new</div>
     </a>
-  </div>
+  
+</nav>
 
 
-      
-    </header>
-  </div>
+  
 </article>
-    
-    </div></section>
-    </section>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-title="在Golang中使用json" data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
       
         <aside id="sidebar">
   
