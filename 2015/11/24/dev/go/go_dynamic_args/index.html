@@ -3,19 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Zabbix | Frank</title>
+  <title>Go可变长参数函数 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="zabbix(音同 zæbix)是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位和解决存在的各种问题。zabbix由2部分构成，zabbix server与可选组件zabbix agent. zabbix server可以通过SNMP，zabbix agent，pin">
+  <meta name="description" content="支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。1234567891011121314151617181920212223242526package mainimport &quot;fmt&quot;// 这个函数可以传入任意数量的整型参数func sum(nums ...int) &amp;#123;    fmt.Print(nums, &quot; &quot;)    t">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Zabbix">
-<meta property="og:url" content="http://www.notehub.cn/2014/06/15/opensource/zabbix/index.html">
+<meta property="og:title" content="Go可变长参数函数">
+<meta property="og:url" content="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="zabbix(音同 zæbix)是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位和解决存在的各种问题。zabbix由2部分构成，zabbix server与可选组件zabbix agent. zabbix server可以通过SNMP，zabbix agent，pin">
-<meta property="og:image" content="http://www.notehub.cn/images/zabbix.png">
-<meta property="og:updated_time" content="2015-09-03T02:43:50.000Z">
+<meta property="og:description" content="支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。1234567891011121314151617181920212223242526package mainimport &quot;fmt&quot;// 这个函数可以传入任意数量的整型参数func sum(nums ...int) &amp;#123;    fmt.Print(nums, &quot; &quot;)    t">
+<meta property="og:updated_time" content="2015-11-24T08:22:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Zabbix">
-<meta name="twitter:description" content="zabbix(音同 zæbix)是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位和解决存在的各种问题。zabbix由2部分构成，zabbix server与可选组件zabbix agent. zabbix server可以通过SNMP，zabbix agent，pin">
+<meta name="twitter:title" content="Go可变长参数函数">
+<meta name="twitter:description" content="支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。1234567891011121314151617181920212223242526package mainimport &quot;fmt&quot;// 这个函数可以传入任意数量的整型参数func sum(nums ...int) &amp;#123;    fmt.Print(nums, &quot; &quot;)    t">
   
   
     <link rel="icon" href="favicon.png">
@@ -126,7 +125,7 @@
 </aside>
 
       
-      <section id="main"><article id="post-opensource/zabbix" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-dev/go/go_dynamic_args" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -135,7 +134,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Zabbix
+      Go可变长参数函数
     </h1>
   
 
@@ -143,32 +142,37 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2014/06/15/opensource/zabbix/">
-      <time datetime="2014-06-14T16:00:00.000Z" itemprop="datePublished">2014-06-15</time>
+    <a href="/2015/11/24/dev/go/go_dynamic_args/">
+      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
     </a>
   </div>
 
 
           
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
         </div>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>　　zabbix(音同 zæbix)是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位和解决存在的各种问题。zabbix由2部分构成，zabbix server与可选组件zabbix agent. zabbix server可以通过SNMP，zabbix agent，ping，端口监视等方法提供对远程服务器/网络状态的监视，数据收集等功能，它可以运行在Linux, Solaris, HP-UX, AIX, Free BSD, Open BSD, OS X等平台上。</p>
-<p>　　zabbix agent需要安装在被监视的目标服务器上，它主要完成对硬件信息或与操作系统有关的内存，CPU等信息的收集。zabbix agent可以运行在Linux,Solaris,HP-UX,AIX,Free BSD,Open BSD, OS X, Tru64/OSF1, Windows NT4.0, Windows (2000/2003/XP/Vista)等系统之上。 zabbix server可以单独监视远程服务器的服务状态；同时也可以与zabbix agent配合，可以轮询zabbix agent主动接收监视数据（agent方式），同时还可被动接收zabbix agent发送的数据（trapping方式）。 另外zabbix server还支持SNMP (v1,v2)，可以与SNMP软件(例如：net-snmp)等配合使用.</p>
-<p><img src="/images/zabbix.png" alt="zabbix"></p>
+        <p>支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 这个函数可以传入任意数量的整型参数</span></span><br><span class="line"><span class="keyword">func</span> sum(nums ...<span class="typename">int</span>) &#123;</span><br><span class="line">    fmt.Print(nums, <span class="string">" "</span>)</span><br><span class="line">    total := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _, num := <span class="keyword">range</span> nums &#123;</span><br><span class="line">        total += num</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(total)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 支持可变长参数的函数调用方法和普通函数一样</span></span><br><span class="line">    <span class="comment">// 也支持只有一个参数的情况</span></span><br><span class="line">    sum(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    sum(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果你需要传入的参数在一个切片中，像下面一样</span></span><br><span class="line">    <span class="comment">// "func(slice...)"把切片打散传入</span></span><br><span class="line">    nums := []<span class="typename">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line">    sum(nums...)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为</p>
+<p>[1 2] 3<br>[1 2 3] 6<br>[1 2 3 4] 10<br>需要注意的是，可变长参数应该是函数定义的最右边的参数，即最后一个参数。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/06/15/opensource/zabbix/" data-id="cihd47erc001b59pj9zabw4bf" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="cihd47esf002t59pjzcy7zscv" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2014/06/15/opensource/zabbix/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
 
     </footer>
   </div>
@@ -176,19 +180,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2014/10/02/other/because_we_fall/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">
-        
-          因为好高骛远所以半途而废
-        
-      </div>
-    </a>
   
-  
-    <a href="/2014/06/09/opensource/license/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/11/21/dev/go/go_json/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">图解各种开源许可证</div>
+      <div class="article-nav-title">在Golang中使用json</div>
     </a>
   
 </nav>
@@ -199,7 +194,7 @@
 
 
   <section id="comments">
-    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2014/06/15/opensource/zabbix/" data-title="Zabbix" data-url="http://www.notehub.cn/2014/06/15/opensource/zabbix/">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-title="Go可变长参数函数" data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/">
       <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
       </div>
   </section>
