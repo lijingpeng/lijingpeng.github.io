@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Li Jingpeng's site]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.notehub.cn/"/>
-  <updated>2015-11-24T08:22:34.000Z</updated>
+  <updated>2015-11-24T08:25:08.000Z</updated>
   <id>http://www.notehub.cn/</id>
   
   <author>
@@ -13,6 +13,23 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[golang语言中map的初始化及使用]]></title>
+    <link href="http://www.notehub.cn/2015/11/24/dev/go/go_map/"/>
+    <id>http://www.notehub.cn/2015/11/24/dev/go/go_map/</id>
+    <published>2015-11-24T06:19:56.000Z</published>
+    <updated>2015-11-24T08:25:08.000Z</updated>
+    <content type="html"><![CDATA[<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先声明map</span></span><br><span class="line"><span class="keyword">var</span> m1 <span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span></span><br><span class="line"><span class="comment">// 再使用make函数创建一个非nil的map，nil map不能赋值</span></span><br><span class="line">m1 = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>)</span><br><span class="line"><span class="comment">// 最后给已声明的map赋值</span></span><br><span class="line">m1[<span class="string">"a"</span>] = <span class="string">"aa"</span></span><br><span class="line">m1[<span class="string">"b"</span>] = <span class="string">"bb"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 直接创建</span></span><br><span class="line">m2 := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>)</span><br><span class="line"><span class="comment">// 然后赋值</span></span><br><span class="line">m2[<span class="string">"a"</span>] = <span class="string">"aa"</span></span><br><span class="line">m2[<span class="string">"b"</span>] = <span class="string">"bb"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化 + 赋值一体化</span></span><br><span class="line">m3 := <span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>&#123;</span><br><span class="line">    <span class="string">"a"</span>: <span class="string">"aa"</span>,</span><br><span class="line">    <span class="string">"b"</span>: <span class="string">"bb"</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==========================================</span></span><br><span class="line"><span class="comment">// 查找键值是否存在</span></span><br><span class="line"><span class="keyword">if</span> v, ok := m1[<span class="string">"a"</span>]; ok &#123;</span><br><span class="line">    fmt.Println(v)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"Key Not Found"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 遍历map</span></span><br><span class="line"><span class="keyword">for</span> k, v := <span class="keyword">range</span> m1 &#123;</span><br><span class="line">    fmt.Println(k, v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    <summary type="html">
+    <![CDATA[<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="l]]>
+    </summary>
+    
+      <category term="go" scheme="http://www.notehub.cn/tags/go/"/>
+    
+      <category term="dev" scheme="http://www.notehub.cn/categories/dev/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Go可变长参数函数]]></title>
@@ -890,33 +907,6 @@
     </summary>
     
       <category term="java" scheme="http://www.notehub.cn/categories/java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[关于Cookie]]></title>
-    <link href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/"/>
-    <id>http://www.notehub.cn/2015/10/10/internet/ad/cookie/</id>
-    <published>2015-10-09T16:00:00.000Z</published>
-    <updated>2015-10-10T06:35:19.000Z</updated>
-    <content type="html"><![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
-<p><img src="/images/other/cookie.jpg" alt=""></p>
-<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
-<h3 id="关于Cookie的一些知识点">关于Cookie的一些知识点</h3><ol>
-<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
-<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
-<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
-</ol>
-]]></content>
-    <summary type="html">
-    <![CDATA[<h2 id="关于Cookie">关于Cookie</h2><hr>
-<p><img src="/images/other/cookie.jpg" alt=""></p>
-<h3 id="Cookie的传递流程">Cookie的传递流程</h3><p>Cookie利用网页代码中]]>
-    </summary>
-    
-      <category term="广告" scheme="http://www.notehub.cn/tags/%E5%B9%BF%E5%91%8A/"/>
-    
-      <category term="internet" scheme="http://www.notehub.cn/categories/internet/"/>
     
   </entry>
   
