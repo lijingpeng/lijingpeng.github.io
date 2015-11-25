@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Li Jingpeng's site]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.notehub.cn/"/>
-  <updated>2015-11-25T02:30:35.000Z</updated>
+  <updated>2015-11-25T02:39:11.000Z</updated>
   <id>http://www.notehub.cn/</id>
   
   <author>
@@ -19,9 +19,9 @@
     <link href="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/"/>
     <id>http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/</id>
     <published>2015-11-25T02:30:56.000Z</published>
-    <updated>2015-11-25T02:30:35.000Z</updated>
+    <updated>2015-11-25T02:39:11.000Z</updated>
     <content type="html"><![CDATA[<p>深度复制可以基于reflect包的反射机制完成, 但是全部重头手写的话会很繁琐.</p>
-<p>最简单的方式是基于序列化和反序列化来实现对象的深度复制:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">func</span> deepCopy(dst, src <span class="keyword">interface</span>&#123;&#125;) error &#123;</span><br><span class="line">    <span class="keyword">var</span> buf bytes.Buffer</span><br><span class="line">    <span class="keyword">if</span> err := gob.NewEncoder(&amp;buf).Encode(src); err != <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> err</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(dst)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最简单的方式是基于序列化和反序列化来实现对象的深度复制:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"bytes"</span></span><br><span class="line">    <span class="string">"encoding/gob"</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> deepCopy(dst, src <span class="keyword">interface</span>&#123;&#125;) error &#123;</span><br><span class="line">    <span class="keyword">var</span> buf bytes.Buffer</span><br><span class="line">    <span class="keyword">if</span> err := gob.NewEncoder(&amp;buf).Encode(src); err != <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> err</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(dst)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>Gob和bytes.Buffer简单组合就搞定了. 当然, Gob的底层也是基于reflect包完成的.</p>
 ]]></content>
     <summary type="html">

@@ -161,13 +161,13 @@
       
                 
         <p>深度复制可以基于reflect包的反射机制完成, 但是全部重头手写的话会很繁琐.</p>
-<p>最简单的方式是基于序列化和反序列化来实现对象的深度复制:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">func</span> deepCopy(dst, src <span class="keyword">interface</span>&#123;&#125;) error &#123;</span><br><span class="line">    <span class="keyword">var</span> buf bytes.Buffer</span><br><span class="line">    <span class="keyword">if</span> err := gob.NewEncoder(&amp;buf).Encode(src); err != <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> err</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(dst)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最简单的方式是基于序列化和反序列化来实现对象的深度复制:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"bytes"</span></span><br><span class="line">    <span class="string">"encoding/gob"</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">    <span class="string">"log"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> deepCopy(dst, src <span class="keyword">interface</span>&#123;&#125;) error &#123;</span><br><span class="line">    <span class="keyword">var</span> buf bytes.Buffer</span><br><span class="line">    <span class="keyword">if</span> err := gob.NewEncoder(&amp;buf).Encode(src); err != <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> err</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(dst)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>Gob和bytes.Buffer简单组合就搞定了. 当然, Gob的底层也是基于reflect包完成的.</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/" data-id="cihe72em00032d9pj5ghmm34g" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/" data-id="cihe7db0s003249pjb1wc5un4" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/#ds-thread" class="article-comment-link">评论</a>
       
@@ -223,7 +223,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="cihe72elk002ld9pj9tjm0q6b" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="cihe7db0g002l49pjwwz7kck1" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_set/#ds-thread" class="article-comment-link">评论</a>
       
@@ -277,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="cihe72elm002qd9pjx48bsx7b" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="cihe7db0i002q49pj8k6g24r9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_map/#ds-thread" class="article-comment-link">评论</a>
       
@@ -334,7 +334,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="cihe72elx002zd9pjlgbhf5hn" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="cihe7db0q002z49pjolwgxk2v" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
       
@@ -395,7 +395,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="cihe72elu002wd9pjqb3ho7wm" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="cihe7db0p002w49pjwuvtx7xq" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_json/#ds-thread" class="article-comment-link">评论</a>
       
