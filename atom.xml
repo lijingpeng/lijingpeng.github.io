@@ -4,7 +4,7 @@
   <subtitle><![CDATA[Li Jingpeng's site]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://www.notehub.cn/"/>
-  <updated>2015-12-04T02:39:04.000Z</updated>
+  <updated>2015-12-04T15:35:05.000Z</updated>
   <id>http://www.notehub.cn/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://www.notehub.cn/2015/12/04/dev/docker/docker/"/>
     <id>http://www.notehub.cn/2015/12/04/dev/docker/docker/</id>
     <published>2015-12-04T02:19:56.000Z</published>
-    <updated>2015-12-04T02:39:04.000Z</updated>
+    <updated>2015-12-04T15:35:05.000Z</updated>
     <content type="html"><![CDATA[<p>MAC docker私有镜像安装配置：</p>
 <ol>
 <li>先安装brew install swig</li>
@@ -29,7 +29,10 @@
 <li><p>安装gevent</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo CFLAGS=<span class="string">'-std=c99'</span> pip install gevent==<span class="number">1.0</span>.<span class="number">1</span></span><br><span class="line"><span class="number">4</span>. sudo pip install docker-registry</span><br></pre></td></tr></table></figure>
 </li>
+<li><p>重启<br>I had the same problem this morning and the following fixed it for me:</p>
+</li>
 </ol>
+<p>$ docker-machine restart default      # Restart the environment<br>$ eval $(docker-machine env default)  # Refresh your environment settings<br>It appears that this is due to the Docker virtual machine getting itself into a strange state.</p>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>MAC docker私有镜像安装配置：</p>

@@ -25,7 +25,7 @@
 
 安装gevent
 12sudo CFLAGS=&apos;-std=c99&apos;">
-<meta property="og:updated_time" content="2015-12-04T02:39:04.000Z">
+<meta property="og:updated_time" content="2015-12-04T15:35:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MAC docker私有镜像安装配置">
 <meta name="twitter:description" content="MAC docker私有镜像安装配置：
@@ -190,12 +190,15 @@
 <li><p>安装gevent</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo CFLAGS=<span class="string">'-std=c99'</span> pip install gevent==<span class="number">1.0</span>.<span class="number">1</span></span><br><span class="line"><span class="number">4</span>. sudo pip install docker-registry</span><br></pre></td></tr></table></figure>
 </li>
+<li><p>重启<br>I had the same problem this morning and the following fixed it for me:</p>
+</li>
 </ol>
+<p>$ docker-machine restart default      # Restart the environment<br>$ eval $(docker-machine env default)  # Refresh your environment settings<br>It appears that this is due to the Docker virtual machine getting itself into a strange state.</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/04/dev/docker/docker/" data-id="cihr2c6y1003d60pj7hrilxcb" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/04/dev/docker/docker/" data-id="cihru20a6003d5kpjzis5duxl" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/04/dev/docker/docker/#ds-thread" class="article-comment-link">评论</a>
       
