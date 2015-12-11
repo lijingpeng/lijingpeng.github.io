@@ -1,6 +1,7 @@
 title: Bayesian Bandits – optimizing click throughs with statistics
 date: 2015-09-03 13:36:48
-tags:
+tags:Bandits
+category: machine learning
 ---
 
 Great news! A murder victim has been found. No slow news day today! The story is already written, now a title needs to be selected. The clever reporter who wrote the story has come up with two potential titles – “Murder victim found in adult entertainment venue” and “Headless Body found in Topless Bar”. (The latter title is one I’ve shamelessly stolen from the NY Daily News.) Once upon a time, deciding which title to run was a matter for a news editor to decide. Those days are now over – the geeks now rule the earth. Title selection is now primarily an algorithmic problem, not an editorial one.

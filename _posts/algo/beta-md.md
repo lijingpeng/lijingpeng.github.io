@@ -1,6 +1,7 @@
 title: 理解Beta分布和Dirichlet分布
 date: 2015-09-03 14:18:04
 tags:
+category: machine learning
 ---
 
 </br>

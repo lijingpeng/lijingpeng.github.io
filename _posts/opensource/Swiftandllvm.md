@@ -1,7 +1,7 @@
 date: 2014-06-08
 title: Swift and LLVM
 tags: swift, llvm
-
+category: dev
 ------------
 2014年6月2号，苹果在一年一度的WWDC上发布了新的编程语言Swift，根据苹果的官方介绍，Swift从开始研发到最终发布用了仅不足4年的时间，这应该算是一个比较短的时间周期了，另外WWDC上苹果还介绍了Swift的一些关键特性，例如：
 - Swift从一些脚本语言如Python、Ruby、Javascript上吸取了一些好的特性

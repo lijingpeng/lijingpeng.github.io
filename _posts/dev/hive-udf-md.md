@@ -1,6 +1,7 @@
 title: Hive UDF开发
 date: 2015-09-03 12:49:45
 tags:
+category: Hive
 ---
 Hive进行UDAF开发，相对要比UDF复杂一些，不过也不是很难。请看一个例子:
 ```java

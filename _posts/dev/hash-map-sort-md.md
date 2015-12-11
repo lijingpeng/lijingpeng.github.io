@@ -1,6 +1,7 @@
 title: HashMap的两种排序方式
 date: 2015-05-03 12:57:56
 tags:
+category: Java
 ---
 
 ```java

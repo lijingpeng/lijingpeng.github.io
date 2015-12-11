@@ -1,7 +1,7 @@
 date: 2014-06-06
 title: ldd 命令的介绍和使用方法
 tags: linux, ldd, 依赖关系
-
+category: dev
 ------------
 ldd 能够显示可执行模块的dependency，其原理是通过设置一系列的环境变量，如下：LD_TRACE_LOADED_OBJECTS、LD_WARN、LD_BIND_NOW、LD_LIBRARY_VERSION、LD_VERBOSE等。当LD_TRACE_LOADED_OBJECTS环境变量不为空时，任何可执行程序在运行时，它都会只显示模块的dependency，而程序并不真正执行。
 

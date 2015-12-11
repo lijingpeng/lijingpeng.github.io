@@ -1,7 +1,7 @@
 date: 2014-06-05
 title: Github pages 搭建个人博客并绑定域名 
-tags: github, pages, blog, 域名
-
+tags: github
+category: github
 ------------
 
 目前，github下pelican搭建的极简主义的博客越来越受到大家的欢迎，本文介绍在github中一个仓库同时保存Markdown博客主内容和HTML网页，并绑定域名。 我们将markdown文件保存在仓库的master分支中，将HTML网页保存在gh-pages分支中，并将域名绑定到gh-pages分支，下面是操作步骤：

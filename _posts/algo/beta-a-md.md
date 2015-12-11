@@ -1,6 +1,7 @@
 title: 二项分布和Beta分布
 date: 2015-09-03 14:33:26
 tags:
+category: machine learning
 ---
 ```python
 import pylab as pl

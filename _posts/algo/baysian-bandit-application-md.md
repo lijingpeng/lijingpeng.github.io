@@ -1,6 +1,7 @@
 title: Bayesian Bandits原理及在互联网广告行业的应用
 date: 2015-09-03 13:48:13
-tags:
+tags:Bandits
+category: machine learning
 ---
 
 ## 1. The Multi-Armed Bandit Problem

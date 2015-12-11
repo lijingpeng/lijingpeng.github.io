@@ -1,6 +1,7 @@
 title: How to customize Writable class in Hadoop
 date: 2015-09-21 12:49:45
 tags:
+category: Hadoop
 ---
 I'm trying to implement Writable class, but i have no idea on how to implement a writable class if in my class there is nested object, such as list, etc.
 ```java

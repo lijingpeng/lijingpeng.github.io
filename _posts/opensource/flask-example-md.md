@@ -1,6 +1,7 @@
 title: Flask microframework example
 date: 2015-09-03 11:25:14
 tags: falsk, restful
+category: dev
 ---
 
 NOTE: This article was revised in September 2014 to be in sync with current versions of Python and Flask.

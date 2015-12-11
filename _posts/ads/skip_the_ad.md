@@ -1,6 +1,6 @@
 date: 2015-10-29 11：20：00
 title: 跳过视频广告好爽，殊不知被狠狠地「算计」了
-tags: 
+tags: ad
 category: ads
 ---
 

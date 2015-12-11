@@ -1,6 +1,7 @@
 title: Java beta distribution
 date: 2015-09-03 14:51:59
 tags:
+category: Java
 ---
 
 

@@ -1,6 +1,7 @@
 title: MurmurHash
 date: 2015-09-03 14:55:54
 tags:
+category: Hash
 ---
 
 　　MurmurHash 是一种非加密型哈希函数，适用于一般的哈希检索操作。由Austin Appleby在2008年发明，并出现了多个变种，都已经发布到了公有领域(public domain)。与其它流行的哈希函数相比，对于规律性较强的key，MurmurHash的随机分布特征表现更良好。
