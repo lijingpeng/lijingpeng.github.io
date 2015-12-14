@@ -1,6 +1,6 @@
 title: Bayesian Bandits – optimizing click throughs with statistics
 date: 2015-09-03 13:36:48
-tags:Bandits
+tags: Bandits
 category: machine learning
 ---
 
