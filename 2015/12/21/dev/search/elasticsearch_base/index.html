@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>skill | Frank</title>
+  <title>elasticsearch 基本操作 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="计算机 网络 互联网">
-<meta property="og:type" content="website">
-<meta property="og:title" content="skill">
-<meta property="og:url" content="http://www.notehub.cn/about/skill/index.html">
+  <meta name="description" content="索引1234567891011121314151617181920212223242526272829303132333435363738394041424344454647curl -XPUT &quot;http://localhost:9200/movies/movie/1&quot; -d&apos;&amp;#123;    &quot;title&quot;: &quot;The Godfather&quot;,    &quot;director&quot;: &quot;Francis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elasticsearch 基本操作">
+<meta property="og:url" content="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="计算机 网络 互联网">
-<meta property="og:updated_time" content="2015-12-16T14:18:12.000Z">
+<meta property="og:description" content="索引1234567891011121314151617181920212223242526272829303132333435363738394041424344454647curl -XPUT &quot;http://localhost:9200/movies/movie/1&quot; -d&apos;&amp;#123;    &quot;title&quot;: &quot;The Godfather&quot;,    &quot;director&quot;: &quot;Francis">
+<meta property="og:updated_time" content="2015-12-21T09:11:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="skill">
-<meta name="twitter:description" content="计算机 网络 互联网">
+<meta name="twitter:title" content="elasticsearch 基本操作">
+<meta name="twitter:description" content="索引1234567891011121314151617181920212223242526272829303132333435363738394041424344454647curl -XPUT &quot;http://localhost:9200/movies/movie/1&quot; -d&apos;&amp;#123;    &quot;title&quot;: &quot;The Godfather&quot;,    &quot;director&quot;: &quot;Francis">
   
   
     <link rel="icon" href="favicon.png">
@@ -125,7 +125,7 @@
 </aside>
 
       
-      <section id="main"><article id="page-undefined" class="article article-type-page" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-dev/search/elasticsearch_base" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -134,7 +134,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      skill
+      elasticsearch 基本操作
     </h1>
   
 
@@ -142,39 +142,70 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/about/skill/index.html">
-      <time datetime="2015-12-16T14:18:00.000Z" itemprop="datePublished">2015-12-16</time>
+    <a href="/2015/12/21/dev/search/elasticsearch_base/">
+      <time datetime="2015-12-21T02:19:56.000Z" itemprop="datePublished">2015-12-21</time>
     </a>
   </div>
 
 
           
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
         </div>
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
                 
-        
+        <h3 id="u7D22_u5F15"><a href="#u7D22_u5F15" class="headerlink" title="索引"></a>索引</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT <span class="string">"http://localhost:9200/movies/movie/1"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "title": "The Godfather",</span><br><span class="line">    "director": "Francis Ford Coppola",</span><br><span class="line">    "year": 1972,</span><br><span class="line">    "genres": ["Crime", "Drama"]</span><br><span class="line">&#125;'</span></span><br><span class="line"> </span><br><span class="line">curl -XPUT <span class="string">"http://localhost:9200/movies/movie/2"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "title": "Lawrence of Arabia",</span><br><span class="line">    "director": "David Lean",</span><br><span class="line">    "year": 1962,</span><br><span class="line">    "genres": ["Adventure", "Biography", "Drama"]</span><br><span class="line">&#125;'</span></span><br><span class="line"> </span><br><span class="line">curl -XPUT <span class="string">"http://localhost:9200/movies/movie/3"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "title": "To Kill a Mockingbird",</span><br><span class="line">    "director": "Robert Mulligan",</span><br><span class="line">    "year": 1962,</span><br><span class="line">    "genres": ["Crime", "Drama", "Mystery"]</span><br><span class="line">&#125;'</span></span><br><span class="line"> </span><br><span class="line">curl -XPUT <span class="string">"http://localhost:9200/movies/movie/4"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "title": "Apocalypse Now",</span><br><span class="line">    "director": "Francis Ford Coppola",</span><br><span class="line">    "year": 1979,</span><br><span class="line">    "genres": ["Drama", "War"]</span><br><span class="line">&#125;'</span></span><br><span class="line"> </span><br><span class="line">curl -XPUT <span class="string">"http://localhost:9200/movies/movie/5"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "title": "Kill Bill: Vol. 1",</span><br><span class="line">    "director": "Quentin Tarantino",</span><br><span class="line">    "year": 2003,</span><br><span class="line">    "genres": ["Action", "Crime", "Thriller"]</span><br><span class="line">&#125;'</span></span><br><span class="line"> </span><br><span class="line">curl -XPUT <span class="string">"http://localhost:9200/movies/movie/6"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "title": "The Assassination of Jesse James by the Coward Robert Ford",</span><br><span class="line">    "director": "Andrew Dominik",</span><br><span class="line">    "year": 2007,</span><br><span class="line">    "genres": ["Biography", "Crime", "Drama"]</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
+<h3 id="u68C0_u7D22"><a href="#u68C0_u7D22" class="headerlink" title="检索"></a>检索</h3><ol>
+<li><p>按照ID进行查询</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">curl -XPUT <span class="string">"http://localhost:9200/movies/movie/1"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "title": "The Godfather",</span><br><span class="line">    "director": "Francis Ford Coppola",</span><br><span class="line">    "year": 1972,</span><br><span class="line">    "genres": ["Crime", "Drama"]</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>基本的文本检索</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="string">"http://localhost:9200/_search"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "query": &#123;</span><br><span class="line">        "query_string": &#123;</span><br><span class="line">            "query": "kill"</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>指定字段进行检索</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="string">"http://localhost:9200/_search"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "query": &#123;</span><br><span class="line">        "query_string": &#123;</span><br><span class="line">            "query": "ford",</span><br><span class="line">            "fields": ["title"]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>过滤（filtering）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST <span class="string">"http://localhost:9200/_search"</span> <span class="operator">-d</span><span class="string">'</span><br><span class="line">&#123;</span><br><span class="line">    "query": &#123;</span><br><span class="line">        "filtered": &#123;</span><br><span class="line">            "query": &#123;</span><br><span class="line">                "query_string": &#123;</span><br><span class="line">                    "query": "drama"</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            "filter": &#123;</span><br><span class="line">                "term": &#123; "year": 1962 &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;'</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/about/skill/index.html" data-id="cii8wl54900035ipjbv3x4snc" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/" data-id="ciifqvjgc0000u5pjdhrk4xuu" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/about/skill/index.html#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/#ds-thread" class="article-comment-link">评论</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li></ul>
+
     </footer>
   </div>
   
     
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/11/ads/skip_the_ad/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">跳过视频广告好爽，殊不知被狠狠地「算计」了</div>
+    </a>
+  
+</nav>
+
 
   
 </article>
 
 
   <section id="comments">
-    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/about/skill/index.html" data-title="skill" data-url="http://www.notehub.cn/about/skill/index.html">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/" data-title="elasticsearch 基本操作" data-url="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/">
       <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
       </div>
   </section>
