@@ -125,8 +125,10 @@ $docker login
 
 9. 发布image（push）
 
+```
 # 发布docker镜像
 $docker push new_image_name
+```
 10.  根据Dockerfile 构建出一个容器
 
 #build
