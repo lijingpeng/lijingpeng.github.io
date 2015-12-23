@@ -4,7 +4,7 @@ date: 2015-12-11 15:53:16
 
 * 搜索引擎
  * Library
-   * [elasticsearch](https://www.elastic.co/)
+   * [elasticsearch](https://www.elastic.co/) [教程](https://github.com/looly/elasticsearch-definitive-guide-cn)
    * [lucene](http://lucene.apache.org/)
    * [sphinx](http://sphinxsearch.com/)
    * [solr](http://lucene.apache.org/solr/)
