@@ -125,6 +125,60 @@
 
       
       <section id="main">
+      <article id="post-dev/go/go_map" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/24/dev/go/go_map/">golang语言中map的初始化及使用</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/24/dev/go/go_map/">
+      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先声明map</span></span><br><span class="line"><span class="keyword">var</span> m1 <span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span></span><br><span class="line"><span class="comment">// 再使用make函数创建一个非nil的map，nil map不能赋值</span></span><br><span class="line">m1 = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>)</span><br><span class="line"><span class="comment">// 最后给已声明的map赋值</span></span><br><span class="line">m1[<span class="string">"a"</span>] = <span class="string">"aa"</span></span><br><span class="line">m1[<span class="string">"b"</span>] = <span class="string">"bb"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 直接创建</span></span><br><span class="line">m2 := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>)</span><br><span class="line"><span class="comment">// 然后赋值</span></span><br><span class="line">m2[<span class="string">"a"</span>] = <span class="string">"aa"</span></span><br><span class="line">m2[<span class="string">"b"</span>] = <span class="string">"bb"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化 + 赋值一体化</span></span><br><span class="line">m3 := <span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>&#123;</span><br><span class="line">    <span class="string">"a"</span>: <span class="string">"aa"</span>,</span><br><span class="line">    <span class="string">"b"</span>: <span class="string">"bb"</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==========================================</span></span><br><span class="line"><span class="comment">// 查找键值是否存在</span></span><br><span class="line"><span class="keyword">if</span> v, ok := m1[<span class="string">"a"</span>]; ok &#123;</span><br><span class="line">    fmt.Println(v)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"Key Not Found"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 遍历map</span></span><br><span class="line"><span class="keyword">for</span> k, v := <span class="keyword">range</span> m1 &#123;</span><br><span class="line">    fmt.Println(k, v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="ciiiy6j2t003ipypjlv1ygjag" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_map/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/go/go_dynamic_args" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -167,63 +221,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="ciiit9aas003rsmpjwhlmpdpx" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="ciiiy6j32003rpypj31nh8vsy" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/go/go_map" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/24/dev/go/go_map/">golang语言中map的初始化及使用</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/11/24/dev/go/go_map/">
-      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先声明map</span></span><br><span class="line"><span class="keyword">var</span> m1 <span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span></span><br><span class="line"><span class="comment">// 再使用make函数创建一个非nil的map，nil map不能赋值</span></span><br><span class="line">m1 = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>)</span><br><span class="line"><span class="comment">// 最后给已声明的map赋值</span></span><br><span class="line">m1[<span class="string">"a"</span>] = <span class="string">"aa"</span></span><br><span class="line">m1[<span class="string">"b"</span>] = <span class="string">"bb"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 直接创建</span></span><br><span class="line">m2 := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>)</span><br><span class="line"><span class="comment">// 然后赋值</span></span><br><span class="line">m2[<span class="string">"a"</span>] = <span class="string">"aa"</span></span><br><span class="line">m2[<span class="string">"b"</span>] = <span class="string">"bb"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化 + 赋值一体化</span></span><br><span class="line">m3 := <span class="keyword">map</span>[<span class="typename">string</span>]<span class="typename">string</span>&#123;</span><br><span class="line">    <span class="string">"a"</span>: <span class="string">"aa"</span>,</span><br><span class="line">    <span class="string">"b"</span>: <span class="string">"bb"</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ==========================================</span></span><br><span class="line"><span class="comment">// 查找键值是否存在</span></span><br><span class="line"><span class="keyword">if</span> v, ok := m1[<span class="string">"a"</span>]; ok &#123;</span><br><span class="line">    fmt.Println(v)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"Key Not Found"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 遍历map</span></span><br><span class="line"><span class="keyword">for</span> k, v := <span class="keyword">range</span> m1 &#123;</span><br><span class="line">    fmt.Println(k, v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="ciiit9aaj003ismpjg3z1tzzk" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_map/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -282,7 +282,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="ciiit9aap003osmpj4rbwhrt6" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="ciiiy6j30003opypj8tywls2k" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_json/#ds-thread" class="article-comment-link">评论</a>
       
@@ -341,7 +341,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="ciiit9aam003lsmpj8j8w9y6w" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="ciiiy6j2w003lpypjkfhv4qec" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/#ds-thread" class="article-comment-link">评论</a>
       
@@ -437,7 +437,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="ciiit9aaw003xsmpj62bmjtdi" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="ciiiy6j36003xpypjcu37i3h0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/20/dev/flatbuffers/#ds-thread" class="article-comment-link">评论</a>
       
