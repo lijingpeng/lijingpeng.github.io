@@ -116,7 +116,7 @@ $docker save image_name > /home/save.tar
 $docker load < /home/save.tar
 ```
 
-8、 登录registry server（login）
+8. 登录registry server（login）
 
 ```
 # 登陆registry server; -e, --email="" Email; -p, --password="" Password; -u, --username="" Username
