@@ -1,7 +1,6 @@
 title: Docker基本命令
 date: 2015-12-23 10:19:56
-tags: 
-- docker
+tags: docker
 category: dev
 ---
 
