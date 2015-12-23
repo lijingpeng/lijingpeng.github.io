@@ -29,6 +29,7 @@ $docker history image_name
 
 3. 启动容器（run）
 
+```
 docker容器可以理解为在沙盒中运行的进程。这个沙盒包含了该进程运行所必须的资源，包括文件系统、系统类库、shell 环境等等。但这个沙盒默认是不会运行任何程序的。你需要在沙盒中运行一个进程来启动某一个容器。这个进程是该容器的唯一进程，所以当该进程结束的时候，容器也会完全的停止。
 
 # 在容器中运行"echo"命令，输出"hello word"
@@ -41,25 +42,32 @@ $docker run -i -t image_name /bin/bash
 # 在容器中安装新的程序
 $docker run image_name apt-get install -y app_name
 Note：  在执行apt-get 命令的时候，要带上-y参数。如果不指定-y参数的话，apt-get命令会进入交互模式，需要用户输入命令来进行确认，但在docker环境中是无法响应这种交互的。apt-get 命令执行完毕之后，容器就会停止，但对容器的改动不会丢失。
+```
 
 4. 查看容器（ps）
 
+```
 # 列出当前所有正在运行的container
 $docker ps
 # 列出所有的container
 $docker ps -a
 # 列出最近一次启动的container
 $docker ps -l
+```
+
 5. 保存对容器的修改（commit）
 
+```
 当你对某一个容器做了修改之后（通过在容器中运行某一个命令），可以把对容器的修改保存下来，这样下次可以从保存后的最新状态运行该容器。
 
 # 保存对容器的修改; -a, --author="" Author; -m, --message="" Commit message
 $docker commit ID new_image_name
 Note：  image相当于类，container相当于实例，不过可以动态给实例安装新软件，然后把这个container用commit命令固化成一个image。
+```
 
 6. 对容器的操作（rm、stop、start、kill、logs、diff、top、cp、restart、attach）
 
+```
 # 删除所有容器
 $docker rm `docker ps -a -q`
 
@@ -90,9 +98,11 @@ $docker restart Name/ID
 # 附加到一个运行的容器上面; --no-stdin=false Do not attach stdin; --sig-proxy=true Proxify all received signal to the process
 $docker attach ID
 Note： attach命令允许你查看或者影响一个运行的容器。你可以在同一时间attach同一个容器。你也可以从一个容器中脱离出来，是从CTRL-C。
+```
 
 7. 保存和加载镜像（save、load）
 
+```
 当需要把一台机器上的镜像迁移到另一台机器的时候，需要保存镜像与加载镜像。
 
 # 保存镜像到一个tar包; -o, --output="" Write to an file
@@ -104,10 +114,15 @@ $docker load -i file_path
 $docker save image_name > /home/save.tar
 # 使用scp将save.tar拷到机器b上，然后：
 $docker load < /home/save.tar
+```
+
 8、 登录registry server（login）
 
+```
 # 登陆registry server; -e, --email="" Email; -p, --password="" Password; -u, --username="" Username
 $docker login
+```
+
 9. 发布image（push）
 
 # 发布docker镜像
