@@ -1,3 +1,10 @@
+title: MAC docker私有镜像安装配置
+date: 2015-12-4 10:19:56
+tags: 
+- docker
+category: dev
+---
+
 1. 查看docker信息（version、info）
 
 ```
