@@ -10,7 +10,8 @@ $docker version
 $docker info
 ```
 
-## 对image的操作（search、pull、images、rmi、history）
+## 对image的操作
+（search、pull、images、rmi、history）
 
 ### 检索image
 ```sh
@@ -22,17 +23,33 @@ $docker search image_name
 $docker pull image_name
 ```
 
-### 列出镜像列表; -a, --all=false Show all images; --no-trunc=false Don't truncate output; -q, --quiet=false Only show numeric IDs
+### 列出镜像列表
+```
+-a, --all=false Show all images; 
+--no-trunc=false Don't truncate output; 
+-q, --quiet=false Only show numeric IDs
+```
+
 ```sh
 $docker images
 ```
 
-### 删除一个或者多个镜像; -f, --force=false Force; --no-prune=false Do not delete untagged parents
+### 删除一个或者多个镜像; 
+```
+-f, --force=false Force; 
+--no-prune=false Do not delete untagged parents
+```
+
 ```sh
 $docker rmi image_name
 ```
 
-### 显示一个镜像的历史; --no-trunc=false Don't truncate output; -q, --quiet=false Only show numeric IDs
+### 显示一个镜像的历史; 
+```
+--no-trunc=false Don't truncate output; 
+-q, --quiet=false Only show numeric IDs
+```
+
 ```sh
 $docker history image_name
 ```
@@ -80,14 +97,20 @@ $docker ps -l
 
 当你对某一个容器做了修改之后（通过在容器中运行某一个命令），可以把对容器的修改保存下来，这样下次可以从保存后的最新状态运行该容器。
 
-### 保存对容器的修改; -a, --author="" Author; -m, --message="" Commit message
+### 保存对容器的修改; 
+```
+-a, --author="" Author; 
+-m, --message="" Commit message
+```
+
 ```sh
 $docker commit ID new_image_name
 ```
 
 Note：  image相当于类，container相当于实例，不过可以动态给实例安装新软件，然后把这个container用commit命令固化成一个image。
 
-## 对容器的操作（rm、stop、start、kill、logs、diff、top、cp、restart、attach）
+## 对容器的操作
+（rm、stop、start、kill、logs、diff、top、cp、restart、attach）
 
 ### 删除所有容器
 ```sh
@@ -95,7 +118,13 @@ $docker rm `docker ps -a -q`
 ```
 
 
-### 删除单个容器; -f, --force=false; -l, --link=false Remove the specified link and not the underlying container; -v, --volumes=false Remove the volumes associated to the container
+### 删除单个容器;
+```
+-f, --force=false; 
+-l, --link=false Remove the specified link and not the underlying container; 
+-v, --volumes=false Remove the volumes associated to the container
+```
+
 ```sh
 $docker rm Name/ID
 ```
@@ -107,7 +136,12 @@ $docker start Name/ID
 $docker kill Name/ID
 ```
 
-### 从一个容器中取日志; -f, --follow=false Follow log output; -t, --timestamps=false Show timestamps
+### 从一个容器中取日志; 
+```
+-f, --follow=false Follow log output; 
+-t, --timestamps=false Show timestamps
+```
+
 ```sh
 $docker logs Name/ID
 ```
@@ -129,12 +163,21 @@ $docker cp Name:/container_path to_path
 $docker cp ID:/container_path to_path
 ```
 
-### 重启一个正在运行的容器; -t, --time=10 Number of seconds to try to stop for before killing the container, Default=10
+### 重启一个正在运行的容器; 
+```
+-t, --time=10 Number of seconds to try to stop for before killing the container, Default=10
+```
+
 ```sh
 $docker restart Name/ID
 ```
 
-### 附加到一个运行的容器上面; --no-stdin=false Do not attach stdin; --sig-proxy=true Proxify all received signal to the process
+### 附加到一个运行的容器上面; 
+```
+--no-stdin=false Do not attach stdin; 
+--sig-proxy=true Proxify all received signal to the process
+```
+
 ```sh
 $docker attach ID
 ```
@@ -145,12 +188,20 @@ Note： attach命令允许你查看或者影响一个运行的容器。你可以
 
 当需要把一台机器上的镜像迁移到另一台机器的时候，需要保存镜像与加载镜像。
 
-### 保存镜像到一个tar包; -o, --output="" Write to an file
+### 保存镜像到一个tar包; 
+```
+-o, --output="" Write to an file
+```
+
 ```sh
 $docker save image_name -o file_path
 ```
 
-# 加载一个tar包格式的镜像; -i, --input="" Read from a tar archive file
+# 加载一个tar包格式的镜像; 
+```
+-i, --input="" Read from a tar archive file
+```
+
 ```sh
 $docker load -i file_path
 ```
@@ -165,7 +216,13 @@ $docker load < /home/save.tar
 
 ## 登录registry server（login）
 
-### 登陆registry server; -e, --email="" Email; -p, --password="" Password; -u, --username="" Username
+### 登陆registry server;
+```
+-e, --email="" Email; 
+-p, --password="" Password; 
+-u, --username="" Username
+```
+
 ```sh
 $docker login
 ```
