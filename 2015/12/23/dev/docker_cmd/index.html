@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="查看docker信息（version、info）查看docker版本1$docker version
+显示docker系统的信息1$docker info
+对image的操作（search、pull、images、rmi、history）
+检索image1$docker search image_name
+下载image1$docker pull image_name
+列出镜像列表123-a, -">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frank">
+<meta property="og:url" content="http://www.notehub.cn/2015/12/23/dev/docker_cmd/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="查看docker信息（version、info）查看docker版本1$docker version
+显示docker系统的信息1$docker info
+对image的操作（search、pull、images、rmi、history）
+检索image1$docker search image_name
+下载image1$docker pull image_name
+列出镜像列表123-a, -">
+<meta property="og:updated_time" content="2015-12-23T14:53:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Frank">
+<meta name="twitter:description" content="查看docker信息（version、info）查看docker版本1$docker version
+显示docker系统的信息1$docker info
+对image的操作（search、pull、images、rmi、history）
+检索image1$docker search image_name
+下载image1$docker pull image_name
+列出镜像列表123-a, -">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        67
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        33
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-dev/docker_cmd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="u67E5_u770Bdocker_u4FE1_u606F_uFF08version_u3001info_uFF09"><a href="#u67E5_u770Bdocker_u4FE1_u606F_uFF08version_u3001info_uFF09" class="headerlink" title="查看docker信息（version、info）"></a>查看docker信息（version、info）</h2><h3 id="u67E5_u770Bdocker_u7248_u672C"><a href="#u67E5_u770Bdocker_u7248_u672C" class="headerlink" title="查看docker版本"></a>查看docker版本</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> version</span><br></pre></td></tr></table></figure>
+<h3 id="u663E_u793Adocker_u7CFB_u7EDF_u7684_u4FE1_u606F"><a href="#u663E_u793Adocker_u7CFB_u7EDF_u7684_u4FE1_u606F" class="headerlink" title="显示docker系统的信息"></a>显示docker系统的信息</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> info</span><br></pre></td></tr></table></figure>
+<h2 id="u5BF9image_u7684_u64CD_u4F5C"><a href="#u5BF9image_u7684_u64CD_u4F5C" class="headerlink" title="对image的操作"></a>对image的操作</h2><p>（search、pull、images、rmi、history）</p>
+<h3 id="u68C0_u7D22image"><a href="#u68C0_u7D22image" class="headerlink" title="检索image"></a>检索image</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> search image_name</span><br></pre></td></tr></table></figure>
+<h3 id="u4E0B_u8F7Dimage"><a href="#u4E0B_u8F7Dimage" class="headerlink" title="下载image"></a>下载image</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> pull image_name</span><br></pre></td></tr></table></figure>
+<h3 id="u5217_u51FA_u955C_u50CF_u5217_u8868"><a href="#u5217_u51FA_u955C_u50CF_u5217_u8868" class="headerlink" title="列出镜像列表"></a>列出镜像列表</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">a, --all=<span class="keyword">false</span> <span class="constant">Show</span> all images; </span><br><span class="line"></span>-<span class="ruby">-no-trunc=<span class="keyword">false</span> <span class="constant">Don</span><span class="string">'t truncate output; </span><br><span class="line"></span></span>-<span class="ruby"><span class="string">q, --quiet=false Only show numeric IDs</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> images</span><br></pre></td></tr></table></figure>
+<h3 id="u5220_u9664_u4E00_u4E2A_u6216_u8005_u591A_u4E2A_u955C_u50CF_3B"><a href="#u5220_u9664_u4E00_u4E2A_u6216_u8005_u591A_u4E2A_u955C_u50CF_3B" class="headerlink" title="删除一个或者多个镜像;"></a>删除一个或者多个镜像;</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">f, --force=<span class="keyword">false</span> <span class="constant">Force</span>; </span><br><span class="line"></span>-<span class="ruby">-no-prune=<span class="keyword">false</span> <span class="constant">Do</span> <span class="keyword">not</span> delete untagged parents</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> rmi image_name</span><br></pre></td></tr></table></figure>
+<h3 id="u663E_u793A_u4E00_u4E2A_u955C_u50CF_u7684_u5386_u53F2_3B"><a href="#u663E_u793A_u4E00_u4E2A_u955C_u50CF_u7684_u5386_u53F2_3B" class="headerlink" title="显示一个镜像的历史;"></a>显示一个镜像的历史;</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">-no-trunc=<span class="keyword">false</span> <span class="constant">Don</span><span class="string">'t truncate output; </span><br><span class="line"></span></span>-<span class="ruby"><span class="string">q, --quiet=false Only show numeric IDs</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> <span class="built_in">history</span> image_name</span><br></pre></td></tr></table></figure>
+<h2 id="u542F_u52A8_u5BB9_u5668_uFF08run_uFF09"><a href="#u542F_u52A8_u5BB9_u5668_uFF08run_uFF09" class="headerlink" title="启动容器（run）"></a>启动容器（run）</h2><p>docker容器可以理解为在沙盒中运行的进程。这个沙盒包含了该进程运行所必须的资源，包括文件系统、系统类库、shell 环境等等。但这个沙盒默认是不会运行任何程序的。你需要在沙盒中运行一个进程来启动某一个容器。这个进程是该容器的唯一进程，所以当该进程结束的时候，容器也会完全的停止。</p>
+<h3 id="u5728_u5BB9_u5668_u4E2D_u8FD0_u884C_u201Decho_u201D_u547D_u4EE4_uFF0C_u8F93_u51FA_u201Dhello_word_u201D"><a href="#u5728_u5BB9_u5668_u4E2D_u8FD0_u884C_u201Decho_u201D_u547D_u4EE4_uFF0C_u8F93_u51FA_u201Dhello_word_u201D" class="headerlink" title="在容器中运行”echo”命令，输出”hello word”"></a>在容器中运行”echo”命令，输出”hello word”</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> run image_name <span class="built_in">echo</span> <span class="string">"hello word"</span></span><br></pre></td></tr></table></figure>
+<h3 id="u4EA4_u4E92_u5F0F_u8FDB_u5165_u5BB9_u5668_u4E2D"><a href="#u4EA4_u4E92_u5F0F_u8FDB_u5165_u5BB9_u5668_u4E2D" class="headerlink" title="交互式进入容器中"></a>交互式进入容器中</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> run -i -t image_name /bin/bash</span><br></pre></td></tr></table></figure>
+<h3 id="u5728_u5BB9_u5668_u4E2D_u5B89_u88C5_u65B0_u7684_u7A0B_u5E8F"><a href="#u5728_u5BB9_u5668_u4E2D_u5B89_u88C5_u65B0_u7684_u7A0B_u5E8F" class="headerlink" title="在容器中安装新的程序"></a>在容器中安装新的程序</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> run image_name apt-get install -y app_name</span><br></pre></td></tr></table></figure>
+<p>Note：  在执行apt-get 命令的时候，要带上-y参数。如果不指定-y参数的话，apt-get命令会进入交互模式，需要用户输入命令来进行确认，但在docker环境中是无法响应这种交互的。apt-get 命令执行完毕之后，容器就会停止，但对容器的改动不会丢失。</p>
+<h2 id="u67E5_u770B_u5BB9_u5668_uFF08ps_uFF09"><a href="#u67E5_u770B_u5BB9_u5668_uFF08ps_uFF09" class="headerlink" title="查看容器（ps）"></a>查看容器（ps）</h2><h3 id="u5217_u51FA_u5F53_u524D_u6240_u6709_u6B63_u5728_u8FD0_u884C_u7684container"><a href="#u5217_u51FA_u5F53_u524D_u6240_u6709_u6B63_u5728_u8FD0_u884C_u7684container" class="headerlink" title="列出当前所有正在运行的container"></a>列出当前所有正在运行的container</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> ps</span><br></pre></td></tr></table></figure>
+<h3 id="u5217_u51FA_u6240_u6709_u7684container"><a href="#u5217_u51FA_u6240_u6709_u7684container" class="headerlink" title="列出所有的container"></a>列出所有的container</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> ps <span class="operator">-a</span></span><br></pre></td></tr></table></figure>
+<h3 id="u5217_u51FA_u6700_u8FD1_u4E00_u6B21_u542F_u52A8_u7684container"><a href="#u5217_u51FA_u6700_u8FD1_u4E00_u6B21_u542F_u52A8_u7684container" class="headerlink" title="列出最近一次启动的container"></a>列出最近一次启动的container</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> ps <span class="operator">-l</span></span><br></pre></td></tr></table></figure>
+<h2 id="u4FDD_u5B58_u5BF9_u5BB9_u5668_u7684_u4FEE_u6539_uFF08commit_uFF09"><a href="#u4FDD_u5B58_u5BF9_u5BB9_u5668_u7684_u4FEE_u6539_uFF08commit_uFF09" class="headerlink" title="保存对容器的修改（commit）"></a>保存对容器的修改（commit）</h2><p>当你对某一个容器做了修改之后（通过在容器中运行某一个命令），可以把对容器的修改保存下来，这样下次可以从保存后的最新状态运行该容器。</p>
+<h3 id="u4FDD_u5B58_u5BF9_u5BB9_u5668_u7684_u4FEE_u6539_3B"><a href="#u4FDD_u5B58_u5BF9_u5BB9_u5668_u7684_u4FEE_u6539_3B" class="headerlink" title="保存对容器的修改;"></a>保存对容器的修改;</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">a, --author=<span class="string">""</span> <span class="constant">Author</span>; </span><br><span class="line"></span>-<span class="ruby">m, --message=<span class="string">""</span> <span class="constant">Commit</span> message</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> commit ID new_image_name</span><br></pre></td></tr></table></figure>
+<p>Note：  image相当于类，container相当于实例，不过可以动态给实例安装新软件，然后把这个container用commit命令固化成一个image。</p>
+<h2 id="u5BF9_u5BB9_u5668_u7684_u64CD_u4F5C"><a href="#u5BF9_u5BB9_u5668_u7684_u64CD_u4F5C" class="headerlink" title="对容器的操作"></a>对容器的操作</h2><p>（rm、stop、start、kill、logs、diff、top、cp、restart、attach）</p>
+<h3 id="u5220_u9664_u6240_u6709_u5BB9_u5668"><a href="#u5220_u9664_u6240_u6709_u5BB9_u5668" class="headerlink" title="删除所有容器"></a>删除所有容器</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> rm `docker ps <span class="operator">-a</span> -q`</span><br></pre></td></tr></table></figure>
+<h3 id="u5220_u9664_u5355_u4E2A_u5BB9_u5668_3B"><a href="#u5220_u9664_u5355_u4E2A_u5BB9_u5668_3B" class="headerlink" title="删除单个容器;"></a>删除单个容器;</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">f, --force=<span class="keyword">false</span>; </span><br><span class="line"></span>-<span class="ruby">l, --link=<span class="keyword">false</span> <span class="constant">Remove</span> the specified link <span class="keyword">and</span> <span class="keyword">not</span> the underlying container; </span><br><span class="line"></span>-<span class="ruby">v, --volumes=<span class="keyword">false</span> <span class="constant">Remove</span> the volumes associated to the container</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> rm Name/ID</span><br></pre></td></tr></table></figure>
+<h3 id="u505C_u6B62_u3001_u542F_u52A8_u3001_u6740_u6B7B_u4E00_u4E2A_u5BB9_u5668"><a href="#u505C_u6B62_u3001_u542F_u52A8_u3001_u6740_u6B7B_u4E00_u4E2A_u5BB9_u5668" class="headerlink" title="停止、启动、杀死一个容器"></a>停止、启动、杀死一个容器</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> stop Name/ID</span><br><span class="line"><span class="variable">$docker</span> start Name/ID</span><br><span class="line"><span class="variable">$docker</span> <span class="built_in">kill</span> Name/ID</span><br></pre></td></tr></table></figure>
+<h3 id="u4ECE_u4E00_u4E2A_u5BB9_u5668_u4E2D_u53D6_u65E5_u5FD7_3B"><a href="#u4ECE_u4E00_u4E2A_u5BB9_u5668_u4E2D_u53D6_u65E5_u5FD7_3B" class="headerlink" title="从一个容器中取日志;"></a>从一个容器中取日志;</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">f, --follow=<span class="keyword">false</span> <span class="constant">Follow</span> log output; </span><br><span class="line"></span>-<span class="ruby">t, --timestamps=<span class="keyword">false</span> <span class="constant">Show</span> timestamps</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> logs Name/ID</span><br></pre></td></tr></table></figure>
+<h3 id="u5217_u51FA_u4E00_u4E2A_u5BB9_u5668_u91CC_u9762_u88AB_u6539_u53D8_u7684_u6587_u4EF6_u6216_u8005_u76EE_u5F55_uFF0Clist_u5217_u8868_u4F1A_u663E_u793A_u51FA_u4E09_u79CD_u4E8B_u4EF6_uFF0CA__u589E_u52A0_u7684_uFF0CD__u5220_u9664_u7684_uFF0CC__u88AB_u6539_u53D8_u7684"><a href="#u5217_u51FA_u4E00_u4E2A_u5BB9_u5668_u91CC_u9762_u88AB_u6539_u53D8_u7684_u6587_u4EF6_u6216_u8005_u76EE_u5F55_uFF0Clist_u5217_u8868_u4F1A_u663E_u793A_u51FA_u4E09_u79CD_u4E8B_u4EF6_uFF0CA__u589E_u52A0_u7684_uFF0CD__u5220_u9664_u7684_uFF0CC__u88AB_u6539_u53D8_u7684" class="headerlink" title="列出一个容器里面被改变的文件或者目录，list列表会显示出三种事件，A 增加的，D 删除的，C 被改变的"></a>列出一个容器里面被改变的文件或者目录，list列表会显示出三种事件，A 增加的，D 删除的，C 被改变的</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> diff Name/ID</span><br></pre></td></tr></table></figure>
+<h3 id="u663E_u793A_u4E00_u4E2A_u8FD0_u884C_u7684_u5BB9_u5668_u91CC_u9762_u7684_u8FDB_u7A0B_u4FE1_u606F"><a href="#u663E_u793A_u4E00_u4E2A_u8FD0_u884C_u7684_u5BB9_u5668_u91CC_u9762_u7684_u8FDB_u7A0B_u4FE1_u606F" class="headerlink" title="显示一个运行的容器里面的进程信息"></a>显示一个运行的容器里面的进程信息</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> top Name/ID</span><br></pre></td></tr></table></figure>
+<h3 id="u4ECE_u5BB9_u5668_u91CC_u9762_u62F7_u8D1D_u6587_u4EF6/_u76EE_u5F55_u5230_u672C_u5730_u4E00_u4E2A_u8DEF_u5F84"><a href="#u4ECE_u5BB9_u5668_u91CC_u9762_u62F7_u8D1D_u6587_u4EF6/_u76EE_u5F55_u5230_u672C_u5730_u4E00_u4E2A_u8DEF_u5F84" class="headerlink" title="从容器里面拷贝文件/目录到本地一个路径"></a>从容器里面拷贝文件/目录到本地一个路径</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> cp Name:/container_path to_path</span><br><span class="line"><span class="variable">$docker</span> cp ID:/container_path to_path</span><br></pre></td></tr></table></figure>
+<h3 id="u91CD_u542F_u4E00_u4E2A_u6B63_u5728_u8FD0_u884C_u7684_u5BB9_u5668_3B"><a href="#u91CD_u542F_u4E00_u4E2A_u6B63_u5728_u8FD0_u884C_u7684_u5BB9_u5668_3B" class="headerlink" title="重启一个正在运行的容器;"></a>重启一个正在运行的容器;</h3><figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-t, --<span class="built_in">time</span>=<span class="number">10</span> Number of seconds <span class="keyword">to</span> <span class="keyword">try</span> <span class="keyword">to</span> <span class="built_in">stop</span> <span class="keyword">for</span> before killing the container, <span class="keyword">Default</span>=<span class="number">10</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> restart Name/ID</span><br></pre></td></tr></table></figure>
+<h3 id="u9644_u52A0_u5230_u4E00_u4E2A_u8FD0_u884C_u7684_u5BB9_u5668_u4E0A_u9762_3B"><a href="#u9644_u52A0_u5230_u4E00_u4E2A_u8FD0_u884C_u7684_u5BB9_u5668_u4E0A_u9762_3B" class="headerlink" title="附加到一个运行的容器上面;"></a>附加到一个运行的容器上面;</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">-no-stdin=<span class="keyword">false</span> <span class="constant">Do</span> <span class="keyword">not</span> attach stdin; </span><br><span class="line"></span>-<span class="ruby">-sig-proxy=<span class="keyword">true</span> <span class="constant">Proxify</span> all received signal to the process</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> attach ID</span><br></pre></td></tr></table></figure>
+<p>Note： attach命令允许你查看或者影响一个运行的容器。你可以在同一时间attach同一个容器。你也可以从一个容器中脱离出来，是从CTRL-C。</p>
+<h2 id="u4FDD_u5B58_u548C_u52A0_u8F7D_u955C_u50CF_uFF08save_u3001load_uFF09"><a href="#u4FDD_u5B58_u548C_u52A0_u8F7D_u955C_u50CF_uFF08save_u3001load_uFF09" class="headerlink" title="保存和加载镜像（save、load）"></a>保存和加载镜像（save、load）</h2><p>当需要把一台机器上的镜像迁移到另一台机器的时候，需要保存镜像与加载镜像。</p>
+<h3 id="u4FDD_u5B58_u955C_u50CF_u5230_u4E00_u4E2Atar_u5305_3B"><a href="#u4FDD_u5B58_u955C_u50CF_u5230_u4E00_u4E2Atar_u5305_3B" class="headerlink" title="保存镜像到一个tar包;"></a>保存镜像到一个tar包;</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-o, --output=<span class="string">""</span> <span class="keyword">Write</span> to an <span class="keyword">file</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> save image_name -o file_path</span><br></pre></td></tr></table></figure>
+<h1 id="u52A0_u8F7D_u4E00_u4E2Atar_u5305_u683C_u5F0F_u7684_u955C_u50CF_3B"><a href="#u52A0_u8F7D_u4E00_u4E2Atar_u5305_u683C_u5F0F_u7684_u955C_u50CF_3B" class="headerlink" title="加载一个tar包格式的镜像;"></a>加载一个tar包格式的镜像;</h1><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="tag">i</span>, --input=<span class="string">""</span> Read from <span class="tag">a</span> tar archive file</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> load -i file_path</span><br></pre></td></tr></table></figure>
+<h3 id="u673A_u5668a"><a href="#u673A_u5668a" class="headerlink" title="机器a"></a>机器a</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> save image_name &gt; /home/save.tar</span><br><span class="line"><span class="comment">### 使用scp将save.tar拷到机器b上，然后：</span></span><br><span class="line">```sh</span><br><span class="line"><span class="variable">$docker</span> load &lt; /home/save.tar</span><br></pre></td></tr></table></figure>
+<h2 id="u767B_u5F55registry_server_uFF08login_uFF09"><a href="#u767B_u5F55registry_server_uFF08login_uFF09" class="headerlink" title="登录registry server（login）"></a>登录registry server（login）</h2><h3 id="u767B_u9646registry_server_3B"><a href="#u767B_u9646registry_server_3B" class="headerlink" title="登陆registry server;"></a>登陆registry server;</h3><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">e, --email=<span class="string">""</span> <span class="constant">Email</span>; </span><br><span class="line"></span>-<span class="ruby">p, --password=<span class="string">""</span> <span class="constant">Password</span>; </span><br><span class="line"></span>-<span class="ruby">u, --username=<span class="string">""</span> <span class="constant">Username</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> login</span><br></pre></td></tr></table></figure>
+<h2 id="u53D1_u5E03image_uFF08push_uFF09"><a href="#u53D1_u5E03image_uFF08push_uFF09" class="headerlink" title="发布image（push）"></a>发布image（push）</h2><h3 id="u53D1_u5E03docker_u955C_u50CF"><a href="#u53D1_u5E03docker_u955C_u50CF" class="headerlink" title="发布docker镜像"></a>发布docker镜像</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> push new_image_name</span><br></pre></td></tr></table></figure>
+<h2 id="u6839_u636EDockerfile__u6784_u5EFA_u51FA_u4E00_u4E2A_u5BB9_u5668"><a href="#u6839_u636EDockerfile__u6784_u5EFA_u51FA_u4E00_u4E2A_u5BB9_u5668" class="headerlink" title="根据Dockerfile 构建出一个容器"></a>根据Dockerfile 构建出一个容器</h2><h4 id="build"><a href="#build" class="headerlink" title="build"></a>build</h4><pre><code>--no-cache=false Do not use cache when building the image
+-q, --quiet=false Suppress the verbose output generated by the containers
+--rm=true Remove intermediate containers after a successful build
+-t, --tag=&quot;&quot; Repository name (and optionally a tag) to be applied to the resulting image in case of success
+</code></pre><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$docker</span> build -t image_name Dockerfile_path</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/12/23/dev/docker_cmd/" data-id="ciiiy53cg0003oxpjkgmo08y9" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/12/23/dev/docker_cmd/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/12/23/dev/docker/docker_cmd/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Docker基本命令</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2015/12/23/dev/docker_cmd/" data-title="" data-url="http://www.notehub.cn/2015/12/23/dev/docker_cmd/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/12/23/dev/docker_cmd/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"></p>
+              <p class="item-title"><a href="/2015/12/23/dev/docker_cmd/" class="title"></a></p>
+              <p class="item-date"><time datetime="2015-12-23T14:53:15.000Z" itemprop="datePublished">2015-12-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/12/23/dev/docker/docker_cmd/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2015/12/23/dev/docker/docker_cmd/" class="title">Docker基本命令</a></p>
+              <p class="item-date"><time datetime="2015-12-23T02:19:56.000Z" itemprop="datePublished">2015-12-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/12/21/dev/search/elasticsearch_base/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2015/12/21/dev/search/elasticsearch_base/" class="title">elasticsearch 基本操作</a></p>
+              <p class="item-date"><time datetime="2015-12-21T02:19:56.000Z" itemprop="datePublished">2015-12-21</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/12/11/ads/skip_the_ad/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/ads/">ads</a></p>
+              <p class="item-title"><a href="/2015/12/11/ads/skip_the_ad/" class="title">跳过视频广告好爽，殊不知被狠狠地「算计」了</a></p>
+              <p class="item-date"><time datetime="2015-12-11T15:01:24.000Z" itemprop="datePublished">2015-12-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/12/09/dev/python/python_mock/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2015/12/09/dev/python/python_mock/" class="title">Python Mock的入门</a></p>
+              <p class="item-date"><time datetime="2015-12-09T02:19:56.000Z" itemprop="datePublished">2015-12-09</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 15px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 15px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 15px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 15px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 15px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
