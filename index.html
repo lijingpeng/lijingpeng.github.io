@@ -92,11 +92,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        67
+        69
         <span>文章</span>
       </div>
       <div class="article-info-block">
-        33
+        34
         <span>标签</span>
       </div>
     </div>
@@ -125,6 +125,187 @@
 
       
       <section id="main">
+      <article id="post-algo/graph/textrank" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/05/algo/graph/textrank/">使用TextRank算法为文本生成关键字和摘要</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/01/05/algo/graph/textrank/">
+      <time datetime="2016-01-05T06:33:26.000Z" itemprop="datePublished">2016-01-05</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mihalcea R, Tarau P. TextRank: Bringing <span class="keyword">order</span> <span class="title">into</span> texts[C]. Association for Computational Linguistics, <span class="number">2004</span>.</span><br></pre></td></tr></table></figure></p>
+<h3 id="PageRank"><a href="#PageRank" class="headerlink" title="PageRank"></a>PageRank</h3><hr>
+<p>PageRank最开始用来计算网页的重要性。整个www可以看作一张有向图图，节点是网页。如果网页A存在到网页B的链接，那么有一条从网页A指向网页B的有向边。</p>
+<p>构造完图后，使用下面的公式：<br><img src="/images/algo/pagerank.png" alt=""><br>S(Vi)是网页i的中重要性（PR值）。d是阻尼系数，一般设置为0.85。In(Vi)是存在指向网页i的链接的网页集合。Out(Vj)是网页j中的链接存在的链接指向的网页的集合。|Out(Vj)|是集合中元素的个数。</p>
+<p>PageRank需要使用上面的公式多次迭代才能得到结果。初始时，可以设置每个网页的重要性为1。上面公式等号左边计算的结果是迭代后网页i的PR值，等号右边用到的PR值全是迭代前的。</p>
+<p>举个例子：<br><img src="/images/algo/pagerank1.png" alt=""><br>上图表示了三张网页之间的链接关系，直觉上网页A最重要。可以得到下面的表：</p>
+<p>结束\起始   A   B   C<br>A           0   1   1<br>B           0   0   0<br>C           0   0   0</p>
+<p>横栏代表其实的节点，纵栏代表结束的节点。若两个节点间有链接关系，对应的值为1。 </p>
+<p>根据公式，需要将每一竖栏归一化（每个元素/元素之和），归一化的结果是： </p>
+<p>结束\起始   A   B   C<br>A           0   1   1<br>B           0   0   0<br>C           0   0   0</p>
+<p>上面的结果构成矩阵M。我们用matlab迭代100次看看最后每个网页的重要性：<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">M = <span class="matrix">[<span class="number">0</span> <span class="number">1</span> <span class="number">1</span> </span><br><span class="line">    <span class="number">0</span> <span class="number">0</span> <span class="number">0</span></span><br><span class="line">    <span class="number">0</span> <span class="number">0</span> <span class="number">0</span>]</span>;</span><br><span class="line">PR = <span class="matrix">[<span class="number">1</span>; <span class="number">1</span> ; <span class="number">1</span>]</span>;</span><br><span class="line"><span class="keyword">for</span> iter = <span class="number">1</span>:<span class="number">100</span></span><br><span class="line">    PR = <span class="number">0.15</span> + <span class="number">0.85</span>*M*PR;</span><br><span class="line">    <span class="built_in">disp</span>(iter);</span><br><span class="line">    <span class="built_in">disp</span>(PR);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p>运行结果（省略部分）：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">95</span></span><br><span class="line"> <span class="number">0.4050</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">96</span></span><br><span class="line"> <span class="number">0.4050</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">97</span></span><br><span class="line"> <span class="number">0.4050</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">98</span></span><br><span class="line"> <span class="number">0.4050</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">99</span></span><br><span class="line"> <span class="number">0.4050</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"><span class="number">100</span></span><br><span class="line"> <span class="number">0.4050</span></span><br><span class="line"> <span class="number">0.1500</span></span><br><span class="line"> <span class="number">0.1500</span></span><br></pre></td></tr></table></figure></p>
+<p>最终A的PR值为0.4050，B和C的PR值为0.1500。 </p>
+<p>如果把上面的有向边看作无向的（其实就是双向的），那么：<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">M = <span class="matrix">[<span class="number">0</span> <span class="number">1</span> <span class="number">1</span> </span><br><span class="line">    <span class="number">0.5</span> <span class="number">0</span> <span class="number">0</span></span><br><span class="line">    <span class="number">0.5</span> <span class="number">0</span> <span class="number">0</span>]</span>;</span><br><span class="line">PR = <span class="matrix">[<span class="number">1</span>; <span class="number">1</span> ; <span class="number">1</span>]</span>;</span><br><span class="line"><span class="keyword">for</span> iter = <span class="number">1</span>:<span class="number">100</span></span><br><span class="line">    PR = <span class="number">0.15</span> + <span class="number">0.85</span>*M*PR;</span><br><span class="line">    <span class="built_in">disp</span>(iter);</span><br><span class="line">    <span class="built_in">disp</span>(PR);</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<p>运行结果（省略部分）：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">.....</span><br><span class="line">    <span class="number">98</span></span><br><span class="line">    <span class="number">1.4595</span></span><br><span class="line">    <span class="number">0.7703</span></span><br><span class="line">    <span class="number">0.7703</span></span><br><span class="line">    <span class="number">99</span></span><br><span class="line">    <span class="number">1.4595</span></span><br><span class="line">    <span class="number">0.7703</span></span><br><span class="line">    <span class="number">0.7703</span></span><br><span class="line">   <span class="number">100</span></span><br><span class="line">    <span class="number">1.4595</span></span><br><span class="line">    <span class="number">0.7703</span></span><br><span class="line">    <span class="number">0.7703</span></span><br></pre></td></tr></table></figure></p>
+<p>依然能判断出A、B、C的重要性。 </p>
+<h3 id="u4F7F_u7528TextRank_u63D0_u53D6_u5173_u952E_u5B57"><a href="#u4F7F_u7528TextRank_u63D0_u53D6_u5173_u952E_u5B57" class="headerlink" title="使用TextRank提取关键字"></a>使用TextRank提取关键字</h3><hr>
+<p>将原文本拆分为句子，在每个句子中过滤掉停用词（可选），并只保留指定词性的单词（可选）。由此可以得到句子的集合和单词的集合。</p>
+<p>每个单词作为pagerank中的一个节点。设定窗口大小为k，假设一个句子依次由下面的单词组成：</p>
+<p>w1, w2, w3, w4, w5, …, wn<br>w1, w2, …, wk、w2, w3, …,wk+1、w3, w4, …,wk+2等都是一个窗口。在一个窗口中的任两个单词对应的节点之间存在一个无向无权的边。</p>
+<p>基于上面构成图，可以计算出每个单词节点的重要性。最重要的若干单词可以作为关键词。</p>
+<h3 id="u4F7F_u7528TextRank_u63D0_u53D6_u5173_u952E_u77ED_u8BED"><a href="#u4F7F_u7528TextRank_u63D0_u53D6_u5173_u952E_u77ED_u8BED" class="headerlink" title="使用TextRank提取关键短语"></a>使用TextRank提取关键短语</h3><hr>
+<p>参照“使用TextRank提取关键词”提取出若干关键词。若原文本中存在若干个关键词相邻的情况，那么这些关键词可以构成一个关键短语。</p>
+<p>例如，在一篇介绍“支持向量机”的文章中，可以找到三个关键词支持、向量、机，通过关键短语提取，可以得到支持向量机。</p>
+<h3 id="u4F7F_u7528TextRank_u63D0_u53D6_u6458_u8981"><a href="#u4F7F_u7528TextRank_u63D0_u53D6_u6458_u8981" class="headerlink" title="使用TextRank提取摘要"></a>使用TextRank提取摘要</h3><hr>
+<p>将每个句子看成图中的一个节点，若两个句子之间有相似性，认为对应的两个节点之间有一个无向有权边，权值是相似度。</p>
+<p>通过pagerank算法计算得到的重要性最高的若干句子可以当作摘要。</p>
+<p>论文中使用下面的公式计算两个句子Si和Sj的相似度：<br><img src="/images/algo/textrank.png" alt=""><br>分子是在两个句子中都出现的单词的数量。|Si|是句子i的单词数。</p>
+<p>由于是有权图，PageRank公式略做修改：<br><img src="/images/algo/textrank2.png" alt=""></p>
+<h3 id="u5B9E_u73B0TextRank"><a href="#u5B9E_u73B0TextRank" class="headerlink" title="实现TextRank"></a>实现TextRank</h3><hr>
+<p>因为要用测试多种情况，所以自己实现了一个基于Python2.7的TextRank针对中文文本的库TextRank4ZH。位于：</p>
+<p><a href="https://github.com/someus/TextRank4ZH" target="_blank" rel="external">https://github.com/someus/TextRank4ZH</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/01/05/algo/graph/textrank/" data-id="cij0wamxu005qohpj3xvjopc5" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/01/05/algo/graph/textrank/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pagerank/">pagerank</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/python/python_tools" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/28/dev/python/python_tools/">Python 工具</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/12/28/dev/python/python_tools/">
+      <time datetime="2015-12-28T02:19:56.000Z" itemprop="datePublished">2015-12-28</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="u5305_u7BA1_u7406"><a href="#u5305_u7BA1_u7406" class="headerlink" title="包管理"></a>包管理</h2><hr>
+<p>Python世界最棒的地方之一，就是大量的第三方程序包。同样，管理这些包也非常容易。按照惯例，会在 requirements.txt 文件中列出项目所需要的包。每个包占一行，通常还包含版本号。这里有一个例子，本博客使用Pelican：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pelican==<span class="number">3.3</span></span><br><span class="line">Markdown</span><br><span class="line">pelican-extended-sitemap==<span class="number">1.0</span><span class="number">.0</span></span><br></pre></td></tr></table></figure></p>
+<p>Python 程序包有一个缺陷是，它们默认会进行全局安装。我们将要使用一个工具，使我们每个项目都有一个独立的环境，这个工具叫virtualenv。我们同样要安装一个更高级的包管理工具，叫做pip，他可以和virtualenv配合工作。</p>
+<p>首先，我们需要安装pip。大多数python安装程序已经内置了easy_install（python默认的包管理工具），所以我们就使用easy_install pip来安装pip。这应该是你最后一次使用easy_install 了。如果你并没有安装easy_install ，在linux系统中，貌似从python-setuptools 包中可以获得。</p>
+<p>如果你使用的Python版本高于等于3.3， 那么Virtualenv 已经是标准库的一部分了，所以没有必要再去安装它了。</p>
+<p>下一步，你希望安装virtualenv和virtualenvwrapper。Virtualenv使你能够为每个项目创造一个独立的环境。尤其是当你的不同项目使用不同版本的包时，这一点特别有用。Virtualenv wrapper 提供了一些不错的脚本，可以让一些事情变得容易。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install virtualenvwrapper</span><br></pre></td></tr></table></figure>
+<p>当virtualenvwrapper安装后，它会把virtualenv列为依赖包，所以会自动安装。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">打开一个新的<span class="keyword">shell</span>，输入mkvirtualenv <span class="keyword">test</span> 。如果你打开另外一个<span class="keyword">shell</span>，则你就不在这个virtualenv中了，你可以通过workon <span class="keyword">test</span> 来启动。如果你的工作完成了，可以使用deactivate 来停用。</span><br></pre></td></tr></table></figure>
+<h2 id="IPython"><a href="#IPython" class="headerlink" title="IPython"></a>IPython</h2><hr>
+<p>IPython是标准Python交互式的编程环境的一个替代品，支持自动补全，文档快速访问，以及标准交互式编程环境本应该具备的很多其他功能。</p>
+<p>当你处在一个虚拟环境中的时候，可以很简单的使用pip install ipython 来进行安装，在命令行中使用ipython 来启动</p>
+<h2 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h2><hr>
+<p>我推荐使用nose或是py.test。我大部分情况下用nose。它们基本上是类似的。我将讲解nose的一些细节。</p>
+<p>这里有一个人为创建的可笑的使用nose进行测试的例子。在一个以test<em>开头的文件中的所有以test</em>开头的函数，都会被调用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_equality</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="keyword">True</span> == <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<p>不出所料，当运行nose的时候，我们的测试没有通过。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ nosetests              </span><br><span class="line">F</span><br><span class="line">======================================================================</span><br><span class="line">FAIL: test_nose_example.test_equality</span><br><span class="line"><span class="comment">----------------------------------------------------------------------</span></span><br><span class="line">Traceback (most recent <span class="operator"><span class="keyword">call</span> <span class="keyword">last</span>):</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/Users/jhaddad/.virtualenvs/test/lib/python2.7/site-packages/nose/case.py"</span>, line <span class="number">197</span>, <span class="keyword">in</span> runTest</span><br><span class="line">    <span class="keyword">self</span>.<span class="keyword">test</span>(*<span class="keyword">self</span>.arg)</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/Users/jhaddad/.virtualenvs/test/src/test_nose_example.py"</span>, line <span class="number">3</span>, <span class="keyword">in</span> test_equality</span><br><span class="line">    assert <span class="literal">True</span> == <span class="literal">False</span></span><br><span class="line">AssertionError</span><br><span class="line"> </span><br><span class="line"><span class="comment">----------------------------------------------------------------------</span></span></span><br></pre></td></tr></table></figure>
+<p>nose.tools中同样也有一些便捷的方法可以调用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nose.tools <span class="keyword">import</span> assert_true</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_equality</span><span class="params">()</span>:</span></span><br><span class="line">    assert_true(<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<p>如果你想使用更加类似JUnit的方法，也是可以的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nose.tools <span class="keyword">import</span> assert_true</span><br><span class="line"><span class="keyword">from</span> unittest <span class="keyword">import</span> TestCase</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span><span class="params">(TestCase)</span>:</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setUp</span><span class="params">(self)</span>:</span> </span><br><span class="line"><span class="comment"># setUp &amp; tearDown are both available</span></span><br><span class="line">        self.blah = <span class="keyword">False</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_blah</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.assertTrue(self.blah)</span><br></pre></td></tr></table></figure>
+<p>开始测试：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ nosetests                            </span><br><span class="line">F</span><br><span class="line">======================================================================</span><br><span class="line">FAIL: test_blah (test_nose_example.ExampleTest)</span><br><span class="line"><span class="comment">----------------------------------------------------------------------</span></span><br><span class="line">Traceback (most recent <span class="operator"><span class="keyword">call</span> <span class="keyword">last</span>):</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/Users/jhaddad/.virtualenvs/test/src/test_nose_example.py"</span>, line <span class="number">11</span>, <span class="keyword">in</span> test_blah</span><br><span class="line">    <span class="keyword">self</span>.assertTrue(<span class="keyword">self</span>.blah)</span><br><span class="line">AssertionError: <span class="literal">False</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">true</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">----------------------------------------------------------------------</span></span><br><span class="line">Ran <span class="number">1</span> <span class="keyword">test</span> <span class="keyword">in</span> <span class="number">0.003</span>s</span><br><span class="line"> </span><br><span class="line"><span class="keyword">FAILED</span> (failures=<span class="number">1</span>)</span></span><br></pre></td></tr></table></figure>
+<p>卓越的Mock库包含在Python 3 中，但是如果你在使用Python 2，可以使用pypi来获取。这个测试将进行一个远程调用，但是这次调用将耗时10s。这个例子显然是人为捏造的。我们使用mock来返回样本数据而不是真正的进行调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> mock</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> mock <span class="keyword">import</span> patch</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sweetness</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">slow_remote_call</span><span class="params">(self)</span>:</span></span><br><span class="line">        sleep(<span class="number">10</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"some_data"</span> </span><br><span class="line"><span class="comment"># lets pretend we get this back from our remote api call</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_long_call</span><span class="params">()</span>:</span></span><br><span class="line">    s = Sweetness()</span><br><span class="line">    result = s.slow_remote_call()</span><br><span class="line">    <span class="keyword">assert</span> result == <span class="string">"some_data"</span></span><br></pre></td></tr></table></figure>
+<p>当然，我们的测试需要很长的时间。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">test</span>)jhaddad@jons-<span class="keyword">mac</span>-<span class="keyword">pro</span> ~VIRTUAL_ENV/src$ nosetests test_mock.py            </span><br><span class="line">Ran 1 <span class="keyword">test</span> <span class="keyword">in</span> 10.001s</span><br><span class="line"> </span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>太慢了！因此我们会问自己，我们在测试什么？我们需要测试远程调用是否有用，还是我们要测试当我们获得数据后要做什么？大多数情况下是后者。让我们摆脱这个愚蠢的远程调用吧：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> mock</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> mock <span class="keyword">import</span> patch</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sweetness</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">slow_remote_call</span><span class="params">(self)</span>:</span></span><br><span class="line">        sleep(<span class="number">10</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"some_data"</span> </span><br><span class="line"><span class="comment"># lets pretend we get this back from our remote api call</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_long_call</span><span class="params">()</span>:</span></span><br><span class="line">    s = Sweetness()</span><br><span class="line">    <span class="keyword">with</span> patch.object(s, <span class="string">"slow_remote_call"</span>, return_value=<span class="string">"some_data"</span>):</span><br><span class="line">        result = s.slow_remote_call()</span><br><span class="line">    <span class="keyword">assert</span> result == <span class="string">"some_data"</span></span><br></pre></td></tr></table></figure>
+<p>好吧，让我们再试一次：</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL<span class="emphasis">_ENV/src$ nosetests test_</span>mock.py                     </span><br><span class="line"><span class="header">.</span><br><span class="line">----------------------------------------------------------------------</span></span><br><span class="line">Ran 1 test in 0.001s</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>好多了。记住，这个例子进行了荒唐的简化。就我个人来讲，我仅仅会忽略从远程系统的调用，而不是我的数据库调用。</p>
+<p>nose-progressive是一个很好的模块，它可以改善nose的输出，让错误在发生时就显示出来，而不是留到最后。如果你的测试需要花费一定的时间，那么这是件好事。<br>pip install nose-progressive 并且在你的nosetests中添加–with-progressive</p>
+<h2 id="u8C03_u8BD5"><a href="#u8C03_u8BD5" class="headerlink" title="调试"></a>调试</h2><hr>
+<p>iPDB是一个极好的工具，我已经用它查出了很多匪夷所思的bug。pip install ipdb 安装该工具，然后在你的代码中import ipdb; ipdb.set_trace()，然后你会在你的程序运行<br>时，获得一个很好的交互式提示。它每次执行程序的一行并且检查变量。</p>
+<h2 id="Gevent"><a href="#Gevent" class="headerlink" title="Gevent"></a>Gevent</h2><hr>
+<p>Gevent 是一个很好的库，封装了Greenlets，使得Python具备了异步调用的功能。是的，非常棒。我最爱的功能是Pool，它抽象了异步调用部分，给我们提供了可以简单使用的途径，一个异步的map()函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey</span><br><span class="line">monkey.patch_all()</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep, time</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_url</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Fetching %s"</span> % url</span><br><span class="line">    sleep(<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Done fetching %s"</span> % url</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> gevent.pool <span class="keyword">import</span> Pool</span><br><span class="line"> </span><br><span class="line">urls = [<span class="string">"http://test.com"</span>, <span class="string">"http://bacon.com"</span>, <span class="string">"http://eggs.com"</span>]</span><br><span class="line"> </span><br><span class="line">p = Pool(<span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">start = time()</span><br><span class="line">p.map(fetch_url, urls)</span><br><span class="line"><span class="keyword">print</span> time() - start</span><br></pre></td></tr></table></figure>
+<p>非常重要的是，需要注意这段代码顶部对gevent monkey进行的补丁，如果没有它的话，就不能正确的运行。如果我们让Python连续调用 fetch_url 3次，通常我们期望这个过程花费30秒时间。使用gevent：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(test)jhaddad<span class="annotation">@jons</span>-mac-pro ~VIRTUAL_ENV/src$ python g.py                                                                                                                                    </span><br><span class="line">Fetching <span class="string">http:</span><span class="comment">//test.com</span></span><br><span class="line">Fetching <span class="string">http:</span><span class="comment">//bacon.com</span></span><br><span class="line">Fetching <span class="string">http:</span><span class="comment">//eggs.com</span></span><br><span class="line">Done fetching <span class="string">http:</span><span class="comment">//test.com</span></span><br><span class="line">Done fetching <span class="string">http:</span><span class="comment">//bacon.com</span></span><br><span class="line">Done fetching <span class="string">http:</span><span class="comment">//eggs.com</span></span><br><span class="line"><span class="number">10.001791954</span></span><br></pre></td></tr></table></figure></p>
+<p>如果你有很多数据库调用或是从远程URLs获取，这是非常有用的。我并不是很喜欢回调函数，所以这一抽象对我来说效果很好。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/12/28/dev/python/python_tools/" data-id="cij0wamvu002vohpjfwz2gl36" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/12/28/dev/python/python_tools/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/docker/docker_create_env" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -176,7 +357,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/" data-id="ciil3db7b0040zfpjvtvjg1ub" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/" data-id="cij0wamwq0043ohpjn2qo5lf2" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/#ds-thread" class="article-comment-link">评论</a>
       
@@ -271,7 +452,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/23/dev/docker/docker_cmd/" data-id="ciil3db7d0044zfpj9pks9vj2" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/23/dev/docker/docker_cmd/" data-id="cij0wamwr0047ohpjoaai9y65" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/23/dev/docker/docker_cmd/#ds-thread" class="article-comment-link">评论</a>
       
@@ -339,192 +520,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/" data-id="ciil3db69002ozfpj9ia6yb81" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/" data-id="cij0wamvq002oohpj6kywtp87" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-ads/skip_the_ad" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/11/ads/skip_the_ad/">跳过视频广告好爽，殊不知被狠狠地「算计」了</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/12/11/ads/skip_the_ad/">
-      <time datetime="2015-12-11T15:01:24.000Z" itemprop="datePublished">2015-12-11</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/ads/">ads</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>YouTube 视频的广告为什么可以跳过？对广告商的负面影响大吗？</p>
-<p>许多人都从用户角度讲，Youtube 的这种方式用户体验多么多么好，作为相关从业人员，我觉得你们真是太看得起资本家了。Google 请了这么多这么贵的码农来开发这种产品，广告主愿意用这种方式投放广告，一定都是真心为了钱的……</p>
-<p>就从这句话开始说吧。</p>
-<p>如果不是一看就特有趣的广告，我都会选择跳过……这无疑是广告商最不愿看到的情景吧。美国的广告行业有一句著名的话是「我在广告上的投资有一半是被浪费了的，但是问题是我不知道是哪一半。」</p>
-<p>所以才有了广告测量这个子行业。</p>
-<p>从互联网视频这个分支来讲，一般的广告效果追踪主要靠网站播放器的 impression callback。简单说来就是说你在看视频广告的时候，播放器会不断向服务器端汇报你的观看进展的。同时视频网站也是依照这个数据找广告主收钱的，也就是著名的 CPM（千次观看成本）模型。 </p>
-<p>问题在于：播放器实际上只能汇报「播放进展」，而不是「观看进展」。</p>
-<p>这也是为什么在视频广告行业还有所谓的「First in Pod」的概念的原因，因为广告商也不傻，他们也知道一场足球比赛，中场休息放广告的时候，你们一定去上厕所开啤酒叫烤串儿去了。所以只有进广告后第一个广告可能被更多人看到，因此这种广告往往比中间的卖得要贵得多。</p>
-<p>因此 Youtube 的这种可以跳过的广告（ 正式名字叫做 TrueView），其实不是给你一个跳过广告的机会，而是让他们获得一个与你互动的机会。如果说真的是为了用户体验，那么他们就应该在广告的第一秒就直接允许你跳过广告。</p>
-<p>因为你知道 5 秒之后就能马上进入视频，所以这 5 秒你一定会盯着屏幕，甚至把鼠标预先挪到那个倒数框里。 </p>
-<p>这算是 TrueView 的第一个优点：精准测量，保证你真的在看。</p>
-<p>至于能不能吸引你继续看下去，那就是广告制作公司的本事了。</p>
-<p>而你说你跳过广告是广告商不愿意看到的事情，其实真不是，广告商乐坏了，因为他们不用付钱向一个对他们的产品不感兴趣的人推销了。这就好比著名的浏览器插件 AdBlock Plus， 广告商对它几乎都是持欢迎态度的，因为会用这个插件的用户，往往都是获取难度较高的客户，你把它们的广告屏蔽了，他们也省得为一个无谓的展示付钱。而且相反，因为给予了观看者跳过的权利，如果这条广告最后居然播完了，那么很大可能是你是对这个广告的内容感兴趣的，换句话说，是广告主的潜在客户。 </p>
-<p>所以这是 TrueView 的第二个优点：精准投放。</p>
-<p>最后，我们才说到用户体验，如果说良好的用户体验实际上是 TrueView 的副产物的话，那么这个副产物也不是完全没有价值的，因为广告的性质其实大体可以分两类：</p>
-<p>一类是 Selling，例如网上小视频里弹出一个广告说，现在来买大众汽车，分期免利息，还有折扣，blabla</p>
-<p>一类是 Branding，就好比几年前超级碗决赛上大众汽车做的无厘头的星战系列宣传片，不卖产品，就告诉你我高大上买得起超级碗的广告</p>
-<p>越是大公司大品牌，可能在 Branding 上花的钱就越多，但同时他们对于广告投放的体验要求也就更高，因为这个广告创意要传递给你的一定是关于他们品牌的正面印象，所以说这种广告往往是大手笔的投入，例如宝马找 Clive Owen 拍的一系列小电影。这种情况下，如果你的网站用户体验非常差，那么在你这里投放只能是浪费广告商的创意花费了。</p>
-<p>因此，TrueView 的第三个优点是：保证了良好的用户体验，因而可以吸引更大的客户来进行投放。</p>
-<p>因为有了上述三个优点，以及对大客户友好的特性，TrueView 的广告本身就具有了对于Youtube 盈利来说特别有利的特质：</p>
-<ul>
-<li>CPM 高， 能吸引更有钱的金主，适应更多不同的广告需求</li>
-<li>广告创意自由度更大， 其中第三点我是见过实例的，曾经我看过一个长达十分钟的 TrueView 广告，本身就是一个小电影，因为制作的精良，我不但看完了，而且还特地去搜索单独播放的地址。如果不是 TrueView，一个十分钟的广告简直是不可接受的。</li>
-</ul>
-<p>综上所述，我觉得 TrueView 是一个非常精妙的设计。基本上在「广告是视频网站盈利的根基」这一前提下，倚靠提供精准的投放和良好的体验，做到了广告主、网站和用户的三赢。 </p>
-<p>当然，我认为 Youtube 依托 Google，对于互联网用户的兴趣爱好甚至年龄性别特征都有非常多的了解， 因而能够智能地选取广告内容，一定程度上保证 TrueView 观看率的，才有信心敢推出这类型的产品。</p>
-<p>那说回来，为什么国内视频网站为什么不能也这样做？我猜是可以。但是：</p>
-<ul>
-<li>国内用户被盗版滋养了那么多年，对于免费产品 + 第三方补偿的接受能力比较弱</li>
-<li>国内的视频网站在用户追踪和人群分析上做得不够成熟，不能够保证投放出去的广告一定是用户感兴趣的</li>
-</ul>
-<p>最终导致使用类似的模式不能保证收益，倒不如用垃圾广告直接强奸用户广种薄收了……</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/11/ads/skip_the_ad/" data-id="ciil3db8y0068zfpjltwbgi0t" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/12/11/ads/skip_the_ad/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ad/">ad</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/python/python_mock" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/09/dev/python/python_mock/">Python Mock的入门</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/12/09/dev/python/python_mock/">
-      <time datetime="2015-12-09T02:19:56.000Z" itemprop="datePublished">2015-12-09</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h3 id="Mock_u662F_u4EC0_u4E48"><a href="#Mock_u662F_u4EC0_u4E48" class="headerlink" title="Mock是什么"></a>Mock是什么</h3><p>Mock这个词在英语中有模拟的这个意思，因此我们可以猜测出这个库的主要功能是模拟一些东西。准确的说，Mock是Python中一个用于支持的测试的库，它的主要功能是使用mock对象替代掉指定的Python对象，以达到模拟对象的行为。简单的说，mock库用于如下的场景：</p>
-<p>假设你开发的项目叫a，里面包含了一个模块b，模块b中的一个函数c（也就是a.b.c）在工作的时候需要调用发送请求给特定的服务器来得到一个JSON返回值，然后根据这个返回值来做处理。如果要为a.b.c函数写一个单元测试，该如何做？<br>一个简单的办法是搭建一个测试的服务器，在单元测试的时候，让a.b.c函数和这个测试服务器交互。但是这种做法有两个问题：</p>
-<p>测试服务器可能很不好搭建，或者搭建效率很低。<br>你搭建的测试服务器可能无法返回所有可能的值，或者需要大量的工作才能达到这个目的。<br>那么如何在没有测试服务器的情况下进行上面这种情况的单元测试呢？Mock模块就是答案。上面已经说过了，mock模块可以替换Python对象。我们假设a.b.c的代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">c</span><span class="params">(url)</span>:</span></span><br><span class="line">    resp = requests.get(url)</span><br><span class="line">    <span class="comment"># further process with resp</span></span><br></pre></td></tr></table></figure>
-<p>如果利用mock模块，那么就可以达到这样的效果：使用一个mock对象替换掉上面的requests.get函数，然后执行函数c时，c调用requests.get的返回值就能够由我们的mock对象来决定，而不需要服务器的参与。简单的说，就是我们用一个mock对象替换掉c函数和服务器交互的过程。你一定很好奇这个功能是如何实现的，这个是mock模块内部的实现机制，不在本文的讨论范围。本文主要讨论如何用mock模块来解决上面提到的这种单元测试场景。</p>
-<h3 id="Mock_u7684_u5B89_u88C5_u548C_u5BFC_u5165"><a href="#Mock_u7684_u5B89_u88C5_u548C_u5BFC_u5165" class="headerlink" title="Mock的安装和导入"></a>Mock的安装和导入</h3><p>在Python 3.3以前的版本中，需要另外安装mock模块，可以使用pip命令来安装：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install mock</span><br></pre></td></tr></table></figure></p>
-<p>然后在代码中就可以直接import进来：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mock</span><br></pre></td></tr></table></figure></p>
-<p>从Python 3.3开始，mock模块已经被合并到标准库中，被命名为unittest.mock，可以直接import进来使用：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> unittest <span class="keyword">import</span> mock</span><br></pre></td></tr></table></figure></p>
-<h3 id="Mock_u5BF9_u8C61"><a href="#Mock_u5BF9_u8C61" class="headerlink" title="Mock对象"></a>Mock对象</h3><h4 id="u57FA_u672C_u7528_u6CD5"><a href="#u57FA_u672C_u7528_u6CD5" class="headerlink" title="基本用法"></a>基本用法</h4><p>Mock对象是mock模块中最重要的概念。Mock对象就是mock模块中的一个类的实例，这个类的实例可以用来替换其他的Python对象，来达到模拟的效果。Mock类的定义如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mock</span><span class="params">(spec=None, side_effect=None, return_value=DEFAULT, wraps=None, name=None, spec_set=None, **kwargs)</span></span></span><br></pre></td></tr></table></figure></p>
-<p>这里给出这个定义只是要说明下Mock对象其实就是个Python类而已，当然，它内部的实现是很巧妙的，有兴趣的可以去看mock模块的代码。</p>
-<p>Mock对象的一般用法是这样的：</p>
-<p>找到你要替换的对象，这个对象可以是一个类，或者是一个函数，或者是一个类实例。<br>然后实例化Mock类得到一个mock对象，并且设置这个mock对象的行为，比如被调用的时候返回什么值，被访问成员的时候返回什么值等。<br>使用这个mock对象替换掉我们想替换的对象，也就是步骤1中确定的对象。<br>之后就可以开始写测试代码，这个时候我们可以保证我们替换掉的对象在测试用例执行的过程中行为和我们预设的一样。<br>举个例子来说：我们有一个简单的客户端实现，用来访问一个URL，当访问正常时，需要返回状态码200，不正常时，需要返回状态码404。首先，我们的客户端代码实现如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_request</span><span class="params">(url)</span>:</span></span><br><span class="line">    r = requests.get(url)</span><br><span class="line">    <span class="keyword">return</span> r.status_code</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">visit_ustack</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> send_request(<span class="string">'http://www.ustack.com'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>外部模块调用visit_ustack()来访问UnitedStack的官网。下面我们使用mock对象在单元测试中分别测试访问正常和访问不正常的情况。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> unittest</span><br><span class="line"><span class="keyword">import</span> mock</span><br><span class="line"><span class="keyword">import</span> client</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestClient</span><span class="params">(unittest.TestCase)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_success_request</span><span class="params">(self)</span>:</span></span><br><span class="line">        success_send = mock.Mock(return_value=<span class="string">'200'</span>)</span><br><span class="line">        client.send_request = success_send</span><br><span class="line">        self.assertEqual(client.visit_ustack(), <span class="string">'200'</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_fail_request</span><span class="params">(self)</span>:</span></span><br><span class="line">        fail_send = mock.Mock(return_value=<span class="string">'404'</span>)</span><br><span class="line">        client.send_request = fail_send</span><br><span class="line">        self.assertEqual(client.visit_ustack(), <span class="string">'404'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>找到要替换的对象：我们需要测试的是visit_ustack这个函数，那么我们需要替换掉send_request这个函数。<br>实例化Mock类得到一个mock对象，并且设置这个mock对象的行为。在成功测试中，我们设置mock对象的返回值为字符串“200”，在失败测试中，我们设置mock对象的返回值为字符串”404”。<br>使用这个mock对象替换掉我们想替换的对象。我们替换掉了client.send_request<br>写测试代码。我们调用client.visit_ustack()，并且期望它的返回值和我们预设的一样。<br>上面这个就是使用mock对象的基本步骤了。在上面的例子中我们替换了自己写的模块的对象，其实也可以替换标准库和第三方模块的对象，方法是一样的：先import进来，然后替换掉指定的对象就可以了。</p>
-<h4 id="u7A0D_u5FAE_u9AD8_u7EA7_u70B9_u7684_u7528_u6CD5"><a href="#u7A0D_u5FAE_u9AD8_u7EA7_u70B9_u7684_u7528_u6CD5" class="headerlink" title="稍微高级点的用法"></a>稍微高级点的用法</h4><p>class Mock的参数</p>
-<p>上面讲的是mock对象最基本的用法。下面来看看mock对象的稍微高级点的用法（并不是很高级啊，最完整最高级的直接去看mock的文档即可，后面给出）。</p>
-<p>先来看看Mock这个类的参数，在上面看到的类定义中，我们知道它有好几个参数，这里介绍最主要的几个：</p>
-<p>name: 这个是用来命名一个mock对象，只是起到标识作用，当你print一个mock对象的时候，可以看到它的name。<br>return_value: 这个我们刚才使用过了，这个字段可以指定一个值（或者对象），当mock对象被调用时，如果side_effect函数返回的是DEFAULT，则对mock对象的调用会返回return_value指定的值。<br>side_effect: 这个参数指向一个可调用对象，一般就是函数。当mock对象被调用时，如果该函数返回值不是DEFAULT时，那么以该函数的返回值作为mock对象调用的返回值。<br>其他的参数请参考官方文档。</p>
-<h4 id="mock_u5BF9_u8C61_u7684_u81EA_u52A8_u521B_u5EFA"><a href="#mock_u5BF9_u8C61_u7684_u81EA_u52A8_u521B_u5EFA" class="headerlink" title="mock对象的自动创建"></a>mock对象的自动创建</h4><p>当访问一个mock对象中不存在的属性时，mock会自动建立一个子mock对象，并且把正在访问的属性指向它，这个功能对于实现多级属性的mock很方便。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">client = Client()</span><br><span class="line">client.v2_client.get.return_value = <span class="string">'200'</span></span><br></pre></td></tr></table></figure></p>
-<p>这个时候，你就得到了一个mock过的client实例，调用该实例的v2_client.get()方法会得到的返回值是”200”。</p>
-<p>从上面的例子中还可以看到，指定mock对象的return_value还可以使用属性赋值的方法。</p>
-<h4 id="u5BF9_u65B9_u6CD5_u8C03_u7528_u8FDB_u884C_u68C0_u67E5"><a href="#u5BF9_u65B9_u6CD5_u8C03_u7528_u8FDB_u884C_u68C0_u67E5" class="headerlink" title="对方法调用进行检查"></a>对方法调用进行检查</h4><p>mock对象有一些方法可以用来检查该对象是否被调用过、被调用时的参数如何、被调用了几次等。实现这些功能可以调用mock对象的方法，具体的可以查看mock的文档。这里我们举个例子。</p>
-<p>还是使用上面的代码，这次我们要检查visit_ustack()函数调用send_request()函数时，传递的参数类型是否正确。我们可以像下面这样使用mock对象。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestClient</span><span class="params">(unittest.TestCase)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_call_send_request_with_right_arguments</span><span class="params">(self)</span>:</span></span><br><span class="line">        client.send_request = mock.Mock()</span><br><span class="line">        client.visit_ustack()</span><br><span class="line">        self.assertEqual(client.send_request.called, <span class="keyword">True</span>)</span><br><span class="line">        call_args = client.send_request.call_args</span><br><span class="line">        self.assertIsInstance(call_args[<span class="number">0</span>][<span class="number">0</span>], str)</span><br></pre></td></tr></table></figure></p>
-<p>Mock对象的called属性表示该mock对象是否被调用过。</p>
-<p>Mock对象的call_args表示该mock对象被调用的tuple，tuple的每个成员都是一个mock.call对象。mock.call这个对象代表了一次对mock对象的调用，其内容是一个tuple，含有两个元素，第一个元素是调用mock对象时的位置参数（<em>args），第二个元素是调用mock对象时的关键字参数（*</em>kwargs）。</p>
-<p>现在来分析下上面的用例，我们要检查的项目有两个：</p>
-<p>visit_ustack()调用了send_request()<br>调用的参数是一个字符串<br>patch和patch.object</p>
-<p>在了解了mock对象之后，我们来看两个方便测试的函数：patch和patch.object。这两个函数都会返回一个mock内部的类实例，这个类是class _patch。返回的这个类实例既可以作为函数的装饰器，也可以作为类的装饰器，也可以作为上下文管理器。使用patch或者patch.object的目的是为了控制mock的范围，意思就是在一个函数范围内，或者一个类的范围内，或者with语句的范围内mock掉一个对象。我们看个代码例子即可：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestClient</span><span class="params">(unittest.TestCase)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_success_request</span><span class="params">(self)</span>:</span></span><br><span class="line">        status_code = <span class="string">'200'</span></span><br><span class="line">        success_send = mock.Mock(return_value=status_code)</span><br><span class="line">        <span class="keyword">with</span> mock.patch(<span class="string">'client.send_request'</span>, success_send):</span><br><span class="line">            <span class="keyword">from</span> client <span class="keyword">import</span> visit_ustack</span><br><span class="line">            self.assertEqual(visit_ustack(), status_code)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_fail_request</span><span class="params">(self)</span>:</span></span><br><span class="line">        status_code = <span class="string">'404'</span></span><br><span class="line">        fail_send = mock.Mock(return_value=status_code)</span><br><span class="line">        <span class="keyword">with</span> mock.patch(<span class="string">'client.send_request'</span>, fail_send):</span><br><span class="line">            <span class="keyword">from</span> client <span class="keyword">import</span> visit_ustack</span><br><span class="line">            self.assertEqual(visit_ustack(), status_code)</span><br></pre></td></tr></table></figure></p>
-<p>这个测试类和我们刚才写的第一个测试类一样，包含两个测试，只不过这次不是显示创建一个mock对象并且进行替换，而是使用了patch函数（作为上下文管理器使用）。</p>
-<p>patch.object和patch的效果是一样的，只不过用法有点不同。举例来说，同样是上面这个例子，换成patch.object的话是这样的：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_fail_request</span><span class="params">(self)</span>:</span></span><br><span class="line">    status_code = <span class="string">'404'</span></span><br><span class="line">    fail_send = mock.Mock(return_value=status_code)</span><br><span class="line">    <span class="keyword">with</span> mock.patch.object(client, <span class="string">'send_request'</span>, fail_send):</span><br><span class="line">        <span class="keyword">from</span> client <span class="keyword">import</span> visit_ustack</span><br><span class="line">        self.assertEqual(visit_ustack(), status_code)</span><br></pre></td></tr></table></figure></p>
-<p>就是替换掉一个对象的指定名称的属性，用法和setattr类似。</p>
-<h3 id="u5982_u4F55_u5B66_u4E60_u4F7F_u7528mock_uFF1F"><a href="#u5982_u4F55_u5B66_u4E60_u4F7F_u7528mock_uFF1F" class="headerlink" title="如何学习使用mock？"></a>如何学习使用mock？</h3><p>你肯定很奇怪，本文不就是教人使用mock的么？其实不是的，我发现自己在学习mock的过程中遇到的主要困难是不清楚mock能做什么，而不是mock对象到底有哪些函数。因此写这篇文章的主要目的是为了说明mock能做什么。</p>
-<p>当你知道了mock能做什么之后，要如何学习并掌握mock呢？最好的方式就是查看阅读官方文档，并在自己的单元测试中使用。</p>
-<p>最后，学习mock技能你应该要能够感受到一种控制的快感，就是你能享受控制外部服务的快乐。当你感受到这种快感的时候，你的mock应该就达到熟练使用的水平了。</p>
-<h3 id="u5B98_u65B9_u6587_u6863"><a href="#u5B98_u65B9_u6587_u6863" class="headerlink" title="官方文档"></a>官方文档</h3><p>Python 2.7</p>
-<p>mock还未加入标准库。</p>
-<p><a href="http://www.voidspace.org.uk/python/mock/index.html" target="_blank" rel="external">http://www.voidspace.org.uk/python/mock/index.html</a></p>
-<p>Python 3.4</p>
-<p>mock已经加入了标准库。</p>
-<p><a href="https://docs.python.org/3.4/library/unittest.mock-examples.html" target="_blank" rel="external">https://docs.python.org/3.4/library/unittest.mock-examples.html</a><br><a href="https://docs.python.org/3.4/library/unittest.mock.html" target="_blank" rel="external">https://docs.python.org/3.4/library/unittest.mock.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/09/dev/python/python_mock/" data-id="ciil3db6d002vzfpj618wblvd" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/12/09/dev/python/python_mock/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mock/">Mock</a></li></ul>
 
     </footer>
   </div>
@@ -546,6 +547,41 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/05/algo/graph/textrank/" class="thumbnail">
+  
+    <span style="background-image:url(/images/algo/pagerank.png
+)" alt="使用TextRank算法为文本生成关键字和摘要" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/01/05/algo/graph/textrank/" class="title">使用TextRank算法为文本生成关键字和摘要</a></p>
+              <p class="item-date"><time datetime="2016-01-05T06:33:26.000Z" itemprop="datePublished">2016-01-05</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2015/12/28/dev/python/python_tools/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2015/12/28/dev/python/python_tools/" class="title">Python 工具</a></p>
+              <p class="item-date"><time datetime="2015-12-28T02:19:56.000Z" itemprop="datePublished">2015-12-28</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -598,40 +634,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/12/11/ads/skip_the_ad/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/ads/">ads</a></p>
-              <p class="item-title"><a href="/2015/12/11/ads/skip_the_ad/" class="title">跳过视频广告好爽，殊不知被狠狠地「算计」了</a></p>
-              <p class="item-date"><time datetime="2015-12-11T15:01:24.000Z" itemprop="datePublished">2015-12-11</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/12/09/dev/python/python_mock/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2015/12/09/dev/python/python_mock/" class="title">Python Mock的入门</a></p>
-              <p class="item-date"><time datetime="2015-12-09T02:19:56.000Z" itemprop="datePublished">2015-12-09</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -641,7 +643,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -650,7 +652,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -659,7 +661,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 13.33px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -668,7 +670,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -681,7 +683,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 Li Jingpeng<br>
+      &copy; 2016 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>
