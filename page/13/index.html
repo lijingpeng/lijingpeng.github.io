@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        73
+        74
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,73 @@
 
       
       <section id="main">
+      <article id="post-system/apache_htpasswd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/01/19/system/apache_htpasswd/">Apache htpasswd命令</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/01/19/system/apache_htpasswd/">
+      <time datetime="2015-01-18T16:00:00.000Z" itemprop="datePublished">2015-01-19</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/system/">system</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>在Linux主机中，为了保护站点的目录安全，通常会通过htaccess文件对目录添加密码来进行保护，如果忘记密码则可以通过htpasswd命令修改密码。</p>
+<p>apache htpasswd选项参数:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">htpasswd [-cmdpsD] passwordfile username</span><br><span class="line">htpasswd -b[cmdpsD] passwordfile username password</span><br><span class="line">htpasswd -n[mdps] username</span><br><span class="line">htpasswd -nb[mdps] username password</span><br></pre></td></tr></table></figure></p>
+<p>apache htpasswd命令选项参数说明:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-c 创建一个加密文件</span><br><span class="line">-n 不更新加密文件，只将apache htpasswd命令加密后的用户名密码显示在屏幕上</span><br><span class="line">-m 默认apache htpassswd命令采用MD5算法对密码进行加密</span><br><span class="line"><span class="operator">-d</span> apache htpassswd命令采用CRYPT算法对密码进行加密</span><br><span class="line">-p apache htpassswd命令不对密码进行进行加密，即明文密码</span><br><span class="line"><span class="operator">-s</span> apache htpassswd命令采用SHA算法对密码进行加密</span><br><span class="line">-b 在apache htpassswd命令行中一并输入用户名和密码而不是根据提示输入密码</span><br><span class="line">-D 删除指定的用户</span><br></pre></td></tr></table></figure></p>
+<h2 id="apache_htpasswd_u4F8B_u5B50"><a href="#apache_htpasswd_u4F8B_u5B50" class="headerlink" title="apache htpasswd例子"></a>apache htpasswd例子</h2><p>1、如何利用htpasswd命令添加用户？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -bc .passwd tonyzhang pass</span><br></pre></td></tr></table></figure></p>
+<p>在bin目录下生成一个.passwd文件，用户名tonyzhang ，密码：pass，默认采用MD5加密方式</p>
+<p>2、如何在原有密码文件中增加下一个用户？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -b .passwd onlyzq pass</span><br></pre></td></tr></table></figure></p>
+<p>去掉c选项，即可在第一个用户之后添加第二个用户，依此类推</p>
+<p>3、如何不更新密码文件，只显示加密后的用户名和密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -nb tonyzhang pass</span><br></pre></td></tr></table></figure></p>
+<p>不更新.passwd文件，只在屏幕上输出用户名和经过加密后的密码</p>
+<p>4、如何利用htpasswd命令删除用户名和密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -D .passwd tonyzhang</span><br></pre></td></tr></table></figure></p>
+<p>5、如何利用htpasswd命令修改密码？<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">htpasswd -D .passwd tonyzhang</span><br><span class="line">htpasswd -b .passwd tonyzhang pass</span><br></pre></td></tr></table></figure></p>
+<p>即先使用htpasswd删除命令删除指定用户，再利用htpasswd添加用户命令创建用户即可实现修改密码的功能。</p>
+<p>文章链接：<a href="http://onlyzq.blog.51cto.com/1228/557593" target="_blank" rel="external">http://onlyzq.blog.51cto.com/1228/557593</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/" data-id="cij2erq1j000rgwpjrykfl3el" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/01/19/system/apache_htpasswd/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apache/">apache</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/lift_lr" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -178,7 +245,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/12/10/algo/lift_lr/" data-id="cij2ajhbi005octpjr9zia6om" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2014/12/10/algo/lift_lr/" data-id="cij2erq4x005ogwpjcyfh5p1w" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2014/12/10/algo/lift_lr/#ds-thread" class="article-comment-link">评论</a>
       
@@ -236,7 +303,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/27/other/ps_auto/" data-id="cij2ajh7s000zctpj3d3xv9y2" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2014/11/27/other/ps_auto/" data-id="cij2erq1n000zgwpj2yp4dfm9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2014/11/27/other/ps_auto/#ds-thread" class="article-comment-link">评论</a>
       
@@ -291,7 +358,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/26/travel/macau/" data-id="cij2ajh710004ctpjlu0k4m7f" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2014/11/26/travel/macau/" data-id="cij2erq110004gwpjfadfw540" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2014/11/26/travel/macau/#ds-thread" class="article-comment-link">评论</a>
       
@@ -347,68 +414,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/20/system/apache_deploy/" data-id="cij2ajh7p000vctpj0fbfzfyg" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2014/11/20/system/apache_deploy/" data-id="cij2erq1l000vgwpj7zax5lp2" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2014/11/20/system/apache_deploy/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Apache/">Apache</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-other/monumentvallay" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2014/11/14/other/monumentvallay/">Monument Vallay Pictures</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2014/11/14/other/monumentvallay/">
-      <time datetime="2014-11-13T16:00:00.000Z" itemprop="datePublished">2014-11-14</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/other/">other</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>纪念碑谷（Monument Vallay）游戏截图</p>
-<p><img src="/images/mm/mm1.jpg" alt="mm"><br><img src="/images/mm/mm2.jpg" alt="mm"><br><img src="/images/mm/mm3.jpg" alt="mm"><br><img src="/images/mm/mm4.jpg" alt="mm"><br><img src="/images/mm/mm5.jpg" alt="mm"><br><img src="/images/mm/mm6.jpg" alt="mm"><br><img src="/images/mm/mm7.jpg" alt="mm"><br><img src="/images/mm/mm8.jpg" alt="mm"><br><img src="/images/mm/mm9.jpg" alt="mm"><br><img src="/images/mm/mm10.jpg" alt="mm"><br><img src="/images/mm/mm11.jpg" alt="mm"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2014/11/14/other/monumentvallay/" data-id="cij2ajh7y0016ctpjov04c4c1" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2014/11/14/other/monumentvallay/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a></li></ul>
 
     </footer>
   </div>
@@ -430,6 +441,24 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/06/algo/lib/big_data_resource/" class="thumbnail">
+  
+    <span style="background-image:url(http://www.36dsj.com/wp-content/uploads/2015/12/538.jpg
+)" alt="大数据/数据挖掘/推荐系统/机器学习相关资源" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/01/06/algo/lib/big_data_resource/" class="title">大数据/数据挖掘/推荐系统/机器学习相关资源</a></p>
+              <p class="item-date"><time datetime="2016-01-06T05:52:12.000Z" itemprop="datePublished">2016-01-06</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -501,24 +530,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/01/05/algo/graph/textrank/" class="thumbnail">
-  
-    <span style="background-image:url(/images/algo/pagerank.png
-)" alt="使用TextRank算法为文本生成关键字和摘要" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/01/05/algo/graph/textrank/" class="title">使用TextRank算法为文本生成关键字和摘要</a></p>
-              <p class="item-date"><time datetime="2016-01-05T06:33:26.000Z" itemprop="datePublished">2016-01-05</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -528,7 +539,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">16</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -555,7 +566,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
