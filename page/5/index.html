@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        72
+        73
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,102 @@
 
       
       <section id="main">
+      <article id="post-dev/flatbuffers" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/20/dev/flatbuffers/">FlatBuffers使用简介</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/20/dev/flatbuffers/">
+      <time datetime="2015-11-20T02:01:56.000Z" itemprop="datePublished">2015-11-20</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h3 id="u6982_u8FF0"><a href="#u6982_u8FF0" class="headerlink" title="概述"></a>概述</h3><hr>
+<p>Google在今年6月份发布了跨平台序列化工具FlatBuffers，提供了C++/Java/Go/C#接口支持，这是一个注重性能和资源使用的序列化类库。相较于Protocol Buffers，其更适用于移动设备，FlatBuffers提供更高的性能以及更低的资源需求。</p>
+<p>特点</p>
+<ul>
+<li>不需要打包/解包。它的结构化数据都以二进制形式保存，不需要数据解析过程，数据也可以方便传递</li>
+<li>省内存、性能好</li>
+<li>强类型系统，在编译阶段就能预防一些bug的产生</li>
+<li>跨平台（C++11/Java/Go/C#）</li>
+</ul>
+<h3 id="FlatBuffers_u548CProtocol_Buffers_u4EE5_u53CAJson_u7684_u6BD4_u8F83_uFF1A"><a href="#FlatBuffers_u548CProtocol_Buffers_u4EE5_u53CAJson_u7684_u6BD4_u8F83_uFF1A" class="headerlink" title="FlatBuffers和Protocol Buffers以及Json的比较："></a>FlatBuffers和Protocol Buffers以及Json的比较：</h3><ul>
+<li>FlatBuffers的功能和Protocol Buffers很像，他们的最大不同点是在使用具体的数据之前，FlatBuffers不需要解析/解包的过程。同时，在工程中使用时，FlatBuffers的引用比Protocol Buffers方便很多，只需要包含两三个头文件即可</li>
+<li>JSON作为数据交换格式，被广泛用户各种动态语言之间（当然也包括静态语言）。它的优点是易于理解（可读性好），同时它的最大的缺点那就是解析时的性能问题了。而且因为它的动态类型特点，你的代码可能还需要多写好多类型、数据检查逻辑。</li>
+</ul>
+<h3 id="FlatBuffers_u7684_u4F7F_u7528_u6B65_u9AA4"><a href="#FlatBuffers_u7684_u4F7F_u7528_u6B65_u9AA4" class="headerlink" title="FlatBuffers的使用步骤"></a>FlatBuffers的使用步骤</h3><p>编写一个用来定义数据结构的schema(IDL，接口定义)文件，如下所示：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//flatbuffers test struct&#10;&#10;namespace Jason.Flat.Test;&#10;&#10;enum Color : byte &#123; Red = 1, Green, Blue &#125;&#10;&#10;union Any &#123; TextureData, Texture &#125;&#10;&#10;table TestAppend &#123;&#10;    test_num:int;&#10;    test_num2:int;&#10;&#125;&#10;&#10;table TextureData &#123;&#10;    image_size:int (id:0);&#10;    image_data:[ubyte] (id:1);&#10;    image_test:short(id:3);&#10;    test_num2:int(id:2);&#10;&#125;&#10;&#10;table Texture &#123;&#10;    num_textures:short;&#10;    textures:[TextureData];&#10;    num_test:short = 30;&#10;    num_test1:short (deprecated);&#10;        num_test2:short;&#10;    test_append:TestAppend;&#10;&#125;&#10;&#10;root_type Texture;</span><br></pre></td></tr></table></figure>
+<p>将上述代码保存为TestFlat.fbs文件之后，即可用flatc来编译了</p>
+<ul>
+<li><p>使用FlatBuffer编译器flatc生成数据结构源代码（C++头文件或者Java类）<br>登录GitHub，下载所需版本的源码及工程文件，在build目录下有VS2010的工程文件（当然，你也可以选择利用CMake自己本地创建工程），打开配置好flatc工程的传入参数，如下：<br>-c -o ./ ./TestFlat.fbs<br>运行flatc工程，即可在当前工程目录下生成TestFlat_generated.h头文件，这个头文件中包含了我们所需的所有结构体、枚举类型等以及相应的存取方法和验证方法</p>
+</li>
+<li><p>使用FlatBufferBuilder类创建flat的二进制buffer<br>以下代码展示了如何利用FlatBufferBuilder创建相应buffer：</p>
+</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//read serialized buffer</span></span><br><span class="line">flatbuffers::FlatBufferBuilder builder_data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> test_append = <span class="number">300</span>;</span><br><span class="line"><span class="keyword">auto</span> name_test = builder_data.CreateString(<span class="string">"TestAppend"</span>);</span><br><span class="line"><span class="keyword">auto</span> testApp = CreateTestAppend(builder_data, test_append, test_append);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> image_size = <span class="number">12</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> inv_data[] = &#123; <span class="number">11</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">3</span>, <span class="number">5</span> ,<span class="number">7</span>, <span class="number">10</span>, <span class="number">39</span>, <span class="number">45</span>, <span class="number">23</span> &#125;;</span><br><span class="line"><span class="keyword">auto</span> name = builder_data.CreateString(<span class="string">"TextureData"</span>);</span><br><span class="line"><span class="keyword">auto</span> image_data = builder_data.CreateVector(inv_data, image_size);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> image_test = <span class="number">900</span>;</span><br><span class="line"><span class="keyword">auto</span> texture_data = CreateTextureData(builder_data, image_size, image_data, image_test, image_test);</span><br><span class="line"></span><br><span class="line"><span class="comment">//flatbuffers::FlatBufferBuilder builder_tex;</span></span><br><span class="line"><span class="keyword">int</span> texture_num = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> name_tex = builder_data.CreateString(<span class="string">"Texture"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">vector</span>&lt;flatbuffers::Offset&lt;TextureData&gt;&gt; tex_vec;</span><br><span class="line">tex_vec.push_back(texture_data);</span><br><span class="line"><span class="keyword">auto</span> tex_data = builder_data.CreateVector(tex_vec);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> num_text = <span class="number">100</span>, num_text2 = <span class="number">200</span>, num_text3 = <span class="number">300</span>;</span><br><span class="line"><span class="keyword">auto</span> texture = CreateTexture(builder_data, texture_num, tex_data, num_text, num_text2, testApp);</span><br><span class="line">builder_data.Finish(texture);</span><br></pre></td></tr></table></figure>
+<p>要使上述正确运行，除了引用C++基本库之外，需在文件头部添加以下代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"flatbuffers/flatbuffers.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"idl.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"util.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"TestFlat_generated.h"</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> Jason::Flat::Test;</span><br></pre></td></tr></table></figure>
+<p>上述代码的编写中规中矩，其中CreateString和CreateVector都是FlatBufferBuilder类的成员函数，分别用于创建适用于FlatBuffer内存结构的字符串数据以及向量数据。其余的方法，如CreateTextureData、CreateTexture均是由flatc根据IDL文件（TestFlat.fbs）自动生成的头文件中用于创建相应结构体的函数。最后一句builder_data.Finish(texture)用于优化对齐写入builder_data的内存结构。</p>
+<ul>
+<li>保存buffer到本地或者直接通过网络发送<br>保存buffer到本地的代码，如下：</li>
+</ul>
+<p>std::cout &lt;&lt; builder_data.GetSize() &lt;&lt; std::endl;<br>flatbuffers::SaveFile(“texture.bin”, reinterpret_cast<char *="">(builder_data.GetBufferPointer()), builder_data.GetSize(), true);<br>将数据保存到名为texture.bin的二进制文件中，其中通过builder_data.GetBufferPointer()获取内存指针，builder_data.GetSize()获取内存大小，最后一个参数用于制定是否生成二进制文件。</char></p>
+<ul>
+<li>接收并buffer并读取数据内容<br>读取二进制文件的代码如下：</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">string binaryfile;</span><br><span class="line">bool ok = flatbuffers::LoadFile("texture.bin", false, &amp;binaryfile);</span><br><span class="line"></span><br><span class="line">flatbuffers::Verifier tex_verify(builderOut.GetBufferPointer(), builderOut.GetSize());</span><br><span class="line">bool verify_flag = VerifyTextureBuffer(tex_verify);</span><br><span class="line"></span><br><span class="line">flatbuffers::FlatBufferBuilder builderOut;</span><br><span class="line">TextureBuilder* texBuilder = new TextureBuilder(builderOut);</span><br><span class="line">builderOut.PushBytes(reinterpret_cast&lt;unsigned char*&gt;(const_cast&lt;char *&gt;(binaryfile.c_str())), binaryfile.size());</span><br><span class="line">std::cout &lt;&lt; builderOut.GetSize() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">auto model = GetTexture(builderOut.GetBufferPointer());</span><br><span class="line"></span><br><span class="line">int outNum = model-&gt;num_textures();</span><br><span class="line">const flatbuffers::Vector&lt;flatbuffers::Offset&lt;TextureData&gt;&gt;* outTex = model-&gt;textures();</span><br><span class="line">TextureData* outTexData = (TextureData *)outTex-&gt;Get(0);</span><br><span class="line">int outSize = outTexData-&gt;image_size();</span><br><span class="line">const flatbuffers::Vector&lt;unsigned char&gt;* outData = outTexData-&gt;image_data();</span><br><span class="line">int x = outData-&gt;Get(5);</span><br><span class="line">int len = outData-&gt;Length();</span><br><span class="line">delete texBuilder;</span><br></pre></td></tr></table></figure>
+<p>上述代码中VerifyTextureBuffer用于验证读取的内存是否为FlatBuffers的内存块，是则返回true，不是则返回false。通过GetTexture获取指针之后，结构体中的变量均可以通过相应方法（各方法名请查看自动生成的头文件）获取。</p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>利用FlatBuffers来进行数据保存及传输的优点显而易见，它利用自身特殊的编码格式，能一定程度上减少内存的占用，优化读取的性能。更重要的是，对于数据结构的向前向后兼容提供了很好的扩展性，方便又高效：</p>
+<ul>
+<li>要想让数据结构具有可扩展性，需将数据结构定义为table，它是数据扩展的基础，FlatBuffers中的struct类型不支持扩展</li>
+<li>如果想在后续的版本中删除数据结构中的某些字段，只要在将要删除的字段后面添加(deprecated)即可，当然需要保证删除的字段在之前版本的程序中不会引起程序崩溃（该删掉的字段在上一版本的程序中获取到的会是个空指针或空值，只需保证程序在获取到空值或空指针之后不会出现异常即可）</li>
+<li>如果想在后续版本中向数据结构中添加某些字段，需添加到table中最后一个字段的后面，若是想table中随意位置添加字段，需如上面TextureData 的定义，给每个字段指明添加id:n（n从0开始）<br>目前FlatBuffers还不是很完善，碰到问题可以到FlatBuffers Issues Tracker去提交或则寻找答案。</li>
+</ul>
+<p>From: <a href="http://www.jianshu.com/p/6eb04a149cd8" target="_blank" rel="external">http://www.jianshu.com/p/6eb04a149cd8</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="cij258vpk004157pj7d4aa063" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/20/dev/flatbuffers/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/web/ui_base" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -168,12 +264,76 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="cij1410010027iwpj90izwbm7" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="cij258voa002757pjzv6z45p1" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/ui_base/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端/">前端</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/18/dev/web/python_cgi_bin/">
+      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> BaseHTTPServer</span><br><span class="line"><span class="keyword">import</span> CGIHTTPServer</span><br><span class="line"><span class="keyword">import</span> cgitb; cgitb.enable()  <span class="comment">## This line enables CGI error reporting</span></span><br><span class="line"></span><br><span class="line">server = BaseHTTPServer.HTTPServer</span><br><span class="line">handler = CGIHTTPServer.CGIHTTPRequestHandler</span><br><span class="line">server_address = (<span class="string">"0.0.0.0"</span>, <span class="number">8082</span>)</span><br><span class="line">handler.cgi_directories = [<span class="string">"/cgi-bin"</span>]</span><br><span class="line"></span><br><span class="line">httpd = server(server_address, handler)</span><br><span class="line">httpd.serve_forever()</span><br></pre></td></tr></table></figure>
+<p>CGI-BIN下的py文件要有执行权限。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cgi</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">form = cgi.FieldStorage()</span><br><span class="line"></span><br><span class="line">query_str = form.getvalue(<span class="string">'query'</span>)</span><br><span class="line">query = <span class="string">"http://0.0.0.0:9999/query?query=%s"</span> % query_str</span><br><span class="line"></span><br><span class="line">exec_query = urllib.urlopen(query)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Status: 200 OK"</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"Content-Type: application/json"</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">""</span></span><br><span class="line"><span class="keyword">print</span> exec_query.read()</span><br></pre></td></tr></table></figure>
+<p>HTML:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"content-type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>test<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"></span><br><span class="line">            $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span><br><span class="line">            </span>&#123;</span><br><span class="line">                $(<span class="string">'#clickme'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                    alert(<span class="string">'Im going to start processing'</span>);</span><br><span class="line"></span><br><span class="line">                    $.ajax(&#123;</span><br><span class="line">                        url: <span class="string">"/scripts/ajaxpost.py"</span>,</span><br><span class="line">                        type: <span class="string">"post"</span>,</span><br><span class="line">                        datatype:<span class="string">"json"</span>,</span><br><span class="line">                        data: &#123;<span class="string">'key'</span>:<span class="string">'value'</span>,<span class="string">'key2'</span>:<span class="string">'value2'</span>&#125;,</span><br><span class="line">                        success: <span class="function"><span class="keyword">function</span>(<span class="params">response</span>)</span>&#123;</span><br><span class="line">                            alert(response.message);</span><br><span class="line">                            alert(response.keys);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">button</span> <span class="attribute">id</span>=<span class="value">"clickme"</span>&gt;</span> click me <span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>参考： </p>
+<ul>
+<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
+<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
+<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="cij258vod002g57pjl4e0ot2i" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
 
     </footer>
   </div>
@@ -234,73 +394,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cij141003002ciwpja8rr56v3" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cij258vob002c57pjkat30dur" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/11/18/dev/web/python_cgi_bin/">
-      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/web/">web</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> BaseHTTPServer</span><br><span class="line"><span class="keyword">import</span> CGIHTTPServer</span><br><span class="line"><span class="keyword">import</span> cgitb; cgitb.enable()  <span class="comment">## This line enables CGI error reporting</span></span><br><span class="line"></span><br><span class="line">server = BaseHTTPServer.HTTPServer</span><br><span class="line">handler = CGIHTTPServer.CGIHTTPRequestHandler</span><br><span class="line">server_address = (<span class="string">"0.0.0.0"</span>, <span class="number">8082</span>)</span><br><span class="line">handler.cgi_directories = [<span class="string">"/cgi-bin"</span>]</span><br><span class="line"></span><br><span class="line">httpd = server(server_address, handler)</span><br><span class="line">httpd.serve_forever()</span><br></pre></td></tr></table></figure>
-<p>CGI-BIN下的py文件要有执行权限。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cgi</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">form = cgi.FieldStorage()</span><br><span class="line"></span><br><span class="line">query_str = form.getvalue(<span class="string">'query'</span>)</span><br><span class="line">query = <span class="string">"http://0.0.0.0:9999/query?query=%s"</span> % query_str</span><br><span class="line"></span><br><span class="line">exec_query = urllib.urlopen(query)</span><br><span class="line"><span class="keyword">print</span> <span class="string">"Status: 200 OK"</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">"Content-Type: application/json"</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">""</span></span><br><span class="line"><span class="keyword">print</span> exec_query.read()</span><br></pre></td></tr></table></figure>
-<p>HTML:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">http-equiv</span>=<span class="value">"content-type"</span> <span class="attribute">content</span>=<span class="value">"text/html; charset=utf-8"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>test<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">script</span>&gt;</span><span class="javascript"></span><br><span class="line"></span><br><span class="line">            $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span><br><span class="line">            </span>&#123;</span><br><span class="line">                $(<span class="string">'#clickme'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                    alert(<span class="string">'Im going to start processing'</span>);</span><br><span class="line"></span><br><span class="line">                    $.ajax(&#123;</span><br><span class="line">                        url: <span class="string">"/scripts/ajaxpost.py"</span>,</span><br><span class="line">                        type: <span class="string">"post"</span>,</span><br><span class="line">                        datatype:<span class="string">"json"</span>,</span><br><span class="line">                        data: &#123;<span class="string">'key'</span>:<span class="string">'value'</span>,<span class="string">'key2'</span>:<span class="string">'value2'</span>&#125;,</span><br><span class="line">                        success: <span class="function"><span class="keyword">function</span>(<span class="params">response</span>)</span>&#123;</span><br><span class="line">                            alert(response.message);</span><br><span class="line">                            alert(response.keys);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;);</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        </span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="title">button</span> <span class="attribute">id</span>=<span class="value">"clickme"</span>&gt;</span> click me <span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>参考： </p>
-<ul>
-<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
-<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
-<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="cij141004002giwpjtxjfrtkl" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -354,82 +450,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cij14102a004viwpjictsavct" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cij258vq7004x57pjs4ewlp15" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/granger_causality" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/28/algo/granger_causality/">Granger causality</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/28/algo/granger_causality/">
-      <time datetime="2015-10-28T02:23:16.000Z" itemprop="datePublished">2015-10-28</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h3 id="Granger_causality"><a href="#Granger_causality" class="headerlink" title="Granger causality"></a>Granger causality</h3><hr>
-<p>如果一个变量X无助于预测另一个变量Y，则说X不是Y的原因；相反，若X是Y的原因，则必须满足两个条件：第一，X应该有助于预测Y，即在Y关于Y的过去值的回归中，添加X的过去值作为独立变量应当显著地增加回归的解释能力；第二，Y不应当有助于预测X，其原因是，如果X有助于预测Y，Y也有助于预测X，则很可能存在一个或几个其他变量，它们既是引起X变化的原因，也是引起Y变化的原因。</p>
-<h3 id="Granger_u56E0_u679C_u5173_u7CFB_u68C0_u9A8C"><a href="#Granger_u56E0_u679C_u5173_u7CFB_u68C0_u9A8C" class="headerlink" title="Granger因果关系检验"></a>Granger因果关系检验</h3><hr>
-<p><img src="/images/gc1.png" alt=""><br><img src="/images/gc2.png" alt=""><br><img src="/images/gc3.png" alt=""></p>
-<h3 id="u5173_u4E8E_u9E21_u751F_u86CB_u8FD8_u662F_u86CB_u751F_u9E21"><a href="#u5173_u4E8E_u9E21_u751F_u86CB_u8FD8_u662F_u86CB_u751F_u9E21" class="headerlink" title="关于鸡生蛋还是蛋生鸡"></a>关于鸡生蛋还是蛋生鸡</h3><hr>
-<p>鸡生蛋还是蛋生鸡？对于原因与结果的区分，自古以来是个难题。1926年，挪威经济学家、第一届（1969年）诺贝尔经济学奖得主弗瑞希（R . Frisch）仿照“生物计量学”（Biometrics）一词提出了“计量经济学”或“经济计量学”（Econometrics）之名。有趣的是，两位经济学家Walter N. Thurman和Mark E. Fisher又将计量经济学的方法用于讨论生物学领域的问题（当然也可以算是经济问题，因为研究结果发表杂经济学杂志上），探讨了这个“鸡与蛋”的关系问题。见“Chicken，eggs，and causality，or which came first?”, American Journal of Agricultural Economics, pp237-238, May 1988”。</p>
-<p>他们用1930-1983期间美国鸡蛋产量和美国同期鸡产量的时间序列数据，建立滞后回归模型（1-4年），然后做格兰杰因果关系检验。结果能够拒绝鸡蛋不是鸡出现原因的原假设，同时不能拒绝鸡不是鸡蛋出现的原因的原假设（只有在检验出单向因果关系后，检验才是有效的）。也就是是说鸡生蛋的假设被拒绝，而蛋生鸡的假设成立，因此，蛋为因，鸡为果。因此，他们得出先有蛋的结论。他们建议作其他诸如“最后笑者笑得最好”（He who laughs last laughs best）、“骄傲是失败之母”（Pride goeth before destruction, and an haughty spirit before a fall）之类的格兰杰因果检验。</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">library</span>(lmtest) </span><br><span class="line"></span><br><span class="line">data(ChickEgg)</span><br><span class="line">grangertest(egg ~ chicken, order = <span class="number">4</span>, data = ChickEgg)</span><br><span class="line">grangertest(chicken ~ egg, order = <span class="number">4</span>, data = ChickEgg)</span><br></pre></td></tr></table></figure>
-<p>结果:<br>Granger causality test<br>Model 1: egg ~ Lags(egg, 1:4) + Lags(chicken, 1:4)<br>Model 2: egg ~ Lags(egg, 1:4)<br>  Res.Df Df      F Pr(&gt;F)<br>1     41<br>2     45 -4 0.3929 0.8125<br>我们的假设是『鸡不是蛋的原因』， egg ~ Lags(egg, 1:4) + Lags(chicken, 1:4)， 拒绝该假设犯错的概率是0.8125， 因此我们不可以拒绝该假设， 也就是『鸡不是蛋的原因』成立</p>
-<p>Granger causality test<br>Model 1: chicken ~ Lags(chicken, 1:4) + Lags(egg, 1:4)<br>Model 2: chicken ~ Lags(chicken, 1:4)<br>  Res.Df Df      F   Pr(&gt;F)<br>1     41<br>2     45 -4 4.2568 0.005671 **</p>
-<p>我们的假设是『蛋不是鸡的原因』， chicken ~ Lags(chicken, 1:4) + Lags(egg, 1:4)， 拒绝该假设犯错的概率是0.005671， 因此我们可以拒绝该假设， 也就是蛋-&gt;鸡是成立的</p>
-<p>他们所使用的分析变量之间的因果的办法，即格兰杰因果关系检验。该检验方法为2003年诺贝尔经济学奖得主克莱夫·格兰杰（Clive W. J. Granger）所开创。从统计的角度，因果关系是通过概率或者分布函数的角度体现出来的：在宇宙中所有其它事件的发生情况固定不变的条件下，如果一个事件A的发生与不发生对于另一个事件B的发生的概率（如果通过事件定义了随机变量那么也可以说分布函数）有影响，并且这两个事件在时间上又先后顺序（A前B后），那么我们便可以说A是B的原因。Granger从预测的角度给出了因果性的一个定义：如果x有助于预测(解释)y，则x是y的Granger原因。将x的信息从信息集中去除不会改变对y的最优预测,则x不是y的granger原因。相反，会改变预测，则x是y的Granger原因，即将过去的x包含在信息集中可提高对y的预测。格兰杰因果检验只是数据上的因果关系不代表实际的因果关系。</p>
-<p>格兰杰因果关系检验的基本思路是，在两个变量x和y的系统中，若y的现在值用x和y的过去值预测要好于单独用y预测，那么，称x是y的原因；若用x的现在值和x、y的过去值去预测y比只用x和y去预测要好，那么，称x是y的瞬时原因。反之反是。换言之，如果x的变化引起y的变化，则x的变化应当发生在y的变化之前。特别地，说“x是引起y变化的原因”，则必须满足两个条件：一是x应该有助于预测y，即在y关于y的过去值的回归分析中，添加x的过去值作为独立变量应当显著地增加回归的解释能力；二是y不应当有助于预测x，其原因是如果x有助于预测y，y也有助于预测x，则很可能存在一个或几个其它的变量，它们既是引起x变化的原因，也是引起y变化的原因。</p>
-<p>进行格兰杰因果关系检验的一个前提条件是时间序列必须具有平稳性，否则可能会出现虚假回归问题。因此在进行格兰杰因果关系检验之前首先应对各指标时间序列的平稳性进行单位根检验(unit  root  test)。常用增广的迪基—富勒检验(ADF检验)来分别对各指标序列的平稳性进行单位根检验。格兰杰检验的特点决定了它只能适用于时间序列数据模型的因果性检验，无法检验只有横截面数据时变量间的因果性。因此，在使用这种方法时，务必检查前提条件，使其尽量能够满足。</p>
-<p>时间序列的稳定性是指时间序列的方差、协方差、均值不受时间t的影响。平稳性就是要求经由样本时间序列所得到的拟合曲线在未来的一段期间内仍能顺着现有的形态“惯性”地延续下去；如果数据非平稳，则说明样本拟合曲线的形态不具有“惯性”延续的特点，也就是基于未来将要获得的样本时间序列所拟合出来的曲线将迥异于当前的样本拟合曲线。</p>
-<p>由于格兰杰天才地利用了条件概率来定义因果关系，所以他的方法显得既实用又有效，这是个令许多人甚至哲学家都佩服的思维上的突破。但是格兰杰因果关系检验的结论只是统计意义上的因果性，而不一定是真正的因果关系。虽然可以作为真正的因果关系的一种支持，但不能作为肯定或否定因果关系的最终根据。也许，鸡和蛋之间没有必要讨论谁先谁后的问题，因为在足够长的时间里，不存在单向的因果关系，或者说只是存在互为因果关系。运用统计工具来解释经济变量之间的关系，仍有很多的漏洞，存在很多逻辑上的问题。“鸡生蛋还是蛋生鸡”的命题告诉我们，在许多情况下，探讨因果关系是没有意义的。</p>
-<p>真正的因果关系，还是要立足于理论模型的思考。统计方法并非万能的，评判一个对象，往往需要多种角度的观察。正所谓“兼听则明，偏听则暗”。诚然真相永远只有一个，但是也要靠科学的探索方法。当然，我们也不能因噎废食，全盘否定计量统计的意义。即使格兰杰因果关系不等于实际因果关系，也并不妨碍其参考价值。因为统计意义上的因果关系也是有意义的，对于经济预测等仍然能起很大的作用。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/28/algo/granger_causality/" data-id="cij14103m005xiwpj80yq0pz1" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/28/algo/granger_causality/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Granger-causality/">Granger causality</a></li></ul>
-
     </footer>
   </div>
   
@@ -450,6 +475,23 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/06/dev/CPP/c_opensource/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/01/06/dev/CPP/c_opensource/" class="title">阅读源码，推荐 10 个 C 语言开源项目</a></p>
+              <p class="item-date"><time datetime="2016-01-06T01:27:12.000Z" itemprop="datePublished">2016-01-06</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -522,23 +564,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2015/12/28/dev/python/python_tools/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2015/12/28/dev/python/python_tools/" class="title">Python 工具</a></p>
-              <p class="item-date"><time datetime="2015-12-28T02:19:56.000Z" itemprop="datePublished">2015-12-28</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -548,7 +573,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">16</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">16</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -575,7 +600,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
