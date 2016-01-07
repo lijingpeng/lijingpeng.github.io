@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>HTTPS、SSL/TLS协议及CA证书介绍 | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="HTTPS协议作为一种网络数据通讯加密方式已经被各大网站广泛支持，对于个人网站来说，虽然不需要过分担心数据传输的安全性，但是，网站部署SSL证书已是一种趋势。
+SSL/TLS协议介绍
+1、SSL协议介绍SSL 即安全套接层（Secure Sockets Layer，SSL），是一种安全协议，是网景公司在推出 Web 浏览器首版的同时提出，目的是为网络通信提供安全及数据完整性。SSL 在传输层对网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTPS、SSL/TLS协议及CA证书介绍">
+<meta property="og:url" content="http://www.notehub.cn/2016/01/07/internet/https/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="HTTPS协议作为一种网络数据通讯加密方式已经被各大网站广泛支持，对于个人网站来说，虽然不需要过分担心数据传输的安全性，但是，网站部署SSL证书已是一种趋势。
+SSL/TLS协议介绍
+1、SSL协议介绍SSL 即安全套接层（Secure Sockets Layer，SSL），是一种安全协议，是网景公司在推出 Web 浏览器首版的同时提出，目的是为网络通信提供安全及数据完整性。SSL 在传输层对网络">
+<meta property="og:updated_time" content="2016-01-07T02:23:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTPS、SSL/TLS协议及CA证书介绍">
+<meta name="twitter:description" content="HTTPS协议作为一种网络数据通讯加密方式已经被各大网站广泛支持，对于个人网站来说，虽然不需要过分担心数据传输的安全性，但是，网站部署SSL证书已是一种趋势。
+SSL/TLS协议介绍
+1、SSL协议介绍SSL 即安全套接层（Secure Sockets Layer，SSL），是一种安全协议，是网景公司在推出 Web 浏览器首版的同时提出，目的是为网络通信提供安全及数据完整性。SSL 在传输层对网络">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        75
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        35
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-internet/https" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HTTPS、SSL/TLS协议及CA证书介绍
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/01/07/internet/https/">
+      <time datetime="2016-01-07T02:19:56.000Z" itemprop="datePublished">2016-01-07</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/internet/">internet</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>HTTPS协议作为一种网络数据通讯加密方式已经被各大网站广泛支持，对于个人网站来说，虽然不需要过分担心数据传输的安全性，但是，网站部署SSL证书已是一种趋势。</p>
+<h2 id="SSL/TLS_u534F_u8BAE_u4ECB_u7ECD"><a href="#SSL/TLS_u534F_u8BAE_u4ECB_u7ECD" class="headerlink" title="SSL/TLS协议介绍"></a>SSL/TLS协议介绍</h2><hr>
+<h3 id="1_u3001SSL_u534F_u8BAE_u4ECB_u7ECD"><a href="#1_u3001SSL_u534F_u8BAE_u4ECB_u7ECD" class="headerlink" title="1、SSL协议介绍"></a>1、SSL协议介绍</h3><p>SSL 即安全套接层（Secure Sockets Layer，SSL），是一种安全协议，是网景公司在推出 Web 浏览器首版的同时提出，目的是为网络通信提供安全及数据完整性。SSL 在传输层对网络连接进行加密。</p>
+<p>SSL 采用公开密钥技术，保证两个应用间通信的保密性和可靠性，使客户与服务器应用之间的通信不被攻击者窃听。它在服务器和客户机两端可同时被支持，目前已成为互联网上保密通讯的工业标准。现行 Web 浏览器亦普遍将 HTTP 和 SSL 相结合，从而实现安全通信。此协议的继任者是 TLS。</p>
+<p>SSL目前有三个版本：2、3、3.1，最常用的是第3版，是1995年发布的。</p>
+<h3 id="2_u3001TLS_u534F_u8BAE_u4ECB_u7ECD"><a href="#2_u3001TLS_u534F_u8BAE_u4ECB_u7ECD" class="headerlink" title="2、TLS协议介绍"></a>2、TLS协议介绍</h3><p>IETF（www.ietf.org）于1999年将 SSL 作了标准化，即 RFC2246 ，并将其称为 TLS（Transport Layer Security）。</p>
+<p>常用的 TLS 协议版本有如下几个：TLS1.2, TLS1.1, TLS1.0 和 SSL3.0。其中 SSL3.0 由于 POODLE 攻击已经被证明不安全，但统计发现依然有不到 1% 的浏览器使用 SSL3.0。TLS1.0 也存在部分安全漏洞，比如 RC4 和 BEAST 攻击。</p>
+<p>TLS1.2 和 TLS1.1 暂时没有已知的安全漏洞，比较安全，同时有大量扩展提升速度和性能，推荐大家使用。</p>
+<h3 id="3_u3001_HTTPS_u534F_u8BAE_u4ECB_u7ECD"><a href="#3_u3001_HTTPS_u534F_u8BAE_u4ECB_u7ECD" class="headerlink" title="3、 HTTPS协议介绍"></a>3、 HTTPS协议介绍</h3><p>HTTPS 可以认为是 HTTP + TLS。HTTP 协议相信大家耳熟能详，目前大部分 WEB 应用和网站都是使用 HTTP 协议传输的。而HTTP 本身是明文传输的，没有经过任何安全处理。</p>
+<p>以使用百度搜索为例。用户在百度搜索了一个关键字，比如“苹果手机”，中间者完全能够查看到这个信息，并且有可能打电话过来骚扰用户。也有一些用户投诉使用百度时，发现首页或者结果页面浮了一个很长很大的广告，这也肯定是中间者往页面插的广告内容。如果劫持技术比较低劣的话，用户甚至无法访问百度。这里提到的中间者主要指一些网络节点，是用户数据在浏览器和百度服务器中间传输必须要经过的节点。比如 WIFI 热点，路由器，防火墙，反向代理，缓存服务器等。</p>
+<p>在 HTTP 协议下，中间者可以随意嗅探用户搜索内容，窃取隐私甚至篡改网页。不过 HTTPS 是这些劫持行为的克星，能够完全有效地防御。</p>
+<p>总体来说，HTTPS 协议提供了三个强大的功能来对抗上述的劫持行为：</p>
+<p>1）内容加密。浏览器到百度服务器的内容都是以加密形式传输，中间者无法直接查看原始内容。</p>
+<p>2）身份认证。保证用户访问的是百度服务，即使被 DNS 劫持到了第三方站点，也会提醒用户没有访问百度服务，有可能被劫持</p>
+<p>3）数据完整性。防止内容被第三方冒充或者篡改。</p>
+<h2 id="SSL/TLS_u534F_u8BAE_u539F_u7406"><a href="#SSL/TLS_u534F_u8BAE_u539F_u7406" class="headerlink" title="SSL/TLS协议原理"></a>SSL/TLS协议原理</h2><hr>
+<h3 id="1_u3001_u5BF9_u79F0_u52A0_u5BC6_u53CA_u975E_u5BF9_u79F0_u52A0_u5BC6"><a href="#1_u3001_u5BF9_u79F0_u52A0_u5BC6_u53CA_u975E_u5BF9_u79F0_u52A0_u5BC6" class="headerlink" title="1、对称加密及非对称加密"></a>1、对称加密及非对称加密</h3><p>加密算法一般分为两种，对称加密和非对称加密。</p>
+<p>1） 对称加密</p>
+<p>对称加密是最快速、最简单的一种加密方式，加密（encryption）与解密（decryption）用的是同样的密钥（secret key）。对称加密有很多种算法，由于它效率很高，所以被广泛使用在很多加密协议的核心当中。对称加密通常使用的是相对较小的密钥，一般小于256 bit。因为密钥越大，加密越强，但加密与解密的过程越慢。</p>
+<p>对称加密的一大缺点是密钥的管理与分配，换句话说，如何把密钥发送到需要解密你的消息的人的手里是一个问题。在发送密钥的过程中，密钥有很大的风险会被黑客们拦截。现实中通常的做法是将对称加密的密钥进行非对称加密，然后传送给需要它的人。</p>
+<p>对称加密又分为两种模式：流式加密和分组加密。流式加密算法推荐 ChaCha20，而分组加密算法则推荐使用AES-GCM。</p>
+<p>2） 非对称加密</p>
+<p>非对称加密为数据的加密与解密提供了一个非常安全的方法，它使用了一对密钥，公钥（public key）和私钥（private key）。私钥只能由一方安全保管，不能外泄，而公钥则可以发给任何请求它的人。非对称加密使用这对密钥中的一个进行加密，而解密则需要另一个密钥。</p>
+<p>非对称加密存在CPU资源消耗大、加密内容有限制等问题，因此只能用来作对称密钥交换或者内容签名，不适合用来做应用层传输内容的加解密。</p>
+<p>在SSL/TLS协议中，常见的用于对称密钥交换的非对称加密算法有 RSA，ECDHE，DH，DHE 等算法，一般建议优先支持 RSA 和 ECDH_RSA 密钥交换算法。</p>
+<h3 id="2_u3001SSL_u534F_u8BAE_u5DE5_u4F5C_u8FC7_u7A0B"><a href="#2_u3001SSL_u534F_u8BAE_u5DE5_u4F5C_u8FC7_u7A0B" class="headerlink" title="2、SSL协议工作过程"></a>2、SSL协议工作过程</h3><p>SSL协议可以分为三部分：握手协议（Handshake protocol）、记录协议（Record protocol）、警报协议（Alert protocol）。</p>
+<p>1） 握手协议</p>
+<p>握手协议是客户机和服务器用SSL连接通信时使用的第一个子协议，握手协议包括客户机与服务器之间的一系列消息。SSL中最复杂的协议就是握手协议。该协议允许服务器和客户机相互验证，协商非对称密钥交换算法和MAC算法以及对称加密密钥，用来保护在SSL记录中发送的数据。握手协议是在应用程序的数据传输之前使用的。</p>
+<p>2） 记录协议</p>
+<p>在记录协议中，使用握手协议规定的对称加密密钥对传输内容进行加密，并利用MD5或SHA算法实现数据完整性验证。</p>
+<p>3） 警报协议</p>
+<p>客户机和服务器发现错误时，向对方发送一个警报消息。如果是致命错误，则算法立即关闭SSL连接，双方还会先删除相关的会话号，秘密和密钥。</p>
+<h2 id="CA_u6570_u5B57_u8BC1_u4E66"><a href="#CA_u6570_u5B57_u8BC1_u4E66" class="headerlink" title="CA数字证书"></a>CA数字证书</h2><hr>
+<h3 id="1_u3001_CA_u8BC1_u4E66_u4ECB_u7ECD"><a href="#1_u3001_CA_u8BC1_u4E66_u4ECB_u7ECD" class="headerlink" title="1、 CA证书介绍"></a>1、 CA证书介绍</h3><p>CA是“Certificate Authority”的缩写，也叫“证书授权中心”，它是负责管理和签发证书的第三方机构。利用CA签发的数字证书，我们可以对网站进行身份验证，以防止该网站是假冒钓鱼网站，避免个人数据被窃取。</p>
+<p>CA数字证书有两个作用：</p>
+<p>1） 身份授权</p>
+<p>确保浏览器访问的网站是经过 CA 验证的可信任的网站。</p>
+<p>2） 分发公钥</p>
+<p>每个数字证书都包含了注册者生成的公钥。在SSL握手时会通过certificate消息传输给客户端。比如前文提到的RSA及ECDHE算法的签名都是使用的这个公钥。</p>
+<h3 id="2_u3001_CA_u8BC1_u4E66_u7B49_u7EA7"><a href="#2_u3001_CA_u8BC1_u4E66_u7B49_u7EA7" class="headerlink" title="2、 CA证书等级"></a>2、 CA证书等级</h3><p>CA证书等级分 Class 1 （一级，只验证Email）、Class 2（二级，验证Email和验证个人身份证明文件）、Class 3（三级，验证Email、验证单位身份验证文件、第三方数据库核实）、Class 4（四级，全球统一标准的扩展验证标准，验证Email、验证单位身份证明文件、验证申请人身份证明文件、第三方数据库核实）。</p>
+<p>1） DV</p>
+<p>DV是 Domain Validation 的缩写，意思就是对网站域名所有权进行验证。CA 认证机构会向域名持有者的邮箱发送相应的邮件，以确认证书和域名的所有权关系。其特点是简单快捷，价格便宜，缺点是无法保证网站经营者的身份，因此一般仅用来提供数据加密的功能，属于 Class 1 验证的证书。</p>
+<p>2） OV</p>
+<p>OV是 Organization Validation 的缩写，这种证书在颁发的时候会对网站所有单位的身份和域名的所有权进行证实行验证，所以一般电子商务类的网站往往会做 OV 的认证。价格当然也会比较昂贵，证书颁发周期也会比较久，属于 Class 2 或者 Class 3 验证的证书。</p>
+<p>3） EV</p>
+<p>EV是 Extended Validation 的缩写，也是最严格的身份验证，此证书审核证书申请人对域名的所有权，以及详细的企业/组织相关信息审核，当用户在访问通过 EV 认证的网站时候，浏览器的显示为绿色，当然价格也是相当的昂贵，属于 Class 4 验证的证书。</p>
+<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>HTTPS是未来互联网的趋势，HTTPS目前存在以下问题：</p>
+<p>1） 签发证书费用及更新维护</p>
+<p>事实上，现在签发证书费用很低，便宜的只有一年几十块钱。而且现在也有了免费的证书机构，比如著名的 mozilla 发起的免费证书项目： <a href="https://letsencrypt.org/就支持免费证书安装和自动更新。这个项目已于15年12月3日正式公测。" target="_blank" rel="external">https://letsencrypt.org/就支持免费证书安装和自动更新。这个项目已于15年12月3日正式公测。</a></p>
+<p>2） HTTPS 降低用户访问速度</p>
+<p>HTTPS 对速度会有一定程度的降低，但是只要经过合理优化和部署，HTTPS 对速度的影响完全可以接受。</p>
+<p>3） HTTPS 消耗 CPU 资源</p>
+<p>主要是非对称密钥交换消耗CPU资源，但是通过合理的优化和部署，也是可以降低影响。</p>
+<p>参考文章：</p>
+<p><a href="http://blog.jobbole.com/86660/" target="_blank" rel="external">大型网站的 HTTPS 实践（1）：HTTPS 协议和原理</a></p>
+<p><a href="http://www.cnblogs.com/jfzhu/p/4020928.html" target="_blank" rel="external">对称加密与非对称加密</a></p>
+<p><a href="https://www.vobe.io/84" target="_blank" rel="external">SSL/TLS 功能介绍和等级说明</a></p>
+<p><a href="http://www.cnblogs.com/zhuqil/archive/2012/10/06/ssl_detail.html" target="_blank" rel="external">SSL协议详解</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/01/07/internet/https/" data-id="cij3mlpxv001zcgpjenm33qsr" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/01/07/internet/https/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTPS/">HTTPS</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/01/06/algo/lib/big_data_resource/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">大数据/数据挖掘/推荐系统/机器学习相关资源</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2016/01/07/internet/https/" data-title="HTTPS、SSL/TLS协议及CA证书介绍" data-url="http://www.notehub.cn/2016/01/07/internet/https/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/07/internet/https/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/internet/">internet</a></p>
+              <p class="item-title"><a href="/2016/01/07/internet/https/" class="title">HTTPS、SSL/TLS协议及CA证书介绍</a></p>
+              <p class="item-date"><time datetime="2016-01-07T02:19:56.000Z" itemprop="datePublished">2016-01-07</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/06/algo/lib/big_data_resource/" class="thumbnail">
+  
+    <span style="background-image:url(http://www.36dsj.com/wp-content/uploads/2015/12/538.jpg
+)" alt="大数据/数据挖掘/推荐系统/机器学习相关资源" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/01/06/algo/lib/big_data_resource/" class="title">大数据/数据挖掘/推荐系统/机器学习相关资源</a></p>
+              <p class="item-date"><time datetime="2016-01-06T05:52:12.000Z" itemprop="datePublished">2016-01-06</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/06/dev/CPP/c_opensource/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/01/06/dev/CPP/c_opensource/" class="title">阅读源码，推荐 10 个 C 语言开源项目</a></p>
+              <p class="item-date"><time datetime="2016-01-06T01:27:12.000Z" itemprop="datePublished">2016-01-06</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/05/algo/lib/big_data_lib2/" class="thumbnail">
+  
+    <span style="background-image:url(http://www.36dsj.com/wp-content/uploads/2015/03/1321.jpg
+)" alt="开源大数据处理工具汇总（下）" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/01/05/algo/lib/big_data_lib2/" class="title">开源大数据处理工具汇总（下）</a></p>
+              <p class="item-date"><time datetime="2016-01-05T08:38:12.000Z" itemprop="datePublished">2016-01-05</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/05/algo/lib/big_data_lib/" class="thumbnail">
+  
+    <span style="background-image:url(http://www.36dsj.com/wp-content/uploads/2015/03/1321.jpg
+)" alt="开源大数据处理工具汇总（上）" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/01/05/algo/lib/big_data_lib/" class="title">开源大数据处理工具汇总（上）</a></p>
+              <p class="item-date"><time datetime="2016-01-05T08:07:12.000Z" itemprop="datePublished">2016-01-05</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
