@@ -6,7 +6,7 @@ date: 2015-12-11 15:53:16
 ---
  * Markdown [教程](http://ibruce.info/2013/11/26/markdown/) 
  * C/C++ 
- * Go [文档](http://godoc.golangtc.com/doc/) [编程规范](http://ilovers.sinaapp.com/doc/golang-specification.html)
+ * Go [文档](http://godoc.golangtc.com/doc/) [编程规范](http://ilovers.sinaapp.com/doc/golang-specification.html) [学习](http://hacpai.com/article/1437497122181)
  * R [官网](https://www.r-project.org/) [Shiny](http://yanping.me/shiny-tutorial/) [Shiny-gallery](http://shiny.rstudio.com/gallery/)
  * python [官网](www.python.org/) [教程](http://www.pythondoc.com/pythontutorial27/index.html) pip ipython [nose](http://pythontesting.net/framework/nose/nose-introduction/) [iPDB](http://blog.csdn.net/lengyisheng/article/details/18254763) [gevent](www.gevent.org/)
  * Matlab
@@ -45,6 +45,8 @@ date: 2015-12-11 15:53:16
      * Aliyun
      * Amazon AWS
      * Google Platform 
+ * 工具总结
+   * [老衣的工具集](http://yimingzhi.net/2015/12/lao-yi-de-gong-ju-ji-2015-ban)
 
 ## 大数据
 ---
@@ -74,6 +76,13 @@ date: 2015-12-11 15:53:16
        * 贝努利分布
        * 二项分布
        * Beta分布
+       * 高斯分布
+       * 多项式分布
+       * dirichlet分布
+       * 非参数方法
+         * 密度估计
+         * 核方法
+         * K近邻 
    * 决策论
      * 决策面/决策边界 
    * 信息论 
@@ -87,8 +96,14 @@ date: 2015-12-11 15:53:16
      * 杰卡德
      * 曼哈顿
      * 欧式距离
-   * 线性模型
+   * 线性回归模型
     * Lasso 
+    * Ridge
+    * 正则化
+   * 线性分类模型
+    * 线性分类
+    * Fisher判别
+    * 感知器算法 
    * 树
     * GBRT
    * 神经网络
@@ -110,6 +125,8 @@ date: 2015-12-11 15:53:16
      * [Topcoder](http://www.topcoder.com/)
      * [leetcode](www.leetcode.com)
      * [POJ](http://poj.org/) 
+ * 书籍
+   * [PRML](https://www.gitbook.com/subscribe/book/mqshen/prml)  
 
 ## 计算机网络
 ---
