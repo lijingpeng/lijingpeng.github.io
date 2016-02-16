@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深度学习框架的评估与比较 | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="人工智能无疑是计算机世界的前沿领域，而深度学习无疑又是人工智能的研究热点，那么现在都有哪些开源的深度学习工具，他们各自的优缺点又是什么呢？最近zer0n和bamos在GitHub上发表了一篇文章，对Caffe、CNTK、TensorFlow、Theano和Torch等深度学习工具从网络、模型能力、接口、部署、性能、架构、生态系统、跨平台等方面做了比较。
+网络和模型能力Caffe可能是第一个主流的工">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习框架的评估与比较">
+<meta property="og:url" content="http://www.notehub.cn/2016/02/16/algo/lib/dl_lib/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="人工智能无疑是计算机世界的前沿领域，而深度学习无疑又是人工智能的研究热点，那么现在都有哪些开源的深度学习工具，他们各自的优缺点又是什么呢？最近zer0n和bamos在GitHub上发表了一篇文章，对Caffe、CNTK、TensorFlow、Theano和Torch等深度学习工具从网络、模型能力、接口、部署、性能、架构、生态系统、跨平台等方面做了比较。
+网络和模型能力Caffe可能是第一个主流的工">
+<meta property="og:updated_time" content="2016-02-16T08:07:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深度学习框架的评估与比较">
+<meta name="twitter:description" content="人工智能无疑是计算机世界的前沿领域，而深度学习无疑又是人工智能的研究热点，那么现在都有哪些开源的深度学习工具，他们各自的优缺点又是什么呢？最近zer0n和bamos在GitHub上发表了一篇文章，对Caffe、CNTK、TensorFlow、Theano和Torch等深度学习工具从网络、模型能力、接口、部署、性能、架构、生态系统、跨平台等方面做了比较。
+网络和模型能力Caffe可能是第一个主流的工">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        77
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        36
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-algo/lib/dl_lib" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      深度学习框架的评估与比较
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/02/16/algo/lib/dl_lib/">
+      <time datetime="2016-02-16T08:07:12.000Z" itemprop="datePublished">2016-02-16</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>人工智能无疑是计算机世界的前沿领域，而深度学习无疑又是人工智能的研究热点，那么现在都有哪些开源的深度学习工具，他们各自的优缺点又是什么呢？最近zer0n和bamos在GitHub上发表了一篇文章，对Caffe、CNTK、TensorFlow、Theano和Torch等深度学习工具从网络、模型能力、接口、部署、性能、架构、生态系统、跨平台等方面做了比较。</p>
+<h2 id="u7F51_u7EDC_u548C_u6A21_u578B_u80FD_u529B"><a href="#u7F51_u7EDC_u548C_u6A21_u578B_u80FD_u529B" class="headerlink" title="网络和模型能力"></a>网络和模型能力</h2><p>Caffe可能是第一个主流的工业级深度学习工具，它开始于2013年底,具有出色的卷积神经网络实现。在计算机视觉领域Caffe依然是最流行的工具包，它有很多扩展，但是由于一些遗留的架构问题，它对递归网络和语言建模的支持很差。此外，在Caffe中图层需要使用C++定义，而网络则使用Protobuf定义。</p>
+<p>CNTK由深度学习热潮的发起演讲人创建,目前已经发展成一个通用的、平台独立的深度学习系统。在CNTK中，网络会被指定为向量运算的符号图，运算的组合会形成层。CNTK通过细粒度的构件块让用户不需要使用低层次的语言就能创建新的、复杂的层类型。</p>
+<p>TensorFlow是一个理想的RNN（递归神经网络） API和实现，TensorFlow使用了向量运算的符号图方法，使得新网络的指定变得相当容易，但TensorFlow并不支持双向RNN和3D卷积，同时公共版本的图定义也不支持循环和条件控制，这使得RNN的实现并不理想，因为必须要使用Python循环且无法进行图编译优化。</p>
+<p>Theano支持大部分先进的网络，现在的很多研究想法都来源于Theano，它引领了符号图在编程网络中使用的趋势。Theano的符号API支持循环控制，让RNN的实现更加容易且高效。</p>
+<p>Torch对卷积网络的支持非常好。在TensorFlow和Theano中时域卷积可以通过conv2d来实现，但这样做有点取巧；Torch通过时域卷积的本地接口使得它的使用非常直观。Torch通过很多非官方的扩展支持大量的RNN，同时网络的定义方法也有很多种。但Torch本质上是以图层的方式定义网络的，这种粗粒度的方式使得它对新图层类型的扩展缺乏足够的支持。与Caffe相比，在Torch中定义新图层非常容易，不需要使用C++编程，图层和网络定义方式之间的区别最小。</p>
+<h2 id="u63A5_u53E3"><a href="#u63A5_u53E3" class="headerlink" title="接口"></a>接口</h2><p>Caffe支持pycaffe接口，但这仅仅是用来辅助命令行接口的，而即便是使用pycaffe也必须使用protobuf定义模型。</p>
+<p>CNTK的使用方式与Caffe相似，也是通过指定配置文件并运行命令行，但CNTK没有Python或者任何其他高级语言的接口。</p>
+<p>TensorFlow支持Python和C++两种类型的接口。用户可以在一个相对丰富的高层环境中做实验并在需要本地代码或低延迟的环境中部署模型。</p>
+<p>Theano支持Python接口。</p>
+<p>Torch运行在LuaJIT上，与C++、C#以及Java等工业语言相比速度非常快，用户能够编写任意类型的计算，不需要担心性能，唯一的问题就是Lua并不是主流的语言。</p>
+<h2 id="u6A21_u578B_u90E8_u7F72"><a href="#u6A21_u578B_u90E8_u7F72" class="headerlink" title="模型部署"></a>模型部署</h2><p>Caffe是基于C++的，因此可以在多种设备上编译，具有跨平台性，在部署方面是最佳选择。</p>
+<p>CNTK与Caffe一样也是基于C++并且跨平台的，大部分情况下部署非常简单。但是它不支持ARM架构，这限制了它在移动设备上的能力。</p>
+<p>TensorFlow支持C++接口，同时由于它使用了Eigen而不是BLAS类库，所以能够基于ARM架构编译和优化。TensorFlow的用户能够将训练好的模型部署到多种设备上，不需要实现单独的模型解码器或者加载Python/LuaJIT解释器。但是TensorFlow并不支持Windows，因此其模型无法部署到Windows设备上。</p>
+<p>Theano缺少底层的接口，并且其Python解释器也很低效，对工业用户而言缺少吸引力。虽然对大的模型其Python开销并不 大，但它的限制摆在那，唯一的亮点就是它跨平台，模型能够部署到Windows环境上。</p>
+<p>Torch的模型运行需要LuaJIT的支持，虽然这样做对性能的影响并不大，但却对集成造成了很大的障碍，使得它的吸引力不如Caffe/CNTK/TensorFlow等直接支持C++的框架。</p>
+<h2 id="u6027_u80FD"><a href="#u6027_u80FD" class="headerlink" title="性能"></a>性能</h2><p>在单GPU的场景下，所有这些工具集都调用了cuDNN，因此只要外层的计算或者内存分配差异不大其表现都差不多。本文的性能测试是基于Soumith@FB的ConvNets基准测试来做的。<br>Caffe 简单快速。</p>
+<p>CNTK 简单快速。</p>
+<p>TensorFlow仅使用了cuDNN v2，但即使如此它的性能依然要比同样使用cuDNN v2的Torch要慢1.5倍，并且在批大小为128时训练GoogleNet还出现了内存溢出的问题。</p>
+<p>Theano在大型网络上的性能与Torch7不相上下。但它的主要问题是启动时间特别长，因为它需要将C/CUDA代码编译成二进制，而TensorFlow并没有这个问题。此外，Theano的导入也会消耗时间，并且在导入之后无法摆脱预配置的设备（例如GPU0）。</p>
+<p>Torch非常好，没有TensorFlow和Theano的问题。<br>另外，在多GPU方面，CNTK相较于其他的深度学习工具包表现更好，它实现了1-bit SGD和自适应的minibatching。</p>
+<h2 id="u67B6_u6784"><a href="#u67B6_u6784" class="headerlink" title="架构"></a>架构</h2><p>Caffe的架构在现在看来算是平均水准，它的主要痛点是图层需要使用C++定义，而模型需要使用protobuf定义。另外，如果想要支持CPU和GPU，用户还必须实现额外的函数，例如Forward_gpu和Backward_gpu；对于自定义的层类型，还必须为其分配一个int类型的id，并将其添加到proto文件中。</p>
+<p>TensorFlow的架构清晰，采用了模块化设计，支持多种前端和执行平台。</p>
+<p>Theano 的架构比较变态，它的整个代码库都是Python的，就连C/<br>CUDA代码也要被打包为Python字符串，这使得它难以导航、调试、重构和维护。</p>
+<p>Torch7和nn类库拥有清晰的设计和模块化的接口。</p>
+<h2 id="u8DE8_u5E73_u53F0"><a href="#u8DE8_u5E73_u53F0" class="headerlink" title="跨平台"></a>跨平台</h2><p>Caffe、CNTK和Theano都能在所有的系统上运行，而TensorFlow和Torch则不支持Windows。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/02/16/algo/lib/dl_lib/" data-id="cikp4nj3100602apjz1vebh7u" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/02/16/algo/lib/dl_lib/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/02/02/system/crontab/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Crontab使用举例</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2016/02/16/algo/lib/dl_lib/" data-title="深度学习框架的评估与比较" data-url="http://www.notehub.cn/2016/02/16/algo/lib/dl_lib/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/02/16/algo/lib/dl_lib/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/02/16/algo/lib/dl_lib/" class="title">深度学习框架的评估与比较</a></p>
+              <p class="item-date"><time datetime="2016-02-16T08:07:12.000Z" itemprop="datePublished">2016-02-16</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/02/02/system/crontab/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/system/">system</a></p>
+              <p class="item-title"><a href="/2016/02/02/system/crontab/" class="title">Crontab使用举例</a></p>
+              <p class="item-date"><time datetime="2016-02-01T16:00:00.000Z" itemprop="datePublished">2016-02-02</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/07/internet/https/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/internet/">internet</a></p>
+              <p class="item-title"><a href="/2016/01/07/internet/https/" class="title">HTTPS、SSL/TLS协议及CA证书介绍</a></p>
+              <p class="item-date"><time datetime="2016-01-07T02:19:56.000Z" itemprop="datePublished">2016-01-07</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/06/algo/lib/big_data_resource/" class="thumbnail">
+  
+    <span style="background-image:url(http://www.36dsj.com/wp-content/uploads/2015/12/538.jpg
+)" alt="大数据/数据挖掘/推荐系统/机器学习相关资源" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/01/06/algo/lib/big_data_resource/" class="title">大数据/数据挖掘/推荐系统/机器学习相关资源</a></p>
+              <p class="item-date"><time datetime="2016-01-06T05:52:12.000Z" itemprop="datePublished">2016-01-06</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/01/06/dev/CPP/c_opensource/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/01/06/dev/CPP/c_opensource/" class="title">阅读源码，推荐 10 个 C 语言开源项目</a></p>
+              <p class="item-date"><time datetime="2016-01-06T01:27:12.000Z" itemprop="datePublished">2016-01-06</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 16.67px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
