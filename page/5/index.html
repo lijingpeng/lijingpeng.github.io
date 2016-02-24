@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        77
+        78
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,7 +125,7 @@
 
       
       <section id="main">
-      <article id="post-dev/go/go_dynamic_args" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-dev/go/go_set" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -134,7 +134,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/24/dev/go/go_dynamic_args/">Go可变长参数函数</a>
+      <a class="article-title" href="/2015/11/24/dev/go/go_set/">Go语言实现set</a>
     </h1>
   
 
@@ -142,8 +142,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/11/24/dev/go/go_dynamic_args/">
-      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
+    <a href="/2015/11/24/dev/go/go_set/">
+      <time datetime="2015-11-24T09:19:56.000Z" itemprop="datePublished">2015-11-24</time>
     </a>
   </div>
 
@@ -160,16 +160,15 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 这个函数可以传入任意数量的整型参数</span></span><br><span class="line"><span class="keyword">func</span> sum(nums ...<span class="typename">int</span>) &#123;</span><br><span class="line">    fmt.Print(nums, <span class="string">" "</span>)</span><br><span class="line">    total := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _, num := <span class="keyword">range</span> nums &#123;</span><br><span class="line">        total += num</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(total)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 支持可变长参数的函数调用方法和普通函数一样</span></span><br><span class="line">    <span class="comment">// 也支持只有一个参数的情况</span></span><br><span class="line">    sum(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    sum(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果你需要传入的参数在一个切片中，像下面一样</span></span><br><span class="line">    <span class="comment">// "func(slice...)"把切片打散传入</span></span><br><span class="line">    nums := []<span class="typename">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line">    sum(nums...)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>输出结果为</p>
-<p>[1 2] 3<br>[1 2 3] 6<br>[1 2 3 4] 10<br>需要注意的是，可变长参数应该是函数定义的最右边的参数，即最后一个参数。</p>
+        <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> set</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Set <span class="keyword">interface</span> &#123;</span><br><span class="line">    Add(e <span class="keyword">interface</span>&#123;&#125;) <span class="typename">bool</span></span><br><span class="line">    Remove(e <span class="keyword">interface</span>&#123;&#125;)</span><br><span class="line">    Clear()</span><br><span class="line">    Contains(e <span class="keyword">interface</span>&#123;&#125;) <span class="typename">bool</span></span><br><span class="line">    Len() <span class="typename">int</span></span><br><span class="line">    Same(other Set) <span class="typename">bool</span></span><br><span class="line">    Elements() []<span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">    String() <span class="typename">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断集合 one 是否是集合 other 的超集</span></span><br><span class="line"><span class="keyword">func</span> IsSuperset(one Set, other Set) <span class="typename">bool</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> one == <span class="constant">nil</span> || other == <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    oneLen := one.Len()</span><br><span class="line">    otherLen := other.Len()</span><br><span class="line">    <span class="keyword">if</span> oneLen == <span class="number">0</span> || oneLen == otherLen &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> oneLen &gt; <span class="number">0</span> &amp;&amp; otherLen == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> other.Elements() &#123;</span><br><span class="line">        <span class="keyword">if</span> !one.Contains(v) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="constant">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成集合 one 和集合 other 的并集</span></span><br><span class="line"><span class="keyword">func</span> Union(one Set, other Set) Set &#123;</span><br><span class="line">    <span class="keyword">if</span> one == <span class="constant">nil</span> || other == <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    unionedSet := NewSimpleSet()</span><br><span class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> one.Elements() &#123;</span><br><span class="line">        unionedSet.Add(v)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> other.Len() == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> unionedSet</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> other.Elements() &#123;</span><br><span class="line">        unionedSet.Add(v)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> unionedSet</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成集合 one 和集合 other 的交集</span></span><br><span class="line"><span class="keyword">func</span> Intersect(one Set, other Set) Set &#123;</span><br><span class="line">    <span class="keyword">if</span> one == <span class="constant">nil</span> || other == <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    intersectedSet := NewSimpleSet()</span><br><span class="line">    <span class="keyword">if</span> other.Len() == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> intersectedSet</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> one.Len() &lt; other.Len() &#123;</span><br><span class="line">        <span class="keyword">for</span> _, v := <span class="keyword">range</span> one.Elements() &#123;</span><br><span class="line">            <span class="keyword">if</span> other.Contains(v) &#123;</span><br><span class="line">                intersectedSet.Add(v)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> _, v := <span class="keyword">range</span> other.Elements() &#123;</span><br><span class="line">            <span class="keyword">if</span> one.Contains(v) &#123;</span><br><span class="line">                intersectedSet.Add(v)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> intersectedSet</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成集合 one 对集合 other 的差集</span></span><br><span class="line"><span class="keyword">func</span> Difference(one Set, other Set) Set &#123;</span><br><span class="line">    <span class="keyword">if</span> one == <span class="constant">nil</span> || other == <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    differencedSet := NewSimpleSet()</span><br><span class="line">    <span class="keyword">if</span> other.Len() == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> _, v := <span class="keyword">range</span> one.Elements() &#123;</span><br><span class="line">            differencedSet.Add(v)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> differencedSet</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> one.Elements() &#123;</span><br><span class="line">        <span class="keyword">if</span> !other.Contains(v) &#123;</span><br><span class="line">            differencedSet.Add(v)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> differencedSet</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成集合 one 和集合 other 的对称差集</span></span><br><span class="line"><span class="keyword">func</span> SymmetricDifference(one Set, other Set) Set &#123;</span><br><span class="line">    <span class="keyword">if</span> one == <span class="constant">nil</span> || other == <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">nil</span></span><br><span class="line">    &#125;</span><br><span class="line">    diffA := Difference(one, other)</span><br><span class="line">    <span class="keyword">if</span> other.Len() == <span class="number">0</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> diffA</span><br><span class="line">    &#125;</span><br><span class="line">    diffB := Difference(other, one)</span><br><span class="line">    <span class="keyword">return</span> Union(diffA, diffB)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> NewSimpleSet() Set &#123;</span><br><span class="line">    <span class="keyword">return</span> NewHashSet()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> IsSet(value <span class="keyword">interface</span>&#123;&#125;) <span class="typename">bool</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> _, ok := value.(Set); ok &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>HashSet：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> set</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"bytes"</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> HashSet <span class="keyword">struct</span> &#123;</span><br><span class="line">    m <span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]<span class="typename">bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> NewHashSet() *HashSet &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp;HashSet&#123;m: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]<span class="typename">bool</span>)&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> (set *HashSet) Add(e <span class="keyword">interface</span>&#123;&#125;) <span class="typename">bool</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> !set.m[e] &#123;</span><br><span class="line">        set.m[e] = <span class="constant">true</span></span><br><span class="line">        <span class="keyword">return</span> <span class="constant">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> (set *HashSet) Remove(e <span class="keyword">interface</span>&#123;&#125;) &#123;</span><br><span class="line">    <span class="built_in">delete</span>(set.m, e)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> (set *HashSet) Clear() &#123;</span><br><span class="line">    set.m = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]<span class="typename">bool</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> (set *HashSet) Contains(e <span class="keyword">interface</span>&#123;&#125;) <span class="typename">bool</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> set.m[e]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> (set *HashSet) Len() <span class="typename">int</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(set.m)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> (set *HashSet) Same(other Set) <span class="typename">bool</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> other == <span class="constant">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> set.Len() != other.Len() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> key := <span class="keyword">range</span> set.m &#123;</span><br><span class="line">        <span class="keyword">if</span> !other.Contains(key) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="constant">false</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="constant">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> (set *HashSet) Elements() []<span class="keyword">interface</span>&#123;&#125; &#123;</span><br><span class="line">    initialLen := <span class="built_in">len</span>(set.m)</span><br><span class="line">    snapshot := <span class="built_in">make</span>([]<span class="keyword">interface</span>&#123;&#125;, initialLen)</span><br><span class="line">    actualLen := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> key := <span class="keyword">range</span> set.m &#123;</span><br><span class="line">        <span class="keyword">if</span> actualLen &lt; initialLen &#123;</span><br><span class="line">            snapshot[actualLen] = key</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            snapshot = <span class="built_in">append</span>(snapshot, key)</span><br><span class="line">        &#125;</span><br><span class="line">        actualLen++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> actualLen &lt; initialLen &#123;</span><br><span class="line">        snapshot = snapshot[:actualLen]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> snapshot</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> (set *HashSet) String() <span class="typename">string</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> buf bytes.Buffer</span><br><span class="line">    buf.WriteString(<span class="string">"HashSet&#123;"</span>)</span><br><span class="line">    first := <span class="constant">true</span></span><br><span class="line">    <span class="keyword">for</span> key := <span class="keyword">range</span> set.m &#123;</span><br><span class="line">        <span class="keyword">if</span> first &#123;</span><br><span class="line">            first = <span class="constant">false</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            buf.WriteString(<span class="string">" "</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        buf.WriteString(fmt.Sprintf(<span class="string">"%v"</span>, key))</span><br><span class="line">    &#125;</span><br><span class="line">    buf.WriteString(<span class="string">"&#125;"</span>)</span><br><span class="line">    <span class="keyword">return</span> buf.String()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="cikp4q30q004173pjgd02a7tj" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="cil0fy6c3003qfxpjn69i3hqy" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_set/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -221,9 +220,66 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="cikp4q30j003s73pjwi4r3yij" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="cil0fy6c4003ufxpj9mobz16b" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_map/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/go/go_dynamic_args" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/24/dev/go/go_dynamic_args/">Go可变长参数函数</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/24/dev/go/go_dynamic_args/">
+      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 这个函数可以传入任意数量的整型参数</span></span><br><span class="line"><span class="keyword">func</span> sum(nums ...<span class="typename">int</span>) &#123;</span><br><span class="line">    fmt.Print(nums, <span class="string">" "</span>)</span><br><span class="line">    total := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _, num := <span class="keyword">range</span> nums &#123;</span><br><span class="line">        total += num</span><br><span class="line">    &#125;</span><br><span class="line">    fmt.Println(total)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">func</span> main() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 支持可变长参数的函数调用方法和普通函数一样</span></span><br><span class="line">    <span class="comment">// 也支持只有一个参数的情况</span></span><br><span class="line">    sum(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    sum(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果你需要传入的参数在一个切片中，像下面一样</span></span><br><span class="line">    <span class="comment">// "func(slice...)"把切片打散传入</span></span><br><span class="line">    nums := []<span class="typename">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line">    sum(nums...)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>输出结果为</p>
+<p>[1 2] 3<br>[1 2 3] 6<br>[1 2 3 4] 10<br>需要注意的是，可变长参数应该是函数定义的最右边的参数，即最后一个参数。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="cil0fy6c90043fxpj1emvk4ej" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -282,7 +338,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="cikp4q30o003y73pjl0hzk1mw" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="cil0fy6c70040fxpjiybhjmjd" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_json/#ds-thread" class="article-comment-link">评论</a>
       
@@ -341,108 +397,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="cikp4q30l003v73pjzuwu0vui" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="cil0fy6c6003xfxpjhzekqqok" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/flatbuffers" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/20/dev/flatbuffers/">FlatBuffers使用简介</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/11/20/dev/flatbuffers/">
-      <time datetime="2015-11-20T02:01:56.000Z" itemprop="datePublished">2015-11-20</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h3 id="u6982_u8FF0"><a href="#u6982_u8FF0" class="headerlink" title="概述"></a>概述</h3><hr>
-<p>Google在今年6月份发布了跨平台序列化工具FlatBuffers，提供了C++/Java/Go/C#接口支持，这是一个注重性能和资源使用的序列化类库。相较于Protocol Buffers，其更适用于移动设备，FlatBuffers提供更高的性能以及更低的资源需求。</p>
-<p>特点</p>
-<ul>
-<li>不需要打包/解包。它的结构化数据都以二进制形式保存，不需要数据解析过程，数据也可以方便传递</li>
-<li>省内存、性能好</li>
-<li>强类型系统，在编译阶段就能预防一些bug的产生</li>
-<li>跨平台（C++11/Java/Go/C#）</li>
-</ul>
-<h3 id="FlatBuffers_u548CProtocol_Buffers_u4EE5_u53CAJson_u7684_u6BD4_u8F83_uFF1A"><a href="#FlatBuffers_u548CProtocol_Buffers_u4EE5_u53CAJson_u7684_u6BD4_u8F83_uFF1A" class="headerlink" title="FlatBuffers和Protocol Buffers以及Json的比较："></a>FlatBuffers和Protocol Buffers以及Json的比较：</h3><ul>
-<li>FlatBuffers的功能和Protocol Buffers很像，他们的最大不同点是在使用具体的数据之前，FlatBuffers不需要解析/解包的过程。同时，在工程中使用时，FlatBuffers的引用比Protocol Buffers方便很多，只需要包含两三个头文件即可</li>
-<li>JSON作为数据交换格式，被广泛用户各种动态语言之间（当然也包括静态语言）。它的优点是易于理解（可读性好），同时它的最大的缺点那就是解析时的性能问题了。而且因为它的动态类型特点，你的代码可能还需要多写好多类型、数据检查逻辑。</li>
-</ul>
-<h3 id="FlatBuffers_u7684_u4F7F_u7528_u6B65_u9AA4"><a href="#FlatBuffers_u7684_u4F7F_u7528_u6B65_u9AA4" class="headerlink" title="FlatBuffers的使用步骤"></a>FlatBuffers的使用步骤</h3><p>编写一个用来定义数据结构的schema(IDL，接口定义)文件，如下所示：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//flatbuffers test struct&#10;&#10;namespace Jason.Flat.Test;&#10;&#10;enum Color : byte &#123; Red = 1, Green, Blue &#125;&#10;&#10;union Any &#123; TextureData, Texture &#125;&#10;&#10;table TestAppend &#123;&#10;    test_num:int;&#10;    test_num2:int;&#10;&#125;&#10;&#10;table TextureData &#123;&#10;    image_size:int (id:0);&#10;    image_data:[ubyte] (id:1);&#10;    image_test:short(id:3);&#10;    test_num2:int(id:2);&#10;&#125;&#10;&#10;table Texture &#123;&#10;    num_textures:short;&#10;    textures:[TextureData];&#10;    num_test:short = 30;&#10;    num_test1:short (deprecated);&#10;        num_test2:short;&#10;    test_append:TestAppend;&#10;&#125;&#10;&#10;root_type Texture;</span><br></pre></td></tr></table></figure>
-<p>将上述代码保存为TestFlat.fbs文件之后，即可用flatc来编译了</p>
-<ul>
-<li><p>使用FlatBuffer编译器flatc生成数据结构源代码（C++头文件或者Java类）<br>登录GitHub，下载所需版本的源码及工程文件，在build目录下有VS2010的工程文件（当然，你也可以选择利用CMake自己本地创建工程），打开配置好flatc工程的传入参数，如下：<br>-c -o ./ ./TestFlat.fbs<br>运行flatc工程，即可在当前工程目录下生成TestFlat_generated.h头文件，这个头文件中包含了我们所需的所有结构体、枚举类型等以及相应的存取方法和验证方法</p>
-</li>
-<li><p>使用FlatBufferBuilder类创建flat的二进制buffer<br>以下代码展示了如何利用FlatBufferBuilder创建相应buffer：</p>
-</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//read serialized buffer</span></span><br><span class="line">flatbuffers::FlatBufferBuilder builder_data;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> test_append = <span class="number">300</span>;</span><br><span class="line"><span class="keyword">auto</span> name_test = builder_data.CreateString(<span class="string">"TestAppend"</span>);</span><br><span class="line"><span class="keyword">auto</span> testApp = CreateTestAppend(builder_data, test_append, test_append);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> image_size = <span class="number">12</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> inv_data[] = &#123; <span class="number">11</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">2</span>, <span class="number">10</span>, <span class="number">3</span>, <span class="number">5</span> ,<span class="number">7</span>, <span class="number">10</span>, <span class="number">39</span>, <span class="number">45</span>, <span class="number">23</span> &#125;;</span><br><span class="line"><span class="keyword">auto</span> name = builder_data.CreateString(<span class="string">"TextureData"</span>);</span><br><span class="line"><span class="keyword">auto</span> image_data = builder_data.CreateVector(inv_data, image_size);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> image_test = <span class="number">900</span>;</span><br><span class="line"><span class="keyword">auto</span> texture_data = CreateTextureData(builder_data, image_size, image_data, image_test, image_test);</span><br><span class="line"></span><br><span class="line"><span class="comment">//flatbuffers::FlatBufferBuilder builder_tex;</span></span><br><span class="line"><span class="keyword">int</span> texture_num = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> name_tex = builder_data.CreateString(<span class="string">"Texture"</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">vector</span>&lt;flatbuffers::Offset&lt;TextureData&gt;&gt; tex_vec;</span><br><span class="line">tex_vec.push_back(texture_data);</span><br><span class="line"><span class="keyword">auto</span> tex_data = builder_data.CreateVector(tex_vec);</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> num_text = <span class="number">100</span>, num_text2 = <span class="number">200</span>, num_text3 = <span class="number">300</span>;</span><br><span class="line"><span class="keyword">auto</span> texture = CreateTexture(builder_data, texture_num, tex_data, num_text, num_text2, testApp);</span><br><span class="line">builder_data.Finish(texture);</span><br></pre></td></tr></table></figure>
-<p>要使上述正确运行，除了引用C++基本库之外，需在文件头部添加以下代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"flatbuffers/flatbuffers.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"idl.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"util.h"</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">"TestFlat_generated.h"</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> Jason::Flat::Test;</span><br></pre></td></tr></table></figure>
-<p>上述代码的编写中规中矩，其中CreateString和CreateVector都是FlatBufferBuilder类的成员函数，分别用于创建适用于FlatBuffer内存结构的字符串数据以及向量数据。其余的方法，如CreateTextureData、CreateTexture均是由flatc根据IDL文件（TestFlat.fbs）自动生成的头文件中用于创建相应结构体的函数。最后一句builder_data.Finish(texture)用于优化对齐写入builder_data的内存结构。</p>
-<ul>
-<li>保存buffer到本地或者直接通过网络发送<br>保存buffer到本地的代码，如下：</li>
-</ul>
-<p>std::cout &lt;&lt; builder_data.GetSize() &lt;&lt; std::endl;<br>flatbuffers::SaveFile(“texture.bin”, reinterpret_cast<char *="">(builder_data.GetBufferPointer()), builder_data.GetSize(), true);<br>将数据保存到名为texture.bin的二进制文件中，其中通过builder_data.GetBufferPointer()获取内存指针，builder_data.GetSize()获取内存大小，最后一个参数用于制定是否生成二进制文件。</char></p>
-<ul>
-<li>接收并buffer并读取数据内容<br>读取二进制文件的代码如下：</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">string binaryfile;</span><br><span class="line">bool ok = flatbuffers::LoadFile("texture.bin", false, &amp;binaryfile);</span><br><span class="line"></span><br><span class="line">flatbuffers::Verifier tex_verify(builderOut.GetBufferPointer(), builderOut.GetSize());</span><br><span class="line">bool verify_flag = VerifyTextureBuffer(tex_verify);</span><br><span class="line"></span><br><span class="line">flatbuffers::FlatBufferBuilder builderOut;</span><br><span class="line">TextureBuilder* texBuilder = new TextureBuilder(builderOut);</span><br><span class="line">builderOut.PushBytes(reinterpret_cast&lt;unsigned char*&gt;(const_cast&lt;char *&gt;(binaryfile.c_str())), binaryfile.size());</span><br><span class="line">std::cout &lt;&lt; builderOut.GetSize() &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">auto model = GetTexture(builderOut.GetBufferPointer());</span><br><span class="line"></span><br><span class="line">int outNum = model-&gt;num_textures();</span><br><span class="line">const flatbuffers::Vector&lt;flatbuffers::Offset&lt;TextureData&gt;&gt;* outTex = model-&gt;textures();</span><br><span class="line">TextureData* outTexData = (TextureData *)outTex-&gt;Get(0);</span><br><span class="line">int outSize = outTexData-&gt;image_size();</span><br><span class="line">const flatbuffers::Vector&lt;unsigned char&gt;* outData = outTexData-&gt;image_data();</span><br><span class="line">int x = outData-&gt;Get(5);</span><br><span class="line">int len = outData-&gt;Length();</span><br><span class="line">delete texBuilder;</span><br></pre></td></tr></table></figure>
-<p>上述代码中VerifyTextureBuffer用于验证读取的内存是否为FlatBuffers的内存块，是则返回true，不是则返回false。通过GetTexture获取指针之后，结构体中的变量均可以通过相应方法（各方法名请查看自动生成的头文件）获取。</p>
-<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>利用FlatBuffers来进行数据保存及传输的优点显而易见，它利用自身特殊的编码格式，能一定程度上减少内存的占用，优化读取的性能。更重要的是，对于数据结构的向前向后兼容提供了很好的扩展性，方便又高效：</p>
-<ul>
-<li>要想让数据结构具有可扩展性，需将数据结构定义为table，它是数据扩展的基础，FlatBuffers中的struct类型不支持扩展</li>
-<li>如果想在后续的版本中删除数据结构中的某些字段，只要在将要删除的字段后面添加(deprecated)即可，当然需要保证删除的字段在之前版本的程序中不会引起程序崩溃（该删掉的字段在上一版本的程序中获取到的会是个空指针或空值，只需保证程序在获取到空值或空指针之后不会出现异常即可）</li>
-<li>如果想在后续版本中向数据结构中添加某些字段，需添加到table中最后一个字段的后面，若是想table中随意位置添加字段，需如上面TextureData 的定义，给每个字段指明添加id:n（n从0开始）<br>目前FlatBuffers还不是很完善，碰到问题可以到FlatBuffers Issues Tracker去提交或则寻找答案。</li>
-</ul>
-<p>From: <a href="http://www.jianshu.com/p/6eb04a149cd8" target="_blank" rel="external">http://www.jianshu.com/p/6eb04a149cd8</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="cikp4q30v004773pjhupdd77b" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/11/20/dev/flatbuffers/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a></li></ul>
 
     </footer>
   </div>
@@ -464,6 +424,24 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/02/24/dev/web/fcgi/" class="thumbnail">
+  
+    <span style="background-image:url(/images/other/fcgi.png
+)" alt="FastCGI 工作原理分析" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2016/02/24/dev/web/fcgi/" class="title">FastCGI 工作原理分析</a></p>
+              <p class="item-date"><time datetime="2016-02-24T05:19:56.000Z" itemprop="datePublished">2016-02-24</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -534,23 +512,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/01/06/dev/CPP/c_opensource/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/01/06/dev/CPP/c_opensource/" class="title">阅读源码，推荐 10 个 C 语言开源项目</a></p>
-              <p class="item-date"><time datetime="2016-01-06T01:27:12.000Z" itemprop="datePublished">2016-01-06</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -560,7 +521,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -587,7 +548,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

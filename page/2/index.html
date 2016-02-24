@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        77
+        78
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,83 @@
 
       
       <section id="main">
+      <article id="post-dev/CPP/c_opensource" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/06/dev/CPP/c_opensource/">阅读源码，推荐 10 个 C 语言开源项目</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/01/06/dev/CPP/c_opensource/">
+      <time datetime="2016-01-06T01:27:12.000Z" itemprop="datePublished">2016-01-06</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>1 Webbench</p>
+<p>Webbench是一个在linux下使用的非常简单的网站压测工具。它使用fork()模拟多个客户端同时访问我们设定的URL，测试网站在压力下工作的性能，最多可以模拟3万个并发连接去测试网站的负载能力。Webbench使用C语言编写, 代码实在太简洁，源码加起来不到600行。下载链接：<a href="http://home.tiscali.cz/~cz210552/webbench.html" target="_blank" rel="external">http://home.tiscali.cz/~cz210552/webbench.html</a></p>
+<p>2 Tinyhttpd</p>
+<p>tinyhttpd是一个超轻量型Http Server，使用C语言开发，全部代码只有502行(包括注释)，附带一个简单的Client，可以通过阅读这段代码理解一个 Http Server 的本质。下载链接：<a href="http://sourceforge.net/projects/tinyhttpd/" target="_blank" rel="external">http://sourceforge.net/projects/tinyhttpd/</a></p>
+<p>3 cJSON</p>
+<p>cJSON是C语言中的一个JSON编解码器，非常轻量级，C文件只有500多行，速度也非常理想。</p>
+<p>cJSON也存在几个弱点，虽然功能不是非常强大，但cJSON的小身板和速度是最值得赞赏的。其代码被非常好地维护着，结构也简单易懂，可以作为一个非常好的C语言项目进行学习。项目主页:<a href="http://sourceforge.net/projects/cjson/" target="_blank" rel="external">http://sourceforge.net/projects/cjson/</a></p>
+<p>4 CMockery</p>
+<p>cmockery是google发布的用于C单元测试的一个轻量级的框架。它很小巧，对其他开源包没有依赖，对被测试代码侵入性小。cmockery的源代码行数不到3K，你阅读一下will_return和mock的源代码就一目了然了。</p>
+<p>主要特点：</p>
+<p>免费且开源，google提供技术支持；<br>轻量级的框架，使测试更加快速简单；<br>避免使用复杂的编译器特性，对老版本的编译器来讲，兼容性好;<br>并不强制要求待测代码必须依赖C99标准，这一特性对许多嵌入式系统的开发很有用<br>下载链接：<a href="http://code.google.com/p/cmockery/downloads/list" target="_blank" rel="external">http://code.google.com/p/cmockery/downloads/list</a></p>
+<p>5 Libev</p>
+<p>libev是一个开源的事件驱动库，基于epoll，kqueue等OS提供的基础设施。其以高效出名，它可以将IO事件，定时器，和信号统一起来，统一放在事件处理这一套框架下处理。基于Reactor模式，效率较高，并且代码精简（4.15版本8000多行），是学习事件驱动编程的很好的资源。下载链接：<a href="http://software.schmorp.de/pkg/libev.html" target="_blank" rel="external">http://software.schmorp.de/pkg/libev.html</a></p>
+<p>6 Memcached</p>
+<p>Memcached 是一个高性能的分布式内存对象缓存系统，用于动态Web应用以减轻数据库负载。它通过在内存中缓存数据和对象来减少读取数据库的次数，从而提供动态数据库驱动网站的速度。Memcached 基于一个存储键/值对的 hashmap。Memcached-1.4.7的代码量还是可以接受的，只有10K行左右。下载地址：<a href="http://memcached.org/" target="_blank" rel="external">http://memcached.org/</a></p>
+<p>7 Lua</p>
+<p>Lua很棒，Lua是巴西人发明的，这些都令我不爽，但是还不至于脸红，最多眼红。</p>
+<p>让我脸红的是Lua的源代码，百分之一百的ANSI C，一点都不掺杂。在任何支持ANSI C编译器的平台上都可以轻松编译通过。我试过，真是一点废话都没有。Lua的代码数量足够小，5.1.4仅仅1.5W行，去掉空白行和注释估计能到1W行。下载地址：<a href="http://www.lua.org/" target="_blank" rel="external">http://www.lua.org/</a></p>
+<p>8 SQLite</p>
+<p>SQLite是一个开源的嵌入式关系数据库，实现自包容、零配置、支持事务的SQL数据库引擎。 其特点是高度便携、使用方便、结构紧凑、高效、可靠。足够小，大致3万行C代码，250K。 下载地址：<a href="http://www.sqlite.org/" target="_blank" rel="external">http://www.sqlite.org/</a> 。</p>
+<p>9 UNIX v6</p>
+<p>UNIX V6 的内核源代码包括设备驱动程序在内 约有1 万行，这个数量的源代码，初学者是能够充分理解的。有一种说法是一个人所能理解的代码量上限为1 万行，UNIX V6的内核源代码从数量上看正好在这个范围之内。看到这里，大家是不是也有“如果只有1万行的话没准儿我也能学会”的想法呢？</p>
+<p>另一方面，最近的操作系统，例如Linux 最新版的内核源代码据说超过了1000 万行。就算不是初学者，想完全理解全部代码基本上也是不可能的。下载地址：<a href="http://minnie.tuhs.org/cgi-bin/utree.pl?file=V6" target="_blank" rel="external">http://minnie.tuhs.org/cgi-bin/utree.pl?file=V6</a></p>
+<p>10 NETBSD</p>
+<p>NetBSD是一个免费的，具有高度移植性的 UNIX-like 操作系统，是现行可移植平台最多的操作系统，可以在许多平台上执行，从 64bit alpha 服务器到手持设备和嵌入式设备。NetBSD计划的口号是：”Of course it runs NetBSD”。它设计简洁，代码规范，拥有众多先进特性，使得它在业界和学术界广受好评。由于简洁的设计和先进的特征，使得它在生产和研究方面，都有卓越的表现，而且它也有受使用者支持的完整的源代码。许多程序都可以很容易地通过NetBSD Packages Collection获得。下载地址：<br><a href="http://www.netbsd.org/" target="_blank" rel="external">http://www.netbsd.org/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/01/06/dev/CPP/c_opensource/" data-id="cil0fy6cz0059fxpjxobjvuzi" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/01/06/dev/CPP/c_opensource/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/lib/big_data_lib2" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -469,7 +546,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib2/" data-id="cikp4q32x006473pjslayn55q" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib2/" data-id="cil0fy6dr0066fxpjvtn68n6u" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib2/#ds-thread" class="article-comment-link">评论</a>
       
@@ -831,7 +908,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib/" data-id="cikp4q330006673pj6xcu0295" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib/" data-id="cil0fy6ds0068fxpjat42g6ks" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib/#ds-thread" class="article-comment-link">评论</a>
       
@@ -936,7 +1013,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/java_ml_lib/" data-id="cikp4q32p005y73pjo3lrxs56" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/java_ml_lib/" data-id="cil0fy6dk0060fxpjmf331b1s" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/05/algo/lib/java_ml_lib/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1020,107 +1097,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/graph/textrank/" data-id="cikp4q335006a73pjr378zw2l" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/05/algo/graph/textrank/" data-id="cil0fy6dv006cfxpjpq21b805" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/05/algo/graph/textrank/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pagerank/">pagerank</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/python/python_tools" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/28/dev/python/python_tools/">Python 工具</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/12/28/dev/python/python_tools/">
-      <time datetime="2015-12-28T02:19:56.000Z" itemprop="datePublished">2015-12-28</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="u5305_u7BA1_u7406"><a href="#u5305_u7BA1_u7406" class="headerlink" title="包管理"></a>包管理</h2><hr>
-<p>Python世界最棒的地方之一，就是大量的第三方程序包。同样，管理这些包也非常容易。按照惯例，会在 requirements.txt 文件中列出项目所需要的包。每个包占一行，通常还包含版本号。这里有一个例子，本博客使用Pelican：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pelican==<span class="number">3.3</span></span><br><span class="line">Markdown</span><br><span class="line">pelican-extended-sitemap==<span class="number">1.0</span><span class="number">.0</span></span><br></pre></td></tr></table></figure></p>
-<p>Python 程序包有一个缺陷是，它们默认会进行全局安装。我们将要使用一个工具，使我们每个项目都有一个独立的环境，这个工具叫virtualenv。我们同样要安装一个更高级的包管理工具，叫做pip，他可以和virtualenv配合工作。</p>
-<p>首先，我们需要安装pip。大多数python安装程序已经内置了easy_install（python默认的包管理工具），所以我们就使用easy_install pip来安装pip。这应该是你最后一次使用easy_install 了。如果你并没有安装easy_install ，在linux系统中，貌似从python-setuptools 包中可以获得。</p>
-<p>如果你使用的Python版本高于等于3.3， 那么Virtualenv 已经是标准库的一部分了，所以没有必要再去安装它了。</p>
-<p>下一步，你希望安装virtualenv和virtualenvwrapper。Virtualenv使你能够为每个项目创造一个独立的环境。尤其是当你的不同项目使用不同版本的包时，这一点特别有用。Virtualenv wrapper 提供了一些不错的脚本，可以让一些事情变得容易。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pip install virtualenvwrapper</span><br></pre></td></tr></table></figure>
-<p>当virtualenvwrapper安装后，它会把virtualenv列为依赖包，所以会自动安装。</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">打开一个新的<span class="keyword">shell</span>，输入mkvirtualenv <span class="keyword">test</span> 。如果你打开另外一个<span class="keyword">shell</span>，则你就不在这个virtualenv中了，你可以通过workon <span class="keyword">test</span> 来启动。如果你的工作完成了，可以使用deactivate 来停用。</span><br></pre></td></tr></table></figure>
-<h2 id="IPython"><a href="#IPython" class="headerlink" title="IPython"></a>IPython</h2><hr>
-<p>IPython是标准Python交互式的编程环境的一个替代品，支持自动补全，文档快速访问，以及标准交互式编程环境本应该具备的很多其他功能。</p>
-<p>当你处在一个虚拟环境中的时候，可以很简单的使用pip install ipython 来进行安装，在命令行中使用ipython 来启动</p>
-<h2 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h2><hr>
-<p>我推荐使用nose或是py.test。我大部分情况下用nose。它们基本上是类似的。我将讲解nose的一些细节。</p>
-<p>这里有一个人为创建的可笑的使用nose进行测试的例子。在一个以test<em>开头的文件中的所有以test</em>开头的函数，都会被调用：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_equality</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">assert</span> <span class="keyword">True</span> == <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
-<p>不出所料，当运行nose的时候，我们的测试没有通过。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ nosetests              </span><br><span class="line">F</span><br><span class="line">======================================================================</span><br><span class="line">FAIL: test_nose_example.test_equality</span><br><span class="line"><span class="comment">----------------------------------------------------------------------</span></span><br><span class="line">Traceback (most recent <span class="operator"><span class="keyword">call</span> <span class="keyword">last</span>):</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/Users/jhaddad/.virtualenvs/test/lib/python2.7/site-packages/nose/case.py"</span>, line <span class="number">197</span>, <span class="keyword">in</span> runTest</span><br><span class="line">    <span class="keyword">self</span>.<span class="keyword">test</span>(*<span class="keyword">self</span>.arg)</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/Users/jhaddad/.virtualenvs/test/src/test_nose_example.py"</span>, line <span class="number">3</span>, <span class="keyword">in</span> test_equality</span><br><span class="line">    assert <span class="literal">True</span> == <span class="literal">False</span></span><br><span class="line">AssertionError</span><br><span class="line"> </span><br><span class="line"><span class="comment">----------------------------------------------------------------------</span></span></span><br></pre></td></tr></table></figure>
-<p>nose.tools中同样也有一些便捷的方法可以调用</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nose.tools <span class="keyword">import</span> assert_true</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_equality</span><span class="params">()</span>:</span></span><br><span class="line">    assert_true(<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
-<p>如果你想使用更加类似JUnit的方法，也是可以的：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> nose.tools <span class="keyword">import</span> assert_true</span><br><span class="line"><span class="keyword">from</span> unittest <span class="keyword">import</span> TestCase</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span><span class="params">(TestCase)</span>:</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setUp</span><span class="params">(self)</span>:</span> </span><br><span class="line"><span class="comment"># setUp &amp; tearDown are both available</span></span><br><span class="line">        self.blah = <span class="keyword">False</span></span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_blah</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.assertTrue(self.blah)</span><br></pre></td></tr></table></figure>
-<p>开始测试：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ nosetests                            </span><br><span class="line">F</span><br><span class="line">======================================================================</span><br><span class="line">FAIL: test_blah (test_nose_example.ExampleTest)</span><br><span class="line"><span class="comment">----------------------------------------------------------------------</span></span><br><span class="line">Traceback (most recent <span class="operator"><span class="keyword">call</span> <span class="keyword">last</span>):</span><br><span class="line">  <span class="keyword">File</span> <span class="string">"/Users/jhaddad/.virtualenvs/test/src/test_nose_example.py"</span>, line <span class="number">11</span>, <span class="keyword">in</span> test_blah</span><br><span class="line">    <span class="keyword">self</span>.assertTrue(<span class="keyword">self</span>.blah)</span><br><span class="line">AssertionError: <span class="literal">False</span> <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">true</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">----------------------------------------------------------------------</span></span><br><span class="line">Ran <span class="number">1</span> <span class="keyword">test</span> <span class="keyword">in</span> <span class="number">0.003</span>s</span><br><span class="line"> </span><br><span class="line"><span class="keyword">FAILED</span> (failures=<span class="number">1</span>)</span></span><br></pre></td></tr></table></figure>
-<p>卓越的Mock库包含在Python 3 中，但是如果你在使用Python 2，可以使用pypi来获取。这个测试将进行一个远程调用，但是这次调用将耗时10s。这个例子显然是人为捏造的。我们使用mock来返回样本数据而不是真正的进行调用。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> mock</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> mock <span class="keyword">import</span> patch</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sweetness</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">slow_remote_call</span><span class="params">(self)</span>:</span></span><br><span class="line">        sleep(<span class="number">10</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"some_data"</span> </span><br><span class="line"><span class="comment"># lets pretend we get this back from our remote api call</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_long_call</span><span class="params">()</span>:</span></span><br><span class="line">    s = Sweetness()</span><br><span class="line">    result = s.slow_remote_call()</span><br><span class="line">    <span class="keyword">assert</span> result == <span class="string">"some_data"</span></span><br></pre></td></tr></table></figure>
-<p>当然，我们的测试需要很长的时间。</p>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">test</span>)jhaddad@jons-<span class="keyword">mac</span>-<span class="keyword">pro</span> ~VIRTUAL_ENV/src$ nosetests test_mock.py            </span><br><span class="line">Ran 1 <span class="keyword">test</span> <span class="keyword">in</span> 10.001s</span><br><span class="line"> </span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
-<p>太慢了！因此我们会问自己，我们在测试什么？我们需要测试远程调用是否有用，还是我们要测试当我们获得数据后要做什么？大多数情况下是后者。让我们摆脱这个愚蠢的远程调用吧：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> mock</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> mock <span class="keyword">import</span> patch</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sweetness</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">slow_remote_call</span><span class="params">(self)</span>:</span></span><br><span class="line">        sleep(<span class="number">10</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"some_data"</span> </span><br><span class="line"><span class="comment"># lets pretend we get this back from our remote api call</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_long_call</span><span class="params">()</span>:</span></span><br><span class="line">    s = Sweetness()</span><br><span class="line">    <span class="keyword">with</span> patch.object(s, <span class="string">"slow_remote_call"</span>, return_value=<span class="string">"some_data"</span>):</span><br><span class="line">        result = s.slow_remote_call()</span><br><span class="line">    <span class="keyword">assert</span> result == <span class="string">"some_data"</span></span><br></pre></td></tr></table></figure>
-<p>好吧，让我们再试一次：</p>
-<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL<span class="emphasis">_ENV/src$ nosetests test_</span>mock.py                     </span><br><span class="line"><span class="header">.</span><br><span class="line">----------------------------------------------------------------------</span></span><br><span class="line">Ran 1 test in 0.001s</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
-<p>好多了。记住，这个例子进行了荒唐的简化。就我个人来讲，我仅仅会忽略从远程系统的调用，而不是我的数据库调用。</p>
-<p>nose-progressive是一个很好的模块，它可以改善nose的输出，让错误在发生时就显示出来，而不是留到最后。如果你的测试需要花费一定的时间，那么这是件好事。<br>pip install nose-progressive 并且在你的nosetests中添加–with-progressive</p>
-<h2 id="u8C03_u8BD5"><a href="#u8C03_u8BD5" class="headerlink" title="调试"></a>调试</h2><hr>
-<p>iPDB是一个极好的工具，我已经用它查出了很多匪夷所思的bug。pip install ipdb 安装该工具，然后在你的代码中import ipdb; ipdb.set_trace()，然后你会在你的程序运行<br>时，获得一个很好的交互式提示。它每次执行程序的一行并且检查变量。</p>
-<h2 id="Gevent"><a href="#Gevent" class="headerlink" title="Gevent"></a>Gevent</h2><hr>
-<p>Gevent 是一个很好的库，封装了Greenlets，使得Python具备了异步调用的功能。是的，非常棒。我最爱的功能是Pool，它抽象了异步调用部分，给我们提供了可以简单使用的途径，一个异步的map()函数</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey</span><br><span class="line">monkey.patch_all()</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep, time</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_url</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Fetching %s"</span> % url</span><br><span class="line">    sleep(<span class="number">10</span>)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"Done fetching %s"</span> % url</span><br><span class="line"> </span><br><span class="line"><span class="keyword">from</span> gevent.pool <span class="keyword">import</span> Pool</span><br><span class="line"> </span><br><span class="line">urls = [<span class="string">"http://test.com"</span>, <span class="string">"http://bacon.com"</span>, <span class="string">"http://eggs.com"</span>]</span><br><span class="line"> </span><br><span class="line">p = Pool(<span class="number">10</span>)</span><br><span class="line"> </span><br><span class="line">start = time()</span><br><span class="line">p.map(fetch_url, urls)</span><br><span class="line"><span class="keyword">print</span> time() - start</span><br></pre></td></tr></table></figure>
-<p>非常重要的是，需要注意这段代码顶部对gevent monkey进行的补丁，如果没有它的话，就不能正确的运行。如果我们让Python连续调用 fetch_url 3次，通常我们期望这个过程花费30秒时间。使用gevent：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(test)jhaddad<span class="annotation">@jons</span>-mac-pro ~VIRTUAL_ENV/src$ python g.py                                                                                                                                    </span><br><span class="line">Fetching <span class="string">http:</span><span class="comment">//test.com</span></span><br><span class="line">Fetching <span class="string">http:</span><span class="comment">//bacon.com</span></span><br><span class="line">Fetching <span class="string">http:</span><span class="comment">//eggs.com</span></span><br><span class="line">Done fetching <span class="string">http:</span><span class="comment">//test.com</span></span><br><span class="line">Done fetching <span class="string">http:</span><span class="comment">//bacon.com</span></span><br><span class="line">Done fetching <span class="string">http:</span><span class="comment">//eggs.com</span></span><br><span class="line"><span class="number">10.001791954</span></span><br></pre></td></tr></table></figure></p>
-<p>如果你有很多数据库调用或是从远程URLs获取，这是非常有用的。我并不是很喜欢回调函数，所以这一抽象对我来说效果很好。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/28/dev/python/python_tools/" data-id="cikp4q2z4003373pj6vh4y9ym" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/12/28/dev/python/python_tools/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
 
     </footer>
   </div>
@@ -1142,6 +1124,24 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/02/24/dev/web/fcgi/" class="thumbnail">
+  
+    <span style="background-image:url(/images/other/fcgi.png
+)" alt="FastCGI 工作原理分析" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2016/02/24/dev/web/fcgi/" class="title">FastCGI 工作原理分析</a></p>
+              <p class="item-date"><time datetime="2016-02-24T05:19:56.000Z" itemprop="datePublished">2016-02-24</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -1212,23 +1212,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/01/06/dev/CPP/c_opensource/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/01/06/dev/CPP/c_opensource/" class="title">阅读源码，推荐 10 个 C 语言开源项目</a></p>
-              <p class="item-date"><time datetime="2016-01-06T01:27:12.000Z" itemprop="datePublished">2016-01-06</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1238,7 +1221,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -1265,7 +1248,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
