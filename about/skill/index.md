@@ -131,7 +131,15 @@ date: 2015-12-11 15:53:16
       * CLARANS聚类算法
      * 层次聚类
       * CURE聚类
-      * BIRCH聚类 
+      * BIRCH聚类
+     * 密度聚类
+      * DBSCAN
+      * OPTICS
+     * 网格聚类
+      * STING聚类
+      * WaveCluster
+      * CLIQUE
+     * 神经网络聚类-SOM      
  * 通用算法
    * Hash
      * Murmurhash
