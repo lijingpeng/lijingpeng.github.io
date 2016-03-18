@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        81
+        82
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,85 @@
 
       
       <section id="main">
+      <article id="post-algo/lib/dl_lib" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/16/algo/lib/dl_lib/">深度学习框架的评估与比较</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/02/16/algo/lib/dl_lib/">
+      <time datetime="2016-02-16T08:07:12.000Z" itemprop="datePublished">2016-02-16</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>人工智能无疑是计算机世界的前沿领域，而深度学习无疑又是人工智能的研究热点，那么现在都有哪些开源的深度学习工具，他们各自的优缺点又是什么呢？最近zer0n和bamos在GitHub上发表了一篇文章，对Caffe、CNTK、TensorFlow、Theano和Torch等深度学习工具从网络、模型能力、接口、部署、性能、架构、生态系统、跨平台等方面做了比较。</p>
+<h2 id="u7F51_u7EDC_u548C_u6A21_u578B_u80FD_u529B"><a href="#u7F51_u7EDC_u548C_u6A21_u578B_u80FD_u529B" class="headerlink" title="网络和模型能力"></a>网络和模型能力</h2><p>Caffe可能是第一个主流的工业级深度学习工具，它开始于2013年底,具有出色的卷积神经网络实现。在计算机视觉领域Caffe依然是最流行的工具包，它有很多扩展，但是由于一些遗留的架构问题，它对递归网络和语言建模的支持很差。此外，在Caffe中图层需要使用C++定义，而网络则使用Protobuf定义。</p>
+<p>CNTK由深度学习热潮的发起演讲人创建,目前已经发展成一个通用的、平台独立的深度学习系统。在CNTK中，网络会被指定为向量运算的符号图，运算的组合会形成层。CNTK通过细粒度的构件块让用户不需要使用低层次的语言就能创建新的、复杂的层类型。</p>
+<p>TensorFlow是一个理想的RNN（递归神经网络） API和实现，TensorFlow使用了向量运算的符号图方法，使得新网络的指定变得相当容易，但TensorFlow并不支持双向RNN和3D卷积，同时公共版本的图定义也不支持循环和条件控制，这使得RNN的实现并不理想，因为必须要使用Python循环且无法进行图编译优化。</p>
+<p>Theano支持大部分先进的网络，现在的很多研究想法都来源于Theano，它引领了符号图在编程网络中使用的趋势。Theano的符号API支持循环控制，让RNN的实现更加容易且高效。</p>
+<p>Torch对卷积网络的支持非常好。在TensorFlow和Theano中时域卷积可以通过conv2d来实现，但这样做有点取巧；Torch通过时域卷积的本地接口使得它的使用非常直观。Torch通过很多非官方的扩展支持大量的RNN，同时网络的定义方法也有很多种。但Torch本质上是以图层的方式定义网络的，这种粗粒度的方式使得它对新图层类型的扩展缺乏足够的支持。与Caffe相比，在Torch中定义新图层非常容易，不需要使用C++编程，图层和网络定义方式之间的区别最小。</p>
+<h2 id="u63A5_u53E3"><a href="#u63A5_u53E3" class="headerlink" title="接口"></a>接口</h2><p>Caffe支持pycaffe接口，但这仅仅是用来辅助命令行接口的，而即便是使用pycaffe也必须使用protobuf定义模型。</p>
+<p>CNTK的使用方式与Caffe相似，也是通过指定配置文件并运行命令行，但CNTK没有Python或者任何其他高级语言的接口。</p>
+<p>TensorFlow支持Python和C++两种类型的接口。用户可以在一个相对丰富的高层环境中做实验并在需要本地代码或低延迟的环境中部署模型。</p>
+<p>Theano支持Python接口。</p>
+<p>Torch运行在LuaJIT上，与C++、C#以及Java等工业语言相比速度非常快，用户能够编写任意类型的计算，不需要担心性能，唯一的问题就是Lua并不是主流的语言。</p>
+<h2 id="u6A21_u578B_u90E8_u7F72"><a href="#u6A21_u578B_u90E8_u7F72" class="headerlink" title="模型部署"></a>模型部署</h2><p>Caffe是基于C++的，因此可以在多种设备上编译，具有跨平台性，在部署方面是最佳选择。</p>
+<p>CNTK与Caffe一样也是基于C++并且跨平台的，大部分情况下部署非常简单。但是它不支持ARM架构，这限制了它在移动设备上的能力。</p>
+<p>TensorFlow支持C++接口，同时由于它使用了Eigen而不是BLAS类库，所以能够基于ARM架构编译和优化。TensorFlow的用户能够将训练好的模型部署到多种设备上，不需要实现单独的模型解码器或者加载Python/LuaJIT解释器。但是TensorFlow并不支持Windows，因此其模型无法部署到Windows设备上。</p>
+<p>Theano缺少底层的接口，并且其Python解释器也很低效，对工业用户而言缺少吸引力。虽然对大的模型其Python开销并不 大，但它的限制摆在那，唯一的亮点就是它跨平台，模型能够部署到Windows环境上。</p>
+<p>Torch的模型运行需要LuaJIT的支持，虽然这样做对性能的影响并不大，但却对集成造成了很大的障碍，使得它的吸引力不如Caffe/CNTK/TensorFlow等直接支持C++的框架。</p>
+<h2 id="u6027_u80FD"><a href="#u6027_u80FD" class="headerlink" title="性能"></a>性能</h2><p>在单GPU的场景下，所有这些工具集都调用了cuDNN，因此只要外层的计算或者内存分配差异不大其表现都差不多。本文的性能测试是基于Soumith@FB的ConvNets基准测试来做的。<br>Caffe 简单快速。</p>
+<p>CNTK 简单快速。</p>
+<p>TensorFlow仅使用了cuDNN v2，但即使如此它的性能依然要比同样使用cuDNN v2的Torch要慢1.5倍，并且在批大小为128时训练GoogleNet还出现了内存溢出的问题。</p>
+<p>Theano在大型网络上的性能与Torch7不相上下。但它的主要问题是启动时间特别长，因为它需要将C/CUDA代码编译成二进制，而TensorFlow并没有这个问题。此外，Theano的导入也会消耗时间，并且在导入之后无法摆脱预配置的设备（例如GPU0）。</p>
+<p>Torch非常好，没有TensorFlow和Theano的问题。<br>另外，在多GPU方面，CNTK相较于其他的深度学习工具包表现更好，它实现了1-bit SGD和自适应的minibatching。</p>
+<h2 id="u67B6_u6784"><a href="#u67B6_u6784" class="headerlink" title="架构"></a>架构</h2><p>Caffe的架构在现在看来算是平均水准，它的主要痛点是图层需要使用C++定义，而模型需要使用protobuf定义。另外，如果想要支持CPU和GPU，用户还必须实现额外的函数，例如Forward_gpu和Backward_gpu；对于自定义的层类型，还必须为其分配一个int类型的id，并将其添加到proto文件中。</p>
+<p>TensorFlow的架构清晰，采用了模块化设计，支持多种前端和执行平台。</p>
+<p>Theano 的架构比较变态，它的整个代码库都是Python的，就连C/<br>CUDA代码也要被打包为Python字符串，这使得它难以导航、调试、重构和维护。</p>
+<p>Torch7和nn类库拥有清晰的设计和模块化的接口。</p>
+<h2 id="u8DE8_u5E73_u53F0"><a href="#u8DE8_u5E73_u53F0" class="headerlink" title="跨平台"></a>跨平台</h2><p>Caffe、CNTK和Theano都能在所有的系统上运行，而TensorFlow和Torch则不支持Windows。</p>
+<p>转自：<a href="http://www.linuxeden.com/html/news/20160128/164564.html" target="_blank" rel="external">http://www.linuxeden.com/html/news/20160128/164564.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/02/16/algo/lib/dl_lib/" data-id="cilxtsd4x006ewfjinc5pbd5o" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/02/16/algo/lib/dl_lib/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-system/crontab" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -164,7 +243,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/02/02/system/crontab/" data-id="cilxtl9ju000ruijio91dk7fh" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/02/02/system/crontab/" data-id="cilxtsd13000rwfji5pgvmh5g" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/02/02/system/crontab/#ds-thread" class="article-comment-link">评论</a>
       
@@ -276,7 +355,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/07/internet/https/" data-id="cilxtl9kr0023uijiwc2nk4b7" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/07/internet/https/" data-id="cilxtsd210023wfji0tyq1rdp" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/07/internet/https/#ds-thread" class="article-comment-link">评论</a>
       
@@ -692,7 +771,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/06/algo/lib/big_data_resource/" data-id="cilxtl9nj006duiji69dwrlmm" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/06/algo/lib/big_data_resource/" data-id="cilxtsd4y006gwfjitg7fnci4" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/06/algo/lib/big_data_resource/#ds-thread" class="article-comment-link">评论</a>
       
@@ -769,366 +848,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/06/dev/CPP/c_opensource/" data-id="cilxtl9mw005guijia5429vru" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/06/dev/CPP/c_opensource/" data-id="cilxtsd4a005jwfjinlz2s1t8" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/06/dev/CPP/c_opensource/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/lib/big_data_lib2" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/05/algo/lib/big_data_lib2/">开源大数据处理工具汇总（下）</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/01/05/algo/lib/big_data_lib2/">
-      <time datetime="2016-01-05T08:38:12.000Z" itemprop="datePublished">2016-01-05</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1321.jpg" alt="大数据"></p>
-<p>接上一部分：<a href="http://www.36dsj.com/archives/24852" title="一共81个，开源大数据处理工具汇总（上） | 36大数据" target="_blank" rel="external">一共81个，开源大数据处理工具汇总（上）</a>，第二部分主要收集整理的内容主要有日志收集系统、消息系统、分布式服务、集群管理、RPC、基础设施、搜索引擎、Iaas和监控管理等大数据开源工具。</p>
-<h1 id="u65E5_u5FD7_u6536_u96C6_u7CFB_u7EDF"><a href="#u65E5_u5FD7_u6536_u96C6_u7CFB_u7EDF" class="headerlink" title="<strong>日志收集系统</strong>"></a><strong>日志收集系统</strong></h1><p><span style="color: #f73100;"><strong>一、Facebook Scribe</strong></span></p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1107.jpg" alt="scribe"></p>
-<p><strong>贡献者</strong>：Facebook</p>
-<p><strong>简介</strong>：Scribe是Facebook开源的日志收集系统，在Facebook内部已经得到大量的应用。它能够从各种日志源上收集日志，存储到一个中央存储系统（可以是NFS，分布式文件系统等）上，以便于进行集中统计分析处理。它为日志的“分布式收集，统一处理”提供了一个可扩展的，高容错的方案。当中央存储系统的网络或者机器出现故障时，scribe会将日志转存到本地或者另一个位置，当中央存储系统恢复后，scribe会将转存的日志重新传输给中央存储系统。其通常与Hadoop结合使用，scribe用于向HDFS中push日志，而Hadoop通过MapReduce作业进行定期处理。</p>
-<p><strong>Scribe的系统架构</strong></p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/298-600x234.jpg" alt="scribe"></p>
-<p><strong>代码托管</strong>：<a href="https://github.com/facebook/scribe" target="_blank" rel="external">https://github.com/facebook/scribe</a></p>
-<p><strong><span style="color: #f73100;">二、Cloudera Flume</span></strong><img src="http://www.36dsj.com/wp-content/uploads/2015/03/348.jpg" alt="Cloudera Flume"></p>
-<p><strong>贡献者</strong>：<a href="http://www.36dsj.com/archives/tag/cloudera" target="_blank" rel="external">Cloudera</a></p>
-<p><strong>简介：</strong>Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统，Flume支持在日志系统中定制各类数据发送方，用于收集数据；同时，Flume提供对数据进行简单处理，并写到各种数据接受方（可定制）的能力。</p>
-<p>Flume提供了从console（控制台）、RPC（Thrift-RPC）、text（文件）、tail（UNIX tail）、syslog（syslog日志系统，支持TCP和UDP等2种模式），exec（命令执行）等数据源上收集数据的能力。</p>
-<p>当前Flume有两个版本Flume 0.9X版本的统称Flume-og，Flume1.X版本的统称Flume-ng。由于Flume-ng经过重大重构，与Flume-og有很大不同，使用时请注意区分。</p>
-<p><strong>Cloudera Flume构架</strong>：</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/427-414x429.jpg" alt="Cloudera Flume"></p>
-<p><strong>官网</strong>：<a href="http://flume.apache.org/" target="_blank" rel="external">http://flume.apache.org/</a></p>
-<p><strong><span style="color: #f73100;">三、logstash</span></strong></p>
-<p><strong>简介</strong>：logstash 是一个应用程序日志、事件的传输、处理、管理和搜索的平台。你可以用它来统一对应用程序日志进行收集管理，提供 Web 接口用于查询和统计。他可以对你的日志进行收集、分析，并将其存储供以后使用（如，搜索），您可以使用它。说到搜索，logstash带有一个web界面，搜索和展示所有日志。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/527-600x265.jpg" alt="logstash"></p>
-<p><strong>官网</strong>：<a href="http://www.logstash.net/" target="_blank" rel="external">http://www.logstash.net/</a></p>
-<p><span style="color: #f73100;"><strong>四、kibana</strong></span></p>
-<p><strong>简介</strong>：Kibana 是一个为 Logstash 和 ElasticSearch 提供的日志分析的 Web 接口。可使用它对日志进行高效的搜索、可视化、分析等各种操作。kibana 也是一个开源和免费的工具，他可以帮助您汇总、分析和搜索重要数据日志并提供友好的web界面。他可以为 Logstash 和 ElasticSearch 提供的日志分析的 Web 界面。</p>
-<p><strong>主页</strong>： <a href="http://kibana.org/" target="_blank" rel="external">http://kibana.org/</a></p>
-<p><strong>代码托管</strong>： <a href="https://github.com/rashidkpc/Kibana/downloads" target="_blank" rel="external">https://github.com/rashidkpc/Kibana/downloads</a></p>
-<h1 id="u6D88_u606F_u7CFB_u7EDF"><a href="#u6D88_u606F_u7CFB_u7EDF" class="headerlink" title="<strong>消息系统</strong>"></a><strong>消息系统</strong></h1><p><strong><span style="color: #f75402;">一、StormMQ</span></strong></p>
-<p><strong>简介</strong>：MQMessageQueue消息队列产品 StormMQ，是一种服务程序。</p>
-<p><strong>官网</strong>：<a href="http://stormmq.com/" target="_blank" rel="external">http://stormmq.com/</a></p>
-<p><span style="color: #f75402;"><strong>二、ZeroMQ</strong></span></p>
-<p><strong>简介</strong>：这是个类似于Socket的一系列接口，他跟Socket的区别是：普通的socket是端到端的（1:1的关系），而ZMQ却是可以N：M 的关系，人们对BSD套接字的了解较多的是点对点的连接，点对点连接需要显式地建立连接、销毁连接、选择协议（TCP/UDP）和处理错误等，而ZMQ屏蔽了这些细节，让你的网络编程更为简单。ZMQ用于node与node间的通信，node可以是主机或者是进程。</p>
-<p>引用官方的说法： “ZMQ(以下ZeroMQ简称ZMQ)是一个简单好用的传输层，像框架一样的一个socket library，他使得Socket编程更加简单、简洁和性能更高。是一个消息处理队列库，可在多个线程、内核和主机盒之间弹性伸缩。ZMQ的明确目标是“成为标准网络协议栈的一部分，之后进入Linux内核”。现在还未看到它们的成功。但是，它无疑是极具前景的、并且是人们更加需要的“传统”BSD套接字之上的一 层封装。ZMQ让编写高性能网络应用程序极为简单和有趣。”</p>
-<p><strong>官网</strong>：<a href="http://zeromq.org/" target="_blank" rel="external">http://zeromq.org/</a></p>
-<p><strong><span style="color: #f75402;">三、RabbitMQ</span></strong></p>
-<p><strong>简介：</strong>RabbitMQ是一个受欢迎的消息代理，通常用于应用程序之间或者程序的不同组件之间通过消息来进行集成。本文简单介绍了如何使用 RabbitMQ，假定你已经配置好了rabbitmq服务器。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/624.jpg" alt="RabbitMQ"></p>
-<p>RabbitMQ是用Erlang，对于主要的编程语言都有驱动或者客户端。我们这里要用的是Java，所以先要获得Java客户端。</p>
-<p>像RabbitMQ这样的消息代理可用来模拟不同的场景，例如点对点的消息分发或者订阅/推送。我们的程序足够简单，有两个基本的组件，一个生产者用于产生消息，还有一个消费者用来使用产生的消息。</p>
-<p><strong>官网</strong>：<a href="https://www.rabbitmq.com/" target="_blank" rel="external">https://www.rabbitmq.com/</a></p>
-<p><strong><span style="color: #f75402;">四、Apache ActiveMQ</span></strong></p>
-<p><strong>简介：</strong>ActiveMQ 是Apache出品，最流行的，能力强劲的开源消息总线。ActiveMQ 是一个完全支持JMS1.1和J2EE 1.4规范的 JMS Provider实现，尽管JMS规范出台已经是很久的事情了，但是JMS在当今的J2EE应用中间仍然扮演着特殊的地位。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/726.jpg" alt="Apache ActiveMQ"></p>
-<p><strong>特性：</strong></p>
-<p>⒈ 多种语言和协议编写客户端。语言: Java,C,C++,C#,Ruby,Perl,Python,PHP。应用协议： OpenWire,Stomp REST,WS Notification,XMPP,AMQP</p>
-<p>⒉ 完全支持JMS1.1和J2EE 1.4规范 （持久化，XA消息，事务)</p>
-<p>⒊ 对Spring的支持，ActiveMQ可以很容易内嵌到使用Spring的系统里面去，而且也支持Spring2.0的特性</p>
-<p>⒋ 通过了常见J2EE服务器（如 Geronimo,JBoss 4,GlassFish,WebLogic)的测试，其中通过JCA 1.5 resource adaptors的配置，可以让ActiveMQ可以自动的部署到任何兼容J2EE 1.4 商业服务器上</p>
-<p>⒌ 支持多种传送协议：in-VM,TCP,SSL,NIO,UDP,JGroups,JXTA</p>
-<p>⒍ 支持通过JDBC和journal提供高速的消息持久化</p>
-<p>⒎ 从设计上保证了高性能的集群，客户端-服务器，点对点</p>
-<p>⒏ 支持Ajax</p>
-<p>⒐ 支持与Axis的整合</p>
-<p>⒑ 可以很容易得调用内嵌JMS provider，进行测试</p>
-<p><strong>官网</strong>：<a href="http://activemq.apache.org/" target="_blank" rel="external">http://activemq.apache.org/</a></p>
-<p><strong><span style="color: #f75402;">五、Jafka</span></strong></p>
-<p><strong>贡献者</strong>：LinkedIn</p>
-<p><span style="color: #f75402;"><strong>简介：</strong></span>Jafka 是一个开源的、高性能的、跨语言分布式消息系统，使用GitHub托管。Jafka 最早是由Apache孵化的Kafka（由LinkedIn捐助给Apache）克隆而来。由于是一个开放式的数据传输协议，因此除了Java开发语言受到支持，Python、Ruby、C、C++等其他语言也能够很好的得到支持。</p>
-<p><strong>特性：</strong></p>
-<p>1、消息持久化非常快，服务端存储消息的开销为O(1)，并且基于文件系统，能够持久化TB级的消息而不损失性能。</p>
-<p>2、吞吐量取决于网络带宽。</p>
-<p>3、完全的分布式系统，broker、producer、consumer都原生自动支持分布式。自动实现复杂均衡。</p>
-<p>4、内核非常小，整个系统（包括服务端和客户端）只有一个272KB的jar包，内部机制也不复杂，适合进行内嵌或者二次开发 。整个服务端加上依赖组件共3.5MB。</p>
-<p>5、消息格式以及通信机制非常简单，适合进行跨语言开发。目前自带的Python3.x的客户端支持发送消息和接收消息。</p>
-<p><strong>官网</strong>：<a href="http://kafka.apache.org/" target="_blank" rel="external">http://kafka.apache.org/</a></p>
-<p><strong><span style="color: #f75402;">六、Apache Kafka</span></strong></p>
-<p><strong>贡献者</strong>：LinkedIn</p>
-<p><strong>简介</strong>：Apache Kafka是由Apache软件基金会开发的一个开源消息系统项目，由Scala写成。Kafka最初是由LinkedIn开发，并于2011年初开源。2012年10月从Apache Incubator毕业。该项目的目标是为处理实时数据提供一个统一、高通量、低等待的平台。</p>
-<p>Kafka是一个分布式的、分区的、多复本的日志提交服务。它通过一种独一无二的设计提供了一个消息系统的功能。</p>
-<p>Kafka集群可以在一个指定的时间内保持所有发布上来的消息，不管这些消息有没有被消费。打个比方，如果这个时间设置为两天，那么在消息发布的两天以内，这条消息都是可以被消费的，但是在两天后，这条消息就会被系统丢弃以释放空间。Kafka的性能不会受数据量的大小影响，因此保持大量的数据不是一个问题。</p>
-<p><strong>官网</strong>：<a href="http://kafka.apache.org/" target="_blank" rel="external">http://kafka.apache.org/</a></p>
-<h1 id="u5206_u5E03_u5F0F_u670D_u52A1"><a href="#u5206_u5E03_u5F0F_u670D_u52A1" class="headerlink" title="<strong>分布式服务</strong>"></a><strong>分布式服务</strong></h1><p><strong><span style="color: #f75402;">一、ZooKeeper</span></strong></p>
-<p><strong>贡献者：</strong>Google</p>
-<p><strong>简介：</strong>ZooKeeper是一个分布式的，开放源码的分布式应用程序协调服务，是Google的Chubby一个开源的实现，是Hadoop和Hbase的重要组件。它是一个为分布式应用提供一致性服务的软件，提供的功能包括：配置维护、名字服务、分布式同步、组服务等。</p>
-<p>ZooKeeper是以Fast Paxos算法为基础的，paxos算法存在活锁的问题，即当有多个proposer交错提交时，有可能互相排斥导致没有一个proposer能提交成功，而Fast Paxos作了一些优化，通过选举产生一个leader，只有leader才能提交propose，具体算法可见Fast Paxos。因此，要想弄懂ZooKeeper首先得对Fast Paxos有所了解。</p>
-<p>架构：</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/824-600x244.jpg" alt="zookeeper"></p>
-<p>官网：<a href="http://zookeeper.apache.org/" target="_blank" rel="external">http://zookeeper.apache.org/</a></p>
-<p>&nbsp;</p>
-<h1 id="RPC"><a href="#RPC" class="headerlink" title="<strong>RPC</strong>"></a><strong>RPC</strong></h1><p>（Remote Procedure Call Protocol）——远程过程调用协议</p>
-<p>一、Apache Avro</p>
-<p>简介：Apache Avro是Hadoop下的一个子项目。它本身既是一个序列化框架，同时也实现了RPC的功能。Avro官网描述Avro的特性和功能如下：</p>
-<ul>
-<li>丰富的数据结构类型；</li>
-<li>快速可压缩的二进制数据形式；</li>
-<li>存储持久数据的文件容器；</li>
-<li>提供远程过程调用RPC；</li>
-<li>简单的动态语言结合功能。</li>
-</ul>
-<p>相比于Apache Thrift 和Google的Protocol Buffers，Apache Avro具有以下特点：</p>
-<ul>
-<li>支持动态模式。Avro不需要生成代码，这有利于搭建通用的数据处理系统，同时避免了代码入侵。</li>
-<li>数据无须加标签。读取数据前，Avro能够获取模式定义，这使得Avro在数据编码时只需要保留更少的类型信息，有利于减少序列化后的数据大小。</li>
-</ul>
-<p>官网：<a href="http://avro.apache.org/" target="_blank" rel="external">http://avro.apache.org/</a></p>
-<p>二、Facebook Thrift</p>
-<p>贡献者：Facebook</p>
-<p>简介：Thrift源于大名鼎鼎的facebook之手，在2007年facebook提交Apache基金会将Thrift作为一个开源项目，对于当时的facebook来说创造thrift是为了解决facebook系统中各系统间大数据量的传输通信以及系统之间语言环境不同需要跨平台的特性。</p>
-<p>thrift可以支持多种程序语言，例如: C++, C#, Cocoa, Erlang, Haskell, Java, Ocami, Perl, PHP, Python, Ruby, Smalltalk. 在多种不同的语言之间通信thrift可以作为二进制的高性能的通讯中间件，支持数据(对象)序列化和多种类型的RPC服务。</p>
-<p>Thrift适用于程序对程 序静态的数据交换，需要先确定好他的数据结构，他是完全静态化的，当数据结构发生变化时，必须重新编辑IDL文件，代码生成，再编译载入的流程，跟其他IDL工具相比较可以视为是Thrift的弱项，Thrift适用于搭建大型数据交换及存储的通用工具，对于大型系统中的内部数据传输相对于JSON和xml无论在性能、传输大小上有明显的优势。</p>
-<p>Thrift 主要由5个部分组成：</p>
-<p>· 类型系统以及 IDL 编译器：负责由用户给定的 IDL 文件生成相应语言的接口代码</p>
-<p>· TProtocol：实现 RPC 的协议层，可以选择多种不同的对象串行化方式，如 JSON, Binary。</p>
-<p>· TTransport：实现 RPC 的传输层，同样可以选择不同的传输层实现，如socket, 非阻塞的 socket, MemoryBuffer 等。</p>
-<p>· TProcessor：作为协议层和用户提供的服务实现之间的纽带，负责调用服务实现的接口。</p>
-<p>· TServer：聚合 TProtocol, TTransport 和 TProcessor 几个对象。</p>
-<p>上述的这5个部件都是在 Thrift 的源代码中通过为不同语言提供库来实现的，这些库的代码在 Thrift 源码目录的 lib 目录下面，在使用 Thrift 之前需要先熟悉与自己的语言对应的库提供的接口。</p>
-<p>Facebook Thrift构架：</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/921.jpg" alt="Thrift"></p>
-<p>官网：<a href="http://thrift.apache.org/" target="_blank" rel="external">http://thrift.apache.org/</a></p>
-<h1 id="u96C6_u7FA4_u7BA1_u7406"><a href="#u96C6_u7FA4_u7BA1_u7406" class="headerlink" title="<strong>集群管理</strong>"></a><strong>集群管理</strong></h1><p><strong><span style="color: #f75402;">一、Nagios</span></strong></p>
-<p><strong>简介：</strong>Nagios是一款开源的免费网络监视工具，能有效监控Windows、Linux和Unix的主机状态，交换机路由器等网络设置，打印机等。在系统或服务状态异常时发出邮件或短信报警第一时间通知网站运维人员，在状态恢复后发出正常的邮件或短信通知。</p>
-<p>Nagios可运行在Linux/Unix平台之上，同时提供一个可选的基于浏览器的WEB界面以方便系统管理人员查看网络状态，各种系统问题，以及日志等等。</p>
-<p><strong>官网：</strong><a href="http://www.nagios.org/" target="_blank" rel="external">http://www.nagios.org/</a></p>
-<p><span style="color: #f75402;"><strong>二、Ganglia</strong></span></p>
-<p><strong>简介：</strong>Ganglia是UC Berkeley发起的一个开源集群监视项目，设计用于测量数以千计的节点。Ganglia的核心包含gmond、gmetad以及一个Web前端。主要是用来监控系统性能，如：cpu 、mem、硬盘利用率， I/O负载、网络流量情况等，通过曲线很容易见到每个节点的工作状态，对合理调整、分配系统资源，提高系统整体性能起到重要作用。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1130-600x417.jpg" alt="Ganglia"></p>
-<p><strong>官网：</strong><a href="http://ganglia.sourceforge.net/" target="_blank" rel="external">http://ganglia.sourceforge.net/</a></p>
-<p><span style="color: #f75402;"><strong>三、Apache Ambari</strong></span></p>
-<p><strong>简介：</strong>Apache Ambari是一种基于Web的工具，支持Apache Hadoop集群的供应、管理和监控。Ambari目前已支持大多数Hadoop组件，包括HDFS、MapReduce、Hive、Pig、 Hbase、Zookeper、Sqoop和Hcatalog等。</p>
-<p>Apache Ambari 支持HDFS、MapReduce、Hive、Pig、Hbase、Zookeper、Sqoop和Hcatalog等的集中管理。也是5个顶级hadoop管理工具之一。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1223.jpg" alt="Apache Ambari"></p>
-<p><strong>Ambari主要取得了以下成绩：</strong></p>
-<ul>
-<li>通过一步一步的安装向导简化了集群供应。</li>
-<li>预先配置好关键的运维指标（metrics），可以直接查看Hadoop Core（HDFS和MapReduce）及相关项目（如HBase、Hive和HCatalog）是否健康。</li>
-<li>支持作业与任务执行的可视化与分析，能够更好地查看依赖和性能。</li>
-<li>通过一个完整的RESTful API把监控信息暴露出来，集成了现有的运维工具。</li>
-<li>用户界面非常直观，用户可以轻松有效地查看信息并控制集群。</li>
-</ul>
-<p>Ambari使用Ganglia收集度量指标，用Nagios支持系统报警，当需要引起管理员的关注时（比如，节点停机或磁盘剩余空间不足等问题），系统将向其发送邮件。</p>
-<p>此外，Ambari能够安装安全的（基于Kerberos）Hadoop集群，以此实现了对Hadoop 安全的支持，提供了基于角色的用户认证、授权和审计功能，并为用户管理集成了LDAP和Active Directory。</p>
-<p><strong>官网</strong>：<a href="http://ambari.apache.org/" target="_blank" rel="external">http://ambari.apache.org/</a></p>
-<p>&nbsp;</p>
-<h1 id="u57FA_u7840_u8BBE_u65BD"><a href="#u57FA_u7840_u8BBE_u65BD" class="headerlink" title="<strong>基础设施</strong>"></a><strong>基础设施</strong></h1><p><strong><span style="color: #f75402;">一、LevelDB</span></strong></p>
-<p><strong>贡献者</strong>：Jeff Dean和Sanjay Ghemawat</p>
-<p><strong>简介：</strong>Leveldb是一个google实现的非常高效的kv数据库，目前的版本1.2能够支持billion级别的数据量了。 在这个数量级别下还有着非常高的性能，主要归功于它的良好的设计。特别是LMS算法。LevelDB 是单进程的服务，性能非常之高，在一台4核Q6600的CPU机器上，每秒钟写数据超过40w，而随机读的性能每秒钟超过10w。</p>
-<p><strong>Leveldb框架</strong>：</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1322-468x429.jpg" alt="Leveldb"></p>
-<p><strong>官网</strong>：<a href="http://code.google.com/p/leveldb/" target="_blank" rel="external">http://code.google.com/p/leveldb/</a></p>
-<p><strong><span style="color: #f75402;">二、SSTable</span></strong></p>
-<p><strong>简介</strong>：如果说Protocol Buffer是谷歌独立数据记录的通用语言 ，那么有序字符串表（SSTable，Sorted String Table）则是用于存储，处理和数据集交换的最流行​​的数据输出格式。正如它的名字本身，SSTable是有效存储大量键-值对的简单抽象，对高吞吐量顺序读/写进行了优化。</p>
-<p>SSTable是Bigtable中至关重要的一块，对于LevelDB来说也是如此。</p>
-<p><strong><span style="color: #f75402;">三、RecordIO</span></strong></p>
-<p><strong>贡献者</strong>：Google</p>
-<p><strong>简介：</strong>我们大家都在用文件来存储数据。文件是存储在磁盘上的。如果在一些不稳定的介质上，文件很容损坏。即时文件某个位置出现一点小小的问题，整个文件就废了。</p>
-<p>下面我来介绍Google的一个做法，可以比较好的解决这个问题。那就是recordio文件格式。recoidio的存储单元是一个一个record。这个record可以根据业务的需要自行定义。但Google有一种建议的处理方式就是使用protobuf。</p>
-<p>reocordio底层的格式其实很简单。一个record由四部分组成：</p>
-<ul>
-<li>MagicNumber (32 bits)</li>
-<li>Uncompressed data payload size (64 bits)</li>
-<li>Compressed data payload size (64 bits), or 0 if the data is not compressed</li>
-<li>Payload, possibly compressed.</li>
-</ul>
-<p><strong>详细格式如下图所示：</strong></p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/recordio_thumb-600x76.png" alt="RecordIO"></p>
-<p>到这里，大家可能已经知道，recordio之所以能对付坏数据，其实就是在这个MagicNumber（校验值）。</p>
-<p><strong><span style="color: #f75402;">四、Flat Buffers</span></strong></p>
-<p><strong>贡献者</strong>：Google</p>
-<p><strong>简介</strong>：谷歌开源高效、跨平台的序列化库FlatBuffers。</p>
-<p>该库的构建是专门为游戏开发人员的性能需求提供支持，它将序列化数据存储在缓存中，这些数据既可以存储在文件中，又可以通过网络原样传输，而不需要任何解析开销。</p>
-<p><strong>FlatBuffers有如下一些关键特性—</strong>—</p>
-<ul>
-<li>访问序列化数据不需要打包/拆包</li>
-<li>节省内存而且访问速度快——缓存只占用访问数据所需要的内存；不需要任何额外的内存。</li>
-<li>灵活性——通过可选字段向前向后兼容</li>
-<li>代码规模小</li>
-<li>强类型——错误在编译时捕获，而不是在运行时</li>
-<li>便利性——生成的C++头文件代码简洁。如果需要，有一项可选功能可以用来在运行时高效解析Schema和JSON-like格式的文本。</li>
-<li>跨平台——使用C++编写，不依赖STL之外的库，因此可以用于任何有C++编辑器的平台。当前，该项目包含构建方法和在Android、Linux、Windows和OSX等操作系统上使用该库的示例。</li>
-</ul>
-<p>与Protocol Buffers或JSON Parsing这样的可选方案相比，FlatBuffers的优势在于开销更小，这主要是由于它没有解析过程。</p>
-<p><strong>代码托管</strong>：<a href="https://github.com/google/flatbuffers" target="_blank" rel="external">https://github.com/google/flatbuffers</a></p>
-<p><strong><span style="color: #f75402;">五、Protocol Buffers</span></strong></p>
-<p><strong>贡献者：</strong>Google</p>
-<p><strong>简介</strong>：Protocol Buffers是Google公司开发的一种数据描述语言，类似于XML能够将结构化数据序列化，可用于数据存储、通信协议等方面。它不依赖于语言和平台并且可扩展性极强。现阶段官方支持C++、JAVA、Python等三种编程语言，但可以找到大量的几乎涵盖所有语言的第三方拓展包。</p>
-<p>通过它，你可以定义你的数据的结构，并生成基于各种语言的代码。这些你定义的数据流可以轻松地在传递并不破坏你已有的程序。并且你也可以更新这些数据而现有的程序也不会受到任何的影响。</p>
-<p>Protocol Buffers经常被简称为protobuf。</p>
-<p><strong>官网</strong>：<a href="http://code.google.com/p/protobuf/" target="_blank" rel="external">http://code.google.com/p/protobuf/</a></p>
-<p><strong><span style="color: #f75402;">六、Consistent Hashing（哈希算法）</span></strong></p>
-<p><strong>简介：</strong>一致性哈希算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点(Hot spot)问题，初衷和CARP十分类似。一致性哈希修正了CARP使用的简 单哈希算法带来的问题，使得分布式哈希（DHT）可以在P2P环境中真正得到应用。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1420.jpg" alt="Consistent Hashing"></p>
-<p>一致性hash算法提出了在动态变化的Cache环境中，<strong>判定哈希算法好坏的四个定义：</strong></p>
-<p>1、平衡性(Balance)：平衡性是指哈希的结果能够尽可能分布到所有的缓冲中去，这样可以使得所有的缓冲空间都得到利用。很多哈希算法都能够满足这一条件。</p>
-<p>2、单调性(Monotonicity)：单调性是指如果已经有一些内容通过哈希分派到了相应的缓冲中，又有新的缓冲加入到系统中。哈希的结果应能够保证原有已分配的内容可以被映射到原有的或者新的缓冲中去，而不会被映射到旧的缓冲集合中的其他缓冲区。</p>
-<p>3、分散性(Spread)：在分布式环境中，终端有可能看不到所有的缓冲，而是只能看到其中的一部分。当终端希望通过哈希过程将内容映射到缓冲上时，由于不同终端所见的缓冲范围有可能不同，从而导致哈希的结果不一致，最终的结果是相同的内容被不同的终端映射到不同的缓冲区中。这种情况显然是应该避免的，因为它导致相同内容被存储到不同缓冲中去，降低了系统存储的效率。分散性的定义就是上述情况发生的严重程度。好的哈希算法应能够尽量避免不一致的情况发生，也就是尽量降低分散性。</p>
-<p>4、负载(Load)：负载问题实际上是从另一个角度看待分散性问题。既然不同的终端可能将相同的内容映射到不同的缓冲区中，那么对于一个特定的缓冲区而言，也可能被不同的用户映射为不同 的内容。与分散性一样，这种情况也是应当避免的，因此好的哈希算法应能够尽量降低缓冲的负荷。</p>
-<p>在分布式集群中，对机器的添加删除，或者机器故障后自动脱离集群这些操作是分布式集群管理最基本的功能。如果采用常用的hash(object)%N算法，那么在有机器添加或者删除后，很多原有的数据就无法找到了，这样严重的违反了单调性原则。</p>
-<p><strong><span style="color: #f75402;">七、Netty</span></strong></p>
-<p><strong>贡献者</strong>：JBOSS</p>
-<p><strong>简介：</strong>Netty是由JBOSS提供的一个java开源框架。Netty提供异步的、事件驱动的网络应用程序框架和工具，用以快速开发高性能、高可靠性的网络服务器和客户端程序。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1518.jpg" alt="Netty"></p>
-<p>也就是说，Netty 是一个基于NIO的客户，服务器端编程框架，使用Netty 可以确保你快速和简单的开发出一个网络应用，例如实现了某种协议的客户，服务端应用。Netty相当简化和流线化了网络应用的编程开发过程，例如，TCP和UDP的socket服务开发。</p>
-<p>“快速”和“简单”并不意味着会让你的最终应用产生维护性或性能上的问题。Netty 是一个吸收了多种协议的实现经验，这些协议包括FTP,SMTP,HTTP，各种二进制，文本协议，并经过相当精心设计的项目，最终，Netty 成功的找到了一种方式，在保证易于开发的同时还保证了其应用的性能，稳定性和伸缩性。</p>
-<p><strong>官网</strong>：<a href="http://netty.io/" target="_blank" rel="external">http://netty.io/</a></p>
-<p><span style="color: #f75402;"><strong>八、BloomFilter</strong></span></p>
-<p><strong>简介：</strong>Bloom filter 是由 Howard Bloom 在 1970 年提出的二进制向量数据结构，它具有很好的空间和时间效率，被用来检测一个元素是不是集合中的一个成员。如果检测结果为是，该元素不一定在集合中；但如果检测结果为否，该元素一定不在集合中。因此Bloom filter具有100%的召回率。这样每个检测请求返回有“在集合内（可能错误）”和“不在集合内（绝对不在集合内）”两种情况，可见 Bloom filter 是牺牲了正确率和时间以节省空间。</p>
-<p>Bloom filter 优点就是它的插入和查询时间都是常数，另外它查询元素却不保存元素本身，具有良好的安全性。</p>
-<h1 id="u641C_u7D22_u5F15_u64CE"><a href="#u641C_u7D22_u5F15_u64CE" class="headerlink" title="搜索引擎"></a>搜索引擎</h1><p><strong><span style="color: #f74802;">一、Nutch</span></strong></p>
-<p><strong>简介：</strong>Nutch 是一个开源Java 实现的搜索引擎。它提供了我们运行自己的搜索引擎所需的全部工具。包括全文搜索和Web爬虫。</p>
-<p>尽管Web搜索是漫游Internet的基本要求, 但是现有web搜索引擎的数目却在下降. 并且这很有可能进一步演变成为一个公司垄断了几乎所有的web搜索为其谋取商业利益.这显然 不利于广大Internet用户.</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1615.jpg" alt="Nutch"></p>
-<p>Nutch为我们提供了这样一个不同的选择. 相对于那些商用的搜索引擎, Nutch作为开放源代码 搜索引擎将会更加透明, 从而更值得大家信赖. 现在所有主要的搜索引擎都采用私有的排序算法, 而不会解释为什么一个网页会排在一个特定的位置. 除此之外, 有的搜索引擎依照网站所付的 费用, 而不是根据它们本身的价值进行排序. 与它们不同, Nucth没有什么需要隐瞒, 也没有 动机去扭曲搜索的结果. Nutch将尽自己最大的努力为用户提供最好的搜索结果.</p>
-<p>Nutch目前最新的版本为version v2.2.1。</p>
-<p>官网：<a href="https://nutch.apache.org/" target="_blank" rel="external">https://nutch.apache.org/</a></p>
-<p><strong><span style="color: #f74802;">二、Lucene</span></strong></p>
-<p><strong>开发者</strong>：Doug Cutting（Hadoop之父，你懂的）</p>
-<p><strong>简介：</strong>Lucene是apache软件基金会4 jakarta项目组的一个子项目，是一个开放源代码的全文检索引擎工具包，即它不是一个完整的全文检索引擎，而是一个全文检索引擎的架构，提供了完整的查询引擎和索引引擎，部分文本分析引擎（英文与德文两种西方语言）。Lucene的目的是为软件开发人员提供一个简单易用的工具包，以方便的在目标系统中实现全文检索的功能，或者是以此为基础建立起完整的全文检索引擎。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1717-556x429.jpg" alt="Lucene"></p>
-<p>官网：<a href="http://lucene.apache.org/" target="_blank" rel="external">http://lucene.apache.org/</a></p>
-<p><strong><span style="color: #f74802;">三、SolrCloud</span></strong></p>
-<p><strong>简介</strong>：SolrCloud是Solr4.0版本以后基于Solr和Zookeeper的分布式搜索方案。SolrCloud是Solr的基于Zookeeper一种部署方式。Solr可以以多种方式部署，例如单机方式，多机Master-Slaver方式。</p>
-<p><strong>原理图</strong>：</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1813-583x429.jpg" alt="SolrCloud"></p>
-<p><strong>SolrCloud有几个特色功能：</strong></p>
-<p>集中式的配置信息使用ZK进行集中配置。启动时可以指定把Solr的相关配置文件上传</p>
-<p>Zookeeper，多机器共用。这些ZK中的配置不会再拿到本地缓存，Solr直接读取ZK中的配置信息。配置文件的变动，所有机器都可以感知到。另外，Solr的一些任务也是通过ZK作为媒介发布的。目的是为了容错。接收到任务，但在执行任务时崩溃的机器，在重启后，或者集群选出候选者时，可以再次执行这个未完成的任务。</p>
-<p>自动容错SolrCloud对索引分片，并对每个分片创建多个Replication。每个Replication都可以对外提供服务。一个Replication挂掉不会影响索引服务。更强大的是，它还能自动的在其它机器上帮你把失败机器上的索引Replication重建并投入使用。</p>
-<p>近实时搜索立即推送式的replication（也支持慢推送）。可以在秒内检索到新加入索引。</p>
-<p>查询时自动负载均衡SolrCloud索引的多个Replication可以分布在多台机器上，均衡查询压力。如果查询压力大，可以通过扩展机器，增加Replication来减缓。</p>
-<p>自动分发的索引和索引分片发送文档到任何节点，它都会转发到正确节点。</p>
-<p>事务日志事务日志确保更新无丢失，即使文档没有索引到磁盘。</p>
-<p><span style="color: #f74802;"><strong>四、Solr</strong></span></p>
-<p><strong>简介：</strong>Solr是一个独立的企业级搜索应用服务器，它对外提供类似于Web-service的API接口。用户可以通过http请求，向搜索引擎服务器提交一定格式的XML文件，生成索引；也可以通过Http Get操作提出查找请求，并得到XML格式的返回结果。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/1913-593x429.jpg" alt="Solr"></p>
-<p>Solr是一个高性能，采用Java5开发，基于Lucene的全文搜索服务器。同时对其进行了扩展，提供了比Lucene更为丰富的查询语言，同时实现了可配置、可扩展并对查询性能进行了优化，并且提供了一个完善的功能管理界面，是一款非常优秀的全文搜索引擎。</p>
-<p><strong>官网：</strong><a href="https://lucene.apache.org/solr/" target="_blank" rel="external">https://lucene.apache.org/solr/</a></p>
-<p><strong><span style="color: #f74802;">五、ElasticSearch</span></strong></p>
-<p><strong>简介</strong>：ElasticSearch是一个基于Lucene的搜索服务器。它提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口。Elasticsearch是用Java开发的，并作为Apache许可条款下的开放源码发布，是第二最流行的企业搜索引擎。设计用于云计算中，能够达到实时搜索，稳定，可靠，快速，安装使用方便。</p>
-<p><strong>官网：</strong><a href="http://www.elasticsearch.org/http://www.elasticsearch.cn/" target="_blank" rel="external">http://www.elasticsearch.org/</a></p>
-<p><strong><span style="color: #f74802;">六、Sphinx</span></strong></p>
-<p><strong>简介</strong>：Sphinx是一个基于SQL的全文检索引擎，可以结合MySQL,PostgreSQL做全文搜索，它可以提供比数据库本身更专业的搜索功能，使得应用程序更容易实现专业化的全文检索。Sphinx特别为一些脚本语言设计搜索API接口，如PHP,Python,Perl,Ruby等，同时为MySQL也设计了一个存储引擎插件。</p>
-<p>Sphinx单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级）。Sphinx创建索引的速度为：创建100万条记录的索引只需 3～4分钟，创建1000万条记录的索引可以在50分钟内完成，而只包含最新10万条记录的增量索引，重建一次只需几十秒。</p>
-<p><strong>官网</strong>：<a href="http://sphinxsearch.com/" target="_blank" rel="external">http://sphinxsearch.com</a></p>
-<p><strong><span style="color: #f74802;">七、SenseiDB</span></strong></p>
-<p><strong>贡献者</strong>：linkedin</p>
-<p><strong>简介</strong>：SenseiDB是一个NoSQL数据库，它专注于高更新率以及复杂半结构化搜索查询。熟悉Lucene和Solor的用户会发现，SenseiDB背后有许多似曾相识的概念。SenseiDB部署在多节点集群中，其中每个节点可以包括N块数据片。Apache Zookeeper用于管理节点，它能够保持现有配置，并可以将任意改动（如拓扑修改）传输到整个节点群中。SenseiDB集群还需要一种模式用于定义将要使用的数据模型。</p>
-<p>从SenseiDB集群中获取数据的唯一方法是通过Gateways（它 没有“INSERT”方法）。每个集群都连接到一个单一gateway。你需要了解很重要的一点是，由于SenseiDB本身没法处理原子性 （Atomicity）和隔离性（Isolation），因此只能通过外部在gateway层进行限制。另外，gateway必须确保数据流按照预期的方 式运作。内置的gateway有以下几种形式：</p>
-<ul>
-<li>来自文件</li>
-<li>来自JMS队列</li>
-<li>通过JDBC</li>
-<li>来自Apache Kafka</li>
-</ul>
-<p><strong>官网</strong>：<a href="http://senseidb.com/" target="_blank" rel="external">http://senseidb.com</a></p>
-<h1 id="u6570_u636E_u6316_u6398"><a href="#u6570_u636E_u6316_u6398" class="headerlink" title="<strong>数据挖掘</strong>"></a><strong>数据挖掘</strong></h1><p><strong><span style="color: #f74802;">一、Mahout</span></strong></p>
-<p><a href="http://www.36dsj.com/wp-content/uploads/2015/03/2012.jpg" target="_blank" rel="external"><img src="http://www.36dsj.com/wp-content/uploads/2015/03/2012.jpg" alt="Mahout"></a></p>
-<p><strong>简介</strong>：Apache Mahout 是 Apache Software Foundation (ASF) 开发的一个全新的开源项目，其主要目标是创建一些可伸缩的机器学习算法，供开发人员在 Apache 在许可下免费使用。该项目已经发展到了它的最二个年头，目前只有一个公共发行版。Mahout 包含许多实现，包括集群、分类、CP 和进化程序。此外，通过使用 Apache Hadoop 库，Mahout 可以有效地扩展到云中。</p>
-<p>虽然在开源领域中相对较为年轻，但 Mahout 已经提供了大量功能，特别是在集群和 CF 方面。<strong>Mahout 的主要特性包括：</strong></p>
-<ol>
-<li>Taste CF。Taste 是 Sean Owen 在 SourceForge 上发起的一个针对 CF 的开源项目，并在 2008 年被赠予 Mahout。</li>
-<li>一些支持 Map-Reduce 的集群实现包括 k-Means、模糊 k-Means、Canopy、Dirichlet 和 Mean-Shift。</li>
-<li>Distributed Naive Bayes 和 Complementary Naive Bayes 分类实现。</li>
-<li>针对进化编程的分布式适用性功能。</li>
-<li>Matrix 和矢量库。</li>
-<li>上述算法的示例。</li>
-</ol>
-<p><strong>官网</strong>：<a href="http://mahout.apache.org/" target="_blank" rel="external">http://mahout.apache.org/</a></p>
-<h1 id="Iaas"><a href="#Iaas" class="headerlink" title="<strong>Iaas</strong>"></a><strong>Iaas</strong></h1><p>IaaS（Infrastructure as a Service），即基础设施即服务。</p>
-<p><strong><span style="color: #f74802;">一、OpenStack</span></strong></p>
-<p><strong>简介：</strong>OpenStack是一个由NASA（美国国家航空航天局）和Rackspace合作研发并发起的，以Apache许可证授权的自由软件和开放源代码项目。</p>
-<p>OpenStack是一个开源的云计算管理平台项目，由几个主要的组件组合起来完成具体工作。OpenStack支持几乎所有类型的云环境，项目目标是提供实施简单、可大规模扩展、丰富、标准统一的云计算管理平台。OpenStack通过各种互补的服务提供了基础设施即服务（IaaS）的解决方案，每个服务提供API以进行集成。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2014/12/1148-599x429.jpg" alt="OpenStack"></p>
-<p>6个核心项目：Nova（计算，Compute），Swift（对象存储，Object），Glance（镜像，Image），Keystone（身份，Identity），Horizon（自助门户，Dashboard），Quantum &amp; Melange（网络&amp;地址管理），另外还有若干社区项目，如Rackspace（负载均衡）、Rackspace（关系型数据库）。</p>
-<p><strong>相关阅读：</strong></p>
-<p><a href="http://www.36dsj.com/archives/19596" title="什么是OpenStack？ | 36大数据" target="_blank" rel="external">什么是OpenStack？</a></p>
-<p><a href="http://www.36dsj.com/archives/22179" title="成功部署OpenStack的十大要点 | 36大数据" target="_blank" rel="external">成功部署OpenStack的十大要点</a></p>
-<p><strong> 官网</strong>：<a href="https://www.openstack.org/" target="_blank" rel="external">https://www.openstack.org/</a></p>
-<p><strong><span style="color: #f74802;">二、Docker</span></strong></p>
-<p><strong>贡献者</strong>：dotCloud</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/2215.jpg" alt="Docker"></p>
-<p><strong>简介</strong>：Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口（类似 iPhone 的 app）。几乎没有性能开销,可以很容易地在机器和数据中心中运行。最重要的是,他们不依赖于任何语言、框架或包括系统。</p>
-<p><strong>官网</strong>：<a href="http://www.docker.io/" target="_blank" rel="external">http://www.docker.io/</a></p>
-<p><strong><span style="color: #f74802;">三、Kubernetes</span></strong></p>
-<p><strong>贡献者</strong>：Google</p>
-<p><strong>简介</strong>：Kubernetes是Google开源的容器集群管理系统。它构建Ddocker技术之上，为容器化的应用提供资源调度、部署运行、服务发现、扩容缩容等整一套功能，本质上可看作是基于容器技术的mini-PaaS平台。</p>
-<p>Kubernetes从另一个角度对资源进行抽象，它让开发人员和管理人员共同着眼于服务的行为和性能的提升，而不是仅仅关注对单一的组件或者是基础资源。</p>
-<p>那么Kubernetes集群到底提供了哪些单一容器所没有功能?它主要关注的是对服务级别的控制而并非仅仅是对容器级别的控制，Kubernetes提供了一种“机智”的管理方式，它将服务看成一个整体。在Kubernete的解决方案中，一个服务甚至可以自我扩展，自我诊断，并且容易升级。例如，在Google中，我们使用机器学习技术来保证每个运行的服务的当前状态都是最高效的。</p>
-<p>代码托管：<a href="https://github.com/GoogleCloudPlatform/kubernetes/" target="_blank" rel="external">https://github.com/GoogleCloudPlatform/kubernetes/</a></p>
-<p><strong><span style="color: #f74802;">四、Imctfy</span></strong></p>
-<p><strong>贡献者</strong>：Google</p>
-<p><strong>简介</strong>：Google开源了自己所用Linux容器系统的开源版本lmctfy，读音为lem-kut-fee。包括一个C++库（使用了C++11，文档可以参考头文件）和命令行界面。目前的版本是0.1，只提供了CPU与内存隔离。项目还在密集开发中。</p>
-<p>mctfy本身是针对某些特定使用场景设计和实现的，目前拥有一台机器上所有容器时运行情况最好，不推荐与LXC和其他容器系统一起使用（虽然也可行）。已在Ubuntu 12.04+和Ubuntu 3.3与3.8内核上测试。</p>
-<p><strong>代码托管</strong>：<a href="https://github.com/google/Imctfy/" target="_blank" rel="external">https://github.com/google/Imctfy/</a></p>
-<p>&nbsp;</p>
-<h1 id="u76D1_u63A7_u7BA1_u7406"><a href="#u76D1_u63A7_u7BA1_u7406" class="headerlink" title="<strong>监控管理</strong>"></a><strong>监控管理</strong></h1><p><strong><span style="color: #f74802;">一、Dapper</span></strong></p>
-<p><strong>贡献者：</strong>Google</p>
-<p><strong>简介：</strong>Dapper是一个轻量的ORM(对象关系映射（英语：Object Relational Mapping，简称ORM，或O/RM，或O/R mapping）。并不单纯的是一个DBHelper.因为在Dapper中数据其实就是一个对象。Dapper扩展与IDbConnection上，所以事实上它的倾入性很低。我用了StructureMap。如果不喜欢可以自己更换，或者自己实现下。</p>
-<p>代码就一个SqlMapper.cs文件,主要是IDbConnection的扩展方法，编译后就40K的一个很小的dll。</p>
-<p><strong>特性：</strong></p>
-<ol>
-<li>Dapper很快。Dapper的速度接近与IDataReader。</li>
-<li>Dapper支持主流数据库 Mysql,SqlLite,Mssql2000,Mssql2005,Oracle等一系列的数据库</li>
-<li>支持多表并联的对象。支持一对多 多对多的关系，并且没侵入性。</li>
-<li>原理通过Emit反射IDataReader的序列队列，来快速的得到和产生对象</li>
-<li>Dapper语法十分简单。并且无须迁就数据库的设计</li>
-</ol>
-<p><strong>官方站点</strong> <a href="http://code.google.com/p/dapper-dot-net/" target="_blank" rel="external">http://code.google.com/p/dapper-dot-net/</a></p>
-<p><strong>代码托管</strong>：<a href="http://bigbully.github.io/Dapper-translation/" target="_blank" rel="external">http://bigbully.github.io/Dapper-translation/</a></p>
-<p><span style="color: #f74802;"><strong>二、Zipkin</strong></span></p>
-<p><strong>贡献者：</strong>Twitter</p>
-<p><strong>简介：</strong>Zipkin （分布式跟踪系统）是 Twitter 的一个开源项目，允许开发者收集 Twitter 各个服务上的监控数据，并提供查询接口。该系统让开发者可通过一个 Web 前端轻松的收集和分析数据，例如用户每次请求服务的处理时间等，可方便的监测系统中存在的瓶颈。</p>
-<p><img src="http://www.36dsj.com/wp-content/uploads/2015/03/2313-535x429.jpg" alt="Zipkin"></p>
-<p><strong>官方网站</strong>：<a href="http://twitter.github.io/zipkin/" target="_blank" rel="external">http://twitter.github.io/zipkin/</a></p>
-<p><strong>代码托管</strong>：<a href="https://github.com/twitter/zipkin/" target="_blank" rel="external">https://github.com/twitter/zipkin/</a></p>
-<p>End.</p>
-<p><a href="http://www.36dsj.com/archives/25042" target="_blank" rel="external">http://www.36dsj.com/archives/25042</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib2/" data-id="cilxtl9nl006fuijisjl3nj54" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib2/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -1151,6 +873,23 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/18/dev/web/python_mysql_code/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/03/18/dev/web/python_mysql_code/" class="title">Python mysql 编码问题</a></p>
+              <p class="item-date"><time datetime="2016-03-18T04:19:56.000Z" itemprop="datePublished">2016-03-18</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -1221,23 +960,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/02/16/algo/lib/dl_lib/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/02/16/algo/lib/dl_lib/" class="title">深度学习框架的评估与比较</a></p>
-              <p class="item-date"><time datetime="2016-02-16T08:07:12.000Z" itemprop="datePublished">2016-02-16</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1247,7 +969,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">27</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -1256,7 +978,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1265,7 +987,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 17.5px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 17.5px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -1274,7 +996,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
