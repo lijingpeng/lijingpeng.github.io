@@ -92,11 +92,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        80
+        81
         <span>文章</span>
       </div>
       <div class="article-info-block">
-        36
+        37
         <span>标签</span>
       </div>
     </div>
@@ -125,6 +125,74 @@
 
       
       <section id="main">
+      <article id="post-dev/hive-udf-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/dev/hive-udf-md/">Hive UDF开发</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/dev/hive-udf-md/">
+      <time datetime="2015-09-03T04:49:45.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/Hive/">Hive</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>Hive进行UDAF开发，相对要比UDF复杂一些，不过也不是很难。请看一个例子:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.hrj.hive.udf;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.ql.exec.UDAFEvaluator;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hive.serde2.io.DoubleWritable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UDAFSum_Sample</span> <span class="keyword">extends</span> <span class="title">NumericUDAF</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Evaluator</span> <span class="keyword">implements</span> <span class="title">UDAFEvaluator</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">boolean</span> mEmpty;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> mSum;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Evaluator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">super</span>();</span><br><span class="line">            init();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            mSum = <span class="number">0</span>;</span><br><span class="line">            mEmpty = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">iterate</span><span class="params">(DoubleWritable o)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (o != <span class="keyword">null</span>) &#123;</span><br><span class="line">                mSum += o.get();</span><br><span class="line">                mEmpty = <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> DoubleWritable <span class="title">terminatePartial</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">// This is SQL standard - sum of zero items should be null.</span></span><br><span class="line">            <span class="keyword">return</span> mEmpty ? <span class="keyword">null</span> : <span class="keyword">new</span> DoubleWritable(mSum);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">merge</span><span class="params">(DoubleWritable o)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (o != <span class="keyword">null</span>) &#123;</span><br><span class="line">                mSum += o.get();</span><br><span class="line">                mEmpty = <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> DoubleWritable <span class="title">terminate</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">// This is SQL standard - sum of zero items should be null.</span></span><br><span class="line">            <span class="keyword">return</span> mEmpty ? <span class="keyword">null</span> : <span class="keyword">new</span> DoubleWritable(mSum);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>1.将java文件编译成Sum_Sample.jar</p>
+<p>2.进入hive<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">hive&gt; add jar Sum_sample.jar;</span><br><span class="line"></span><br><span class="line">hive&gt; create temporary <span class="keyword">function</span> sum_<span class="built_in">test</span> as <span class="string">'com.hrj.hive.udf.UDAFSum_Sample'</span>;</span><br><span class="line"></span><br><span class="line">hive&gt; select sum_<span class="built_in">test</span>(t.num) from t;</span><br><span class="line"></span><br><span class="line">hive&gt; drop temporary <span class="keyword">function</span> sum_<span class="built_in">test</span>;</span><br><span class="line"></span><br><span class="line">hive&gt; quit;</span><br></pre></td></tr></table></figure></p>
+<p>关于UDAF开发注意点：</p>
+<p>1.需要import org.apache.hadoop.hive.ql.exec.UDAF以及org.apache.hadoop.hive.ql.exec.UDAFEvaluator,这两个包都是必须的</p>
+<p>2.函数类需要继承UDAF类，内部类Evaluator实现UDAFEvaluator接口</p>
+<p>3.Evaluator需要实现 init、iterate、terminatePartial、merge、terminate这几个函数</p>
+<pre><code>1）init函数类似于构造函数，用于UDAF的初始化
+
+2）iterate接收传入的参数，并进行内部的轮转。其返回类型为boolean
+
+3）terminatePartial无参数，其为iterate函数轮转结束后，返回乱转数据，iterate和terminatePartial类似于hadoop的Combiner
+
+4）merge接收terminatePartial的返回结果，进行数据merge操作，其返回类型为boolean
+
+5）terminate返回最终的聚集函数结果
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="cilxthd1q003rt5jivqh07le8" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-opensource/flask-example-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -194,7 +262,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/opensource/flask-example-md/" data-id="cilrztiy7001vxapjm2skftls" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/opensource/flask-example-md/" data-id="cilxthd0j001vt5jiv9wepb5b" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/opensource/flask-example-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -251,7 +319,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="cilrztiy4001rxapjrc0lj51s" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="cilxthd0g001rt5ji9c5wuxsn" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/opensource/input-font-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -337,7 +405,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="cilrztj1r006pxapjg928isiu" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="cilxthd3n006tt5jisx10x4g0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/06/06/algo/feature_d/#ds-thread" class="article-comment-link">评论</a>
       
@@ -392,7 +460,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="cilrztix7000exapjo4jr729s" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="cilxthczn000et5jiiq4d7bcn" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/#ds-thread" class="article-comment-link">评论</a>
       
@@ -407,69 +475,8 @@
 
 
     
-      <article id="post-system/shadowsocks" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/14/system/shadowsocks/">Shadowsocks 安装配置使用</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/05/14/system/shadowsocks/">
-      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/system/">system</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>Debian/Ubuntu安装<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python-pip</span><br><span class="line">pip install shadowsocks</span><br></pre></td></tr></table></figure></p>
-<p>配置:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">"server"</span>:<span class="string">"my_server_ip"</span>,</span><br><span class="line">    <span class="string">"server_port"</span>:<span class="number">8388</span>,</span><br><span class="line">    <span class="string">"local_address"</span>: <span class="string">"127.0.0.1"</span>,</span><br><span class="line">    <span class="string">"local_port"</span>:<span class="number">1080</span>,</span><br><span class="line">    <span class="string">"password"</span>:<span class="string">"mypassword"</span>,</span><br><span class="line">    <span class="string">"timeout"</span>:<span class="number">300</span>,</span><br><span class="line">    <span class="string">"method"</span>:<span class="string">"aes-256-cfb"</span>,</span><br><span class="line">    <span class="string">"fast_open"</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="string">"workers"</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>服务器端运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssserver -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
-<p>后台运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup ssserver -c /etc/shadowsocks/config.json &gt; /dev/null &amp;</span><br></pre></td></tr></table></figure></p>
-<p>客户端运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sslocal -c /etc/shadowsocks/config.json</span><br></pre></td></tr></table></figure></p>
-<p>后台运行:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup sslocal -c /etc/shadowsocks/config.json &gt; /dev/null &amp;</span><br></pre></td></tr></table></figure></p>
-<p>浏览器配置，推荐使用SwithySharp插件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protocol: socks5</span><br><span class="line">hostname: <span class="number">127.0</span>.<span class="number">0.1</span></span><br><span class="line">port:     your <span class="built_in">local</span>_port</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="cilrztix50009xapjp52eddis" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/05/14/system/shadowsocks/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/11/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/13/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/11/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/13/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -480,6 +487,23 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/18/dev/python/python_mysql/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/03/18/dev/python/python_mysql/" class="title">Python MySQLdb</a></p>
+              <p class="item-date"><time datetime="2016-03-18T02:19:56.000Z" itemprop="datePublished">2016-03-18</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -550,23 +574,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/02/02/system/crontab/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/system/">system</a></p>
-              <p class="item-title"><a href="/2016/02/02/system/crontab/" class="title">Crontab使用举例</a></p>
-              <p class="item-date"><time datetime="2016-02-01T16:00:00.000Z" itemprop="datePublished">2016-02-02</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -576,7 +583,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -585,7 +592,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -594,7 +601,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 17.5px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 10px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 17.5px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -603,7 +610,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
