@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        83
+        84
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,76 @@
 
       
       <section id="main">
+      <article id="post-dev/CPP/cpp_string" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/23/dev/CPP/cpp_string/">标准C++中的string类的用法总结</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/10/23/dev/CPP/cpp_string/">
+      <time datetime="2015-10-23T12:19:56.000Z" itemprop="datePublished">2015-10-23</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/c/">c++</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>#include <string>// 注意是<string>，不是<string.h>，带.h的是C语言中的头文件<br>using  std::string;<br>using  std::wstring;<br>using namespace std;</string.h></string></string></p>
+<p>下面你就可以使用string/wstring了，它们两分别对应着char和wchar_t。<br>string和wstring的用法是一样的，以下只用string作介绍：</p>
+<p>string类的构造函数：</p>
+<p>string(const char *s);    //用c字符串s初始化<br>string(int n,char c);     //用n个字符c初始化<br>此外，string类还支持默认构造函数和复制构造函数，如string s1；string s2=”hello”；都是正确的写法。当构造的string太长而无法表达时会抛出length_error异常 ；</p>
+<p>string类的字符操作：<br>const char &amp;operator<a href="int n"></a>const;<br>const char &amp;at(int n)const;<br>char &amp;operator<a href="int n"></a>;<br>char &amp;at(int n);<br>operator[]和at()均返回当前字符串中第n个字符的位置，但at函数提供范围检查，当越界时会抛出out_of_range异常，下标运算符[]不提供检查访问。<br>const char <em>data()const;//返回一个非null终止的c字符数组<br>const char </em>c_str()const;//返回一个以null终止的c字符串<br>int copy(char *s, int n, int pos = 0) const;//把当前串中以pos开始的n个字符拷贝到以s为起始位置的字符数组中，返回实际拷贝的数目</p>
+<p>string的特性描述:<br>int capacity()const;    //返回当前容量（即string中不必增加内存即可存放的元素个数）<br>int max_size()const;    //返回string对象中可存放的最大字符串的长度<br>int size()const;        //返回当前字符串的大小<br>int length()const;       //返回当前字符串的长度<br>bool empty()const;        //当前字符串是否为空<br>void resize(int len,char c);//把字符串当前大小置为len，并用字符c填充不足的部分</p>
+<p>string类的输入输出操作:<br>string类重载运算符operator&gt;&gt;用于输入，同样重载运算符operator&lt;&lt;用于输出操作。<br>函数getline(istream &amp;in,string &amp;s);用于从输入流in中读取字符串到s中，以换行符’\n’分开。</p>
+<p>string的赋值：<br>string &amp;operator=(const string &amp;s);//把字符串s赋给当前字符串<br>string &amp;assign(const char <em>s);//用c类型字符串s赋值<br>string &amp;assign(const char </em>s,int n);//用c字符串s开始的n个字符赋值<br>string &amp;assign(const string &amp;s);//把字符串s赋给当前字符串<br>string &amp;assign(int n,char c);//用n个字符c赋值给当前字符串<br>string &amp;assign(const string &amp;s,int start,int n);//把字符串s中从start开始的n个字符赋给当前字符串<br>string &amp;assign(const_iterator first,const_itertor last);//把first和last迭代器之间的部分赋给字符串</p>
+<p>string的连接：<br>string &amp;operator+=(const string &amp;s);//把字符串s连接到当前字符串的结尾<br>string &amp;append(const char <em>s);            //把c类型字符串s连接到当前字符串结尾<br>string &amp;append(const char </em>s,int n);//把c类型字符串s的前n个字符连接到当前字符串结尾<br>string &amp;append(const string &amp;s);    //同operator+=()<br>string &amp;append(const string &amp;s,int pos,int n);//把字符串s中从pos开始的n个字符连接到当前字符串的结尾<br>string &amp;append(int n,char c);        //在当前字符串结尾添加n个字符c<br>string &amp;append(const_iterator first,const_iterator last);//把迭代器first和last之间的部分连接到当前字符串的结尾</p>
+<p>string的比较：<br>bool operator==(const string &amp;s1,const string &amp;s2)const;//比较两个字符串是否相等<br>运算符”&gt;”,”&lt;”,”&gt;=”,”&lt;=”,”!=”均被重载用于字符串的比较；<br>int compare(const string &amp;s) const;//比较当前字符串和s的大小<br>int compare(int pos, int n,const string &amp;s)const;//比较当前字符串从pos开始的n个字符组成的字符串与s的大小<br>int compare(int pos, int n,const string &amp;s,int pos2,int n2)const;//比较当前字符串从pos开始的n个字符组成的字符串与s中<br>//pos2开始的n2个字符组成的字符串的大小<br>int compare(const char <em>s) const;<br>int compare(int pos, int n,const char </em>s) const;<br>int compare(int pos, int n,const char *s, int pos2) const;<br>compare函数在&gt;时返回1，&lt;时返回-1，==时返回0  </p>
+<p>string的子串：<br>string substr(int pos = 0,int n = npos) const;//返回pos开始的n个字符组成的字符串</p>
+<p>string的交换：<br>void swap(string &amp;s2);    //交换当前字符串与s2的值</p>
+<p>string类的查找函数：<br>int find(char c, int pos = 0) const;//从pos开始查找字符c在当前字符串的位置<br>int find(const char <em>s, int pos = 0) const;//从pos开始查找字符串s在当前串中的位置<br>int find(const char </em>s, int pos, int n) const;//从pos开始查找字符串s中前n个字符在当前串中的位置<br>int find(const string &amp;s, int pos = 0) const;//从pos开始查找字符串s在当前串中的位置<br>//查找成功时返回所在位置，失败返回string::npos的值<br>int rfind(char c, int pos = npos) const;//从pos开始从后向前查找字符c在当前串中的位置<br>int rfind(const char <em>s, int pos = npos) const;<br>int rfind(const char </em>s, int pos, int n = npos) const;<br>int rfind(const string &amp;s,int pos = npos) const;<br>//从pos开始从后向前查找字符串s中前n个字符组成的字符串在当前串中的位置，成功返回所在位置，失败时返回string::npos的值<br>int find_first_of(char c, int pos = 0) const;//从pos开始查找字符c第一次出现的位置<br>int find_first_of(const char <em>s, int pos = 0) const;<br>int find_first_of(const char </em>s, int pos, int n) const;<br>int find_first_of(const string &amp;s,int pos = 0) const;<br>//从pos开始查找当前串中第一个在s的前n个字符组成的数组里的字符的位置。查找失败返回string::npos<br>int find_first_not_of(char c, int pos = 0) const;<br>int find_first_not_of(const char <em>s, int pos = 0) const;<br>int find_first_not_of(const char </em>s, int pos,int n) const;<br>int find_first_not_of(const string &amp;s,int pos = 0) const;<br>//从当前串中查找第一个不在串s中的字符出现的位置，失败返回string::npos<br>int find_last_of(char c, int pos = npos) const;<br>int find_last_of(const char <em>s, int pos = npos) const;<br>int find_last_of(const char </em>s, int pos, int n = npos) const;<br>int find_last_of(const string &amp;s,int pos = npos) const;<br>int find_last_not_of(char c, int pos = npos) const;<br>int find_last_not_of(const char <em>s, int pos = npos) const;<br>int find_last_not_of(const char </em>s, int pos, int n) const;<br>int find_last_not_of(const string &amp;s,int pos = npos) const;<br>//find_last_of和find_last_not_of与find_first_of和find_first_not_of相似，只不过是从后向前查找</p>
+<p>string类的替换函数：<br>string &amp;replace(int p0, int n0,const char <em>s);//删除从p0开始的n0个字符，然后在p0处插入串s<br>string &amp;replace(int p0, int n0,const char </em>s, int n);//删除p0开始的n0个字符，然后在p0处插入字符串s的前n个字符<br>string &amp;replace(int p0, int n0,const string &amp;s);//删除从p0开始的n0个字符，然后在p0处插入串s<br>string &amp;replace(int p0, int n0,const string &amp;s, int pos, int n);//删除p0开始的n0个字符，然后在p0处插入串s中从pos开始的n个字符<br>string &amp;replace(int p0, int n0,int n, char c);//删除p0开始的n0个字符，然后在p0处插入n个字符c<br>string &amp;replace(iterator first0, iterator last0,const char <em>s);//把[first0，last0）之间的部分替换为字符串s<br>string &amp;replace(iterator first0, iterator last0,const char </em>s, int n);//把[first0，last0）之间的部分替换为s的前n个字符<br>string &amp;replace(iterator first0, iterator last0,const string &amp;s);//把[first0，last0）之间的部分替换为串s<br>string &amp;replace(iterator first0, iterator last0,int n, char c);//把[first0，last0）之间的部分替换为n个字符c<br>string &amp;replace(iterator first0, iterator last0,const_iterator first, const_iterator last);//把[first0，last0）之间的部分替换成[first，last）之间的字符串</p>
+<p>string类的插入函数：<br>string &amp;insert(int p0, const char <em>s);<br>string &amp;insert(int p0, const char </em>s, int n);<br>string &amp;insert(int p0,const string &amp;s);<br>string &amp;insert(int p0,const string &amp;s, int pos, int n);<br>//前4个函数在p0位置插入字符串s中pos开始的前n个字符<br>string &amp;insert(int p0, int n, char c);//此函数在p0处插入n个字符c<br>iterator insert(iterator it, char c);//在it处插入字符c，返回插入后迭代器的位置<br>void insert(iterator it, const_iterator first, const_iterator last);//在it处插入[first，last）之间的字符<br>void insert(iterator it, int n, char c);//在it处插入n个字符c</p>
+<p>string类的删除函数<br>iterator erase(iterator first, iterator last);//删除[first，last）之间的所有字符，返回删除后迭代器的位置<br>iterator erase(iterator it);//删除it指向的字符，返回删除后迭代器的位置<br>string &amp;erase(int pos = 0, int n = npos);//删除pos开始的n个字符，返回修改后的字符串</p>
+<p>string类的迭代器处理：<br>string类提供了向前和向后遍历的迭代器iterator，迭代器提供了访问各个字符的语法，类似于指针操作，迭代器不检查范围。<br>用string::iterator或string::const_iterator声明迭代器变量，const_iterator不允许改变迭代的内容。常用迭代器函数有：<br>const_iterator begin()const;<br>iterator begin();                //返回string的起始位置<br>const_iterator end()const;<br>iterator end();                    //返回string的最后一个字符后面的位置<br>const_iterator rbegin()const;<br>iterator rbegin();                //返回string的最后一个字符的位置<br>const_iterator rend()const;<br>iterator rend();                    //返回string第一个字符位置的前面<br>rbegin和rend用于从后向前的迭代访问，通过设置迭代器string::reverse_iterator,string::const_reverse_iterator实现</p>
+<p>字符串流处理：<br>通过定义ostringstream和istringstream变量实现，#include <sstream>头文件中<br>例如：<br>    string input(“hello,this is a test”);<br>    istringstream is(input);<br>    string s1,s2,s3,s4;<br>    is&gt;&gt;s1&gt;&gt;s2&gt;&gt;s3&gt;&gt;s4;//s1=”hello,this”,s2=”is”,s3=”a”,s4=”test”<br>    ostringstream os;<br>    os&lt;&lt;s1&lt;&lt;s2&lt;&lt;s3&lt;&lt;s4;<br>    cout&lt;&lt;os.str();</sstream></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/10/23/dev/CPP/cpp_string/" data-id="cilxubl4f005f1kjigs2zznej" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/10/23/dev/CPP/cpp_string/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/blade" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -422,7 +492,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/23/dev/blade/" data-id="cilxu7lzo0051zvji5smbc2xb" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/23/dev/blade/" data-id="cilxubl4a00541kjivj6ci7tr" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/23/dev/blade/#ds-thread" class="article-comment-link">评论</a>
       
@@ -482,7 +552,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/" data-id="cilxu7lzx005hzvjilkmrmfst" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/" data-id="cilxubl4i005k1kjiizs5xq30" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/#ds-thread" class="article-comment-link">评论</a>
       
@@ -535,7 +605,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/12/dev/maven_assembly/" data-id="cilxu7lyz003qzvji2i6yoh50" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/maven_assembly/" data-id="cilxubl35003t1kjiei6txgj9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/12/dev/maven_assembly/#ds-thread" class="article-comment-link">评论</a>
       
@@ -588,73 +658,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="cilxu7lz2003wzvji711rn41s" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="cilxubl3b003z1kjily0onswz" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/12/dev/java_math_stat/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-internet/ad/cookie" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/10/internet/ad/cookie/">关于Cookie</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/10/internet/ad/cookie/">
-      <time datetime="2015-10-09T16:00:00.000Z" itemprop="datePublished">2015-10-10</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/internet/">internet</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="u5173_u4E8ECookie"><a href="#u5173_u4E8ECookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><hr>
-<p><img src="/images/other/cookie.jpg" alt=""></p>
-<h3 id="Cookie_u7684_u4F20_u9012_u6D41_u7A0B"><a href="#Cookie_u7684_u4F20_u9012_u6D41_u7A0B" class="headerlink" title="Cookie的传递流程"></a>Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
-<h3 id="u5173_u4E8ECookie_u7684_u4E00_u4E9B_u77E5_u8BC6_u70B9"><a href="#u5173_u4E8ECookie_u7684_u4E00_u4E9B_u77E5_u8BC6_u70B9" class="headerlink" title="关于Cookie的一些知识点"></a>关于Cookie的一些知识点</h3><ol>
-<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
-<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
-<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="cilxu7lxx0028zvjiuf73cwli" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li></ul>
-
     </footer>
   </div>
   
@@ -713,6 +721,23 @@
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/03/18/dev/python/python_mysql_page/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/03/18/dev/python/python_mysql_page/" class="title">python mysql 分页程序</a></p>
+              <p class="item-date"><time datetime="2016-03-18T04:10:56.000Z" itemprop="datePublished">2016-03-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/03/18/dev/python/python_mysql/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -744,23 +769,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/03/01/algo/ml/18/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/03/01/algo/ml/18/" class="title">18大经典数据挖掘算法小结</a></p>
-              <p class="item-date"><time datetime="2016-02-29T16:00:00.000Z" itemprop="datePublished">2016-03-01</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -770,7 +778,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">28</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -779,7 +787,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -797,7 +805,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
