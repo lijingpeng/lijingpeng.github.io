@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        84
+        85
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,72 @@
 
       
       <section id="main">
+      <article id="post-dev/web/python_http_server" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/18/dev/web/python_http_server/">Python HTTP server</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/18/dev/web/python_http_server/">
+      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <ol>
+<li><p>HTTP GET</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> BaseHTTPRequestHandler</span><br><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GetHandler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></span><br><span class="line">        parsed_path = urlparse.urlparse(self.path)</span><br><span class="line">        message_parts = [</span><br><span class="line">                <span class="string">'CLIENT VALUES:'</span>,</span><br><span class="line">                <span class="string">'client_address=%s (%s)'</span> % (self.client_address,</span><br><span class="line">                                            self.address_string()),</span><br><span class="line">                <span class="string">'command=%s'</span> % self.command,</span><br><span class="line">                <span class="string">'path=%s'</span> % self.path,</span><br><span class="line">                <span class="string">'real path=%s'</span> % parsed_path.path,</span><br><span class="line">                <span class="string">'query=%s'</span> % parsed_path.query,</span><br><span class="line">                <span class="string">'request_version=%s'</span> % self.request_version,</span><br><span class="line">                <span class="string">''</span>,</span><br><span class="line">                <span class="string">'SERVER VALUES:'</span>,</span><br><span class="line">                <span class="string">'server_version=%s'</span> % self.server_version,</span><br><span class="line">                <span class="string">'sys_version=%s'</span> % self.sys_version,</span><br><span class="line">                <span class="string">'protocol_version=%s'</span> % self.protocol_version,</span><br><span class="line">                <span class="string">''</span>,</span><br><span class="line">                <span class="string">'HEADERS RECEIVED:'</span>,</span><br><span class="line">                ]</span><br><span class="line">        <span class="keyword">for</span> name, value <span class="keyword">in</span> sorted(self.headers.items()):</span><br><span class="line">            message_parts.append(<span class="string">'%s=%s'</span> % (name, value.rstrip()))</span><br><span class="line">        message_parts.append(<span class="string">''</span>)</span><br><span class="line">        message = <span class="string">'\r\n'</span>.join(message_parts)</span><br><span class="line">        self.send_response(<span class="number">200</span>)</span><br><span class="line">        self.end_headers()</span><br><span class="line">        self.wfile.write(message)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer</span><br><span class="line">    server = HTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), GetHandler)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></span><br><span class="line">    server.serve_forever()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>HTTP POST</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> BaseHTTPRequestHandler</span><br><span class="line"><span class="keyword">import</span> cgi</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostHandler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_POST</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="comment"># Parse the form data posted</span></span><br><span class="line">        form = cgi.FieldStorage(</span><br><span class="line">            fp=self.rfile, </span><br><span class="line">            headers=self.headers,</span><br><span class="line">            environ=&#123;<span class="string">'REQUEST_METHOD'</span>:<span class="string">'POST'</span>,</span><br><span class="line">                     <span class="string">'CONTENT_TYPE'</span>:self.headers[<span class="string">'Content-Type'</span>],</span><br><span class="line">                     &#125;)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Begin the response</span></span><br><span class="line">        self.send_response(<span class="number">200</span>)</span><br><span class="line">        self.end_headers()</span><br><span class="line">        self.wfile.write(<span class="string">'Client: %s\n'</span> % str(self.client_address))</span><br><span class="line">        self.wfile.write(<span class="string">'User-agent: %s\n'</span> % str(self.headers[<span class="string">'user-agent'</span>]))</span><br><span class="line">        self.wfile.write(<span class="string">'Path: %s\n'</span> % self.path)</span><br><span class="line">        self.wfile.write(<span class="string">'Form data:\n'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Echo back information about what was posted in the form</span></span><br><span class="line">        <span class="keyword">for</span> field <span class="keyword">in</span> form.keys():</span><br><span class="line">            field_item = form[field]</span><br><span class="line">            <span class="keyword">if</span> field_item.filename:</span><br><span class="line">                <span class="comment"># The field contains an uploaded file</span></span><br><span class="line">                file_data = field_item.file.read()</span><br><span class="line">                file_len = len(file_data)</span><br><span class="line">                <span class="keyword">del</span> file_data</span><br><span class="line">                self.wfile.write(<span class="string">'\tUploaded %s as "%s" (%d bytes)\n'</span> % \</span><br><span class="line">                        (field, field_item.filename, file_len))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="comment"># Regular form value</span></span><br><span class="line">                self.wfile.write(<span class="string">'\t%s=%s\n'</span> % (field, form[field].value))</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer</span><br><span class="line">    server = HTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), PostHandler)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></span><br><span class="line">    server.serve_forever()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Threading and Forking</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer, BaseHTTPRequestHandler</span><br><span class="line"><span class="keyword">from</span> SocketServer <span class="keyword">import</span> ThreadingMixIn</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.send_response(<span class="number">200</span>)</span><br><span class="line">        self.end_headers()</span><br><span class="line">        message =  threading.currentThread().getName()</span><br><span class="line">        self.wfile.write(message)</span><br><span class="line">        self.wfile.write(<span class="string">'\n'</span>)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadedHTTPServer</span><span class="params">(ThreadingMixIn, HTTPServer)</span>:</span></span><br><span class="line">    <span class="string">"""Handle requests in a separate thread."""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    server = ThreadedHTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), Handler)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></span><br><span class="line">    server.serve_forever()</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>From: <a href="https://pymotw.com/2/BaseHTTPServer/" target="_blank" rel="external">https://pymotw.com/2/BaseHTTPServer/</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cim0k2jq5002oo2jirjxny354" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/CPP/cpp_big_number" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -166,7 +232,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cilxug8jr005m31ji0v42taci" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cim0k2js1005po2ji7epkc7tb" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/#ds-thread" class="article-comment-link">评论</a>
       
@@ -235,7 +301,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/28/algo/granger_causality/" data-id="cilxug8kq006z31ji0tv0o6jp" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/28/algo/granger_causality/" data-id="cim0k2jtb0072o2jimp5wl4hx" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/28/algo/granger_causality/#ds-thread" class="article-comment-link">评论</a>
       
@@ -362,7 +428,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="cilxug8jm005i31jiomclv038" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="cim0k2jrw005lo2ji2u7twbv7" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/#ds-thread" class="article-comment-link">评论</a>
       
@@ -477,89 +543,11 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/26/dev/CPP/cpp11/" data-id="cilxug8jt005o31jicql1swee" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/26/dev/CPP/cpp11/" data-id="cim0k2js3005ro2ji4sh3jyo9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/26/dev/CPP/cpp11/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/about_nio" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/26/dev/about_nio/">一个故事讲清楚 NIO</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/26/dev/about_nio/">
-      <time datetime="2015-10-26T08:19:56.000Z" itemprop="datePublished">2015-10-26</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>假设某银行只有10个职员, 该银行的业务流程分为以下4个步骤：</p>
-<p>1） 顾客填申请表（5分钟）；<br>2） 职员审核（1分钟）；<br>3） 职员叫保安去金库取钱（3分钟）；<br>4） 职员打印票据，并将钱和票据返回给顾客（1分钟）。<br>我们看看银行不同的工作方式对其工作效率到底有何影响。</p>
-<h3 id="1_BIO_u65B9_u5F0F"><a href="#1_BIO_u65B9_u5F0F" class="headerlink" title="1 BIO方式"></a>1 BIO方式</h3><p>每来一个顾客，马上由一位职员来接待处理，并且这个职员需要负责以上4个完整流程。当超过10个顾客时，剩余的顾客需要排队等候。</p>
-<p>我们算算这个银行一个小时到底能处理多少顾客？一个职员处理一个顾客需要10分钟（5+1+3+1）时间，一个小时（60分钟）能处理6个顾客，一共10个职员，那就是只能处理60个顾客。</p>
-<p>可以看到银行职员的工作状态并不饱和，比如在第1步，其实是处于等待中。</p>
-<p>这种工作其实就是BIO，每次来一个请求（顾客），就分配到线程池中由一个线程（职员）处理，如果超出了线程池的最大上限（10个），就扔到队列等待 。</p>
-<h3 id="2_NIO_u65B9_u5F0F"><a href="#2_NIO_u65B9_u5F0F" class="headerlink" title="2 NIO方式"></a>2 NIO方式</h3><p>如何提高银行的吞吐量呢？</p>
-<p>思路：分而治之，将任务拆分开来，由专门的人负责专门的任务。</p>
-<p>具体来讲，银行专门指派一名职员A，A的工作就是每当有顾客到银行，他就递上表格让顾客填写，每当有顾客填好表后，A就将其随机指派给剩余的9名职员完成后续步骤。</p>
-<p>我们计算下这种工作方式下银行一个小时到底能处理多少顾客？</p>
-<p>假设顾客非常多，职员A的工作处于饱和中，他不断的将填好表的顾客带到柜台处理，柜台一个职员5分钟能处理完一个顾客，一个小时9名职员能处理：9*（60/5）=108。</p>
-<p>可见工作方式的转变能带来效率的极大提升。</p>
-<p>这种工作方式其实就NIO的思路。下图是非常经典的NIO说明图，mainReactor线程负责监听server socket，accept新连接，并将建立的socket分派给subReactor；subReactor可以是一个线程，也可以是线程池（一般可以设置为CPU核数），负责多路分离已连接的socket，读写网络数据，这里的读写网络数据可类比顾客填表这一耗时动作，对具体的业务处理功能，其扔给worker线程池完成。</p>
-<p>可以看到典型NIO有三类线程，分别是mainReactor线程、subReactor线程、work线程。不同的线程干专业的事情，最终每个线程都没空着，系统的吞吐量自然就上去了。</p>
-<h3 id="3__u5F02_u6B65_u65B9_u5F0F"><a href="#3__u5F02_u6B65_u65B9_u5F0F" class="headerlink" title="3 异步方式"></a>3 异步方式</h3><p>第二种工作方式有没有什么可以提高的地方呢？</p>
-<p>仔细查看可发现第3步骤这3分钟柜台职员是在等待中度过的，那怎么能让柜台职员保持满负荷呢？</p>
-<p>还是分而治之的思路，指派1个职员B来专门负责第3步骤。每当柜台员工完成第2步时，就通知职员B来负责与保安沟通取钱。这时候柜台员工可以继续处理下一个顾客。当职员B拿到钱之后，他会怎么办呢？他会通知顾客钱已经到柜台了，让顾客重新排队处理，当柜台职员再次服务该顾客时，发现该顾客前3步已经完成，直接执行第4步即可。</p>
-<p>我们可以算算通过这种方法，银行的吞吐量能提高到多少。</p>
-<p>假设职员B的工作非常饱和，柜台一个职员现在2分钟能处理完一个顾客，一个小时8名职员能处理：8*（60/2）=240。</p>
-<p>在当今web服务中，经常需要通过RPC或者Http等方式调用第三方服务，这里对应的就是第3步，如果这步耗时较长，通过异步方式将能极大降低资源使用率。</p>
-<p>jetty Continuations 就实现了上述异步方式，有兴趣的同学可以去尝试下（<a href="http://wiki.eclipse.org/Jetty/Feature/Continuations）。" target="_blank" rel="external">http://wiki.eclipse.org/Jetty/Feature/Continuations）。</a></p>
-<p>NIO+异步的方式能让少量的线程（资源）做大量的事情，这适用于很多应用场景，比如代理服务、api服务、长连接服务等等，这些应用如果用同步方式将耗费大量机器资源。尽管NIO+异步能提高系统吞吐量，但其并不能让一个请求的等待时间下降，相反可能会增加等待时间。</p>
-<h3 id="4__u5C0F_u7ED3"><a href="#4__u5C0F_u7ED3" class="headerlink" title="4 小结"></a>4 小结</h3><p>总结就一句：“分而治之，将任务拆分开来，由专门的人负责专门的任务”，这不仅在计算机领域生效，在整个社会领域都生效。</p>
-<p>src: <a href="http://blog.jobbole.com/88984/" target="_blank" rel="external">http://blog.jobbole.com/88984/</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/26/dev/about_nio/" data-id="cilxug8jh005831ji6zl66tfp" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/26/dev/about_nio/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
-
     </footer>
   </div>
   
@@ -580,6 +568,23 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/20/dev/mysql_partition/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/MySQL/">MySQL</a></p>
+              <p class="item-title"><a href="/2016/03/20/dev/mysql_partition/" class="title">MySQL 分区表原理及使用详解</a></p>
+              <p class="item-date"><time datetime="2016-03-20T12:19:56.000Z" itemprop="datePublished">2016-03-20</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -649,23 +654,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/03/10/dev/python/python_logging/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/03/10/dev/python/python_logging/" class="title">Python日志输出——logging模块</a></p>
-              <p class="item-date"><time datetime="2016-03-10T02:19:56.000Z" itemprop="datePublished">2016-03-10</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -675,7 +663,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -702,7 +690,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

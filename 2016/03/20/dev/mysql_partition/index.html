@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>MySQL 分区表原理及使用详解 | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. 什么是表分区？表分区，是指根据一定规则，将数据库中的一张表分解成多个更小的，容易管理的部分。从逻辑上看，只有一张表，但是底层却是由多个物理分区组成。
+2. 表分区与分表的区别分表：指的是通过一定规则，将一张表分解成多张不同的表。比如将用户订单记录根据时间成多个表。 分表与分区的区别在于：分区从逻辑上来讲只有一张表，而分表则是将一张表分解成多张表。
+3. 表分区有什么好处？1） 分区表的数据可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 分区表原理及使用详解">
+<meta property="og:url" content="http://www.notehub.cn/2016/03/20/dev/mysql_partition/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="1. 什么是表分区？表分区，是指根据一定规则，将数据库中的一张表分解成多个更小的，容易管理的部分。从逻辑上看，只有一张表，但是底层却是由多个物理分区组成。
+2. 表分区与分表的区别分表：指的是通过一定规则，将一张表分解成多张不同的表。比如将用户订单记录根据时间成多个表。 分表与分区的区别在于：分区从逻辑上来讲只有一张表，而分表则是将一张表分解成多张表。
+3. 表分区有什么好处？1） 分区表的数据可">
+<meta property="og:updated_time" content="2016-03-20T12:46:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL 分区表原理及使用详解">
+<meta name="twitter:description" content="1. 什么是表分区？表分区，是指根据一定规则，将数据库中的一张表分解成多个更小的，容易管理的部分。从逻辑上看，只有一张表，但是底层却是由多个物理分区组成。
+2. 表分区与分表的区别分表：指的是通过一定规则，将一张表分解成多张不同的表。比如将用户订单记录根据时间成多个表。 分表与分区的区别在于：分区从逻辑上来讲只有一张表，而分表则是将一张表分解成多张表。
+3. 表分区有什么好处？1） 分区表的数据可">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        85
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        38
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-dev/mysql_partition" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MySQL 分区表原理及使用详解
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/03/20/dev/mysql_partition/">
+      <time datetime="2016-03-20T12:19:56.000Z" itemprop="datePublished">2016-03-20</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="1-__u4EC0_u4E48_u662F_u8868_u5206_u533A_uFF1F"><a href="#1-__u4EC0_u4E48_u662F_u8868_u5206_u533A_uFF1F" class="headerlink" title="1. 什么是表分区？"></a>1. 什么是表分区？</h2><p>表分区，是指根据一定规则，将数据库中的一张表分解成多个更小的，容易管理的部分。从逻辑上看，只有一张表，但是底层却是由多个物理分区组成。</p>
+<h2 id="2-__u8868_u5206_u533A_u4E0E_u5206_u8868_u7684_u533A_u522B"><a href="#2-__u8868_u5206_u533A_u4E0E_u5206_u8868_u7684_u533A_u522B" class="headerlink" title="2. 表分区与分表的区别"></a>2. 表分区与分表的区别</h2><p>分表：指的是通过一定规则，将一张表分解成多张不同的表。比如将用户订单记录根据时间成多个表。 分表与分区的区别在于：分区从逻辑上来讲只有一张表，而分表则是将一张表分解成多张表。</p>
+<h2 id="3-__u8868_u5206_u533A_u6709_u4EC0_u4E48_u597D_u5904_uFF1F"><a href="#3-__u8868_u5206_u533A_u6709_u4EC0_u4E48_u597D_u5904_uFF1F" class="headerlink" title="3. 表分区有什么好处？"></a>3. 表分区有什么好处？</h2><p>1） 分区表的数据可以分布在不同的物理设备上，从而高效地利用多个硬件设备。<br>2） 和单个磁盘或者文件系统相比，可以存储更多数据<br>3） 优化查询。在where语句中包含分区条件时，可以只扫描一个或多个分区表来提高查询效率；涉及sum和count语句时，也可以在多个分区上并行处理，最后汇总结果。<br>4） 分区表更容易维护。例如：想批量删除大量数据可以清除整个分区。<br>5） 可以使用分区表来避免某些特殊的瓶颈，例如InnoDB的单个索引的互斥访问，ext3问价你系统的inode锁竞争等。</p>
+<h2 id="4-__u5206_u533A_u8868_u7684_u9650_u5236_u56E0_u7D20"><a href="#4-__u5206_u533A_u8868_u7684_u9650_u5236_u56E0_u7D20" class="headerlink" title="4. 分区表的限制因素"></a>4. 分区表的限制因素</h2><p>1） 一个表最多只能有1024个分区<br>2） MySQL5.1中，分区表达式必须是整数，或者返回整数的表达式。在MySQL5.5中提供了非整数表达式分区的支持。<br>3） 如果分区字段中有主键或者唯一索引的列，那么多有主键列和唯一索引列都必须包含进来。即：分区字段要么不包含主键或者索引列，要么包含全部主键和索引列。<br>4） 分区表中无法使用外键约束<br>5） MySQL的分区适用于一个表的所有数据和索引，不能只对表数据分区而不对索引分区，也不能只对索引分区而不对表分区，也不能只对表的一部分数据分区。</p>
+<h2 id="5-__u5982_u4F55_u5224_u65AD_u5F53_u524DMySQL_u662F_u5426_u652F_u6301_u5206_u533A_uFF1F"><a href="#5-__u5982_u4F55_u5224_u65AD_u5F53_u524DMySQL_u662F_u5426_u652F_u6301_u5206_u533A_uFF1F" class="headerlink" title="5. 如何判断当前MySQL是否支持分区？"></a>5. 如何判断当前MySQL是否支持分区？</h2><p>命令：<code>show variables like &#39;%partition%&#39;</code> 运行结果:</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; show variables like '%partition%';
++-------------------+-------+
+| Variable_name     | Value |
++-------------------+-------+
+| have_partitioning | YES   |
++-------------------+-------+
+1 row in set (0.00 sec)</pre>
+
+<p>have_partintioning 的值为YES，表示支持分区。</p>
+<h2 id="6-_MySQL_u652F_u6301_u7684_u5206_u533A_u7C7B_u578B_u6709_u54EA_u4E9B_uFF1F"><a href="#6-_MySQL_u652F_u6301_u7684_u5206_u533A_u7C7B_u578B_u6709_u54EA_u4E9B_uFF1F" class="headerlink" title="6. MySQL支持的分区类型有哪些？"></a>6. MySQL支持的分区类型有哪些？</h2><p>1） RANGE分区：按照数据的区间范围分区<br>2） LIST分区：按照List中的值分区，与RANGE的区别是，range分区的区间范围值是连续的。<br>3） HASH分区<br>4） KEY分区 <strong>说明</strong> 在MySQL5.1版本中，RANGE,LIST,HASH分区要求分区键必须是INT类型，或者通过表达式返回INT类型。但KEY分区的时候，可以使用其他类型的列（BLOB，TEXT类型除外）作为分区键。</p>
+<h2 id="7-_Range_u5206_u533A"><a href="#7-_Range_u5206_u533A" class="headerlink" title="7. Range分区"></a>7. Range分区</h2><p>利用取值范围进行分区，区间要连续并且不能互相重叠。 语法：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">partition by range(exp)( //exp可以为列名或者表达式，比如to_date(created_date)
+    partition p0 values less than(num)
+)</pre>
+
+<p>例如：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; create table emp(
+    -&gt; id INT NOT null,
+    -&gt; store_id int not null
+    -&gt; )
+    -&gt; partition by range(store_id)(
+    -&gt;   partition p0 values less than(10),
+    -&gt;   partition p1 values less than(20)
+    -&gt; );</pre>
+
+<p>上面的语句创建了emp表，并根据store_id字段进行分区，小于10的值存在分区p0中，大于等于10，小于20的值存在分区p1中。 <strong>注意</strong> 每个分区都是按顺序定义的，从最低到最高。上面的语句，如果将less than(10) 和less than (20)的顺序颠倒过来，那么将报错，如下：</p>
+<pre class="brush: bash; gutter: false; first-line: 1">ERROR 1493 (HY000): VALUES LESS THAN value must be strictly increasing for each partition</pre>
+
+<p><strong>RANGE分区存在的问题</strong></p>
+<ol>
+<li>range范围覆盖问题：当插入的记录中对应的分区键的值不在分区定义的范围中的时候，插入语句会失败。 上面的例子，如果我插入一条store_id = 30的记录会怎么样呢？ 我们上面分区的时候，最大值是20，如果插入一条超过20的记录，会报错:<pre class="brush: bash; gutter: false; first-line: 1">mysql&gt; insert into emp(id,store_id) values(2,30);
+ERROR 1526 (HY000): Table has no partition for value 30</pre>
+
+</li>
+</ol>
+<p>提示30这个值没有对应的分区。 <strong>解决办法</strong> A. 预估分区键的值，及时新增分区。 B. 设置分区的时候，使用<code>values less than maxvalue</code> 子句,MAXVALUE表示最大的可能的整数值。 C. 尽量选择能够全部覆盖的字段作为分区键，比如一年的十二个月等。</p>
+<ol>
+<li>Range分区中，分区键的值如果是NULL，将被作为一个最小值来处理。</li>
+</ol>
+<h2 id="8-_LIST_u5206_u533A"><a href="#8-_LIST_u5206_u533A" class="headerlink" title="8. LIST分区"></a>8. LIST分区</h2><p></p><p>List分区是建立离散的值列表告诉数据库特定的值属于哪个分区。 语法：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">   partition by list(exp)( //exp为列名或者表达式
+        partition p0 values in (3,5)  //值为3和5的在p0分区
+    )</pre>
+
+<p>与Range不同的是，list分区不必生命任何特定的顺序。例如：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; create table emp1(
+    -&gt; id int not null,
+    -&gt; store_id int not null
+    -&gt; )
+    -&gt; partition by list(store_id)(
+    -&gt;   partition p0 values in (3,5),
+    -&gt;   partition p1 values in (2,6,7,9)
+    -&gt; );</pre>
+
+<p><strong>注意</strong> 如果插入的记录对应的分区键的值不在list分区指定的值中，将会插入失败。并且，list不能像range分区那样提供maxvalue。</p>
+<h2 id="9-_Columns_u5206_u533A"><a href="#9-_Columns_u5206_u533A" class="headerlink" title="9. Columns分区"></a>9. Columns分区</h2><p>MySQL5.5中引入的分区类型，解决了5.5版本之前range分区和list分区只支持整数分区的问题。 Columns分区可以细分为 range columns分区和 list columns分区，他们都支持整数，日期时间，字符串三大数据类型。（不支持text和blob类型作为分区键） columns分区还支持多列分区（这里不详细展开）。</p>
+<h2 id="10-_Hash_u5206_u533A"><a href="#10-_Hash_u5206_u533A" class="headerlink" title="10. Hash分区"></a>10. Hash分区</h2><p>Hash分区主要用来分散热点读，确保数据在预先确定个数的分区中尽可能平均分布。 MySQL支持两种Hash分区:常规Hash分区和线性Hash分区。 A. 常规Hash分区:使用取模算法 语法：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">partition by hash(store_id) partitions 4;</pre>
+
+<p>上面的语句，根据store_id对4取模，决定记录存储位置。 比如store_id = 234的记录，MOD(234,4)=2,所以会被存储在第二个分区。</p>
+<p><strong>常规Hash分区的优点和不足</strong> 优点：能够使数据尽可能的均匀分布。 缺点：不适合分区经常变动的需求。假如我要新增加两个分区，现在有6个分区，那么MOD(234,6)的结果与之前MOD(234,4)的结果就会出现不一致，这样大部分数据就需要重新计算分区。为解决此问题，MySQL提供了线性Hash分区。</p>
+<p>B. 线性Hash分区：分区函数是一个线性的2的幂的运算法则。 语法：</p>
+<pre class="brush: bash; gutter: false; first-line: 1">partition by LINER hash(store_id) partitions 4;</pre>
+
+<p>与常规Hash的不同在于，“Liner”关键字。 算法介绍: 假设要保存记录的分区编号为N,num为一个非负整数,表示分割成的分区的数量，那么N可以通过以下步骤得到：</p>
+<p>Step 1. 找到一个大于等于num的2的幂，这个值为V，V可以通过下面公式得到：</p>
+<p>V = Power(2,Ceiling(Log(2,num)))</p>
+<p>例如：刚才设置了4个分区，num=4，Log(2,4)=2,Ceiling(2)=2,power(2,2)=4,即V=4</p>
+<p>Step 2. 设置N=F(column_list)&amp;(V-1)</p>
+<p>例如：刚才V=4，store_id=234对应的N值，N = 234&amp;（4-1） =2</p>
+<p>Step 3. 当N&gt;=num,设置V=Ceiling(V/2),N=N&amp;(V-1)</p>
+<p>例如：store_id=234,N=2&lt;4,所以N就取值2，即可。</p>
+<p>假设上面算出来的N=5，那么V=Ceiling(2.5)=3,N=234&amp;(3-1)=1,即在第一个分区。</p>
+<p><strong>线性Hash的优点和不足</strong> 优点：在分区维护（增加，删除，合并，拆分分区）时，MySQL能够处理得更加迅速。 缺点：与常规Hash分区相比，线性Hash各个分区之间的数据分布不太均衡。</p>
+<h2 id="11-_Key_u5206_u533A"><a href="#11-_Key_u5206_u533A" class="headerlink" title="11. Key分区"></a>11. Key分区</h2><p>类似Hash分区，Hash分区允许使用用户自定义的表达式，但Key分区不允许使用用户自定义的表达式。Hash仅支持整数分区，而Key分区支持除了Blob和text的其他类型的列作为分区键。 语法:</p>
+<pre class="brush: bash; gutter: false; first-line: 1">partition by key(exp) partitions 4;//exp是零个或多个字段名的列表</pre>
+
+<p>key分区的时候，exp可以为空，如果为空，则默认使用主键作为分区键，没有主键的时候，会选择非空惟一键作为分区键。</p>
+<h2 id="12-__u5B50_u5206_u533A"><a href="#12-__u5B50_u5206_u533A" class="headerlink" title="12. 子分区"></a>12. 子分区</h2><p>分区表中对每个分区再次分割，又成为复合分区。</p>
+<h2 id="13-__u5206_u533A_u5BF9_u4E8ENULL_u503C_u7684_u5904_u7406"><a href="#13-__u5206_u533A_u5BF9_u4E8ENULL_u503C_u7684_u5904_u7406" class="headerlink" title="13. 分区对于NULL值的处理"></a>13. 分区对于NULL值的处理</h2><p>MySQ允许分区键值为NULL，分区键可能是一个字段或者一个用户定义的表达式。一般情况下，MySQL在分区的时候会把NULL值当作零值或者一个最小值进行处理。</p>
+<p><strong>注意</strong></p>
+<p>Range分区中：NULL值被当作最小值来处理</p>
+<p>List分区中：NULL值必须出现在列表中，否则不被接受</p>
+<p>Hash/Key分区中：NULL值会被当作零值来处理</p>
+<h2 id="14-__u5206_u533A_u7BA1_u7406"><a href="#14-__u5206_u533A_u7BA1_u7406" class="headerlink" title="14. 分区管理"></a>14. 分区管理</h2><p>分区管理包括对于分区的增加，删除，以及查询。</p>
+<p><strong>增加分区：</strong></p>
+<p>对于Range分区和LIst分区来说：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name add partition (partition p0 values ...(exp))</pre>
+
+<p>values后面的内容根据分区的类型不同而不同。</p>
+<p>对于Hash分区和Key分区来说：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name add partition partitions 8;</pre>
+
+<p>上面的语句，指的是新增8个分区 。</p>
+<p><strong>删除分区</strong></p>
+<p>对于Range分区和List分区：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name drop partition p0; //p0为要删除的分区名称</pre>
+
+<p>删除了分区，同时也将删除该分区中的所有数据。同时，如果删除了分区导致分区不能覆盖所有值，那么插入数据的时候会报错。</p>
+<p>对于Hash和Key分区：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name coalesce partition 2; //将分区缩减到2个</pre>
+
+<p><strong>coalesce [ˌkəʊəˈles] vi. 联合，合并</strong></p>
+<p>分区查询 1）查询某张表一共有多少个分区</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; select 
+ -&gt;   partition_name,
+ -&gt;   partition_expression,
+ -&gt;   partition_description,
+ -&gt;   table_rows
+ -&gt; from 
+ -&gt;   INFORMATION_SCHEMA.partitions
+ -&gt; where
+ -&gt;   table_schema='test'
+ -&gt;   and table_name = 'emp';
++----------------+----------------------+-----------------------+------------+
+| partition_name | partition_expression | partition_description | table_rows |
++----------------+----------------------+-----------------------+------------+
+| p0             | store_id             | 10                    |          0 |
+| p1             | store_id             | 20                    |          1 |
++----------------+----------------------+-----------------------+------------+</pre>
+
+<p>即，可以从information_schema.partitions表中查询。</p>
+<p>2）查看执行计划，判断查询数据是否进行了分区过滤</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; explain partitions select * from emp where store_id=10 \G;
+*************************** 1. row ***************************
+        id: 1
+select_type: SIMPLE
+     table: emp
+partitions: p1
+      type: system
+possible_keys: NULL
+       key: NULL
+   key_len: NULL
+       ref: NULL
+      rows: 1
+     Extra: 
+1 row in set (0.00 sec)</pre>
+
+<p>上面的结果：partitions:p1 表示数据在p1分区进行检索。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/03/20/dev/mysql_partition/" data-id="cim0k2jqy003to2ji4rnt4s9m" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/03/20/dev/mysql_partition/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/03/18/dev/web/jquery_datatable_ajax/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Jquery的DataTable插件 AJAX 服务器分页</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2016/03/20/dev/mysql_partition/" data-title="MySQL 分区表原理及使用详解" data-url="http://www.notehub.cn/2016/03/20/dev/mysql_partition/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/20/dev/mysql_partition/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/MySQL/">MySQL</a></p>
+              <p class="item-title"><a href="/2016/03/20/dev/mysql_partition/" class="title">MySQL 分区表原理及使用详解</a></p>
+              <p class="item-date"><time datetime="2016-03-20T12:19:56.000Z" itemprop="datePublished">2016-03-20</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/18/dev/web/jquery_datatable_ajax/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/03/18/dev/web/jquery_datatable_ajax/" class="title">Jquery的DataTable插件 AJAX 服务器分页</a></p>
+              <p class="item-date"><time datetime="2016-03-18T07:19:56.000Z" itemprop="datePublished">2016-03-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/18/dev/web/python_mysql_code/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/03/18/dev/web/python_mysql_code/" class="title">Python mysql 编码问题</a></p>
+              <p class="item-date"><time datetime="2016-03-18T04:19:56.000Z" itemprop="datePublished">2016-03-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/18/dev/python/python_mysql_page/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/03/18/dev/python/python_mysql_page/" class="title">python mysql 分页程序</a></p>
+              <p class="item-date"><time datetime="2016-03-18T04:10:56.000Z" itemprop="datePublished">2016-03-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/18/dev/python/python_mysql/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/03/18/dev/python/python_mysql/" class="title">Python MySQLdb</a></p>
+              <p class="item-date"><time datetime="2016-03-18T02:19:56.000Z" itemprop="datePublished">2016-03-18</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 17.5px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
