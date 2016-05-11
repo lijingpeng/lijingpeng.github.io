@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        85
+        86
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,101 @@
 
       
       <section id="main">
+      <article id="post-dev/docker/docker_cmd" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/23/dev/docker/docker_cmd/">Docker基本命令</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/12/23/dev/docker/docker_cmd/">
+      <time datetime="2015-12-23T02:19:56.000Z" itemprop="datePublished">2015-12-23</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>Docker基本命令  </p>
+<ol>
+<li>查看docker信息（version、info）</li>
+</ol>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看docker版本</span></span><br><span class="line"><span class="variable">$docker</span> version</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示docker系统的信息</span></span><br><span class="line"><span class="variable">$docker</span> <span class="keyword">info</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>对image的操作（search、pull、images、rmi、history）</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检索image</span></span><br><span class="line"><span class="variable">$docker</span> search image_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下载image</span></span><br><span class="line"><span class="variable">$docker</span> pull image_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出镜像列表; -a, --all=false Show all images; --no-trunc=false Don't truncate output; -q, --quiet=false Only show numeric IDs</span></span><br><span class="line"><span class="variable">$docker</span> images</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除一个或者多个镜像; -f, --force=false Force; --no-prune=false Do not delete untagged parents</span></span><br><span class="line"><span class="variable">$docker</span> rmi image_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示一个镜像的历史; --no-trunc=false Don't truncate output; -q, --quiet=false Only show numeric IDs</span></span><br><span class="line"><span class="variable">$docker</span> <span class="built_in">history</span> image_name</span><br></pre></td></tr></table></figure>
+<ol>
+<li>启动容器（run）</li>
+</ol>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">docker容器可以理解为在沙盒中运行的进程。这个沙盒包含了该进程运行所必须的资源，包括文件系统、系统类库、shell 环境等等。但这个沙盒默认是不会运行任何程序的。你需要在沙盒中运行一个进程来启动某一个容器。这个进程是该容器的唯一进程，所以当该进程结束的时候，容器也会完全的停止。</span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在容器中运行<span class="string">"echo"</span>命令，输出<span class="string">"hello word"</span></span></span><br><span class="line"><span class="variable">$docker</span> <span class="built_in">run</span> image_name echo <span class="string">"hello word"</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 交互式进入容器中</span></span><br><span class="line"><span class="variable">$docker</span> <span class="built_in">run</span> -i -t image_name /bin/bash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="preprocessor"># 在容器中安装新的程序</span></span><br><span class="line"><span class="variable">$docker</span> <span class="built_in">run</span> image_name apt-get install -y app_name</span><br><span class="line">Note：  在执行apt-get 命令的时候，要带上-y参数。如果不指定-y参数的话，apt-get命令会进入交互模式，需要用户输入命令来进行确认，但在docker环境中是无法响应这种交互的。apt-get 命令执行完毕之后，容器就会停止，但对容器的改动不会丢失。</span><br></pre></td></tr></table></figure>
+<ol>
+<li>查看容器（ps）</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出当前所有正在运行的container</span></span><br><span class="line"><span class="variable">$docker</span> ps</span><br><span class="line"><span class="comment"># 列出所有的container</span></span><br><span class="line"><span class="variable">$docker</span> ps <span class="operator">-a</span></span><br><span class="line"><span class="comment"># 列出最近一次启动的container</span></span><br><span class="line"><span class="variable">$docker</span> ps <span class="operator">-l</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>保存对容器的修改（commit）</li>
+</ol>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">当你对某一个容器做了修改之后（通过在容器中运行某一个命令），可以把对容器的修改保存下来，这样下次可以从保存后的最新状态运行该容器。</span><br><span class="line"></span><br><span class="line"># 保存对容器的修改; -a, --author=<span class="string">""</span> Author; -m, --message=<span class="string">""</span> Commit message</span><br><span class="line"><span class="variable">$docker</span> commit ID new_image_name</span><br><span class="line">Note：  <span class="keyword">image</span>相当于类，<span class="keyword">container</span>相当于实例，不过可以动态给实例安装新软件，然后把这个<span class="keyword">container</span>用commit命令固化成一个<span class="keyword">image</span>。</span><br></pre></td></tr></table></figure>
+<ol>
+<li>对容器的操作（rm、stop、start、kill、logs、diff、top、cp、restart、attach）</li>
+</ol>
+<figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除所有容器</span></span><br><span class="line"><span class="variable">$docker</span> rm `docker ps -a -q`</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除单个容器; -f, --force=false; -l, --link=false Remove the specified link and not the underlying container; -v, --volumes=false Remove the volumes associated to the container</span></span><br><span class="line"><span class="variable">$docker</span> rm <span class="keyword">Name</span>/ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 停止、启动、杀死一个容器</span></span><br><span class="line"><span class="variable">$docker</span> stop <span class="keyword">Name</span>/ID</span><br><span class="line"><span class="variable">$docker</span> start <span class="keyword">Name</span>/ID</span><br><span class="line"><span class="variable">$docker</span> kill <span class="keyword">Name</span>/ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从一个容器中取日志; -f, --follow=false Follow log output; -t, --timestamps=false Show timestamps</span></span><br><span class="line"><span class="variable">$docker</span> logs <span class="keyword">Name</span>/ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 列出一个容器里面被改变的文件或者目录，list列表会显示出三种事件，A 增加的，D 删除的，C 被改变的</span></span><br><span class="line"><span class="variable">$docker</span> diff <span class="keyword">Name</span>/ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 显示一个运行的容器里面的进程信息</span></span><br><span class="line"><span class="variable">$docker</span> top <span class="keyword">Name</span>/ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从容器里面拷贝文件/目录到本地一个路径</span></span><br><span class="line"><span class="variable">$docker</span> cp <span class="keyword">Name</span>:/container_path to_path</span><br><span class="line"><span class="variable">$docker</span> cp ID:/container_path to_path</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重启一个正在运行的容器; -t, --time=10 Number of seconds to try to stop for before killing the container, Default=10</span></span><br><span class="line"><span class="variable">$docker</span> restart <span class="keyword">Name</span>/ID</span><br><span class="line"></span><br><span class="line"><span class="comment"># 附加到一个运行的容器上面; --no-stdin=false Do not attach stdin; --sig-proxy=true Proxify all received signal to the process</span></span><br><span class="line"><span class="variable">$docker</span> attach ID</span><br><span class="line">Note： attach命令允许你查看或者影响一个运行的容器。你可以在同一时间attach同一个容器。你也可以从一个容器中脱离出来，是从CTRL-C。</span><br></pre></td></tr></table></figure>
+<ol>
+<li>保存和加载镜像（save、load）</li>
+</ol>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">当需要把一台机器上的镜像迁移到另一台机器的时候，需要保存镜像与加载镜像。</span><br><span class="line"></span><br><span class="line"># 保存镜像到一个tar包; -o, --output=<span class="string">""</span> Write to <span class="keyword">an</span> <span class="keyword">file</span></span><br><span class="line"><span class="label">$docker</span> <span class="keyword">save</span> image_name -o file_path</span><br><span class="line"># 加载一个tar包格式的镜像; -i, --<span class="keyword">input</span>=<span class="string">""</span> <span class="keyword">Read</span> from a tar archive <span class="keyword">file</span></span><br><span class="line"><span class="label">$docker</span> load -i file_path</span><br><span class="line"></span><br><span class="line"># 机器a</span><br><span class="line"><span class="label">$docker</span> <span class="keyword">save</span> image_name &gt; /home/<span class="keyword">save</span>.tar</span><br><span class="line"># 使用scp将<span class="keyword">save</span>.tar拷到机器b上，然后：</span><br><span class="line"><span class="label">$docker</span> load &lt; /home/<span class="keyword">save</span>.tar</span><br></pre></td></tr></table></figure>
+<ol>
+<li>登录registry server（login）</li>
+</ol>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 登陆registry server; -<span class="keyword">e</span>, --email=<span class="string">""</span> Email; -p, --password=<span class="string">""</span> Password; -<span class="keyword">u</span>, --username=<span class="string">""</span> Username</span><br><span class="line"><span class="label">$docker</span> login</span><br></pre></td></tr></table></figure>
+<ol>
+<li>发布image（push）</li>
+</ol>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 发布docker镜像</span></span><br><span class="line"><span class="variable">$docker</span> <span class="keyword">push</span> new_image_name</span><br></pre></td></tr></table></figure>
+<ol>
+<li>根据Dockerfile 构建出一个容器</li>
+</ol>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#build</span><br><span class="line">      -<span class="ruby">-no-cache=<span class="keyword">false</span> <span class="constant">Do</span> <span class="keyword">not</span> use cache <span class="keyword">when</span> building the image</span><br><span class="line"></span>      -<span class="ruby">q, --quiet=<span class="keyword">false</span> <span class="constant">Suppress</span> the verbose output generated by the containers</span><br><span class="line"></span>      -<span class="ruby">-rm=<span class="keyword">true</span> <span class="constant">Remove</span> intermediate containers after a successful build</span><br><span class="line"></span>      -<span class="ruby">t, --tag=<span class="string">""</span> <span class="constant">Repository</span> name (<span class="keyword">and</span> optionally a tag) to be applied to the resulting image <span class="keyword">in</span> <span class="keyword">case</span> of success</span><br><span class="line"></span>$docker build -t image_name Dockerfile_path</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/12/23/dev/docker/docker_cmd/" data-id="cio2axv4q0051ogpjx4q249ny" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/12/23/dev/docker/docker_cmd/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/search/elasticsearch_base" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -178,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/" data-id="cim0k2jqj0036o2jixcw4xvqv" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/" data-id="cio2axv3n0036ogpj1e6e5n8m" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/#ds-thread" class="article-comment-link">评论</a>
       
@@ -264,7 +359,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/11/ads/skip_the_ad/" data-id="cim0k2jto007no2jisccgwiwt" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/11/ads/skip_the_ad/" data-id="cio2axv72007pogpjzkgkz7x0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/11/ads/skip_the_ad/#ds-thread" class="article-comment-link">评论</a>
       
@@ -358,7 +453,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/09/dev/python/python_mock/" data-id="cim0k2jqt003mo2jiukbhmkl1" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/09/dev/python/python_mock/" data-id="cio2axv3w003mogpjjrtgtgp7" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/09/dev/python/python_mock/#ds-thread" class="article-comment-link">评论</a>
       
@@ -419,7 +514,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/08/dev/search/Elasticsearch/" data-id="cim0k2jql003ao2ji6vw2oepr" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/08/dev/search/Elasticsearch/" data-id="cio2axv3p003aogpjsl8bq6m6" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/08/dev/search/Elasticsearch/#ds-thread" class="article-comment-link">评论</a>
       
@@ -434,75 +529,8 @@
 
 
     
-      <article id="post-dev/docker/docker" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/04/dev/docker/docker/">MAC docker私有镜像安装配置</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/12/04/dev/docker/docker/">
-      <time datetime="2015-12-04T02:19:56.000Z" itemprop="datePublished">2015-12-04</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>MAC docker私有镜像安装配置：</p>
-<ol>
-<li>先安装brew install swig</li>
-<li><p>在安装docker-registry先安装M2Crypto</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:martinpaljak/M2Crypto.git</span><br><span class="line"><span class="built_in">cd</span> M2Crypto</span><br><span class="line">sudo python setup.py install</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>安装gevent</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo CFLAGS=<span class="string">'-std=c99'</span> pip install gevent==<span class="number">1.0</span>.<span class="number">1</span></span><br><span class="line"><span class="number">4</span>. sudo pip install docker-registry</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重启<br><a href="http://stackoverflow.com/questions/31990757/network-timed-out-while-trying-to-connect-to-https-index-docker-io" target="_blank" rel="external">http://stackoverflow.com/questions/31990757/network-timed-out-while-trying-to-connect-to-https-index-docker-io</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">I had the same problem this morning and the following fixed it <span class="keyword">for</span> me:</span><br><span class="line"></span><br><span class="line">$ docker-machine restart default      <span class="comment"># Restart the environment</span></span><br><span class="line">$ <span class="built_in">eval</span> $(docker-machine env default)  <span class="comment"># Refresh your environment settings</span></span><br><span class="line">It appears that this is due to the Docker virtual machine getting itself into a strange state.</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/04/dev/docker/docker/" data-id="cim0k2jro0054o2ji3m4b2pdo" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/12/04/dev/docker/docker/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/4/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/6/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/4/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/6/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -513,6 +541,24 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/05/11/dev/Java/java_volatile/" class="thumbnail">
+  
+    <span style="background-image:url(/images/java/thread4_2.jpg
+)" alt="Java多线程-volatile关键字" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+              <p class="item-title"><a href="/2016/05/11/dev/Java/java_volatile/" class="title">Java多线程-volatile关键字</a></p>
+              <p class="item-date"><time datetime="2016-05-11T03:19:56.000Z" itemprop="datePublished">2016-05-11</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -582,23 +628,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/03/18/dev/python/python_mysql/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/03/18/dev/python/python_mysql/" class="title">Python MySQLdb</a></p>
-              <p class="item-date"><time datetime="2016-03-18T02:19:56.000Z" itemprop="datePublished">2016-03-18</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -608,7 +637,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -635,7 +664,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
