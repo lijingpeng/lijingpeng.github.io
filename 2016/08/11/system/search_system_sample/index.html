@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用Elasticsearch和docker快速搭建一个搜索引擎 | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="search_system_example快速搭建一个搜索引擎，示例程序，地址：https://github.com/lijingpeng/search_system_example
+有时候你可能有这样的小需求，短时间内快速搭建一个规模不大的搜索引擎，并提供一个简单的界面给同事或者小部分人使用，这篇文章旨在介绍搭建一个简单搜索引擎的步骤，并力求做到：
+
+搜索引擎和数据分离，搜索引擎不应该依赖于数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Elasticsearch和docker快速搭建一个搜索引擎">
+<meta property="og:url" content="http://www.notehub.cn/2016/08/11/system/search_system_sample/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="search_system_example快速搭建一个搜索引擎，示例程序，地址：https://github.com/lijingpeng/search_system_example
+有时候你可能有这样的小需求，短时间内快速搭建一个规模不大的搜索引擎，并提供一个简单的界面给同事或者小部分人使用，这篇文章旨在介绍搭建一个简单搜索引擎的步骤，并力求做到：
+
+搜索引擎和数据分离，搜索引擎不应该依赖于数据">
+<meta property="og:updated_time" content="2016-08-11T12:48:21.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Elasticsearch和docker快速搭建一个搜索引擎">
+<meta name="twitter:description" content="search_system_example快速搭建一个搜索引擎，示例程序，地址：https://github.com/lijingpeng/search_system_example
+有时候你可能有这样的小需求，短时间内快速搭建一个规模不大的搜索引擎，并提供一个简单的界面给同事或者小部分人使用，这篇文章旨在介绍搭建一个简单搜索引擎的步骤，并力求做到：
+
+搜索引擎和数据分离，搜索引擎不应该依赖于数据">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        89
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        39
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-system/search_system_sample" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      使用Elasticsearch和docker快速搭建一个搜索引擎
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/08/11/system/search_system_sample/">
+      <time datetime="2016-08-10T16:00:00.000Z" itemprop="datePublished">2016-08-11</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/system/">system</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h1 id="search_system_example"><a href="#search_system_example" class="headerlink" title="search_system_example"></a>search_system_example</h1><p>快速搭建一个搜索引擎，示例程序，地址：<a href="https://github.com/lijingpeng/search_system_example" target="_blank" rel="external">https://github.com/lijingpeng/search_system_example</a></p>
+<p>有时候你可能有这样的小需求，短时间内快速搭建一个规模不大的搜索引擎，并提供一个简单的界面给同事或者小部分人使用，这篇文章旨在介绍搭建一个简单搜索引擎的步骤，并力求做到：</p>
+<ol>
+<li>搜索引擎和数据分离，搜索引擎不应该依赖于数据存储和web接口  </li>
+<li>可移植性要好，可以快速从本地机器迁移到服务器或者云端主机</li>
+</ol>
+<p>分解任务之后，我们有三部分工作要做：  </p>
+<p>搜索引擎——&gt;准备要进行检索的数据——&gt;web查询接口  </p>
+<p>下面分别介绍每一步</p>
+<h2 id="u7B2C_u4E00_u6B65_uFF1A_u642D_u5EFA_u641C_u7D22_u5F15_u64CE"><a href="#u7B2C_u4E00_u6B65_uFF1A_u642D_u5EFA_u641C_u7D22_u5F15_u64CE" class="headerlink" title="第一步：搭建搜索引擎"></a>第一步：搭建搜索引擎</h2><p>首先我们要搭建一个纯的搜索引擎，这时候引擎是空跑的、可以移植的、提供了访问接口，但暂时还没有索引数据，我们使用Elasticsearch来搭建，关于Elasticsearch的简介请见：<a href="https://www.gitbook.com/book/looly/elasticsearch-the-definitive-guide-cn" target="_blank" rel="external">中文文档</a>  </p>
+<p>有两种方式搭建Elasticsearch引擎，一种是本地搭建，具体步骤请见上面的文档，一般来说会有一些依赖的环境问题需要你逐步安装。另外一种是基于Docker的安装，直接下载一个Elasticsearch的镜像就可以了，不需要关心安装过程中的依赖问题。我们推荐使用这种方式来搭建，具体如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 下载镜像</span></span><br><span class="line">docker pull dockerfile/elasticsearch</span><br><span class="line"><span class="comment"># 2. 测试镜像是否能正常运行</span></span><br><span class="line">docker run <span class="operator">-d</span> -p <span class="number">9200</span>:<span class="number">9200</span> -p <span class="number">9300</span>:<span class="number">9300</span> dockerfile/elasticsearch</span><br></pre></td></tr></table></figure></p>
+<p>通过访问<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 来查看容器是否访问成功，成功后会显示如下信息：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"Night Thrasher"</span></span>,</span><br><span class="line">    "<span class="attribute">cluster_name</span>": <span class="value"><span class="string">"elasticsearch"</span></span>,</span><br><span class="line">    "<span class="attribute">version</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">number</span>": <span class="value"><span class="string">"2.1.1"</span></span>,</span><br><span class="line">        "<span class="attribute">build_hash</span>": <span class="value"><span class="string">"40e2c53a6b6c2972b3d13846e450e66f4375bd71"</span></span>,</span><br><span class="line">        "<span class="attribute">build_timestamp</span>": <span class="value"><span class="string">"2015-12-15T13:05:55Z"</span></span>,</span><br><span class="line">        "<span class="attribute">build_snapshot</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">        "<span class="attribute">lucene_version</span>": <span class="value"><span class="string">"5.3.1"</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">tagline</span>": <span class="value"><span class="string">"You Know, for Search"</span></span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure></p>
+<p>还记得我们的目标之一是可提供一个索引和查询的接口么，<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 这个URL就是Elasticsearch提供给我们的索引和查询接口，如果你部署到了其他的接口和服务器，只需要做相应的修改就可以了。最简单的情况你可以使用curl url来存储和检索数据，如果你想使用python，请参见<a href="https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/index.html" target="_blank" rel="external">python接口封装</a>。</p>
+<p>我们的另一个目标是存储和引擎分离，因为Docker容器适合运行无状态的应用，而我们的索引数据显然是需要持久化存储的，我们需要用Docker Volume来存储索引数据，具体来说在启动容器的时候：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 映射本地主机目录data到容器中的/usr/share/elasticsearch目录中</span></span><br><span class="line"><span class="comment"># 容器中的elasticsearch启动的时候会将索引数据存储到该目录下，这样我们就实现了索引和容器引擎分离存储的目标</span></span><br><span class="line">docker run -v ~/data:/usr/share/elasticsearch/data -p <span class="number">9200</span>:<span class="number">9200</span> -p <span class="number">9300</span>:<span class="number">9300</span> <span class="operator">-d</span> docker/elasticsearch</span><br></pre></td></tr></table></figure></p>
+<p>截止到目前，我们的引擎已经搭建好了，该引擎将数据存储到我们指定的位置，实现了存储分离；提供了一个URL访问接口，不依赖具体的机器环境。下面一步就是准备待索引的数据，将数据索引起来以供检索。</p>
+<h2 id="u7B2C_u4E8C_u6B65__u7D22_u5F15_u6570_u636E"><a href="#u7B2C_u4E8C_u6B65__u7D22_u5F15_u6570_u636E" class="headerlink" title="第二步 索引数据"></a>第二步 索引数据</h2><h3 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h3><p>在索引数据前我们先通过一个小例子测试下python接口，例子来自于<a href="https://elasticsearch-py.readthedocs.io/en/master/" target="_blank" rel="external">这里</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</span><br><span class="line">es = Elasticsearch() <span class="comment"># 默认连接本地9200端口</span></span><br><span class="line"></span><br><span class="line">doc = &#123;</span><br><span class="line">    <span class="string">'author'</span>: <span class="string">'kimchy'</span>,</span><br><span class="line">    <span class="string">'text'</span>: <span class="string">'Elasticsearch: cool. bonsai cool.'</span>,</span><br><span class="line">    <span class="string">'timestamp'</span>: datetime.now(),</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment"># 索引数据</span></span><br><span class="line">res = es.index(index=<span class="string">"test-index"</span>, doc_type=<span class="string">'tweet'</span>, id=<span class="number">1</span>, body=doc)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = es.get(index=<span class="string">"test-index"</span>, doc_type=<span class="string">'tweet'</span>, id=<span class="number">1</span>)</span><br><span class="line">print(res[<span class="string">'_source'</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>{u&apos;text&apos;: u&apos;Elasticsearch: cool. bonsai cool.&apos;, u&apos;author&apos;: u&apos;kimchy&apos;, u&apos;timestamp&apos;: u&apos;2016-08-09T21:15:05.956257&apos;}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">es.indices.refresh(index=<span class="string">"test-index"</span>)</span><br><span class="line"></span><br><span class="line">res = es.search(index=<span class="string">"test-index"</span>, body=&#123;<span class="string">"query"</span>: &#123;<span class="string">"match_all"</span>: &#123;&#125;&#125;&#125;)</span><br><span class="line">print(<span class="string">"Got %d Hits:"</span> % res[<span class="string">'hits'</span>][<span class="string">'total'</span>])</span><br><span class="line"><span class="keyword">for</span> hit <span class="keyword">in</span> res[<span class="string">'hits'</span>][<span class="string">'hits'</span>]:</span><br><span class="line">    print(<span class="string">"%(timestamp)s %(author)s: %(text)s"</span> % hit[<span class="string">"_source"</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>Got 1 Hits:
+2016-08-09T21:15:05.956257 kimchy: Elasticsearch: cool. bonsai cool.
+</code></pre><h3 id="u7D22_u5F15_u6570_u636E"><a href="#u7D22_u5F15_u6570_u636E" class="headerlink" title="索引数据"></a>索引数据</h3><p>假设数据是用户的信息数据，包括user_id和user_name, 存储在csv文件中，以逗号分隔，如下所示：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">123</span>,小米</span><br><span class="line"><span class="number">234</span>,李明</span><br><span class="line"><span class="number">345</span>,李念</span><br></pre></td></tr></table></figure></p>
+<p>接下来我们索引这些数据，指定index名字为user_info, doc_type为basic, 代表用户的基本信息。代码(src/index.py)如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</span><br><span class="line">es = Elasticsearch()</span><br><span class="line"></span><br><span class="line">doc = &#123;</span><br><span class="line">    <span class="string">'user_id'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'user_name'</span>: <span class="string">''</span>,</span><br><span class="line">    <span class="string">'timestamp'</span>: datetime.now()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">id = <span class="number">0</span></span><br><span class="line">file = open(<span class="string">'/dataset/data.csv'</span>)</span><br><span class="line">lines = file.readlines()</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">    shard = line.strip(<span class="string">'\n'</span>).split(<span class="string">','</span>)</span><br><span class="line">    id += <span class="number">1</span></span><br><span class="line">    doc[<span class="string">'user_id'</span>] = shard[<span class="number">0</span>]</span><br><span class="line">    doc[<span class="string">'user_name'</span>] = shard[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">    res = es.index(index=<span class="string">"user_info"</span>, doc_type=<span class="string">'basic'</span>, id=id, body=doc)</span><br><span class="line">    print(res[<span class="string">'created'</span>]), id, <span class="string">' doc(s) indexed.'</span></span><br></pre></td></tr></table></figure>
+<p>输出：<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">True <span class="number">1</span>  <span class="function"><span class="title">doc</span><span class="params">(s)</span></span> indexed.  </span><br><span class="line">True <span class="number">2</span>  <span class="function"><span class="title">doc</span><span class="params">(s)</span></span> indexed.  </span><br><span class="line">True <span class="number">3</span>  <span class="function"><span class="title">doc</span><span class="params">(s)</span></span> indexed.</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">res = es.get(index=<span class="string">"user_info"</span>, doc_type=<span class="string">'basic'</span>, id=<span class="number">1</span>)</span><br><span class="line">print(res[<span class="string">'_source'</span>])</span><br></pre></td></tr></table></figure>
+<p>输出：  </p>
+<pre><code>{u&apos;user_id&apos;: u&apos;123&apos;, u&apos;user_name&apos;: u&apos;\u5c0f\u7c73&apos;, u&apos;timestamp&apos;: u&apos;2016-08-09T21:30:17.860371&apos;}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检索</span></span><br><span class="line">res = es.search(index=<span class="string">"user_info"</span>, body=&#123;<span class="string">"query"</span>: &#123;<span class="string">"match_all"</span>: &#123;&#125;&#125;&#125;)</span><br><span class="line">print(<span class="string">"Got %d Hits:"</span> % res[<span class="string">'hits'</span>][<span class="string">'total'</span>])</span><br><span class="line"><span class="keyword">for</span> hit <span class="keyword">in</span> res[<span class="string">'hits'</span>][<span class="string">'hits'</span>]:</span><br><span class="line">    print(<span class="string">"%(timestamp)s %(user_id)s: %(user_name)s"</span> % hit[<span class="string">"_source"</span>])</span><br></pre></td></tr></table></figure>
+<p>输出：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Got <span class="number">3</span> Hits:</span><br><span class="line"><span class="number">2016</span>-<span class="number">08</span>-<span class="number">09</span>T21:<span class="number">30</span>:<span class="number">17.860371</span> <span class="number">234</span>: 李明</span><br><span class="line"><span class="number">2016</span>-<span class="number">08</span>-<span class="number">09</span>T21:<span class="number">30</span>:<span class="number">17.860371</span> <span class="number">123</span>: 小米</span><br><span class="line"><span class="number">2016</span>-<span class="number">08</span>-<span class="number">09</span>T21:<span class="number">30</span>:<span class="number">17.860371</span> <span class="number">345</span>: 李念</span><br></pre></td></tr></table></figure></p>
+<p>到目前为止，我们的数据检索系统完成了，真的是非常的简单，elasticsearch Schema Free的特性在这里得到了很好的体现，无论你的数据是在本地文件还是在DB， 你只需要重写数据解析和索引模块就可以了。</p>
+<h2 id="u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3"><a href="#u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3" class="headerlink" title="第三步 提供一个web接口"></a>第三步 提供一个web接口</h2><h3 id="u6D4F_u89C8_u5668_u6D4B_u8BD5"><a href="#u6D4F_u89C8_u5668_u6D4B_u8BD5" class="headerlink" title="浏览器测试"></a>浏览器测试</h3><p>试试把这个地址复制到浏览器地址栏中执行：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">http:</span><span class="comment">//localhost:9200/user_info/basic/_search?q=user_id:345</span></span><br></pre></td></tr></table></figure></p>
+<p>没错，这个就是检索user_id = 345的用户基本信息，在浏览器中返回：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    "<span class="attribute">took</span>": <span class="value"><span class="number">6</span></span>,</span><br><span class="line">    "<span class="attribute">timed_out</span>": <span class="value"><span class="literal">false</span></span>,</span><br><span class="line">    "<span class="attribute">_shards</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">total</span>": <span class="value"><span class="number">5</span></span>,</span><br><span class="line">        "<span class="attribute">successful</span>": <span class="value"><span class="number">5</span></span>,</span><br><span class="line">        "<span class="attribute">failed</span>": <span class="value"><span class="number">0</span></span><br><span class="line">    </span>&#125;</span>,</span><br><span class="line">    "<span class="attribute">hits</span>": <span class="value">&#123;</span><br><span class="line">        "<span class="attribute">total</span>": <span class="value"><span class="number">1</span></span>,</span><br><span class="line">        "<span class="attribute">max_score</span>": <span class="value"><span class="number">0.30685282</span></span>,</span><br><span class="line">        "<span class="attribute">hits</span>": <span class="value">[</span><br><span class="line">            &#123;</span><br><span class="line">                "<span class="attribute">_index</span>": <span class="value"><span class="string">"user_info"</span></span>,</span><br><span class="line">                "<span class="attribute">_type</span>": <span class="value"><span class="string">"basic"</span></span>,</span><br><span class="line">                "<span class="attribute">_id</span>": <span class="value"><span class="string">"3"</span></span>,</span><br><span class="line">                "<span class="attribute">_score</span>": <span class="value"><span class="number">0.30685282</span></span>,</span><br><span class="line">                "<span class="attribute">_source</span>": <span class="value">&#123;</span><br><span class="line">                    "<span class="attribute">user_name</span>": <span class="value"><span class="string">"李念"</span></span>,</span><br><span class="line">                    "<span class="attribute">user_id</span>": <span class="value"><span class="string">"345"</span></span>,</span><br><span class="line">                    "<span class="attribute">timestamp</span>": <span class="value"><span class="string">"2016-08-09T21:30:17.860371"</span></span><br><span class="line">                </span>&#125;</span><br><span class="line">            </span>&#125;</span><br><span class="line">        ]</span><br><span class="line">    </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="web_u8BBF_u95EE_u754C_u9762"><a href="#web_u8BBF_u95EE_u754C_u9762" class="headerlink" title="web访问界面"></a>web访问界面</h3><p>接下来就可以编写web服务了，你可以使用任何你熟悉的web框架搭建一个友好的web访问界面，比如Spring MVC、或者是Flask。<br>// todo</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="cirqbmcs2000eg2s8ldr0slfs" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/08/11/system/search_system_sample/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/08/02/dev/Java/java_maven_log4j/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">log4j POM依赖问题</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-title="使用Elasticsearch和docker快速搭建一个搜索引擎" data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/11/system/search_system_sample/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/system/">system</a></p>
+              <p class="item-title"><a href="/2016/08/11/system/search_system_sample/" class="title">使用Elasticsearch和docker快速搭建一个搜索引擎</a></p>
+              <p class="item-date"><time datetime="2016-08-10T16:00:00.000Z" itemprop="datePublished">2016-08-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/02/dev/Java/java_maven_log4j/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+              <p class="item-title"><a href="/2016/08/02/dev/Java/java_maven_log4j/" class="title">log4j POM依赖问题</a></p>
+              <p class="item-date"><time datetime="2016-08-02T03:19:56.000Z" itemprop="datePublished">2016-08-02</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/05/23/dev/python/python_encoding/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/05/23/dev/python/python_encoding/" class="title">Python编码问题</a></p>
+              <p class="item-date"><time datetime="2016-05-23T02:19:56.000Z" itemprop="datePublished">2016-05-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/05/11/dev/Java/java_volatile/" class="thumbnail">
+  
+    <span style="background-image:url(/images/java/thread4_2.jpg
+)" alt="Java多线程-volatile关键字" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+              <p class="item-title"><a href="/2016/05/11/dev/Java/java_volatile/" class="title">Java多线程-volatile关键字</a></p>
+              <p class="item-date"><time datetime="2016-05-11T03:19:56.000Z" itemprop="datePublished">2016-05-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/03/20/dev/mysql_partition/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/MySQL/">MySQL</a></p>
+              <p class="item-title"><a href="/2016/03/20/dev/mysql_partition/" class="title">MySQL 分区表原理及使用详解</a></p>
+              <p class="item-date"><time datetime="2016-03-20T12:19:56.000Z" itemprop="datePublished">2016-03-20</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">30</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 13.33px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
