@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>kaggle之旧金山犯罪预测 | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="kaggle地址github地址
+数据概览123456import pandas as pdimport numpy as np# 载入数据train = pd.read_csv(&apos;~/kaggle/dataset/San_Francisco_Crime_Classification/train.csv&apos;, parse_dates = [&apos;Dates&apos;])test = pd.read_csv(&apos;~">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kaggle之旧金山犯罪预测">
+<meta property="og:url" content="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="kaggle地址github地址
+数据概览123456import pandas as pdimport numpy as np# 载入数据train = pd.read_csv(&apos;~/kaggle/dataset/San_Francisco_Crime_Classification/train.csv&apos;, parse_dates = [&apos;Dates&apos;])test = pd.read_csv(&apos;~">
+<meta property="og:updated_time" content="2016-08-12T06:03:19.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kaggle之旧金山犯罪预测">
+<meta name="twitter:description" content="kaggle地址github地址
+数据概览123456import pandas as pdimport numpy as np# 载入数据train = pd.read_csv(&apos;~/kaggle/dataset/San_Francisco_Crime_Classification/train.csv&apos;, parse_dates = [&apos;Dates&apos;])test = pd.read_csv(&apos;~">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  
+
+  
+</head>
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        90
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        40
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-algo/kaggle/cf_crime" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      kaggle之旧金山犯罪预测
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/08/12/algo/kaggle/cf_crime/">
+      <time datetime="2016-08-12T05:48:13.000Z" itemprop="datePublished">2016-08-12</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/kaggle/">kaggle</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><a href="https://www.kaggle.com/c/sf-crime" target="_blank" rel="external">kaggle地址</a><br><a href="https://github.com/lijingpeng/kaggle" target="_blank" rel="external">github地址</a></p>
+<h2 id="u6570_u636E_u6982_u89C8"><a href="#u6570_u636E_u6982_u89C8" class="headerlink" title="数据概览"></a>数据概览</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 载入数据</span></span><br><span class="line">train = pd.read_csv(<span class="string">'~/kaggle/dataset/San_Francisco_Crime_Classification/train.csv'</span>, parse_dates = [<span class="string">'Dates'</span>])</span><br><span class="line">test = pd.read_csv(<span class="string">'~/kaggle/dataset/San_Francisco_Crime_Classification/test.csv'</span>, parse_dates = [<span class="string">'Dates'</span>])</span><br></pre></td></tr></table></figure>
+<p>预览训练集</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> train.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>                Dates        Category                        Descript  \
+0 2015-05-13 23:53:00        WARRANTS                  WARRANT ARREST   
+1 2015-05-13 23:53:00  OTHER OFFENSES        TRAFFIC VIOLATION ARREST   
+2 2015-05-13 23:33:00  OTHER OFFENSES        TRAFFIC VIOLATION ARREST   
+3 2015-05-13 23:30:00   LARCENY/THEFT    GRAND THEFT FROM LOCKED AUTO   
+4 2015-05-13 23:30:00   LARCENY/THEFT    GRAND THEFT FROM LOCKED AUTO   
+5 2015-05-13 23:30:00   LARCENY/THEFT  GRAND THEFT FROM UNLOCKED AUTO   
+6 2015-05-13 23:30:00   VEHICLE THEFT               STOLEN AUTOMOBILE   
+7 2015-05-13 23:30:00   VEHICLE THEFT               STOLEN AUTOMOBILE   
+8 2015-05-13 23:00:00   LARCENY/THEFT    GRAND THEFT FROM LOCKED AUTO   
+9 2015-05-13 23:00:00   LARCENY/THEFT    GRAND THEFT FROM LOCKED AUTO   
+
+   DayOfWeek PdDistrict      Resolution                        Address  \
+0  Wednesday   NORTHERN  ARREST, BOOKED             OAK ST / LAGUNA ST   
+1  Wednesday   NORTHERN  ARREST, BOOKED             OAK ST / LAGUNA ST   
+2  Wednesday   NORTHERN  ARREST, BOOKED      VANNESS AV / GREENWICH ST   
+3  Wednesday   NORTHERN            NONE       1500 Block of LOMBARD ST   
+4  Wednesday       PARK            NONE      100 Block of BRODERICK ST   
+5  Wednesday  INGLESIDE            NONE            0 Block of TEDDY AV   
+6  Wednesday  INGLESIDE            NONE            AVALON AV / PERU AV   
+7  Wednesday    BAYVIEW            NONE       KIRKWOOD AV / DONAHUE ST   
+8  Wednesday   RICHMOND            NONE           600 Block of 47TH AV   
+9  Wednesday    CENTRAL            NONE  JEFFERSON ST / LEAVENWORTH ST   
+
+            X          Y  
+0 -122.425892  37.774599  
+1 -122.425892  37.774599  
+2 -122.424363  37.800414  
+3 -122.426995  37.800873  
+4 -122.438738  37.771541  
+5 -122.403252  37.713431  
+6 -122.423327  37.725138  
+7 -122.371274  37.727564  
+8 -122.508194  37.776601  
+9 -122.419088  37.807802  
+</code></pre><p>预览测试集合</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> test.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>   Id               Dates DayOfWeek PdDistrict                   Address  \
+0   0 2015-05-10 23:59:00    Sunday    BAYVIEW   2000 Block of THOMAS AV   
+1   1 2015-05-10 23:51:00    Sunday    BAYVIEW        3RD ST / REVERE AV   
+2   2 2015-05-10 23:50:00    Sunday   NORTHERN    2000 Block of GOUGH ST   
+3   3 2015-05-10 23:45:00    Sunday  INGLESIDE  4700 Block of MISSION ST   
+4   4 2015-05-10 23:45:00    Sunday  INGLESIDE  4700 Block of MISSION ST   
+5   5 2015-05-10 23:40:00    Sunday    TARAVAL     BROAD ST / CAPITOL AV   
+6   6 2015-05-10 23:30:00    Sunday  INGLESIDE   100 Block of CHENERY ST   
+7   7 2015-05-10 23:30:00    Sunday  INGLESIDE     200 Block of BANKS ST   
+8   8 2015-05-10 23:10:00    Sunday    MISSION     2900 Block of 16TH ST   
+9   9 2015-05-10 23:10:00    Sunday    CENTRAL      TAYLOR ST / GREEN ST   
+
+            X          Y  
+0 -122.399588  37.735051  
+1 -122.391523  37.732432  
+2 -122.426002  37.792212  
+3 -122.437394  37.721412  
+4 -122.437394  37.721412  
+5 -122.459024  37.713172  
+6 -122.425616  37.739351  
+7 -122.412652  37.739750  
+8 -122.418700  37.765165  
+9 -122.413935  37.798886  
+</code></pre><p>我们看到训练集和测试集都有Dates、DayOfWeek、PdDistrict三个特征，我们先从这三个特征入手。训练集中的Category是我们的预测目标，我们先对其进行编码，这里用到sklearn的LabelEncoder()，示例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</span><br><span class="line">label = preprocessing.LabelEncoder()</span><br><span class="line">label.fit([<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>])</span><br><span class="line"><span class="keyword">print</span> label.transform([<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">6</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>[0 0 1 2]
+</code></pre><p>接下来我们对类别进行编码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">crime = label.fit_transform(train.Category)</span><br></pre></td></tr></table></figure>
+<p>对于离散化的特征，有一种常用的特征处理方式是二值化处理，pandas中有get_dummies()函数，函数示例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pd.get_dummies(pd.Series(list(<span class="string">'abca'</span>)))</span><br></pre></td></tr></table></figure>
+<div><br><table border="1" class="dataframe"><br>  <thead><br>    <tr style="text-align: right;"><br>      <th></th><br>      <th>a</th><br>      <th>b</th><br>      <th>c</th><br>    </tr><br>  </thead><br>  <tbody><br>    <tr><br>      <th>0</th><br>      <td>1.0</td><br>      <td>0.0</td><br>      <td>0.0</td><br>    </tr><br>    <tr><br>      <th>1</th><br>      <td>0.0</td><br>      <td>1.0</td><br>      <td>0.0</td><br>    </tr><br>    <tr><br>      <th>2</th><br>      <td>0.0</td><br>      <td>0.0</td><br>      <td>1.0</td><br>    </tr><br>    <tr><br>      <th>3</th><br>      <td>1.0</td><br>      <td>0.0</td><br>      <td>0.0</td><br>    </tr><br>  </tbody><br></table><br></div>
+
+
+
+<p>接下来对Dates、DayOfWeek、PdDistrict三个特征进行二值化处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">days = pd.get_dummies(train.DayOfWeek)</span><br><span class="line">district = pd.get_dummies(train.PdDistrict)</span><br><span class="line">hour = pd.get_dummies(train.Dates.dt.hour)</span><br></pre></td></tr></table></figure>
+<p>接下来重新组合训练集，并把类别附加上：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">train_data = pd.concat([days, district, hour], axis=<span class="number">1</span>)</span><br><span class="line">train_data[<span class="string">'crime'</span>] = crime</span><br></pre></td></tr></table></figure>
+<p>针对测试集做同样的处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">days = pd.get_dummies(test.DayOfWeek)</span><br><span class="line">district = pd.get_dummies(test.PdDistrict)</span><br><span class="line">hour = pd.get_dummies(test.Dates.dt.hour)</span><br><span class="line">test_data = pd.concat([days, district, hour], axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>预览新的训练集和测试集：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">print</span> train_data.head(<span class="number">10</span>)</span><br><span class="line"><span class="keyword">print</span> test_data.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>   Friday  Monday  Saturday  Sunday  Thursday  Tuesday  Wednesday  BAYVIEW  \
+0     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+1     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+2     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+3     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+4     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+5     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+6     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+7     0.0     0.0       0.0     0.0       0.0      0.0        1.0      1.0   
+8     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+9     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+
+   CENTRAL  INGLESIDE  ...     15   16   17   18   19   20   21   22   23  \
+0      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+1      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+2      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+3      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+4      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+5      0.0        1.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+6      0.0        1.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+7      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+8      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+9      1.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+
+   crime  
+0     37  
+1     21  
+2     21  
+3     16  
+4     16  
+5     16  
+6     36  
+7     36  
+8     16  
+9     16  
+
+[10 rows x 42 columns]
+   Friday  Monday  Saturday  Sunday  Thursday  Tuesday  Wednesday  BAYVIEW  \
+0     0.0     0.0       0.0     1.0       0.0      0.0        0.0      1.0   
+1     0.0     0.0       0.0     1.0       0.0      0.0        0.0      1.0   
+2     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+3     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+4     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+5     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+6     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+7     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+8     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+9     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+
+   CENTRAL  INGLESIDE ...    14   15   16   17   18   19   20   21   22   23  
+0      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+1      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+2      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+3      0.0        1.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+4      0.0        1.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+5      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+6      0.0        1.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+7      0.0        1.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+8      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+9      1.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+
+[10 rows x 41 columns]
+</code></pre><p>分割训练集和验证集(70%训练,30%验证)准备建模：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> train_test_split</span><br><span class="line">training, validation = train_test_split(train_data, train_size=<span class="number">0.6</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="u8D1D_u53F6_u65AF_u8BAD_u7EC3"><a href="#u8D1D_u53F6_u65AF_u8BAD_u7EC3" class="headerlink" title="贝叶斯训练"></a>贝叶斯训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> log_loss</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> BernoulliNB</span><br><span class="line"></span><br><span class="line">model = BernoulliNB()</span><br><span class="line">feature_list = training.columns.tolist()</span><br><span class="line">feature_list = feature_list[:len(feature_list) - <span class="number">1</span>]</span><br><span class="line"><span class="keyword">print</span> <span class="string">'选取的特征列：'</span>, feature_list</span><br><span class="line">model.fit(training[feature_list], training[<span class="string">'crime'</span>])</span><br><span class="line"></span><br><span class="line">predicted = np.array(model.predict_proba(validation[feature_list]))</span><br><span class="line"><span class="keyword">print</span> <span class="string">"朴素贝叶斯log损失为 %f"</span> % (log_loss(validation[<span class="string">'crime'</span>], predicted))</span><br></pre></td></tr></table></figure>
+<pre><code>选取的特征列： [&apos;Friday&apos;, &apos;Monday&apos;, &apos;Saturday&apos;, &apos;Sunday&apos;, &apos;Thursday&apos;, &apos;Tuesday&apos;, &apos;Wednesday&apos;, &apos;BAYVIEW&apos;, &apos;CENTRAL&apos;, &apos;INGLESIDE&apos;, &apos;MISSION&apos;, &apos;NORTHERN&apos;, &apos;PARK&apos;, &apos;RICHMOND&apos;, &apos;SOUTHERN&apos;, &apos;TARAVAL&apos;, &apos;TENDERLOIN&apos;, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+朴素贝叶斯log损失为 2.581561
+</code></pre><h2 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line">model = LogisticRegression(C=<span class="number">0.1</span>)</span><br><span class="line">model.fit(training[feature_list], training[<span class="string">'crime'</span>])</span><br><span class="line"></span><br><span class="line">predicted = np.array(model.predict_proba(validation[feature_list]))</span><br><span class="line"><span class="keyword">print</span> <span class="string">"逻辑回归log损失为 %f"</span> %(log_loss(validation[<span class="string">'crime'</span>], predicted))</span><br></pre></td></tr></table></figure>
+<pre><code>逻辑回归log损失为 2.580102
+</code></pre><p>在测试集上运行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test_predicted = np.array(model.predict_proba(test_data[feature_list]))</span><br></pre></td></tr></table></figure>
+<p>保存结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">col_names = np.sort(train[<span class="string">'Category'</span>].unique())</span><br><span class="line"><span class="keyword">print</span> col_names</span><br><span class="line">result = pd.DataFrame(data=test_predicted, columns=col_names)</span><br><span class="line">result[<span class="string">'Id'</span>] = test[<span class="string">'Id'</span>].astype(int)</span><br><span class="line">result.to_csv(<span class="string">'output.csv'</span>, index=<span class="keyword">False</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[&apos;ARSON&apos; &apos;ASSAULT&apos; &apos;BAD CHECKS&apos; &apos;BRIBERY&apos; &apos;BURGLARY&apos; &apos;DISORDERLY CONDUCT&apos;
+ &apos;DRIVING UNDER THE INFLUENCE&apos; &apos;DRUG/NARCOTIC&apos; &apos;DRUNKENNESS&apos; &apos;EMBEZZLEMENT&apos;
+ &apos;EXTORTION&apos; &apos;FAMILY OFFENSES&apos; &apos;FORGERY/COUNTERFEITING&apos; &apos;FRAUD&apos; &apos;GAMBLING&apos;
+ &apos;KIDNAPPING&apos; &apos;LARCENY/THEFT&apos; &apos;LIQUOR LAWS&apos; &apos;LOITERING&apos; &apos;MISSING PERSON&apos;
+ &apos;NON-CRIMINAL&apos; &apos;OTHER OFFENSES&apos; &apos;PORNOGRAPHY/OBSCENE MAT&apos; &apos;PROSTITUTION&apos;
+ &apos;RECOVERED VEHICLE&apos; &apos;ROBBERY&apos; &apos;RUNAWAY&apos; &apos;SECONDARY CODES&apos;
+ &apos;SEX OFFENSES FORCIBLE&apos; &apos;SEX OFFENSES NON FORCIBLE&apos; &apos;STOLEN PROPERTY&apos;
+ &apos;SUICIDE&apos; &apos;SUSPICIOUS OCC&apos; &apos;TREA&apos; &apos;TRESPASS&apos; &apos;VANDALISM&apos; &apos;VEHICLE THEFT&apos;
+ &apos;WARRANTS&apos; &apos;WEAPON LAWS&apos;]
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-id="cirrcm78s0077nys88g86e1g0" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/08/11/system/search_system_sample/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">使用Elasticsearch和docker快速搭建一个搜索引擎</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-title="kaggle之旧金山犯罪预测" data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/12/algo/kaggle/cf_crime/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
+              <p class="item-title"><a href="/2016/08/12/algo/kaggle/cf_crime/" class="title">kaggle之旧金山犯罪预测</a></p>
+              <p class="item-date"><time datetime="2016-08-12T05:48:13.000Z" itemprop="datePublished">2016-08-12</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/11/system/search_system_sample/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/system/">system</a></p>
+              <p class="item-title"><a href="/2016/08/11/system/search_system_sample/" class="title">使用Elasticsearch和docker快速搭建一个搜索引擎</a></p>
+              <p class="item-date"><time datetime="2016-08-10T16:00:00.000Z" itemprop="datePublished">2016-08-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/02/dev/Java/java_maven_log4j/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+              <p class="item-title"><a href="/2016/08/02/dev/Java/java_maven_log4j/" class="title">log4j POM依赖问题</a></p>
+              <p class="item-date"><time datetime="2016-08-02T03:19:56.000Z" itemprop="datePublished">2016-08-02</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/05/23/dev/python/python_encoding/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/05/23/dev/python/python_encoding/" class="title">Python编码问题</a></p>
+              <p class="item-date"><time datetime="2016-05-23T02:19:56.000Z" itemprop="datePublished">2016-05-23</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/05/11/dev/Java/java_volatile/" class="thumbnail">
+  
+    <span style="background-image:url(/images/java/thread4_2.jpg
+)" alt="Java多线程-volatile关键字" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
+              <p class="item-title"><a href="/2016/05/11/dev/Java/java_volatile/" class="title">Java多线程-volatile关键字</a></p>
+              <p class="item-date"><time datetime="2016-05-11T03:19:56.000Z" itemprop="datePublished">2016-05-11</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">30</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 13.33px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 10px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
