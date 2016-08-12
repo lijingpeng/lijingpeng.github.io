@@ -5,24 +5,51 @@
   
   <title>C++ string实现加减乘除 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+  <meta name="description" content="#include&amp;lt;stdio.h&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;string.h&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+using namespace std;
+
+//compare比较函数：相等返回0，大于返回1，小于返回-1
+int compare(string str1,string str2)
+{
+    if(st">
 <meta property="og:type" content="article">
 <meta property="og:title" content="C++ string实现加减乘除">
 <meta property="og:url" content="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:description" content="#include&amp;lt;stdio.h&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;string.h&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+using namespace std;
+
+//compare比较函数：相等返回0，大于返回1，小于返回-1
+int compare(string str1,string str2)
+{
+    if(st">
 <meta property="og:updated_time" content="2015-11-15T14:24:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C++ string实现加减乘除">
-<meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta name="twitter:description" content="#include&amp;lt;stdio.h&amp;gt;
+#include&amp;lt;string&amp;gt;
+#include&amp;lt;string.h&amp;gt;
+#include&amp;lt;iostream&amp;gt;
+using namespace std;
+
+//compare比较函数：相等返回0，大于返回1，小于返回-1
+int compare(string str1,string str2)
+{
+    if(st">
   
   
     <link rel="icon" href="favicon.png">
   
   <link href='//fonts.useso.com/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
   <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="/css/style.css" type="text/css">
-  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
   
 
   
@@ -93,7 +120,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        90
+        89
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -108,9 +135,9 @@
           
           <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
           
-          <td><a href="/#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          <td><a href="#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
           
-          <td><a href="/#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          <td><a href="#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
           
           <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
           
@@ -160,13 +187,200 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//compare比较函数：相等返回0，大于返回1，小于返回-1</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">compare</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(str1.length()&gt;str2.length()) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(str1.length()&lt;str2.length())  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> str1.compare(str2);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//高精度加法</span></span><br><span class="line"><span class="comment">//只能是两个正数相加</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">add</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2)</span><span class="comment">//高精度加法</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">string</span> str;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> len1=str1.length();</span><br><span class="line">    <span class="keyword">int</span> len2=str2.length();</span><br><span class="line">    <span class="comment">//前面补0，弄成长度相同</span></span><br><span class="line">    <span class="keyword">if</span>(len1&lt;len2)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=len2-len1;i++)</span><br><span class="line">           str1=<span class="string">"0"</span>+str1;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=len1-len2;i++)</span><br><span class="line">           str2=<span class="string">"0"</span>+str2;</span><br><span class="line">    &#125;</span><br><span class="line">    len1=str1.length();</span><br><span class="line">    <span class="keyword">int</span> cf=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> temp;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=len1-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        temp=str1[i]-<span class="string">'0'</span>+str2[i]-<span class="string">'0'</span>+cf;</span><br><span class="line">        cf=temp/<span class="number">10</span>;</span><br><span class="line">        temp%=<span class="number">10</span>;</span><br><span class="line">        str=<span class="keyword">char</span>(temp+<span class="string">'0'</span>)+str;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(cf!=<span class="number">0</span>)  str=<span class="keyword">char</span>(cf+<span class="string">'0'</span>)+str;</span><br><span class="line">    <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//高精度减法</span></span><br><span class="line"><span class="comment">//只能是两个正数相减，而且要大减小</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">sub</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2)</span><span class="comment">//高精度减法</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">string</span> str;</span><br><span class="line">    <span class="keyword">int</span> tmp=str1.length()-str2.length();</span><br><span class="line">    <span class="keyword">int</span> cf=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=str2.length()-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(str1[tmp+i]&lt;str2[i]+cf)</span><br><span class="line">        &#123;</span><br><span class="line">            str=<span class="keyword">char</span>(str1[tmp+i]-str2[i]-cf+<span class="string">'0'</span>+<span class="number">10</span>)+str;</span><br><span class="line">            cf=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            str=<span class="keyword">char</span>(str1[tmp+i]-str2[i]-cf+<span class="string">'0'</span>)+str;</span><br><span class="line">            cf=<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=tmp-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(str1[i]-cf&gt;=<span class="string">'0'</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            str=<span class="keyword">char</span>(str1[i]-cf)+str;</span><br><span class="line">            cf=<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            str=<span class="keyword">char</span>(str1[i]-cf+<span class="number">10</span>)+str;</span><br><span class="line">            cf=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    str.erase(<span class="number">0</span>,str.find_first_not_of(<span class="string">'0'</span>));<span class="comment">//去除结果中多余的前导0</span></span><br><span class="line">    <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//高精度乘法</span></span><br><span class="line"><span class="comment">//只能是两个正数相乘</span></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">mul</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">string</span> str;</span><br><span class="line">    <span class="keyword">int</span> len1=str1.length();</span><br><span class="line">    <span class="keyword">int</span> len2=str2.length();</span><br><span class="line">    <span class="built_in">string</span> tempstr;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=len2-<span class="number">1</span>;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">    &#123;</span><br><span class="line">        tempstr=<span class="string">""</span>;</span><br><span class="line">        <span class="keyword">int</span> temp=str2[i]-<span class="string">'0'</span>;</span><br><span class="line">        <span class="keyword">int</span> t=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> cf=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(temp!=<span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=len2-<span class="number">1</span>-i;j++)</span><br><span class="line">              tempstr+=<span class="string">"0"</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=len1-<span class="number">1</span>;j&gt;=<span class="number">0</span>;j--)</span><br><span class="line">            &#123;</span><br><span class="line">                t=(temp*(str1[j]-<span class="string">'0'</span>)+cf)%<span class="number">10</span>;</span><br><span class="line">                cf=(temp*(str1[j]-<span class="string">'0'</span>)+cf)/<span class="number">10</span>;</span><br><span class="line">                tempstr=<span class="keyword">char</span>(t+<span class="string">'0'</span>)+tempstr;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(cf!=<span class="number">0</span>) tempstr=<span class="keyword">char</span>(cf+<span class="string">'0'</span>)+tempstr;</span><br><span class="line">        &#125;</span><br><span class="line">        str=add(str,tempstr);</span><br><span class="line">    &#125;</span><br><span class="line">    str.erase(<span class="number">0</span>,str.find_first_not_of(<span class="string">'0'</span>));</span><br><span class="line">    <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//高精度除法</span></span><br><span class="line"><span class="comment">//两个正数相除，商为quotient,余数为residue</span></span><br><span class="line"><span class="comment">//需要高精度减法和乘法</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">div</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2,<span class="built_in">string</span> &amp;quotient,<span class="built_in">string</span> &amp;residue)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    quotient=residue=<span class="string">""</span>;<span class="comment">//清空</span></span><br><span class="line">    <span class="keyword">if</span>(str2==<span class="string">"0"</span>)<span class="comment">//判断除数是否为0</span></span><br><span class="line">    &#123;</span><br><span class="line">        quotient=residue=<span class="string">"ERROR"</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(str1==<span class="string">"0"</span>)<span class="comment">//判断被除数是否为0</span></span><br><span class="line">    &#123;</span><br><span class="line">        quotient=residue=<span class="string">"0"</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> res=compare(str1,str2);</span><br><span class="line">    <span class="keyword">if</span>(res&lt;<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        quotient=<span class="string">"0"</span>;</span><br><span class="line">        residue=str1;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(res==<span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        quotient=<span class="string">"1"</span>;</span><br><span class="line">        residue=<span class="string">"0"</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> len1=str1.length();</span><br><span class="line">        <span class="keyword">int</span> len2=str2.length();</span><br><span class="line">        <span class="built_in">string</span> tempstr;</span><br><span class="line">        tempstr.append(str1,<span class="number">0</span>,len2-<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=len2-<span class="number">1</span>;i&lt;len1;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            tempstr=tempstr+str1[i];</span><br><span class="line">            tempstr.erase(<span class="number">0</span>,tempstr.find_first_not_of(<span class="string">'0'</span>));</span><br><span class="line">            <span class="keyword">if</span>(tempstr.empty())</span><br><span class="line">              tempstr=<span class="string">"0"</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">char</span> ch=<span class="string">'9'</span>;ch&gt;=<span class="string">'0'</span>;ch--)<span class="comment">//试商</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="built_in">string</span> str,tmp;</span><br><span class="line">                str=str+ch;</span><br><span class="line">                tmp=mul(str2,str);</span><br><span class="line">                <span class="keyword">if</span>(compare(tmp,tempstr)&lt;=<span class="number">0</span>)<span class="comment">//试商成功</span></span><br><span class="line">                &#123;</span><br><span class="line">                    quotient=quotient+ch;</span><br><span class="line">                    tempstr=sub(tempstr,tmp);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        residue=tempstr;</span><br><span class="line">    &#125;</span><br><span class="line">    quotient.erase(<span class="number">0</span>,quotient.find_first_not_of(<span class="string">'0'</span>));</span><br><span class="line">    <span class="keyword">if</span>(quotient.empty()) quotient=<span class="string">"0"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">     <span class="built_in">string</span> str1,str2;</span><br><span class="line">     <span class="built_in">string</span> str3,str4;</span><br><span class="line">     <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;str1&gt;&gt;str2)</span><br><span class="line">     &#123;</span><br><span class="line">         <span class="built_in">cout</span>&lt;&lt;add(str1,str2)&lt;&lt;endl;</span><br><span class="line">         <span class="built_in">cout</span>&lt;&lt;sub(str1,str2)&lt;&lt;endl;</span><br><span class="line">         <span class="built_in">cout</span>&lt;&lt;mul(str1,str2)&lt;&lt;endl;</span><br><span class="line">         div(str1,str2,str3,str4);</span><br><span class="line">         <span class="built_in">cout</span>&lt;&lt;str3&lt;&lt;<span class="string">"  "</span>&lt;&lt;str4&lt;&lt;endl;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <pre><code class="c++">#include&lt;stdio.h&gt;
+#include&lt;string&gt;
+#include&lt;string.h&gt;
+#include&lt;iostream&gt;
+using namespace std;
+
+//compare比较函数：相等返回0，大于返回1，小于返回-1
+int compare(string str1,string str2)
+{
+    if(str1.length()&gt;str2.length()) return 1;
+    else if(str1.length()&lt;str2.length())  return -1;
+    else return str1.compare(str2);
+}
+//高精度加法
+//只能是两个正数相加
+string add(string str1,string str2)//高精度加法
+{
+    string str;
+
+    int len1=str1.length();
+    int len2=str2.length();
+    //前面补0，弄成长度相同
+    if(len1&lt;len2)
+    {
+        for(int i=1;i&lt;=len2-len1;i++)
+           str1=&quot;0&quot;+str1;
+    }
+    else
+    {
+        for(int i=1;i&lt;=len1-len2;i++)
+           str2=&quot;0&quot;+str2;
+    }
+    len1=str1.length();
+    int cf=0;
+    int temp;
+    for(int i=len1-1;i&gt;=0;i--)
+    {
+        temp=str1[i]-&#39;0&#39;+str2[i]-&#39;0&#39;+cf;
+        cf=temp/10;
+        temp%=10;
+        str=char(temp+&#39;0&#39;)+str;
+    }
+    if(cf!=0)  str=char(cf+&#39;0&#39;)+str;
+    return str;
+}
+//高精度减法
+//只能是两个正数相减，而且要大减小
+string sub(string str1,string str2)//高精度减法
+{
+    string str;
+    int tmp=str1.length()-str2.length();
+    int cf=0;
+    for(int i=str2.length()-1;i&gt;=0;i--)
+    {
+        if(str1[tmp+i]&lt;str2[i]+cf)
+        {
+            str=char(str1[tmp+i]-str2[i]-cf+&#39;0&#39;+10)+str;
+            cf=1;
+        }
+        else
+        {
+            str=char(str1[tmp+i]-str2[i]-cf+&#39;0&#39;)+str;
+            cf=0;
+        }
+    }
+    for(int i=tmp-1;i&gt;=0;i--)
+    {
+        if(str1[i]-cf&gt;=&#39;0&#39;)
+        {
+            str=char(str1[i]-cf)+str;
+            cf=0;
+        }
+        else
+        {
+            str=char(str1[i]-cf+10)+str;
+            cf=1;
+        }
+    }
+    str.erase(0,str.find_first_not_of(&#39;0&#39;));//去除结果中多余的前导0
+    return str;
+}
+//高精度乘法
+//只能是两个正数相乘
+string mul(string str1,string str2)
+{
+    string str;
+    int len1=str1.length();
+    int len2=str2.length();
+    string tempstr;
+    for(int i=len2-1;i&gt;=0;i--)
+    {
+        tempstr=&quot;&quot;;
+        int temp=str2[i]-&#39;0&#39;;
+        int t=0;
+        int cf=0;
+        if(temp!=0)
+        {
+            for(int j=1;j&lt;=len2-1-i;j++)
+              tempstr+=&quot;0&quot;;
+            for(int j=len1-1;j&gt;=0;j--)
+            {
+                t=(temp*(str1[j]-&#39;0&#39;)+cf)%10;
+                cf=(temp*(str1[j]-&#39;0&#39;)+cf)/10;
+                tempstr=char(t+&#39;0&#39;)+tempstr;
+            }
+            if(cf!=0) tempstr=char(cf+&#39;0&#39;)+tempstr;
+        }
+        str=add(str,tempstr);
+    }
+    str.erase(0,str.find_first_not_of(&#39;0&#39;));
+    return str;
+}
+
+//高精度除法
+//两个正数相除，商为quotient,余数为residue
+//需要高精度减法和乘法
+void div(string str1,string str2,string &amp;quotient,string &amp;residue)
+{
+    quotient=residue=&quot;&quot;;//清空
+    if(str2==&quot;0&quot;)//判断除数是否为0
+    {
+        quotient=residue=&quot;ERROR&quot;;
+        return;
+    }
+    if(str1==&quot;0&quot;)//判断被除数是否为0
+    {
+        quotient=residue=&quot;0&quot;;
+        return;
+    }
+    int res=compare(str1,str2);
+    if(res&lt;0)
+    {
+        quotient=&quot;0&quot;;
+        residue=str1;
+        return;
+    }
+    else if(res==0)
+    {
+        quotient=&quot;1&quot;;
+        residue=&quot;0&quot;;
+        return;
+    }
+    else
+    {
+        int len1=str1.length();
+        int len2=str2.length();
+        string tempstr;
+        tempstr.append(str1,0,len2-1);
+        for(int i=len2-1;i&lt;len1;i++)
+        {
+            tempstr=tempstr+str1[i];
+            tempstr.erase(0,tempstr.find_first_not_of(&#39;0&#39;));
+            if(tempstr.empty())
+              tempstr=&quot;0&quot;;
+            for(char ch=&#39;9&#39;;ch&gt;=&#39;0&#39;;ch--)//试商
+            {
+                string str,tmp;
+                str=str+ch;
+                tmp=mul(str2,str);
+                if(compare(tmp,tempstr)&lt;=0)//试商成功
+                {
+                    quotient=quotient+ch;
+                    tempstr=sub(tempstr,tmp);
+                    break;
+                }
+            }
+        }
+        residue=tempstr;
+    }
+    quotient.erase(0,quotient.find_first_not_of(&#39;0&#39;));
+    if(quotient.empty()) quotient=&quot;0&quot;;
+}
+
+int main()
+{
+     string str1,str2;
+     string str3,str4;
+     while(cin&gt;&gt;str1&gt;&gt;str2)
+     {
+         cout&lt;&lt;add(str1,str2)&lt;&lt;endl;
+         cout&lt;&lt;sub(str1,str2)&lt;&lt;endl;
+         cout&lt;&lt;mul(str1,str2)&lt;&lt;endl;
+         div(str1,str2,str3,str4);
+         cout&lt;&lt;str3&lt;&lt;&quot;  &quot;&lt;&lt;str4&lt;&lt;endl;
+     }
+     return 0;
+}
+</code></pre>
 <p>From: <a href="http://www.cnblogs.com/kuangbin/archive/2012/08/11/2634044.html" target="_blank" rel="external">http://www.cnblogs.com/kuangbin/archive/2012/08/11/2634044.html</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cirrcm7780060nys8nfkvi6wp" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cirrwq4kk004lxzjh4xi36fbo" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/#ds-thread" class="article-comment-link">评论</a>
       
@@ -177,19 +391,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2015/11/18/dev/web/python_cgi_bin/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/11/18/dev/web/python_http_server/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          Python CGI-BIN
+          Python HTTP server
         
       </div>
     </a>
   
   
-    <a href="/2015/10/28/algo/granger_causality/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/10/29/ads/skip_the_ad/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">Granger causality</div>
+      <div class="article-nav-title">跳过视频广告好爽，殊不知被狠狠地「算计」了</div>
     </a>
   
 </nav>
@@ -310,7 +524,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">30</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -319,7 +533,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/falsk-restful/">falsk, restful</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -328,7 +542,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 13.33px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/falsk-restful/" style="font-size: 10px;">falsk, restful</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 10px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 13.33px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 10px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -337,7 +551,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">14</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -373,11 +587,11 @@
 <script src="//ajax.useso.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
-  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
 
 
-<script src="/js/script.js" type="text/javascript"></script>
+<script src="/js/script.js"></script>
 
   </div>
 </body>
