@@ -92,11 +92,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        89
+        91
         <span>文章</span>
       </div>
       <div class="article-info-block">
-        40
+        39
         <span>标签</span>
       </div>
     </div>
@@ -125,6 +125,257 @@
 
       
       <section id="main">
+      <article id="post-algo/java-beta-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/algo/java-beta-md/">Java beta distribution</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/algo/java-beta-md/">
+      <time datetime="2015-09-03T06:51:59.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>维基百科介绍：<a href="https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83" target="_blank" rel="external">https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83</a><br><a href="https://en.wikipedia.org/wiki/Beta_distribution" target="_blank" rel="external">https://en.wikipedia.org/wiki/Beta_distribution</a></p>
+<pre><code class="java">import org.apache.commons.math3.distribution.BetaDistribution;
+
+public class test {
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        double x;
+        double b;
+        BetaDistribution beta = new BetaDistribution(40.0, 40.0);
+        for (int i = 0; i &lt; 100; i++) {
+            x = Math.random();
+            b = beta.inverseCumulativeProbability(x);
+            System.out.println(b);
+        }
+    }
+}
+</code></pre>
+<p>实现：</p>
+<pre><code class="java">public class BetaDistributionE {
+    public double getBetaDistribution(double alpha, double beta){
+    double a = alpha + beta;
+    double b;
+    if(Math.min(alpha, beta) &lt;= 1){
+        b = Math.max(1/alpha, 1/beta);
+    }
+    else{
+    b = Math.sqrt((a - 2) / (2*alpha*beta - a));
+    }
+    double c = alpha + 1/b;
+
+    double W = 0;
+    boolean reject = true;
+    for (reject = true; reject; ) {
+         double U1 = Math.random();
+         double U2 = Math.random();
+         double V = b * Math.log(U1/(1-U1));
+         W = alpha * Math.exp(V);
+         reject = (a*Math.log(a/(beta+W)) + c*V - Math.log(4)) &lt; Math.log(U1*U1*U2);
+     }
+     return (W / (beta + W));
+     }
+}
+</code></pre>
+<p>相关资源：</p>
+<ol>
+<li><a href="http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html" target="_blank" rel="external">http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html</a></li>
+<li><a href="http://stackoverflow.com/questions/13634170/java-using-beta-distribution-to-generate-a-random-number-from-0-to-1" target="_blank" rel="external">http://stackoverflow.com/questions/13634170/java-using-beta-distribution-to-generate-a-random-number-from-0-to-1</a></li>
+<li>go语言实现：<a href="https://github.com/purzelrakete/bandit/blob/4fca67f963006845de83860fcd849625251fce57/math/rand.go#L21" target="_blank" rel="external">https://github.com/purzelrakete/bandit/blob/4fca67f963006845de83860fcd849625251fce57/math/rand.go#L21</a></li>
+<li>非均衡抽样，在一个概率区间内抽样：Paper：Generating Beta Variates with Nonintegral Shape Parameters</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/java-beta-md/" data-id="cirx75q5l000hlds8ebt755s7" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/algo/java-beta-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/beta-a-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/algo/beta-a-md/">二项分布和Beta分布</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/algo/beta-a-md/">
+      <time datetime="2015-09-03T06:33:26.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <pre><code class="python">import pylab as pl
+import numpy as np
+from scipy import stats
+</code></pre>
+<h2 id="u4E8C_u9879_u5206_u5E03"><a href="#u4E8C_u9879_u5206_u5E03" class="headerlink" title="二项分布"></a>二项分布</h2><hr>
+<p>　　在概率论和统计学中，二项分布是n个独立的[是/非]试验中成功的次数的离散概率分布，其中每次试验的成功概率为$p$。举两个例子就很容易理解二项分布的含义了：</p>
+<ul>
+<li>抛一次硬币出现正面的概率是0.5($p$)，抛10(n)次硬币，出现k次正面的概率。</li>
+<li>掷一次骰子出现六点的概率是1/6，投掷6次骰子出现k次六点的概率。</li>
+</ul>
+<p>　　在上面的两个例子中，每次抛硬币或者掷骰子都和上次的结果无关，所以每次实验都是独立的。二项分布是一个离散分布，k的取值范围为从0到n，只有n+1种可能的结果。scipy.stats.binom为二项分布，下面用它计算抛十次硬币，出现k次正面的概率分布。</p>
+<h4 id="In__5B16_5D_3A"><a href="#In__5B16_5D_3A" class="headerlink" title="In [16]:"></a>In [16]:</h4><pre><code class="python">n = 10
+k = np.arange(n+1)
+pcoin = stats.binom.pmf(k, n, 0.5)
+pcoin
+</code></pre>
+<h4 id="Out_5B16_5D_3A"><a href="#Out_5B16_5D_3A" class="headerlink" title="Out[16]:"></a>Out[16]:</h4><pre><code class="python">array([ 0.00097656,  0.00976563,  0.04394531,  0.1171875 ,  0.20507813,
+        0.24609375,  0.20507813,  0.1171875 ,  0.04394531,  0.00976563,
+        0.00097656])
+</code></pre>
+<h4 id="In__5B17_5D_3A"><a href="#In__5B17_5D_3A" class="headerlink" title="In [17]:"></a>In [17]:</h4><pre><code class="python">pl.stem(k, pcoin, basefmt=&quot;k-&quot;)
+pl.margins(0.1)
+</code></pre>
+<p><img src="/images/algo/ssss.png" alt=""><br>下面是投掷6次骰子，出现6点的概率分布。</p>
+<h4 id="In__5B18_5D_3A"><a href="#In__5B18_5D_3A" class="headerlink" title="In [18]:"></a>In [18]:</h4><pre><code class="python">n = 6
+k = np.arange(n+1)
+pdice = stats.binom.pmf(k, n, 1.0/6)
+pdice
+</code></pre>
+<h4 id="Out_5B18_5D_3A"><a href="#Out_5B18_5D_3A" class="headerlink" title="Out[18]:"></a>Out[18]:</h4><pre><code class="python">array([  3.34897977e-01,   4.01877572e-01,   2.00938786e-01,
+         5.35836763e-02,   8.03755144e-03,   6.43004115e-04,
+         2.14334705e-05])
+</code></pre>
+<h4 id="In__5B19_5D_3A"><a href="#In__5B19_5D_3A" class="headerlink" title="In [19]:"></a>In [19]:</h4><pre><code class="python">pl.stem(k, pdice, basefmt=&quot;k-&quot;)
+pl.margins(0.1)
+</code></pre>
+<p><img src="/images/algo/ssss1.png" alt=""></p>
+<h2 id="Beta_u5206_u5E03"><a href="#Beta_u5206_u5E03" class="headerlink" title="Beta分布"></a>Beta分布</h2><hr>
+<p>　　对于硬币或者骰子这样的简单实验，我们事先能很准确地掌握系统成功的概率。然而通常情况下，系统成功的概率是未知的。为了测试系统的成功概率$p$，我们做n次试验，统计成功的次数k，于是很直观地就可以计算出$p = k/n$。然而由于系统成功的概率是未知的，这个公式计算出的$p$只是系统成功概率的最佳估计。也就是说实际上$p$也可能为其它的值，只是为其它的值的概率较小。</p>
+<p>　　例如有某种特殊的硬币，我们事先完全无法确定它出现正面的概率。然后抛10次硬币，出现5次正面，于是我们认为硬币出现正面的概率最可能是0.5。但是即使硬币出现正面的概率为0.4，也会出现抛10次出现5次正面的情况。因此我们并不能完全确定硬币出现正面的概率就是0.5，所以$p$也是一个随机变量，它符合Beta分布。</p>
+<p>　　Beta分布是一个连续分布，由于它描述概率$p$的分布，因此其取值范围为0到1。 Beta分布有$\alpha$和$\beta$两个参数，其中$\alpha$为成功次数加1，$\beta$为失败次数加1。连续分布用概率密度函数描述，下面绘制实验10次，成功4次和5次时，系统成功概率$p$的分布情况。可以看出$k=5$时，曲线的峰值在$p=0.5$处，而$k=4$时，曲线的峰值在$p=0.4$处。</p>
+<h4 id="In__5B20_5D_3A"><a href="#In__5B20_5D_3A" class="headerlink" title="In [20]:"></a>In [20]:</h4><pre><code class="python">n = 10
+k = 5
+p = np.linspace(0, 1, 100)
+pbeta = stats.beta.pdf(p, k+1, n-k+1)
+plot(p, pbeta, label=&quot;k=5&quot;, lw=2)
+
+k = 4
+pbeta = stats.beta.pdf(p, k+1, n-k+1)
+plot(p, pbeta, label=&quot;k=4&quot;, lw=2)
+xlabel(&quot;$p$&quot;)
+legend(loc=&quot;best&quot;);
+</code></pre>
+<p><img src="/images/algo/ssss3.png" alt=""><br>　　下面绘制$n=10, k=4$和$n=20, k=8$的概率分布。可以看出峰值都在$p=0.4$处，但是$n=20$的山峰更陡峭。也就是说随着实验次数的增加，$p$取其它值的可能就越小，对$p$的估计就更有信心，因此山峰也就更陡峭了。</p>
+<h4 id="In__5B30_5D_3A"><a href="#In__5B30_5D_3A" class="headerlink" title="In [30]:"></a>In [30]:</h4><pre><code class="python">n = 10
+k = 4
+p = np.linspace(0, 1, 100)
+pbeta = stats.beta.pdf(p, k+1, n-k+1)
+plot(p, pbeta, label=&quot;n=10&quot;, lw=2)
+
+n = 20
+k = 8
+pbeta = stats.beta.pdf(p, k+1, n-k+1)
+plot(p, pbeta, label=&quot;n=20&quot;, lw=2)
+xlabel(&quot;$p$&quot;)
+legend(loc=&quot;best&quot;);
+</code></pre>
+<p><img src="/images/algo/ssss4.png" alt=""></p>
+<h2 id="u7528pymc_u6A21_u62DF"><a href="#u7528pymc_u6A21_u62DF" class="headerlink" title="用pymc模拟"></a>用pymc模拟</h2><hr>
+<p>　　假设我们的知识库中没有Beta分布，如何通过模拟实验找出$p$的概率分布呢？pymc是一个用于统计估计的库，它可以通过 先验概率和 观测值 模拟出 后验概率 的分布。下面先解释一下这两个概率：</p>
+<ul>
+<li>先验概率：在贝叶斯统计中，某一不确定量p的先验概率分布是在考虑”观测数据”前，能表达p不确定性的概率分布。</li>
+<li>后验概率：在考虑相关证据或数据后所得到的不确定量p的概率分布。</li>
+</ul>
+<p>　　拿前面抛硬币的实验来说，如果在做实验之前能确信硬币出现正面的概率大概在0.5附近的话，那么它的先验概率就是一个以0.5为中心的山峰波形。而如果是某种特殊的硬币，我们对其出现正面的概率完全不了解，那么它的先验概率就是一个从0到1的平均分布。为了估计这个特殊硬币出现正面的概率，我们做了20次实验，其中出现了8次正面。通过这个实验，硬币出现正面的可能性的后验概率就如上图中的绿色曲线所示。</p>
+<p>　　pymc库可以通过先验概率和观测值模拟出后验概率的分布，这对于一些复杂的系统的估计是很有用的。下面我们看看如何用pymc来对这个特殊硬币出现正面的可能性进行估计：首先pcoin是这个特殊硬币出现正面的概率，由于我们没有任何先验知识，因此它的先验概率是一个从0到1的平均分布(Uniform)。假设我们做了20次实验，其中8次为正面。根据前面的介绍可知，出现正面的次数符合二项分布(Binomial)，并且这个二项分布的概率$p$为pcoin。这个通过value参数指定了实验的结果。因此experiment虽然是一个二项分布，但是它已经不能取其它值了。</p>
+<h4 id="In__5B32_5D_3A"><a href="#In__5B32_5D_3A" class="headerlink" title="In [32]:"></a>In [32]:</h4><pre><code class="python">import pymc
+pcoin = pymc.Uniform(&quot;pcoin&quot;, 0, 1)
+experiment = pymc.Binomial(&quot;experiment&quot;, 20, pcoin, value=8)
+</code></pre>
+<p>　　接下来通过MCMC对象模拟pcoin的后验概率。MCMC是Markov chain Monte Carlo(马尔科夫蒙特卡洛)的缩写，它是一种用马尔可夫链从随机分布取样的算法。通过调用MCMC对象的sample()，可以对pcoin的后验概率分布进行取样。这里30000为取样次数，5000表示不保存头5000次取样值。这时因为MCMC算法通常有一个收敛过程，我们希望只保留收敛之后的取样值。</p>
+<h4 id="In__5B33_5D_3A"><a href="#In__5B33_5D_3A" class="headerlink" title="In [33]:"></a>In [33]:</h4><pre><code class="python">mc = pymc.MCMC([pcoin])
+mc.sample(30000, 5000)
+</code></pre>
+<p>[<strong><strong><strong><em>**</em></strong></strong></strong>100%<strong><strong><strong><strong>**</strong></strong></strong></strong>]  30000 of 30000 complete<br>　　通过MCMC对象trace()可以获得某个不确定量的取样值。下面的程序获得pcoin的25000次取样值，并用hist()显示其分布情况。由结果可知pcoin的分布与前面介绍的Beta分布一致。</p>
+<h4 id="In__5B31_5D_3A"><a href="#In__5B31_5D_3A" class="headerlink" title="In [31]:"></a>In [31]:</h4><pre><code class="python">pcoin_trace = mc.trace(&quot;pcoin&quot;)[:]
+hist(pcoin_trace, normed=True, bins=30);
+plot(p, pbeta, &quot;r&quot;, label=&quot;n=20&quot;, lw=2)
+</code></pre>
+<h4 id="Out_5B31_5D_3A"><a href="#Out_5B31_5D_3A" class="headerlink" title="Out[31]:"></a>Out[31]:</h4><p><img src="/images/algo/ssss5.png" alt=""></p>
+<h4 id="In__5B34_5D_3A"><a href="#In__5B34_5D_3A" class="headerlink" title="In [34]:"></a>In [34]:</h4><pre><code class="python">pcoin_trace.shape
+</code></pre>
+<h4 id="Out_5B34_5D_3A"><a href="#Out_5B34_5D_3A" class="headerlink" title="Out[34]:"></a>Out[34]:</h4><pre><code class="python">(25000,)
+</code></pre>
+<p>链接：<a href="http://hyry.dip.jp/tech/slice/slice.html/42" target="_blank" rel="external">http://hyry.dip.jp/tech/slice/slice.html/42</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-a-md/" data-id="cirx75q5j000elds84dorjbk7" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/algo/beta-a-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/beta-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -181,7 +432,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-md/" data-id="cirrwq4h5000fxzjh1f6w6fuv" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-md/" data-id="cirx75q5i000dlds8diu3335z" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/beta-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -254,7 +505,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/other/nitian-md/" data-id="cirrwq4hu0017xzjhlmz8s4lw" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/other/nitian-md/" data-id="cirx75q6c0016lds88naudbc6" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/other/nitian-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -418,7 +669,7 @@ class BayesianStrategy( object ):
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-application-md/" data-id="cirrwq4gv0007xzjhme5qd10b" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-application-md/" data-id="cirx75q5e000alds818of272x" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-application-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -433,232 +684,8 @@ class BayesianStrategy( object ):
 
 
     
-      <article id="post-algo/baysian-bandit-md" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/03/algo/baysian-bandit-md/">Bayesian Bandits – optimizing click throughs with statistics</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/algo/baysian-bandit-md/">
-      <time datetime="2015-09-03T05:36:48.000Z" itemprop="datePublished">2015-09-03</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>Great news! A murder victim has been found. No slow news day today! The story is already written, now a title needs to be selected. The clever reporter who wrote the story has come up with two potential titles – “Murder victim found in adult entertainment venue” and “Headless Body found in Topless Bar”. (The latter title is one I’ve shamelessly stolen from the NY Daily News.) Once upon a time, deciding which title to run was a matter for a news editor to decide. Those days are now over – the geeks now rule the earth. Title selection is now primarily an algorithmic problem, not an editorial one.</p>
-<p>One common approach is to display both potential versions of the title on the homepage or news feed, and measure the Click Through Rate (CTR) of each version of the title. At some point, when the measured CTR for one title exceeds that of the other title, you’ll switch to the one with the highest for all users. Algorithms for solving this problem are called bandit algorithms.</p>
-<p>In this blog post I’ll describe one of my favorite bandit algorithms, the Bayesian Bandit, and show why it is an excellent method to use for problems which give us more information than typical bandit algorithms.</p>
-<p>Unless you are already familiar with Bayesian statistics and beta distributions, I strongly recommend reading the previous blog post. That post provides much introductory material, and I’ll depend on it heavily.</p>
-<h2 id="1-_The_problem_to_be_solved_2C_and_the_underlying_model"><a href="#1-_The_problem_to_be_solved_2C_and_the_underlying_model" class="headerlink" title="1. The problem to be solved, and the underlying model"></a>1. The problem to be solved, and the underlying model</h2><hr>
-<p>Ultimately the problem we want to solve is the following. Consider an article being published on a website. The author or editor has come up with several possible titles – “Murder victim found in adult entertainment venue”, “Headless Body found in Topless Bar”, etc. We want to choose the title with the best click through rate (CTR). Let us represent each CTR by θi – i.e., θi is the true probability that an individual user will click on the i-th title. As a simplifying assumption, we assume that these rates θi do not change over time. It is important to note that we don’t actually know what θi is – if we did, we could simply choose i for which θi was largest and move on.</p>
-<p>The goal of the bandit algorithm is to do the following. To begin with, it should display all possible titles to a random selection of users, and measure which titles are clicked on more frequently. Over time, it will use these observations to infer which articles have the higher CTR. Then, once the estimation of the CTR becomes more precise, it will preferentially display articles with the higher CTR.</p>
-<h2 id="2-_The_Bayesian_Approach"><a href="#2-_The_Bayesian_Approach" class="headerlink" title="2. The Bayesian Approach"></a>2. The Bayesian Approach</h2><hr>
-<p>In the model described above, we have N possible story titles, each of which has a click through rate θi. Unfortunately we do not know what θi is. As the astute reader can guess from the title, we are following a Bayesian approach, so we will construct a probability distribution which represents our belief about what the actual value of θi is.<br><img src="/images/bb/beliefs_about_theta.png" alt=""><br>In the figure above, we believe that θi is somewhere between 0.1 and 0.7, with values of 0.3-0.4 being considerably more likely than values of 0.1-0.2 or 0.6-0.7. For those who forgot STATS 101, the area under this curve between the points a and b is the probability thta θi lies between a and b. I.e.:<br><img src="/images/bb/11.png" alt=""><br>The basic idea behind Bayesian methods is to update our beliefs based on evidence. As we gather more data by showing different titles to other users and observing click throughs, we can incrementally narrow the width of the probability distribution.</p>
-<p>As in all Bayesian inference, we need to choose a prior. The prior is something we believe to be true before we have any evidence – i.e., before we have shown the title to any visitors. This is just a starting point – after enough evidence is gathered, our prior will play a very minimal role in what we actually believe. Choosing a good prior is important both for mathematical simplicity, and because if your prior is accurate, you don’t need as much evidence to get the correct answer.</p>
-<p>I’ll follow the approach I described in a previous blog post, and I’ll use a beta distribution as the prior:<br><img src="/images/bb/31.png" alt=""><br>The parameters αi,βi&gt;1 are the prior parameters. One reasonable choice is αi=βi=1, which amounts to the uniform distribution on [0,1]. What this means is that we are assuming that all possible values of θi are equally likely. Depending on the circumstances (which I’ll explain shortly), we might want to choose other possible values.</p>
-<h2 id="3-_Updating_our_beliefs"><a href="#3-_Updating_our_beliefs" class="headerlink" title="3. Updating our beliefs"></a>3. Updating our beliefs</h2><p>Now we address the question of using evidence. After showing title i to ni visitors, we have observed that si of them have actually clicked on the title. We now want to compute theposterior distribution, which is to say the distribution that represents our beliefs after we have evidence.</p>
-<p>I did a little bit of algebra previously, in which I showed that if the prior is fαi,βi(θi), then the posterior distribution is:<br><img src="/images/bb/21.png" alt=""><br>The key idea here is that to update our probability distribution describing θi, we need only update the parameters of our beta distribution.</p>
-<p>So what does this mean in practice? As we run more experiments, our probability distribution on where θi lives becomes sharper:</p>
-<p><img src="/images/bb/beta_distribution_evolution.png" alt=""><br>Before we run any experiments, θi could be anything (as represented by the blue line). Once we have run 700 experiments, yielding 175 click throughs, we are reasonably confident that θi lives roughly between 0.2 and 0.3.</p>
-<p>What we’ve done so far is figured out how to estimate what our click through rates actually are based on empirical evidence. But that doesn’t actually give us a method of optimizing them yet.</p>
-<h2 id="4-_Optimizing_click_throughs"><a href="#4-_Optimizing_click_throughs" class="headerlink" title="4. Optimizing click throughs"></a>4. Optimizing click throughs</h2><p>Now that we have a method of representing our beliefs about CTRs, it is useful to construct an algorithm to identify the best ones. There are many popular choices – I’ve written about the UCB Algorithm before, and I consider it a good choice.</p>
-<p>But my new favorite method is a Monte Carlo method which I’ll describe now.</p>
-<p>The ultimate goal of the bandit algorithm is to display to the user whichever title has the highest CTR. One method of estimating the CTRs of the articles is to sample the posterior distribution. I.e., suppose we have two possible titles, from which we have drawn n0=200,s0=64and n1=180,n2=40. Then one possible set of samples we might observe is this:</p>
-<p><img src="/images/bb/beta_distribution_sampling1.png" alt=""></p>
-<p>For title 0, our sample of θ0 has worked out to be 0.35, while our sample of θ1 is only 0.28. Since θ0=0.35&gt;θ1=0.28, we will display title 0 to the user.</p>
-<p>However, there was no guarantee that things worked out this way. It was possible, although less likely, that θ1 could come out larger than θ0:<br><img src="/images/bb/beta_distribution_sampling2.png" alt=""><br>In this case, we would have displayed title 1 to the user rather than title 0.</p>
-<p>The net result is that for overlapping probability distributions, we will display the title with the larger expected CTR the majority of the time. But occasionally, we will draw from the other distributions simply because it is within the realm of possibility that they are greater.</p>
-<p>As we gather more data our probability distributions will become narrower and a clear winner will become apparent. When this occurs, we will almost surely choose the winner:<br><img src="/images/bb/beta_distribution_sampling3.png" alt=""><br>In python, the algorithm looks like this:</p>
-<p>The results of this algorithm are exactly what any good bandit algorithm should do. I ran the following simulation, giving the beta bandit two titles – title 0 had a CTR of 0.25, title 1 had a CTR of 0.35. To start with, both titles were displayed to the user with roughly equal probability. Over time, evidence accumulated that title 1 was considerably better than title 0. At this point the algorithm switched to displaying primarily title 1, and the overall CTR of the experiment converged to 0.35 (the optimal CTR).</p>
-<p><img src="/images/bb/beta_bandit_results.png" alt=""></p>
-<p>Source code to generate this graph is available here. This method is called Thompson Sampling and is a a fairly popular method in Bayesian AI techniques. For the remainder of this post, I’ll call this method the Bayesian Bandit.</p>
-<h2 id="5-Incorporating_common_sense"><a href="#5-Incorporating_common_sense" class="headerlink" title="5.Incorporating common sense"></a>5.Incorporating common sense</h2><p>Anyone with common sense is now scoffing at the geekiness embodied in this post. Even before using statistics, it was fairly obvious that “Headless Body found in Topless Bar” was going to beat “Murder victim found in adult entertainment venue”. The former just sounds catchier and any good editor would run with it.</p>
-<p>The wonderful thing about Bayesian methods is that we can modify them to take into account our prior knowledge. Suppose we believe editors intuition is a real thing – can we quantify it? Certainly. We can do this with a fairly simple experiment. We require editors to rate a collection of titles as “catchy” or “not catchy”, run them on the site, and then measure the CTR of the “catchy” and “not catchy” samples. Suppose we did such an experiment, and observed the following aggregate results:</p>
-<p><img src="/images/bb/empirical_prior.png" alt=""></p>
-<p>This isn’t a solid win for the editor – some catchy titles have low CTRs, and some boring titles have good CTRs. But nevertheless, it’s better for a story to have catchy title than not.</p>
-<p>What we want to do is incorporate this information into our bandit algorithm. The beauty of a Bayesian method is that it gives you a clear and meaningful place to plug this information in, namely the prior. In contrast, for many other methods (e.g., UCB) it’s somewhat difficult to do this – there is no obvious parameter to tune as a result of our prior empirical data.</p>
-<p>The first step is to fit a theoretical distribution to the empirical data. Due to the fact that I chose the “empirical” (i.e., made up) data to be very nice, a beta distribution fits well [1] – specifically beta distributions with (α0,β0)=(9,20) and (α1,β1)=(4,20).<br><img src="/images/bb/theoretical_prior.png" alt=""></p>
-<p>Then the only modification needed to the algorithm is to plug these variables into the prior:<br><img src="/images/bb/41.png" alt=""><br>Everything else remains unchanged. In terms of modifications to source code, this is only a very small change to the previous code – an implementation can be found here.</p>
-<h2 id="6-_Empirics_of_including_priors"><a href="#6-_Empirics_of_including_priors" class="headerlink" title="6. Empirics of including priors"></a>6. Empirics of including priors</h2><p>To measure the benefits of incorporating priors into the Bayesian bandit, I ran some numerical experiments, the source code of which is available in this github gist. The methodology was the following.</p>
-<p>To compare the Bayesian bandit with priors to that without, I drew a pair (θ0,θ1) from the prior distribution given above. For each pair, I then ran the Bayes Bandit with and without priors for this pair theta, for k trials. This is modelling the scenario that we have k page views on our homepage, and we can only leave a story on the homepage for 1 day.</p>
-<p>I then repeated the experiment for 1000 different possible days, or equivalently for 1000 different pairs of (θ0,θ1). I then computed the average gain per page view over all trials and all days.</p>
-<p>The result is the following. If we get 50 page views/day (i.e., the Bayes Bandit has very little data to use), the prior gives us a big gain. Without prior knowledge, the Bandit achieved a gain of 0.3749 on average, whereas the bandit with prior knowledge achieved a gain of 0.4274. If we run 150 experiments, the Bayes Bandit improves significantly – it achieves a gain of 0.40. If we run 300 experiments, the Bayes Bandit improves to 0.4146, while the bandit with priors improves to 0.4296. If we get 1000 page views/day, the Bayes Bandit improves to 0.4211, while the bandit with priors gains 0.4249.</p>
-<p>The net result is the following – incorporating priors into the Bayes Bandit is an excellent way to improve your results when you don’t have a large number data points to use to train the bandit. If you have a lot of data points, you don’t need strong priors (but they still help a little).</p>
-<h2 id="7-Conclusion"><a href="#7-Conclusion" class="headerlink" title="7.Conclusion"></a>7.Conclusion</h2><p>Bandit algorithms are a great way of optimizing many factors of your website. There are many good options – I’ve written about UCB before and consider it a great choice. But if you have other information you want to include, consider using the Bayesian Bandit. It’s simple to implement, straightforward to use, and very importantly it’s also straightforward to extend.</p>
-<p>It’s also important to note that the theoretical properties of the Bayesian Bandit (namely logarithmic regret) have been proven. So asymptotically, you lose nothing by using it. There are also attempts at constructing a Bayesian UCB algorithm – I don’t currently understand it well enough to comment.</p>
-<p>I’ve written other articles related to this post. I have one post comparing bandit algorithms to a/b testing. I also I wrote about measuring a changing conversion rate, which provides an alternate algorithm for computing the posterior distribution if your conversion rate is not constant.</p>
-<p>[1] If a single Beta distribution doesn’t fit, one can also use a convex combination of Beta distributions. The math works out just as nicely.</p>
-<p>P.S. After I published this blog post, this related article was also pointed out to me, as was this online simulation of the Bayesian bandit.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/" data-id="cirrwq4h0000bxzjhryy5g07p" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bandits/">Bandits</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/hive-udf-md" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/03/dev/hive-udf-md/">Hive UDF开发</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/dev/hive-udf-md/">
-      <time datetime="2015-09-03T04:49:45.000Z" itemprop="datePublished">2015-09-03</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/Hive/">Hive</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>Hive进行UDAF开发，相对要比UDF复杂一些，不过也不是很难。请看一个例子:</p>
-<pre><code class="java">package org.hrj.hive.udf;
-
-import org.apache.hadoop.hive.ql.exec.UDAFEvaluator;
-import org.apache.hadoop.hive.serde2.io.DoubleWritable;
-
-public class UDAFSum_Sample extends NumericUDAF {
-    public static class Evaluator implements UDAFEvaluator {
-        private boolean mEmpty;
-        private double mSum;
-        public Evaluator() {
-            super();
-            init();
-        }
-
-        public void init() {
-            mSum = 0;
-            mEmpty = true;
-        }
-
-        public boolean iterate(DoubleWritable o) {
-            if (o != null) {
-                mSum += o.get();
-                mEmpty = false;
-            }
-            return true;
-        }
-
-        public DoubleWritable terminatePartial() {
-            // This is SQL standard - sum of zero items should be null.
-            return mEmpty ? null : new DoubleWritable(mSum);
-        }
-
-        public boolean merge(DoubleWritable o) {
-            if (o != null) {
-                mSum += o.get();
-                mEmpty = false;
-            }
-            return true;
-        }
-
-        public DoubleWritable terminate() {
-            // This is SQL standard - sum of zero items should be null.
-            return mEmpty ? null : new DoubleWritable(mSum);
-        }
-    }
-}
-</code></pre>
-<p>1.将java文件编译成Sum_Sample.jar</p>
-<p>2.进入hive</p>
-<pre><code class="bash">
-hive&gt; add jar Sum_sample.jar;
-
-hive&gt; create temporary function sum_test as &#39;com.hrj.hive.udf.UDAFSum_Sample&#39;;
-
-hive&gt; select sum_test(t.num) from t;
-
-hive&gt; drop temporary function sum_test;
-
-hive&gt; quit;
-</code></pre>
-<p>关于UDAF开发注意点：</p>
-<p>1.需要import org.apache.hadoop.hive.ql.exec.UDAF以及org.apache.hadoop.hive.ql.exec.UDAFEvaluator,这两个包都是必须的</p>
-<p>2.函数类需要继承UDAF类，内部类Evaluator实现UDAFEvaluator接口</p>
-<p>3.Evaluator需要实现 init、iterate、terminatePartial、merge、terminate这几个函数</p>
-<pre><code>1）init函数类似于构造函数，用于UDAF的初始化
-
-2）iterate接收传入的参数，并进行内部的轮转。其返回类型为boolean
-
-3）terminatePartial无参数，其为iterate函数轮转结束后，返回乱转数据，iterate和terminatePartial类似于hadoop的Combiner
-
-4）merge接收terminatePartial的返回结果，进行数据merge操作，其返回类型为boolean
-
-5）terminate返回最终的聚集函数结果
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="cirrwq4hf000qxzjhm21144vy" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/12/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/14/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/12/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/14/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -669,6 +696,40 @@ hive&gt; quit;
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/16/algo/kaggle/movie_reviews/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
+              <p class="item-title"><a href="/2016/08/16/algo/kaggle/movie_reviews/" class="title">kaggle之电影文本情感分类</a></p>
+              <p class="item-date"><time datetime="2016-08-16T05:48:13.000Z" itemprop="datePublished">2016-08-16</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/15/algo/kaggle/digit/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
+              <p class="item-title"><a href="/2016/08/15/algo/kaggle/digit/" class="title">kaggle之手写体识别</a></p>
+              <p class="item-date"><time datetime="2016-08-15T05:48:13.000Z" itemprop="datePublished">2016-08-15</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -721,41 +782,6 @@ hive&gt; quit;
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/05/23/dev/python/python_encoding/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/05/23/dev/python/python_encoding/" class="title">Python编码问题</a></p>
-              <p class="item-date"><time datetime="2016-05-23T02:19:56.000Z" itemprop="datePublished">2016-05-23</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/05/11/dev/Java/java_volatile/" class="thumbnail">
-  
-    <span style="background-image:url(/images/java/thread4_2.jpg
-)" alt="Java多线程-volatile关键字" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/java/">java</a></p>
-              <p class="item-title"><a href="/2016/05/11/dev/Java/java_volatile/" class="title">Java多线程-volatile关键字</a></p>
-              <p class="item-date"><time datetime="2016-05-11T03:19:56.000Z" itemprop="datePublished">2016-05-11</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -765,7 +791,7 @@ hive&gt; quit;
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -774,7 +800,7 @@ hive&gt; quit;
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -783,7 +809,7 @@ hive&gt; quit;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 13.33px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 10px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 13.33px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 16.67px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -792,7 +818,7 @@ hive&gt; quit;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
