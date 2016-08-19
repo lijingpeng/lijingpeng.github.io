@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        92
+        93
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -176,7 +176,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="cis1v731e006pb6je8dt012pp" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="cis1v9c26004octjeyumzur45" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/#ds-thread" class="article-comment-link">评论</a>
       
@@ -191,7 +191,7 @@
 
 
     
-      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-internet/ad/cookie" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -200,7 +200,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
+      <a class="article-title" href="/2015/10/10/internet/ad/cookie/">关于Cookie</a>
     </h1>
   
 
@@ -208,8 +208,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/09/25/algo/ml/feature_hashing/">
-      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
+    <a href="/2015/10/10/internet/ad/cookie/">
+      <time datetime="2015-10-09T16:00:00.000Z" itemprop="datePublished">2015-10-10</time>
     </a>
   </div>
 
@@ -217,7 +217,7 @@
           
   <div class="article-category">
   	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+    <a class="article-category-link" href="/categories/internet/">internet</a>
   </div>
 
         </div>
@@ -226,56 +226,25 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
-<h3 id="Motivating_example"><a href="#Motivating_example" class="headerlink" title="Motivating example"></a>Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
-<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
-<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
-<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary</p>
-<pre><code>Term    Index
-John    1
-likes   2
-to      3
-watch   4
-movies  5
-Mary    6
-too     7
-also    8
-football9
-</code></pre><p>to the term-document matrix</p>
-<pre><code>1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 
-0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 
-1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1
-</code></pre><p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
-<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
-<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
-<h3 id="Feature_vectorization_using_the_hashing_trick"><a href="#Feature_vectorization_using_the_hashing_trick" class="headerlink" title="Feature vectorization using the hashing trick"></a>Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):</p>
-<pre><code>     x := new vector[N]
-     for f in features:
-         h := hash(f)
-         x[h mod N] += 1
-     return x
-</code></pre><p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):</p>
-<pre><code>     x := new vector[N]
-     for f in features:
-         h := hash(f)
-         idx := h mod N
-         if ξ(f) == 1:
-             x[idx] += 1
-         else:
-             x[idx] -= 1
-     return x
-</code></pre><p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
+        <h2 id="u5173_u4E8ECookie"><a href="#u5173_u4E8ECookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><hr>
+<p><img src="/images/other/cookie.jpg" alt=""></p>
+<h3 id="Cookie_u7684_u4F20_u9012_u6D41_u7A0B"><a href="#Cookie_u7684_u4F20_u9012_u6D41_u7A0B" class="headerlink" title="Cookie的传递流程"></a>Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
+<h3 id="u5173_u4E8ECookie_u7684_u4E00_u4E9B_u77E5_u8BC6_u70B9"><a href="#u5173_u4E8ECookie_u7684_u4E00_u4E9B_u77E5_u8BC6_u70B9" class="headerlink" title="关于Cookie的一些知识点"></a>关于Cookie的一些知识点</h3><ol>
+<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
+<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
+<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
+</ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="cis1v730z005fb6jeo2hwbp6g" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="cis1v9c29004uctjetlj9aa8h" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/#ds-thread" class="article-comment-link">评论</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li></ul>
+
     </footer>
   </div>
   
@@ -400,9 +369,102 @@ blue
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="cis1v730q004lb6jemx6p8mfm" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="cis1v9c1z0046ctjeybgn5whx" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/25/algo/ml/feature_hashing/">
+      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
+<h3 id="Motivating_example"><a href="#Motivating_example" class="headerlink" title="Motivating example"></a>Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
+<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
+<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
+<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary</p>
+<pre><code>Term    Index
+John    1
+likes   2
+to      3
+watch   4
+movies  5
+Mary    6
+too     7
+also    8
+football9
+</code></pre><p>to the term-document matrix</p>
+<pre><code>1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 
+0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 
+1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1
+</code></pre><p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
+<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
+<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
+<h3 id="Feature_vectorization_using_the_hashing_trick"><a href="#Feature_vectorization_using_the_hashing_trick" class="headerlink" title="Feature vectorization using the hashing trick"></a>Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):</p>
+<pre><code>     x := new vector[N]
+     for f in features:
+         h := hash(f)
+         x[h mod N] += 1
+     return x
+</code></pre><p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):</p>
+<pre><code>     x := new vector[N]
+     for f in features:
+         h := hash(f)
+         idx := h mod N
+         if ξ(f) == 1:
+             x[idx] += 1
+         else:
+             x[idx] -= 1
+     return x
+</code></pre><p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="cis1v9c24004ictje14ym5rci" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -590,208 +652,13 @@ blue
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/23/algo/ml/" data-id="cis1v72xu000jb6jejdsrahl9" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/23/algo/ml/" data-id="cis1v9byt000jctjeevs72lxq" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/23/algo/ml/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/How to customize Writable class in Hadoop" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/21/dev/How to customize Writable class in Hadoop/">How to customize Writable class in Hadoop</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/21/dev/How to customize Writable class in Hadoop/">
-      <time datetime="2015-09-21T04:49:45.000Z" itemprop="datePublished">2015-09-21</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/Hadoop/">Hadoop</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>I’m trying to implement Writable class, but i have no idea on how to implement a writable class if in my class there is nested object, such as list, etc.</p>
-<pre><code class="java">public class StorageClass implements Writable{
-
-public String xStr;
-public String yStr;
-
-public List&lt;Field&gt; sStor
-
-//omitted ctors
-
-
-@override
-public void write(DataOutput out) throws IOException{
-    out.writeChars(xStr);
-    out.WriteChars(yStr);
-
-    //WHAT SHOULD I DO FOR List&lt;Field&gt;
-
-}
-
-@override
-public void readFields(DataInput in) throws IOException{
-    xStr = in.readLine();
-    yStr = in.readLine();
-
-    //WHAT SHOULD I DO FOR List&lt;Field&gt;
-}
-
-}
-
-public class SubStorage{
-    public String x;
-    public String y;
-}
-
-}
-</code></pre>
-<p>Following is the Field class:</p>
-<pre><code class="java">public final class Field implements Comparable&lt;Field&gt;, Serializable {
-
-    private String name;
-    private DataType dataType;
-    private Object value;
-    private FieldType fieldType;
-
-
-    public Field(){
-
-    }
-
-
-
-    public  Field(String name, DataType dataType, FieldType fieldType){
-        this(name, dataType, null, fieldType);
-    }
-
-    public  Field(String name, DataType type, Object value, FieldType fieldType){
-        this.name = name;
-        this.dataType = type;
-        this.value = value;
-        this.fieldType = fieldType;
-    }
-}
-
-
-
-
-
-public enum FieldType {
-    PRI, LOOKUP, SCD, VERSION, OTHER
-}
-
-
-
-public enum DataType {
-
-    UNDEFINED(4) {
-        public int getSizeInBytes(Object value) {
-            return STRING.getSizeInBytes(value);
-        }
-    },
-
-    STRING(4) {
-        public int getSizeInBytes(Object value) {
-            if (value == null) {
-                return 0;
-            }
-            return super.getSizeInBytes(value) + (value.toString().length() * 2); // length + chars
-        }
-    },
-
-    INT(4),
-    LONG(8),
-    DOUBLE(8),
-    DATETIME(8),
-    BOOLEAN(1),
-    BYTE(1),
-    FLOAT(4),
-    SHORT(2),
-    CHAR(2),
-    DATE(8),
-    TIME(8),
-
-    BLOB(0) {
-        public int getSizeInBytes(Object value) {
-            if (value == null) {
-                return 0;
-            }
-            return ((byte[])value).length;
-        }
-    };
-
-    private final int sizeInBytes;
-
-    private DataType(int sizeInBytes) {
-        this.sizeInBytes = sizeInBytes;
-    }
-
-    public int getSizeInBytes(Object value) {
-        return sizeInBytes;
-    }
-}
-</code></pre>
-<p>Serializing collections is quite simple.</p>
-<pre><code class="java">@Override
-public void readFields(DataInput in) throws IOException {
-    int size = in.readInt();
-    list= new ArrayList&lt;Field&gt;(size);
-    for(int i = 0; i &lt; size; i++){
-        Field f = new Field();
-        f.readFields(in);
-        list.add(f);
-    }
-}
-
-@Override
-public void write(DataOutput out) throws IOException {
-    out.writeInt(list.size());
-    for (Field l : list) {
-        l.write(out);
-    }
-}
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/" data-id="cis1v72xw000nb6jedub7siu8" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/#ds-thread" class="article-comment-link">评论</a>
-      
-      
     </footer>
   </div>
   
@@ -812,6 +679,24 @@ public void write(DataOutput out) throws IOException {
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/19/algo/kaggle/titanic/" class="thumbnail">
+  
+    <span style="background-image:url(/output_6_1.png
+)" alt="kaggle之Titanic 沉没" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
+              <p class="item-title"><a href="/2016/08/19/algo/kaggle/titanic/" class="title">kaggle之Titanic 沉没</a></p>
+              <p class="item-date"><time datetime="2016-08-19T12:30:13.000Z" itemprop="datePublished">2016-08-19</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -881,23 +766,6 @@ public void write(DataOutput out) throws IOException {
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/11/system/search_system_sample/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/system/">system</a></p>
-              <p class="item-title"><a href="/2016/08/11/system/search_system_sample/" class="title">使用Elasticsearch和docker快速搭建一个搜索引擎</a></p>
-              <p class="item-date"><time datetime="2016-08-10T16:00:00.000Z" itemprop="datePublished">2016-08-11</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -907,7 +775,7 @@ public void write(DataOutput out) throws IOException {
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -916,7 +784,7 @@ public void write(DataOutput out) throws IOException {
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -934,7 +802,7 @@ public void write(DataOutput out) throws IOException {
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        92
+        93
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,179 @@
 
       
       <section id="main">
+      <article id="post-dev/python/python_mock" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/09/dev/python/python_mock/">Python Mock的入门</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/12/09/dev/python/python_mock/">
+      <time datetime="2015-12-09T02:19:56.000Z" itemprop="datePublished">2015-12-09</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h3 id="Mock_u662F_u4EC0_u4E48"><a href="#Mock_u662F_u4EC0_u4E48" class="headerlink" title="Mock是什么"></a>Mock是什么</h3><p>Mock这个词在英语中有模拟的这个意思，因此我们可以猜测出这个库的主要功能是模拟一些东西。准确的说，Mock是Python中一个用于支持的测试的库，它的主要功能是使用mock对象替代掉指定的Python对象，以达到模拟对象的行为。简单的说，mock库用于如下的场景：</p>
+<p>假设你开发的项目叫a，里面包含了一个模块b，模块b中的一个函数c（也就是a.b.c）在工作的时候需要调用发送请求给特定的服务器来得到一个JSON返回值，然后根据这个返回值来做处理。如果要为a.b.c函数写一个单元测试，该如何做？<br>一个简单的办法是搭建一个测试的服务器，在单元测试的时候，让a.b.c函数和这个测试服务器交互。但是这种做法有两个问题：</p>
+<p>测试服务器可能很不好搭建，或者搭建效率很低。<br>你搭建的测试服务器可能无法返回所有可能的值，或者需要大量的工作才能达到这个目的。<br>那么如何在没有测试服务器的情况下进行上面这种情况的单元测试呢？Mock模块就是答案。上面已经说过了，mock模块可以替换Python对象。我们假设a.b.c的代码如下：</p>
+<pre><code class="python">import requests
+
+def c(url):
+    resp = requests.get(url)
+    # further process with resp
+</code></pre>
+<p>如果利用mock模块，那么就可以达到这样的效果：使用一个mock对象替换掉上面的requests.get函数，然后执行函数c时，c调用requests.get的返回值就能够由我们的mock对象来决定，而不需要服务器的参与。简单的说，就是我们用一个mock对象替换掉c函数和服务器交互的过程。你一定很好奇这个功能是如何实现的，这个是mock模块内部的实现机制，不在本文的讨论范围。本文主要讨论如何用mock模块来解决上面提到的这种单元测试场景。</p>
+<h3 id="Mock_u7684_u5B89_u88C5_u548C_u5BFC_u5165"><a href="#Mock_u7684_u5B89_u88C5_u548C_u5BFC_u5165" class="headerlink" title="Mock的安装和导入"></a>Mock的安装和导入</h3><p>在Python 3.3以前的版本中，需要另外安装mock模块，可以使用pip命令来安装：</p>
+<pre><code class="bash">$ sudo pip install mock
+</code></pre>
+<p>然后在代码中就可以直接import进来：</p>
+<pre><code class="python">import mock
+</code></pre>
+<p>从Python 3.3开始，mock模块已经被合并到标准库中，被命名为unittest.mock，可以直接import进来使用：</p>
+<pre><code class="python">from unittest import mock
+</code></pre>
+<h3 id="Mock_u5BF9_u8C61"><a href="#Mock_u5BF9_u8C61" class="headerlink" title="Mock对象"></a>Mock对象</h3><h4 id="u57FA_u672C_u7528_u6CD5"><a href="#u57FA_u672C_u7528_u6CD5" class="headerlink" title="基本用法"></a>基本用法</h4><p>Mock对象是mock模块中最重要的概念。Mock对象就是mock模块中的一个类的实例，这个类的实例可以用来替换其他的Python对象，来达到模拟的效果。Mock类的定义如下：</p>
+<pre><code class="python">class Mock(spec=None, side_effect=None, return_value=DEFAULT, wraps=None, name=None, spec_set=None, **kwargs)
+</code></pre>
+<p>这里给出这个定义只是要说明下Mock对象其实就是个Python类而已，当然，它内部的实现是很巧妙的，有兴趣的可以去看mock模块的代码。</p>
+<p>Mock对象的一般用法是这样的：</p>
+<p>找到你要替换的对象，这个对象可以是一个类，或者是一个函数，或者是一个类实例。<br>然后实例化Mock类得到一个mock对象，并且设置这个mock对象的行为，比如被调用的时候返回什么值，被访问成员的时候返回什么值等。<br>使用这个mock对象替换掉我们想替换的对象，也就是步骤1中确定的对象。<br>之后就可以开始写测试代码，这个时候我们可以保证我们替换掉的对象在测试用例执行的过程中行为和我们预设的一样。<br>举个例子来说：我们有一个简单的客户端实现，用来访问一个URL，当访问正常时，需要返回状态码200，不正常时，需要返回状态码404。首先，我们的客户端代码实现如下：</p>
+<pre><code class="python">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import requests
+
+def send_request(url):
+    r = requests.get(url)
+    return r.status_code
+
+def visit_ustack():
+    return send_request(&#39;http://www.ustack.com&#39;)
+</code></pre>
+<p>外部模块调用visit_ustack()来访问UnitedStack的官网。下面我们使用mock对象在单元测试中分别测试访问正常和访问不正常的情况。</p>
+<pre><code class="python">#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import unittest
+import mock
+import client
+
+class TestClient(unittest.TestCase):
+
+    def test_success_request(self):
+        success_send = mock.Mock(return_value=&#39;200&#39;)
+        client.send_request = success_send
+        self.assertEqual(client.visit_ustack(), &#39;200&#39;)
+
+    def test_fail_request(self):
+        fail_send = mock.Mock(return_value=&#39;404&#39;)
+        client.send_request = fail_send
+        self.assertEqual(client.visit_ustack(), &#39;404&#39;)
+</code></pre>
+<p>找到要替换的对象：我们需要测试的是visit_ustack这个函数，那么我们需要替换掉send_request这个函数。<br>实例化Mock类得到一个mock对象，并且设置这个mock对象的行为。在成功测试中，我们设置mock对象的返回值为字符串“200”，在失败测试中，我们设置mock对象的返回值为字符串”404”。<br>使用这个mock对象替换掉我们想替换的对象。我们替换掉了client.send_request<br>写测试代码。我们调用client.visit_ustack()，并且期望它的返回值和我们预设的一样。<br>上面这个就是使用mock对象的基本步骤了。在上面的例子中我们替换了自己写的模块的对象，其实也可以替换标准库和第三方模块的对象，方法是一样的：先import进来，然后替换掉指定的对象就可以了。</p>
+<h4 id="u7A0D_u5FAE_u9AD8_u7EA7_u70B9_u7684_u7528_u6CD5"><a href="#u7A0D_u5FAE_u9AD8_u7EA7_u70B9_u7684_u7528_u6CD5" class="headerlink" title="稍微高级点的用法"></a>稍微高级点的用法</h4><p>class Mock的参数</p>
+<p>上面讲的是mock对象最基本的用法。下面来看看mock对象的稍微高级点的用法（并不是很高级啊，最完整最高级的直接去看mock的文档即可，后面给出）。</p>
+<p>先来看看Mock这个类的参数，在上面看到的类定义中，我们知道它有好几个参数，这里介绍最主要的几个：</p>
+<p>name: 这个是用来命名一个mock对象，只是起到标识作用，当你print一个mock对象的时候，可以看到它的name。<br>return_value: 这个我们刚才使用过了，这个字段可以指定一个值（或者对象），当mock对象被调用时，如果side_effect函数返回的是DEFAULT，则对mock对象的调用会返回return_value指定的值。<br>side_effect: 这个参数指向一个可调用对象，一般就是函数。当mock对象被调用时，如果该函数返回值不是DEFAULT时，那么以该函数的返回值作为mock对象调用的返回值。<br>其他的参数请参考官方文档。</p>
+<h4 id="mock_u5BF9_u8C61_u7684_u81EA_u52A8_u521B_u5EFA"><a href="#mock_u5BF9_u8C61_u7684_u81EA_u52A8_u521B_u5EFA" class="headerlink" title="mock对象的自动创建"></a>mock对象的自动创建</h4><p>当访问一个mock对象中不存在的属性时，mock会自动建立一个子mock对象，并且把正在访问的属性指向它，这个功能对于实现多级属性的mock很方便。</p>
+<pre><code class="python">client = Client()
+client.v2_client.get.return_value = &#39;200&#39;
+</code></pre>
+<p>这个时候，你就得到了一个mock过的client实例，调用该实例的v2_client.get()方法会得到的返回值是”200”。</p>
+<p>从上面的例子中还可以看到，指定mock对象的return_value还可以使用属性赋值的方法。</p>
+<h4 id="u5BF9_u65B9_u6CD5_u8C03_u7528_u8FDB_u884C_u68C0_u67E5"><a href="#u5BF9_u65B9_u6CD5_u8C03_u7528_u8FDB_u884C_u68C0_u67E5" class="headerlink" title="对方法调用进行检查"></a>对方法调用进行检查</h4><p>mock对象有一些方法可以用来检查该对象是否被调用过、被调用时的参数如何、被调用了几次等。实现这些功能可以调用mock对象的方法，具体的可以查看mock的文档。这里我们举个例子。</p>
+<p>还是使用上面的代码，这次我们要检查visit_ustack()函数调用send_request()函数时，传递的参数类型是否正确。我们可以像下面这样使用mock对象。</p>
+<pre><code class="python">class TestClient(unittest.TestCase):
+
+    def test_call_send_request_with_right_arguments(self):
+        client.send_request = mock.Mock()
+        client.visit_ustack()
+        self.assertEqual(client.send_request.called, True)
+        call_args = client.send_request.call_args
+        self.assertIsInstance(call_args[0][0], str)
+</code></pre>
+<p>Mock对象的called属性表示该mock对象是否被调用过。</p>
+<p>Mock对象的call_args表示该mock对象被调用的tuple，tuple的每个成员都是一个mock.call对象。mock.call这个对象代表了一次对mock对象的调用，其内容是一个tuple，含有两个元素，第一个元素是调用mock对象时的位置参数（<em>args），第二个元素是调用mock对象时的关键字参数（*</em>kwargs）。</p>
+<p>现在来分析下上面的用例，我们要检查的项目有两个：</p>
+<p>visit_ustack()调用了send_request()<br>调用的参数是一个字符串<br>patch和patch.object</p>
+<p>在了解了mock对象之后，我们来看两个方便测试的函数：patch和patch.object。这两个函数都会返回一个mock内部的类实例，这个类是class _patch。返回的这个类实例既可以作为函数的装饰器，也可以作为类的装饰器，也可以作为上下文管理器。使用patch或者patch.object的目的是为了控制mock的范围，意思就是在一个函数范围内，或者一个类的范围内，或者with语句的范围内mock掉一个对象。我们看个代码例子即可：</p>
+<pre><code class="python">class TestClient(unittest.TestCase):
+
+    def test_success_request(self):
+        status_code = &#39;200&#39;
+        success_send = mock.Mock(return_value=status_code)
+        with mock.patch(&#39;client.send_request&#39;, success_send):
+            from client import visit_ustack
+            self.assertEqual(visit_ustack(), status_code)
+
+    def test_fail_request(self):
+        status_code = &#39;404&#39;
+        fail_send = mock.Mock(return_value=status_code)
+        with mock.patch(&#39;client.send_request&#39;, fail_send):
+            from client import visit_ustack
+            self.assertEqual(visit_ustack(), status_code)
+</code></pre>
+<p>这个测试类和我们刚才写的第一个测试类一样，包含两个测试，只不过这次不是显示创建一个mock对象并且进行替换，而是使用了patch函数（作为上下文管理器使用）。</p>
+<p>patch.object和patch的效果是一样的，只不过用法有点不同。举例来说，同样是上面这个例子，换成patch.object的话是这样的：</p>
+<pre><code class="python">    def test_fail_request(self):
+        status_code = &#39;404&#39;
+        fail_send = mock.Mock(return_value=status_code)
+        with mock.patch.object(client, &#39;send_request&#39;, fail_send):
+            from client import visit_ustack
+            self.assertEqual(visit_ustack(), status_code)
+</code></pre>
+<p>就是替换掉一个对象的指定名称的属性，用法和setattr类似。</p>
+<h3 id="u5982_u4F55_u5B66_u4E60_u4F7F_u7528mock_uFF1F"><a href="#u5982_u4F55_u5B66_u4E60_u4F7F_u7528mock_uFF1F" class="headerlink" title="如何学习使用mock？"></a>如何学习使用mock？</h3><p>你肯定很奇怪，本文不就是教人使用mock的么？其实不是的，我发现自己在学习mock的过程中遇到的主要困难是不清楚mock能做什么，而不是mock对象到底有哪些函数。因此写这篇文章的主要目的是为了说明mock能做什么。</p>
+<p>当你知道了mock能做什么之后，要如何学习并掌握mock呢？最好的方式就是查看阅读官方文档，并在自己的单元测试中使用。</p>
+<p>最后，学习mock技能你应该要能够感受到一种控制的快感，就是你能享受控制外部服务的快乐。当你感受到这种快感的时候，你的mock应该就达到熟练使用的水平了。</p>
+<h3 id="u5B98_u65B9_u6587_u6863"><a href="#u5B98_u65B9_u6587_u6863" class="headerlink" title="官方文档"></a>官方文档</h3><p>Python 2.7</p>
+<p>mock还未加入标准库。</p>
+<p><a href="http://www.voidspace.org.uk/python/mock/index.html" target="_blank" rel="external">http://www.voidspace.org.uk/python/mock/index.html</a></p>
+<p>Python 3.4</p>
+<p>mock已经加入了标准库。</p>
+<p><a href="https://docs.python.org/3.4/library/unittest.mock-examples.html" target="_blank" rel="external">https://docs.python.org/3.4/library/unittest.mock-examples.html</a><br><a href="https://docs.python.org/3.4/library/unittest.mock.html" target="_blank" rel="external">https://docs.python.org/3.4/library/unittest.mock.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/12/09/dev/python/python_mock/" data-id="cis1v9c2y006fctje7pvvemcl" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/12/09/dev/python/python_mock/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mock/">Mock</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/search/Elasticsearch" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -181,7 +354,7 @@ bin/kibana
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/08/dev/search/Elasticsearch/" data-id="cis1v731a006db6jeqe080uw5" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/08/dev/search/Elasticsearch/" data-id="cis1v9c2z006hctjestq3qv3p" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/08/dev/search/Elasticsearch/#ds-thread" class="article-comment-link">评论</a>
       
@@ -250,7 +423,7 @@ sudo python setup.py install
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/04/dev/docker/docker/" data-id="cis1v730x0056b6jepwech1u0" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/04/dev/docker/docker/" data-id="cis1v9c2j005ictjehw5ripmg" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/04/dev/docker/docker/#ds-thread" class="article-comment-link">评论</a>
       
@@ -461,7 +634,7 @@ public class TestApp {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/26/dev/lucene_boolean_query/" data-id="cis1v72xz000tb6jekho11blp" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/26/dev/lucene_boolean_query/" data-id="cis1v9bz3000uctje6h8ia6z4" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/26/dev/lucene_boolean_query/#ds-thread" class="article-comment-link">评论</a>
       
@@ -535,273 +708,9 @@ func deepCopy(dst, src interface{}) error {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/" data-id="cis1v7312005rb6jecp73t8bo" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/" data-id="cis1v9c36006qctjepmc4e3dc" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/go/go_set" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/24/dev/go/go_set/">Go语言实现set</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/11/24/dev/go/go_set/">
-      <time datetime="2015-11-24T09:19:56.000Z" itemprop="datePublished">2015-11-24</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <pre><code class="go">package set
-
-type Set interface {
-    Add(e interface{}) bool
-    Remove(e interface{})
-    Clear()
-    Contains(e interface{}) bool
-    Len() int
-    Same(other Set) bool
-    Elements() []interface{}
-    String() string
-}
-
-// 判断集合 one 是否是集合 other 的超集
-func IsSuperset(one Set, other Set) bool {
-    if one == nil || other == nil {
-        return false
-    }
-    oneLen := one.Len()
-    otherLen := other.Len()
-    if oneLen == 0 || oneLen == otherLen {
-        return false
-    }
-    if oneLen &gt; 0 &amp;&amp; otherLen == 0 {
-        return true
-    }
-    for _, v := range other.Elements() {
-        if !one.Contains(v) {
-            return false
-        }
-    }
-    return true
-}
-
-// 生成集合 one 和集合 other 的并集
-func Union(one Set, other Set) Set {
-    if one == nil || other == nil {
-        return nil
-    }
-    unionedSet := NewSimpleSet()
-    for _, v := range one.Elements() {
-        unionedSet.Add(v)
-    }
-    if other.Len() == 0 {
-        return unionedSet
-    }
-    for _, v := range other.Elements() {
-        unionedSet.Add(v)
-    }
-    return unionedSet
-}
-
-// 生成集合 one 和集合 other 的交集
-func Intersect(one Set, other Set) Set {
-    if one == nil || other == nil {
-        return nil
-    }
-    intersectedSet := NewSimpleSet()
-    if other.Len() == 0 {
-        return intersectedSet
-    }
-    if one.Len() &lt; other.Len() {
-        for _, v := range one.Elements() {
-            if other.Contains(v) {
-                intersectedSet.Add(v)
-            }
-        }
-    } else {
-        for _, v := range other.Elements() {
-            if one.Contains(v) {
-                intersectedSet.Add(v)
-            }
-        }
-    }
-    return intersectedSet
-}
-
-// 生成集合 one 对集合 other 的差集
-func Difference(one Set, other Set) Set {
-    if one == nil || other == nil {
-        return nil
-    }
-    differencedSet := NewSimpleSet()
-    if other.Len() == 0 {
-        for _, v := range one.Elements() {
-            differencedSet.Add(v)
-        }
-        return differencedSet
-    }
-    for _, v := range one.Elements() {
-        if !other.Contains(v) {
-            differencedSet.Add(v)
-        }
-    }
-    return differencedSet
-}
-
-// 生成集合 one 和集合 other 的对称差集
-func SymmetricDifference(one Set, other Set) Set {
-    if one == nil || other == nil {
-        return nil
-    }
-    diffA := Difference(one, other)
-    if other.Len() == 0 {
-        return diffA
-    }
-    diffB := Difference(other, one)
-    return Union(diffA, diffB)
-}
-
-func NewSimpleSet() Set {
-    return NewHashSet()
-}
-
-func IsSet(value interface{}) bool {
-    if _, ok := value.(Set); ok {
-        return true
-    }
-    return false
-}
-</code></pre>
-<p>HashSet：</p>
-<pre><code class="go">package set
-
-import (
-    &quot;bytes&quot;
-    &quot;fmt&quot;
-)
-
-type HashSet struct {
-    m map[interface{}]bool
-}
-
-func NewHashSet() *HashSet {
-    return &amp;HashSet{m: make(map[interface{}]bool)}
-}
-
-func (set *HashSet) Add(e interface{}) bool {
-    if !set.m[e] {
-        set.m[e] = true
-        return true
-    }
-    return false
-}
-
-func (set *HashSet) Remove(e interface{}) {
-    delete(set.m, e)
-}
-
-func (set *HashSet) Clear() {
-    set.m = make(map[interface{}]bool)
-}
-
-func (set *HashSet) Contains(e interface{}) bool {
-    return set.m[e]
-}
-
-func (set *HashSet) Len() int {
-    return len(set.m)
-}
-
-func (set *HashSet) Same(other Set) bool {
-    if other == nil {
-        return false
-    }
-    if set.Len() != other.Len() {
-        return false
-    }
-    for key := range set.m {
-        if !other.Contains(key) {
-            return false
-        }
-    }
-    return true
-}
-
-func (set *HashSet) Elements() []interface{} {
-    initialLen := len(set.m)
-    snapshot := make([]interface{}, initialLen)
-    actualLen := 0
-    for key := range set.m {
-        if actualLen &lt; initialLen {
-            snapshot[actualLen] = key
-        } else {
-            snapshot = append(snapshot, key)
-        }
-        actualLen++
-    }
-    if actualLen &lt; initialLen {
-        snapshot = snapshot[:actualLen]
-    }
-    return snapshot
-}
-
-func (set *HashSet) String() string {
-    var buf bytes.Buffer
-    buf.WriteString(&quot;HashSet{&quot;)
-    first := true
-    for key := range set.m {
-        if first {
-            first = false
-        } else {
-            buf.WriteString(&quot; &quot;)
-        }
-        buf.WriteString(fmt.Sprintf(&quot;%v&quot;, key))
-    }
-    buf.WriteString(&quot;}&quot;)
-    return buf.String()
-}
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="cis1v7315005xb6jee8zge0i8" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_set/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -826,6 +735,24 @@ func (set *HashSet) String() string {
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/19/algo/kaggle/titanic/" class="thumbnail">
+  
+    <span style="background-image:url(/output_6_1.png
+)" alt="kaggle之Titanic 沉没" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
+              <p class="item-title"><a href="/2016/08/19/algo/kaggle/titanic/" class="title">kaggle之Titanic 沉没</a></p>
+              <p class="item-date"><time datetime="2016-08-19T12:30:13.000Z" itemprop="datePublished">2016-08-19</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -895,23 +822,6 @@ func (set *HashSet) String() string {
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/11/system/search_system_sample/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/system/">system</a></p>
-              <p class="item-title"><a href="/2016/08/11/system/search_system_sample/" class="title">使用Elasticsearch和docker快速搭建一个搜索引擎</a></p>
-              <p class="item-date"><time datetime="2016-08-10T16:00:00.000Z" itemprop="datePublished">2016-08-11</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -921,7 +831,7 @@ func (set *HashSet) String() string {
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">19</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -930,7 +840,7 @@ func (set *HashSet) String() string {
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -948,7 +858,7 @@ func (set *HashSet) String() string {
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
