@@ -182,11 +182,40 @@ Pipeline(steps=[(&#39;reduce_dim&#39;, PCA(copy=True, n_components=None,
 <pre><code class="python">&gt;&gt;&gt; clf.set_params(svm__C=10)
 </code></pre>
 <p>可以通过set_params函数对pipeline中的某个模型设定参数，上面是将svm参数C设置为10</p>
+<p>另外一个例子：</p>
+<pre><code class="python">&gt;&gt;&gt; from sklearn import svm
+&gt;&gt;&gt; from sklearn.datasets import samples_generator
+&gt;&gt;&gt; from sklearn.feature_selection import SelectKBest
+&gt;&gt;&gt; from sklearn.feature_selection import f_regression
+&gt;&gt;&gt; from sklearn.pipeline import Pipeline
+&gt;&gt;&gt; # generate some data to play with
+&gt;&gt;&gt; X, y = samples_generator.make_classification(
+...     n_informative=5, n_redundant=0, random_state=42)
+&gt;&gt;&gt; # ANOVA SVM-C
+&gt;&gt;&gt; anova_filter = SelectKBest(f_regression, k=5)
+&gt;&gt;&gt; clf = svm.SVC(kernel=&#39;linear&#39;)
+&gt;&gt;&gt; anova_svm = Pipeline([(&#39;anova&#39;, anova_filter), (&#39;svc&#39;, clf)])
+&gt;&gt;&gt; # You can set the parameters using the names issued
+&gt;&gt;&gt; # For instance, fit using a k of 10 in the SelectKBest
+&gt;&gt;&gt; # and a parameter &#39;C&#39; of the svm
+&gt;&gt;&gt; anova_svm.set_params(anova__k=10, svc__C=.1).fit(X, y)
+...                                              
+Pipeline(steps=[...])
+&gt;&gt;&gt; prediction = anova_svm.predict(X)
+&gt;&gt;&gt; anova_svm.score(X, y)                        
+0.77...
+&gt;&gt;&gt; # getting the selected features chosen by anova_filter
+&gt;&gt;&gt; anova_svm.named_steps[&#39;anova&#39;].get_support()
+...
+array([ True,  True,  True, False, False,  True, False,  True,  True, True,
+       False, False,  True, False,  True, False, False, False, False,
+       True], dtype=bool)
+</code></pre>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/" data-id="cis87475m002z6is8kve6l2pd" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/" data-id="cis87as8k004u9es8ey7yqzf3" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/#ds-thread" class="article-comment-link">评论</a>
       
@@ -557,7 +586,7 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/" data-id="cis87475g00266is82l6os8ek" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/" data-id="cis87as7o003f9es8fuohxnv7" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1001,7 +1030,7 @@ Best score: 0.842
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/titanic/" data-id="cis87475j002m6is88tmvtj67" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/titanic/" data-id="cis87as8c004c9es8np8k2zqy" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/19/algo/kaggle/titanic/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1074,7 +1103,7 @@ submission.to_csv(&#39;mode.csv&#39;, index=False)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/" data-id="cis87475h002b6is80lm3wuyg" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/" data-id="cis87as7z003r9es814b0e6j0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1480,7 +1509,7 @@ Wall time: 24.2 s
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/" data-id="cis87475h002e6is827inr918" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/" data-id="cis87as80003u9es8cg1plu42" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/#ds-thread" class="article-comment-link">评论</a>
       

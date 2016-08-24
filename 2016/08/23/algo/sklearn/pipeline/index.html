@@ -23,7 +23,7 @@
 
 下面是一个官方文档的示例：
 &amp;gt;&amp;gt;&amp;gt; from sklearn.pipeline import Pip">
-<meta property="og:updated_time" content="2016-08-24T01:01:59.000Z">
+<meta property="og:updated_time" content="2016-08-24T01:07:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sklearn pipeline简介">
 <meta name="twitter:description" content="Pipeline可以将许多算法模型串联起来，比如将特征提取、归一化、分类组织在一起形成一个典型的机器学习问题工作流。主要带来两点好处：  
@@ -200,11 +200,40 @@ Pipeline(steps=[(&#39;reduce_dim&#39;, PCA(copy=True, n_components=None,
 <pre><code class="python">&gt;&gt;&gt; clf.set_params(svm__C=10)
 </code></pre>
 <p>可以通过set_params函数对pipeline中的某个模型设定参数，上面是将svm参数C设置为10</p>
+<p>另外一个例子：</p>
+<pre><code class="python">&gt;&gt;&gt; from sklearn import svm
+&gt;&gt;&gt; from sklearn.datasets import samples_generator
+&gt;&gt;&gt; from sklearn.feature_selection import SelectKBest
+&gt;&gt;&gt; from sklearn.feature_selection import f_regression
+&gt;&gt;&gt; from sklearn.pipeline import Pipeline
+&gt;&gt;&gt; # generate some data to play with
+&gt;&gt;&gt; X, y = samples_generator.make_classification(
+...     n_informative=5, n_redundant=0, random_state=42)
+&gt;&gt;&gt; # ANOVA SVM-C
+&gt;&gt;&gt; anova_filter = SelectKBest(f_regression, k=5)
+&gt;&gt;&gt; clf = svm.SVC(kernel=&#39;linear&#39;)
+&gt;&gt;&gt; anova_svm = Pipeline([(&#39;anova&#39;, anova_filter), (&#39;svc&#39;, clf)])
+&gt;&gt;&gt; # You can set the parameters using the names issued
+&gt;&gt;&gt; # For instance, fit using a k of 10 in the SelectKBest
+&gt;&gt;&gt; # and a parameter &#39;C&#39; of the svm
+&gt;&gt;&gt; anova_svm.set_params(anova__k=10, svc__C=.1).fit(X, y)
+...                                              
+Pipeline(steps=[...])
+&gt;&gt;&gt; prediction = anova_svm.predict(X)
+&gt;&gt;&gt; anova_svm.score(X, y)                        
+0.77...
+&gt;&gt;&gt; # getting the selected features chosen by anova_filter
+&gt;&gt;&gt; anova_svm.named_steps[&#39;anova&#39;].get_support()
+...
+array([ True,  True,  True, False, False,  True, False,  True,  True, True,
+       False, False,  True, False,  True, False, False, False, False,
+       True], dtype=bool)
+</code></pre>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/" data-id="cis87475m002z6is8kve6l2pd" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/" data-id="cis87as8k004u9es8ey7yqzf3" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/#ds-thread" class="article-comment-link">评论</a>
       
