@@ -125,131 +125,6 @@
 
       
       <section id="main">
-      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/11/18/dev/web/python_cgi_bin/">
-      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/web/">web</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <pre><code class="python">import BaseHTTPServer
-import CGIHTTPServer
-import cgitb; cgitb.enable()  ## This line enables CGI error reporting
-
-server = BaseHTTPServer.HTTPServer
-handler = CGIHTTPServer.CGIHTTPRequestHandler
-server_address = (&quot;0.0.0.0&quot;, 8082)
-handler.cgi_directories = [&quot;/cgi-bin&quot;]
-
-httpd = server(server_address, handler)
-httpd.serve_forever()
-</code></pre>
-<p>CGI-BIN下的py文件要有执行权限。</p>
-<pre><code class="python">#!/usr/bin/env python
-
-import cgi
-import urllib
-import json
-
-form = cgi.FieldStorage()
-
-query_str = form.getvalue(&#39;query&#39;)
-query = &quot;http://0.0.0.0:9999/query?query=%s&quot; % query_str
-
-exec_query = urllib.urlopen(query)
-print &quot;Status: 200 OK&quot;
-print &quot;Content-Type: application/json&quot;
-print &quot;&quot;
-print exec_query.read()
-</code></pre>
-<p>HTML:</p>
-<pre><code class="html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
-
-        &lt;title&gt;test&lt;/title&gt;
-        &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;&gt;&lt;/script&gt;
-        &lt;script&gt;
-
-            $(function()
-            {
-                $(&#39;#clickme&#39;).click(function(){
-                    alert(&#39;Im going to start processing&#39;);
-
-                    $.ajax({
-                        url: &quot;/scripts/ajaxpost.py&quot;,
-                        type: &quot;post&quot;,
-                        datatype:&quot;json&quot;,
-                        data: {&#39;key&#39;:&#39;value&#39;,&#39;key2&#39;:&#39;value2&#39;},
-                        success: function(response){
-                            alert(response.message);
-                            alert(response.keys);
-                        }
-                    });
-                });
-            });
-
-        &lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;button id=&quot;clickme&quot;&gt; click me &lt;/button&gt;
-    &lt;/body&gt;
-
-&lt;/html&gt;
-</code></pre>
-<p>参考： </p>
-<ul>
-<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
-<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
-<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="cis9166qn004xq3jewikcx3xl" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <article id="post-dev/web/python_http_server" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -380,9 +255,134 @@ if __name__ == &#39;__main__&#39;:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cis9166qp0050q3jekct16jb6" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cisa03byj006o1ns8tpn6lkpb" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/18/dev/web/python_cgi_bin/">
+      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <pre><code class="python">import BaseHTTPServer
+import CGIHTTPServer
+import cgitb; cgitb.enable()  ## This line enables CGI error reporting
+
+server = BaseHTTPServer.HTTPServer
+handler = CGIHTTPServer.CGIHTTPRequestHandler
+server_address = (&quot;0.0.0.0&quot;, 8082)
+handler.cgi_directories = [&quot;/cgi-bin&quot;]
+
+httpd = server(server_address, handler)
+httpd.serve_forever()
+</code></pre>
+<p>CGI-BIN下的py文件要有执行权限。</p>
+<pre><code class="python">#!/usr/bin/env python
+
+import cgi
+import urllib
+import json
+
+form = cgi.FieldStorage()
+
+query_str = form.getvalue(&#39;query&#39;)
+query = &quot;http://0.0.0.0:9999/query?query=%s&quot; % query_str
+
+exec_query = urllib.urlopen(query)
+print &quot;Status: 200 OK&quot;
+print &quot;Content-Type: application/json&quot;
+print &quot;&quot;
+print exec_query.read()
+</code></pre>
+<p>HTML:</p>
+<pre><code class="html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+
+        &lt;title&gt;test&lt;/title&gt;
+        &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script&gt;
+
+            $(function()
+            {
+                $(&#39;#clickme&#39;).click(function(){
+                    alert(&#39;Im going to start processing&#39;);
+
+                    $.ajax({
+                        url: &quot;/scripts/ajaxpost.py&quot;,
+                        type: &quot;post&quot;,
+                        datatype:&quot;json&quot;,
+                        data: {&#39;key&#39;:&#39;value&#39;,&#39;key2&#39;:&#39;value2&#39;},
+                        success: function(response){
+                            alert(response.message);
+                            alert(response.keys);
+                        }
+                    });
+                });
+            });
+
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;button id=&quot;clickme&quot;&gt; click me &lt;/button&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>参考： </p>
+<ul>
+<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
+<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
+<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="cisa03byh006m1ns8pdm3ouo8" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -623,7 +623,7 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cis9166q7003rq3je5k2mr1v2" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cisa03bxp005z1ns8ocjsmo6w" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/#ds-thread" class="article-comment-link">评论</a>
       
@@ -707,7 +707,7 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="cis9166ms000fq3je4fl5kiz1" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="cisa03bta000a1ns825tlnjgo" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1107,7 +1107,7 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="cis9166rk006tq3je8301iiqn" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="cisa03bxq00611ns8oo0d315g" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/#ds-thread" class="article-comment-link">评论</a>
       
