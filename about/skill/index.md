@@ -27,6 +27,10 @@ date: 2015-12-11 15:53:16
    * Visual Studio [官网](https://www.visualstudio.com/zh-cn/downloads/download-visual-studio-vs.aspx)
    * LiteIDE [下载](http://www.golangtc.com/go/liteide)
    * WebStrom [官网](https://www.jetbrains.com)
+   * Pandas [官网](pandas.pydata.org)
+ * 工具
+   * Docker
+   * Spark
  * 开发相关
    * 版本控制
      * Git
@@ -110,14 +114,32 @@ date: 2015-12-11 15:53:16
     * 回归
     * 多分类 
    * 树
-    * GBRT
+    * GBRT/GBRT
+    * 随机森林
    * 神经网络
+    * BP神经网络
+    * CNN卷积神经网络
+   * 组合模型
+    * 提升模型
+    * AdaBoost
+    * xgboost
    * 图
      * PageRank [TextRank](http://www.notehub.cn/2016/01/05/algo/graph/textrank/) [TextRank Github](https://github.com/someus/TextRank4ZH)
+     * 有向图模型（贝叶斯网络，信念网络）
+     * 无向图模型（马尔科夫随机场MRF、马尔科夫网络）
+     * 条件随机场CRF
+     * 随机场
    * 博弈
      * Multi arm bandit
    * 时间序列
      * 指数平滑
+   * 异常检测
+     * 方差分析、四分位距
+     * 马氏距离分析
+     * One-Class SVM刻画边界
+   * 客户分层/信用分析
+     * 聚类分析
+     * 评分卡Scorecard
    * 竞赛平台
      * [Kaggle](https://www.kaggle.com/)   
    * 聚类
