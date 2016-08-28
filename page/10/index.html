@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        97
+        98
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,185 @@
 
       
       <section id="main">
+      <article id="post-dev/flatbuffers" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/20/dev/flatbuffers/">FlatBuffers使用简介</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/20/dev/flatbuffers/">
+      <time datetime="2015-11-20T02:01:56.000Z" itemprop="datePublished">2015-11-20</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h3 id="u6982_u8FF0"><a href="#u6982_u8FF0" class="headerlink" title="概述"></a>概述</h3><hr>
+<p>Google在今年6月份发布了跨平台序列化工具FlatBuffers，提供了C++/Java/Go/C#接口支持，这是一个注重性能和资源使用的序列化类库。相较于Protocol Buffers，其更适用于移动设备，FlatBuffers提供更高的性能以及更低的资源需求。</p>
+<p>特点</p>
+<ul>
+<li>不需要打包/解包。它的结构化数据都以二进制形式保存，不需要数据解析过程，数据也可以方便传递</li>
+<li>省内存、性能好</li>
+<li>强类型系统，在编译阶段就能预防一些bug的产生</li>
+<li>跨平台（C++11/Java/Go/C#）</li>
+</ul>
+<h3 id="FlatBuffers_u548CProtocol_Buffers_u4EE5_u53CAJson_u7684_u6BD4_u8F83_uFF1A"><a href="#FlatBuffers_u548CProtocol_Buffers_u4EE5_u53CAJson_u7684_u6BD4_u8F83_uFF1A" class="headerlink" title="FlatBuffers和Protocol Buffers以及Json的比较："></a>FlatBuffers和Protocol Buffers以及Json的比较：</h3><ul>
+<li>FlatBuffers的功能和Protocol Buffers很像，他们的最大不同点是在使用具体的数据之前，FlatBuffers不需要解析/解包的过程。同时，在工程中使用时，FlatBuffers的引用比Protocol Buffers方便很多，只需要包含两三个头文件即可</li>
+<li>JSON作为数据交换格式，被广泛用户各种动态语言之间（当然也包括静态语言）。它的优点是易于理解（可读性好），同时它的最大的缺点那就是解析时的性能问题了。而且因为它的动态类型特点，你的代码可能还需要多写好多类型、数据检查逻辑。</li>
+</ul>
+<h3 id="FlatBuffers_u7684_u4F7F_u7528_u6B65_u9AA4"><a href="#FlatBuffers_u7684_u4F7F_u7528_u6B65_u9AA4" class="headerlink" title="FlatBuffers的使用步骤"></a>FlatBuffers的使用步骤</h3><p>编写一个用来定义数据结构的schema(IDL，接口定义)文件，如下所示：</p>
+<pre><code class="FlatBuffers">  //flatbuffers test struct
+
+  namespace Jason.Flat.Test;
+
+  enum Color : byte { Red = 1, Green, Blue }
+
+  union Any { TextureData, Texture }
+
+  table TestAppend {
+      test_num:int;
+      test_num2:int;
+  }
+
+  table TextureData {
+      image_size:int (id:0);
+      image_data:[ubyte] (id:1);
+      image_test:short(id:3);
+      test_num2:int(id:2);
+  }
+
+  table Texture {
+      num_textures:short;
+      textures:[TextureData];
+      num_test:short = 30;
+      num_test1:short (deprecated);
+          num_test2:short;
+      test_append:TestAppend;
+  }
+
+  root_type Texture;
+</code></pre>
+<p>将上述代码保存为TestFlat.fbs文件之后，即可用flatc来编译了</p>
+<ul>
+<li><p>使用FlatBuffer编译器flatc生成数据结构源代码（C++头文件或者Java类）<br>登录GitHub，下载所需版本的源码及工程文件，在build目录下有VS2010的工程文件（当然，你也可以选择利用CMake自己本地创建工程），打开配置好flatc工程的传入参数，如下：<br>-c -o ./ ./TestFlat.fbs<br>运行flatc工程，即可在当前工程目录下生成TestFlat_generated.h头文件，这个头文件中包含了我们所需的所有结构体、枚举类型等以及相应的存取方法和验证方法</p>
+</li>
+<li><p>使用FlatBufferBuilder类创建flat的二进制buffer<br>以下代码展示了如何利用FlatBufferBuilder创建相应buffer：</p>
+</li>
+</ul>
+<pre><code class="c++"> //read serialized buffer
+ flatbuffers::FlatBufferBuilder builder_data;
+
+ int test_append = 300;
+ auto name_test = builder_data.CreateString(&quot;TestAppend&quot;);
+ auto testApp = CreateTestAppend(builder_data, test_append, test_append);
+
+ int image_size = 12;
+ unsigned char inv_data[] = { 11, 2, 4, 2, 10, 3, 5 ,7, 10, 39, 45, 23 };
+ auto name = builder_data.CreateString(&quot;TextureData&quot;);
+ auto image_data = builder_data.CreateVector(inv_data, image_size);
+
+ int image_test = 900;
+ auto texture_data = CreateTextureData(builder_data, image_size, image_data, image_test, image_test);
+
+ //flatbuffers::FlatBufferBuilder builder_tex;
+ int texture_num = 1;
+
+ auto name_tex = builder_data.CreateString(&quot;Texture&quot;);
+
+ vector&lt;flatbuffers::Offset&lt;TextureData&gt;&gt; tex_vec;
+ tex_vec.push_back(texture_data);
+ auto tex_data = builder_data.CreateVector(tex_vec);
+
+ int num_text = 100, num_text2 = 200, num_text3 = 300;
+ auto texture = CreateTexture(builder_data, texture_num, tex_data, num_text, num_text2, testApp);
+ builder_data.Finish(texture);
+</code></pre>
+<p>要使上述正确运行，除了引用C++基本库之外，需在文件头部添加以下代码：</p>
+<pre><code class="c++">#include &quot;flatbuffers/flatbuffers.h&quot;
+#include &quot;idl.h&quot;
+#include &quot;util.h&quot;
+#include &quot;TestFlat_generated.h&quot;
+using namespace Jason::Flat::Test;
+</code></pre>
+<p>上述代码的编写中规中矩，其中CreateString和CreateVector都是FlatBufferBuilder类的成员函数，分别用于创建适用于FlatBuffer内存结构的字符串数据以及向量数据。其余的方法，如CreateTextureData、CreateTexture均是由flatc根据IDL文件（TestFlat.fbs）自动生成的头文件中用于创建相应结构体的函数。最后一句builder_data.Finish(texture)用于优化对齐写入builder_data的内存结构。</p>
+<ul>
+<li>保存buffer到本地或者直接通过网络发送<br>保存buffer到本地的代码，如下：</li>
+</ul>
+<p>std::cout &lt;&lt; builder_data.GetSize() &lt;&lt; std::endl;<br>flatbuffers::SaveFile(“texture.bin”, reinterpret_cast<char *="">(builder_data.GetBufferPointer()), builder_data.GetSize(), true);<br>将数据保存到名为texture.bin的二进制文件中，其中通过builder_data.GetBufferPointer()获取内存指针，builder_data.GetSize()获取内存大小，最后一个参数用于制定是否生成二进制文件。</char></p>
+<ul>
+<li>接收并buffer并读取数据内容<br>读取二进制文件的代码如下：</li>
+</ul>
+<pre><code class="c++"> string binaryfile;
+ bool ok = flatbuffers::LoadFile(&quot;texture.bin&quot;, false, &amp;binaryfile);
+
+ flatbuffers::Verifier tex_verify(builderOut.GetBufferPointer(), builderOut.GetSize());
+ bool verify_flag = VerifyTextureBuffer(tex_verify);
+
+ flatbuffers::FlatBufferBuilder builderOut;
+ TextureBuilder* texBuilder = new TextureBuilder(builderOut);
+ builderOut.PushBytes(reinterpret_cast&lt;unsigned char*&gt;(const_cast&lt;char *&gt;(binaryfile.c_str())), binaryfile.size());
+ std::cout &lt;&lt; builderOut.GetSize() &lt;&lt; std::endl;
+
+ auto model = GetTexture(builderOut.GetBufferPointer());
+
+ int outNum = model-&gt;num_textures();
+ const flatbuffers::Vector&lt;flatbuffers::Offset&lt;TextureData&gt;&gt;* outTex = model-&gt;textures();
+ TextureData* outTexData = (TextureData *)outTex-&gt;Get(0);
+ int outSize = outTexData-&gt;image_size();
+ const flatbuffers::Vector&lt;unsigned char&gt;* outData = outTexData-&gt;image_data();
+ int x = outData-&gt;Get(5);
+ int len = outData-&gt;Length();
+ delete texBuilder;
+</code></pre>
+<p>上述代码中VerifyTextureBuffer用于验证读取的内存是否为FlatBuffers的内存块，是则返回true，不是则返回false。通过GetTexture获取指针之后，结构体中的变量均可以通过相应方法（各方法名请查看自动生成的头文件）获取。</p>
+<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>利用FlatBuffers来进行数据保存及传输的优点显而易见，它利用自身特殊的编码格式，能一定程度上减少内存的占用，优化读取的性能。更重要的是，对于数据结构的向前向后兼容提供了很好的扩展性，方便又高效：</p>
+<ul>
+<li>要想让数据结构具有可扩展性，需将数据结构定义为table，它是数据扩展的基础，FlatBuffers中的struct类型不支持扩展</li>
+<li>如果想在后续的版本中删除数据结构中的某些字段，只要在将要删除的字段后面添加(deprecated)即可，当然需要保证删除的字段在之前版本的程序中不会引起程序崩溃（该删掉的字段在上一版本的程序中获取到的会是个空指针或空值，只需保证程序在获取到空值或空指针之后不会出现异常即可）</li>
+<li>如果想在后续版本中向数据结构中添加某些字段，需添加到table中最后一个字段的后面，若是想table中随意位置添加字段，需如上面TextureData 的定义，给每个字段指明添加id:n（n从0开始）<br>目前FlatBuffers还不是很完善，碰到问题可以到FlatBuffers Issues Tracker去提交或则寻找答案。</li>
+</ul>
+<p>From: <a href="http://www.jianshu.com/p/6eb04a149cd8" target="_blank" rel="external">http://www.jianshu.com/p/6eb04a149cd8</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="cise97f4o000tsfje895vlowf" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/20/dev/flatbuffers/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/web/ui_base" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -168,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="cisbsuiuo006ub4jerm3ae6xi" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="cise97f8o006usfjeuib860gp" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/ui_base/#ds-thread" class="article-comment-link">评论</a>
       
@@ -313,7 +492,7 @@ if __name__ == &#39;__main__&#39;:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cisbsuiuh006ob4jeizr6g2o0" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cise97f8o006ssfje54du7iwo" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
       
@@ -438,7 +617,7 @@ print exec_query.read()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="cisbsuiui006pb4jepzvnnma8" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="cise97f8n006rsfjedvtbrgit" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
       
@@ -681,97 +860,11 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cisbsuitm0050b4je1f9y6bwh" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="cise97f8b005xsfjexmfd2l9j" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-ads/skip_the_ad" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/29/ads/skip_the_ad/">跳过视频广告好爽，殊不知被狠狠地「算计」了</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/29/ads/skip_the_ad/">
-      <time datetime="2015-10-29T03:32:20.000Z" itemprop="datePublished">2015-10-29</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/ads/">ads</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>YouTube 视频的广告为什么可以跳过？对广告商的负面影响大吗？</p>
-<p>许多人都从用户角度讲，Youtube 的这种方式用户体验多么多么好，作为相关从业人员，我觉得你们真是太看得起资本家了。Google 请了这么多这么贵的码农来开发这种产品，广告主愿意用这种方式投放广告，一定都是真心为了钱的……</p>
-<p>就从这句话开始说吧。</p>
-<p>如果不是一看就特有趣的广告，我都会选择跳过……这无疑是广告商最不愿看到的情景吧。美国的广告行业有一句著名的话是「我在广告上的投资有一半是被浪费了的，但是问题是我不知道是哪一半。」</p>
-<p>所以才有了广告测量这个子行业。</p>
-<p>从互联网视频这个分支来讲，一般的广告效果追踪主要靠网站播放器的 impression callback。简单说来就是说你在看视频广告的时候，播放器会不断向服务器端汇报你的观看进展的。同时视频网站也是依照这个数据找广告主收钱的，也就是著名的 CPM（千次观看成本）模型。 </p>
-<p>问题在于：播放器实际上只能汇报「播放进展」，而不是「观看进展」。</p>
-<p>这也是为什么在视频广告行业还有所谓的「First in Pod」的概念的原因，因为广告商也不傻，他们也知道一场足球比赛，中场休息放广告的时候，你们一定去上厕所开啤酒叫烤串儿去了。所以只有进广告后第一个广告可能被更多人看到，因此这种广告往往比中间的卖得要贵得多。</p>
-<p>因此 Youtube 的这种可以跳过的广告（ 正式名字叫做 TrueView），其实不是给你一个跳过广告的机会，而是让他们获得一个与你互动的机会。如果说真的是为了用户体验，那么他们就应该在广告的第一秒就直接允许你跳过广告。</p>
-<p>因为你知道 5 秒之后就能马上进入视频，所以这 5 秒你一定会盯着屏幕，甚至把鼠标预先挪到那个倒数框里。 </p>
-<p>这算是 TrueView 的第一个优点：精准测量，保证你真的在看。</p>
-<p>至于能不能吸引你继续看下去，那就是广告制作公司的本事了。</p>
-<p>而你说你跳过广告是广告商不愿意看到的事情，其实真不是，广告商乐坏了，因为他们不用付钱向一个对他们的产品不感兴趣的人推销了。这就好比著名的浏览器插件 AdBlock Plus， 广告商对它几乎都是持欢迎态度的，因为会用这个插件的用户，往往都是获取难度较高的客户，你把它们的广告屏蔽了，他们也省得为一个无谓的展示付钱。而且相反，因为给予了观看者跳过的权利，如果这条广告最后居然播完了，那么很大可能是你是对这个广告的内容感兴趣的，换句话说，是广告主的潜在客户。 </p>
-<p>所以这是 TrueView 的第二个优点：精准投放。</p>
-<p>最后，我们才说到用户体验，如果说良好的用户体验实际上是 TrueView 的副产物的话，那么这个副产物也不是完全没有价值的，因为广告的性质其实大体可以分两类：</p>
-<p>一类是 Selling，例如网上小视频里弹出一个广告说，现在来买大众汽车，分期免利息，还有折扣，blabla</p>
-<p>一类是 Branding，就好比几年前超级碗决赛上大众汽车做的无厘头的星战系列宣传片，不卖产品，就告诉你我高大上买得起超级碗的广告</p>
-<p>越是大公司大品牌，可能在 Branding 上花的钱就越多，但同时他们对于广告投放的体验要求也就更高，因为这个广告创意要传递给你的一定是关于他们品牌的正面印象，所以说这种广告往往是大手笔的投入，例如宝马找 Clive Owen 拍的一系列小电影。这种情况下，如果你的网站用户体验非常差，那么在你这里投放只能是浪费广告商的创意花费了。</p>
-<p>因此，TrueView 的第三个优点是：保证了良好的用户体验，因而可以吸引更大的客户来进行投放。</p>
-<p>因为有了上述三个优点，以及对大客户友好的特性，TrueView 的广告本身就具有了对于Youtube 盈利来说特别有利的特质：</p>
-<ul>
-<li>CPM 高， 能吸引更有钱的金主，适应更多不同的广告需求</li>
-<li>广告创意自由度更大， 其中第三点我是见过实例的，曾经我看过一个长达十分钟的 TrueView 广告，本身就是一个小电影，因为制作的精良，我不但看完了，而且还特地去搜索单独播放的地址。如果不是 TrueView，一个十分钟的广告简直是不可接受的。</li>
-</ul>
-<p>综上所述，我觉得 TrueView 是一个非常精妙的设计。基本上在「广告是视频网站盈利的根基」这一前提下，倚靠提供精准的投放和良好的体验，做到了广告主、网站和用户的三赢。 </p>
-<p>当然，我认为 Youtube 依托 Google，对于互联网用户的兴趣爱好甚至年龄性别特征都有非常多的了解， 因而能够智能地选取广告内容，一定程度上保证 TrueView 观看率的，才有信心敢推出这类型的产品。</p>
-<p>那说回来，为什么国内视频网站为什么不能也这样做？我猜是可以。但是：</p>
-<ul>
-<li>国内用户被盗版滋养了那么多年，对于免费产品 + 第三方补偿的接受能力比较弱</li>
-<li>国内的视频网站在用户追踪和人群分析上做得不够成熟，不能够保证投放出去的广告一定是用户感兴趣的</li>
-</ul>
-<p>最终导致使用类似的模式不能保证收益，倒不如用垃圾广告直接强奸用户广种薄收了……</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="cisbsuip4000ab4jeucs94zov" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ad/">ad</a></li></ul>
-
     </footer>
   </div>
   
@@ -792,6 +885,23 @@ int main()
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/26/algo/kaggle/facial_keypoints/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
+              <p class="item-title"><a href="/2016/08/26/algo/kaggle/facial_keypoints/" class="title">kaggle之人脸特征识别</a></p>
+              <p class="item-date"><time datetime="2016-08-26T05:48:13.000Z" itemprop="datePublished">2016-08-26</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -862,24 +972,6 @@ int main()
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/19/algo/kaggle/titanic/" class="thumbnail">
-  
-    <span style="background-image:url(/output_6_1.png
-)" alt="kaggle之Titanic 沉没" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
-              <p class="item-title"><a href="/2016/08/19/algo/kaggle/titanic/" class="title">kaggle之Titanic 沉没</a></p>
-              <p class="item-date"><time datetime="2016-08-19T12:30:13.000Z" itemprop="datePublished">2016-08-19</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -889,7 +981,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -898,7 +990,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GridSearchCV/">GridSearchCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pipeline/">Pipeline</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GridSearchCV/">GridSearchCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pipeline/">Pipeline</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -907,7 +999,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 13.33px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 13.33px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 13.33px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 13.33px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 20px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 13.33px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 17.5px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 17.5px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -916,7 +1008,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
