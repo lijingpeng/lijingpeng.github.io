@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        98
+        99
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,118 @@
 
       
       <section id="main">
+      <article id="post-internet/https" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/01/07/internet/https/">HTTPS、SSL/TLS协议及CA证书介绍</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/01/07/internet/https/">
+      <time datetime="2016-01-07T02:19:56.000Z" itemprop="datePublished">2016-01-07</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/internet/">internet</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>HTTPS协议作为一种网络数据通讯加密方式已经被各大网站广泛支持，对于个人网站来说，虽然不需要过分担心数据传输的安全性，但是，网站部署SSL证书已是一种趋势。</p>
+<h2 id="SSL/TLS_u534F_u8BAE_u4ECB_u7ECD"><a href="#SSL/TLS_u534F_u8BAE_u4ECB_u7ECD" class="headerlink" title="SSL/TLS协议介绍"></a>SSL/TLS协议介绍</h2><hr>
+<h3 id="1_u3001SSL_u534F_u8BAE_u4ECB_u7ECD"><a href="#1_u3001SSL_u534F_u8BAE_u4ECB_u7ECD" class="headerlink" title="1、SSL协议介绍"></a>1、SSL协议介绍</h3><p>SSL 即安全套接层（Secure Sockets Layer，SSL），是一种安全协议，是网景公司在推出 Web 浏览器首版的同时提出，目的是为网络通信提供安全及数据完整性。SSL 在传输层对网络连接进行加密。</p>
+<p>SSL 采用公开密钥技术，保证两个应用间通信的保密性和可靠性，使客户与服务器应用之间的通信不被攻击者窃听。它在服务器和客户机两端可同时被支持，目前已成为互联网上保密通讯的工业标准。现行 Web 浏览器亦普遍将 HTTP 和 SSL 相结合，从而实现安全通信。此协议的继任者是 TLS。</p>
+<p>SSL目前有三个版本：2、3、3.1，最常用的是第3版，是1995年发布的。</p>
+<h3 id="2_u3001TLS_u534F_u8BAE_u4ECB_u7ECD"><a href="#2_u3001TLS_u534F_u8BAE_u4ECB_u7ECD" class="headerlink" title="2、TLS协议介绍"></a>2、TLS协议介绍</h3><p>IETF（www.ietf.org）于1999年将 SSL 作了标准化，即 RFC2246 ，并将其称为 TLS（Transport Layer Security）。</p>
+<p>常用的 TLS 协议版本有如下几个：TLS1.2, TLS1.1, TLS1.0 和 SSL3.0。其中 SSL3.0 由于 POODLE 攻击已经被证明不安全，但统计发现依然有不到 1% 的浏览器使用 SSL3.0。TLS1.0 也存在部分安全漏洞，比如 RC4 和 BEAST 攻击。</p>
+<p>TLS1.2 和 TLS1.1 暂时没有已知的安全漏洞，比较安全，同时有大量扩展提升速度和性能，推荐大家使用。</p>
+<h3 id="3_u3001_HTTPS_u534F_u8BAE_u4ECB_u7ECD"><a href="#3_u3001_HTTPS_u534F_u8BAE_u4ECB_u7ECD" class="headerlink" title="3、 HTTPS协议介绍"></a>3、 HTTPS协议介绍</h3><p>HTTPS 可以认为是 HTTP + TLS。HTTP 协议相信大家耳熟能详，目前大部分 WEB 应用和网站都是使用 HTTP 协议传输的。而HTTP 本身是明文传输的，没有经过任何安全处理。</p>
+<p>以使用百度搜索为例。用户在百度搜索了一个关键字，比如“苹果手机”，中间者完全能够查看到这个信息，并且有可能打电话过来骚扰用户。也有一些用户投诉使用百度时，发现首页或者结果页面浮了一个很长很大的广告，这也肯定是中间者往页面插的广告内容。如果劫持技术比较低劣的话，用户甚至无法访问百度。这里提到的中间者主要指一些网络节点，是用户数据在浏览器和百度服务器中间传输必须要经过的节点。比如 WIFI 热点，路由器，防火墙，反向代理，缓存服务器等。</p>
+<p>在 HTTP 协议下，中间者可以随意嗅探用户搜索内容，窃取隐私甚至篡改网页。不过 HTTPS 是这些劫持行为的克星，能够完全有效地防御。</p>
+<p>总体来说，HTTPS 协议提供了三个强大的功能来对抗上述的劫持行为：</p>
+<p>1）内容加密。浏览器到百度服务器的内容都是以加密形式传输，中间者无法直接查看原始内容。</p>
+<p>2）身份认证。保证用户访问的是百度服务，即使被 DNS 劫持到了第三方站点，也会提醒用户没有访问百度服务，有可能被劫持</p>
+<p>3）数据完整性。防止内容被第三方冒充或者篡改。</p>
+<h2 id="SSL/TLS_u534F_u8BAE_u539F_u7406"><a href="#SSL/TLS_u534F_u8BAE_u539F_u7406" class="headerlink" title="SSL/TLS协议原理"></a>SSL/TLS协议原理</h2><hr>
+<h3 id="1_u3001_u5BF9_u79F0_u52A0_u5BC6_u53CA_u975E_u5BF9_u79F0_u52A0_u5BC6"><a href="#1_u3001_u5BF9_u79F0_u52A0_u5BC6_u53CA_u975E_u5BF9_u79F0_u52A0_u5BC6" class="headerlink" title="1、对称加密及非对称加密"></a>1、对称加密及非对称加密</h3><p>加密算法一般分为两种，对称加密和非对称加密。</p>
+<p>1） 对称加密</p>
+<p>对称加密是最快速、最简单的一种加密方式，加密（encryption）与解密（decryption）用的是同样的密钥（secret key）。对称加密有很多种算法，由于它效率很高，所以被广泛使用在很多加密协议的核心当中。对称加密通常使用的是相对较小的密钥，一般小于256 bit。因为密钥越大，加密越强，但加密与解密的过程越慢。</p>
+<p>对称加密的一大缺点是密钥的管理与分配，换句话说，如何把密钥发送到需要解密你的消息的人的手里是一个问题。在发送密钥的过程中，密钥有很大的风险会被黑客们拦截。现实中通常的做法是将对称加密的密钥进行非对称加密，然后传送给需要它的人。</p>
+<p>对称加密又分为两种模式：流式加密和分组加密。流式加密算法推荐 ChaCha20，而分组加密算法则推荐使用AES-GCM。</p>
+<p>2） 非对称加密</p>
+<p>非对称加密为数据的加密与解密提供了一个非常安全的方法，它使用了一对密钥，公钥（public key）和私钥（private key）。私钥只能由一方安全保管，不能外泄，而公钥则可以发给任何请求它的人。非对称加密使用这对密钥中的一个进行加密，而解密则需要另一个密钥。</p>
+<p>非对称加密存在CPU资源消耗大、加密内容有限制等问题，因此只能用来作对称密钥交换或者内容签名，不适合用来做应用层传输内容的加解密。</p>
+<p>在SSL/TLS协议中，常见的用于对称密钥交换的非对称加密算法有 RSA，ECDHE，DH，DHE 等算法，一般建议优先支持 RSA 和 ECDH_RSA 密钥交换算法。</p>
+<h3 id="2_u3001SSL_u534F_u8BAE_u5DE5_u4F5C_u8FC7_u7A0B"><a href="#2_u3001SSL_u534F_u8BAE_u5DE5_u4F5C_u8FC7_u7A0B" class="headerlink" title="2、SSL协议工作过程"></a>2、SSL协议工作过程</h3><p>SSL协议可以分为三部分：握手协议（Handshake protocol）、记录协议（Record protocol）、警报协议（Alert protocol）。</p>
+<p>1） 握手协议</p>
+<p>握手协议是客户机和服务器用SSL连接通信时使用的第一个子协议，握手协议包括客户机与服务器之间的一系列消息。SSL中最复杂的协议就是握手协议。该协议允许服务器和客户机相互验证，协商非对称密钥交换算法和MAC算法以及对称加密密钥，用来保护在SSL记录中发送的数据。握手协议是在应用程序的数据传输之前使用的。</p>
+<p>2） 记录协议</p>
+<p>在记录协议中，使用握手协议规定的对称加密密钥对传输内容进行加密，并利用MD5或SHA算法实现数据完整性验证。</p>
+<p>3） 警报协议</p>
+<p>客户机和服务器发现错误时，向对方发送一个警报消息。如果是致命错误，则算法立即关闭SSL连接，双方还会先删除相关的会话号，秘密和密钥。</p>
+<h2 id="CA_u6570_u5B57_u8BC1_u4E66"><a href="#CA_u6570_u5B57_u8BC1_u4E66" class="headerlink" title="CA数字证书"></a>CA数字证书</h2><hr>
+<h3 id="1_u3001_CA_u8BC1_u4E66_u4ECB_u7ECD"><a href="#1_u3001_CA_u8BC1_u4E66_u4ECB_u7ECD" class="headerlink" title="1、 CA证书介绍"></a>1、 CA证书介绍</h3><p>CA是“Certificate Authority”的缩写，也叫“证书授权中心”，它是负责管理和签发证书的第三方机构。利用CA签发的数字证书，我们可以对网站进行身份验证，以防止该网站是假冒钓鱼网站，避免个人数据被窃取。</p>
+<p>CA数字证书有两个作用：</p>
+<p>1） 身份授权</p>
+<p>确保浏览器访问的网站是经过 CA 验证的可信任的网站。</p>
+<p>2） 分发公钥</p>
+<p>每个数字证书都包含了注册者生成的公钥。在SSL握手时会通过certificate消息传输给客户端。比如前文提到的RSA及ECDHE算法的签名都是使用的这个公钥。</p>
+<h3 id="2_u3001_CA_u8BC1_u4E66_u7B49_u7EA7"><a href="#2_u3001_CA_u8BC1_u4E66_u7B49_u7EA7" class="headerlink" title="2、 CA证书等级"></a>2、 CA证书等级</h3><p>CA证书等级分 Class 1 （一级，只验证Email）、Class 2（二级，验证Email和验证个人身份证明文件）、Class 3（三级，验证Email、验证单位身份验证文件、第三方数据库核实）、Class 4（四级，全球统一标准的扩展验证标准，验证Email、验证单位身份证明文件、验证申请人身份证明文件、第三方数据库核实）。</p>
+<p>1） DV</p>
+<p>DV是 Domain Validation 的缩写，意思就是对网站域名所有权进行验证。CA 认证机构会向域名持有者的邮箱发送相应的邮件，以确认证书和域名的所有权关系。其特点是简单快捷，价格便宜，缺点是无法保证网站经营者的身份，因此一般仅用来提供数据加密的功能，属于 Class 1 验证的证书。</p>
+<p>2） OV</p>
+<p>OV是 Organization Validation 的缩写，这种证书在颁发的时候会对网站所有单位的身份和域名的所有权进行证实行验证，所以一般电子商务类的网站往往会做 OV 的认证。价格当然也会比较昂贵，证书颁发周期也会比较久，属于 Class 2 或者 Class 3 验证的证书。</p>
+<p>3） EV</p>
+<p>EV是 Extended Validation 的缩写，也是最严格的身份验证，此证书审核证书申请人对域名的所有权，以及详细的企业/组织相关信息审核，当用户在访问通过 EV 认证的网站时候，浏览器的显示为绿色，当然价格也是相当的昂贵，属于 Class 4 验证的证书。</p>
+<h2 id="u5C0F_u7ED3"><a href="#u5C0F_u7ED3" class="headerlink" title="小结"></a>小结</h2><p>HTTPS是未来互联网的趋势，HTTPS目前存在以下问题：</p>
+<p>1） 签发证书费用及更新维护</p>
+<p>事实上，现在签发证书费用很低，便宜的只有一年几十块钱。而且现在也有了免费的证书机构，比如著名的 mozilla 发起的免费证书项目： <a href="https://letsencrypt.org/就支持免费证书安装和自动更新。这个项目已于15年12月3日正式公测。" target="_blank" rel="external">https://letsencrypt.org/就支持免费证书安装和自动更新。这个项目已于15年12月3日正式公测。</a></p>
+<p>2） HTTPS 降低用户访问速度</p>
+<p>HTTPS 对速度会有一定程度的降低，但是只要经过合理优化和部署，HTTPS 对速度的影响完全可以接受。</p>
+<p>3） HTTPS 消耗 CPU 资源</p>
+<p>主要是非对称密钥交换消耗CPU资源，但是通过合理的优化和部署，也是可以降低影响。</p>
+<p>参考文章：</p>
+<p><a href="http://blog.jobbole.com/86660/" target="_blank" rel="external">大型网站的 HTTPS 实践（1）：HTTPS 协议和原理</a></p>
+<p><a href="http://www.cnblogs.com/jfzhu/p/4020928.html" target="_blank" rel="external">对称加密与非对称加密</a></p>
+<p><a href="https://www.vobe.io/84" target="_blank" rel="external">SSL/TLS 功能介绍和等级说明</a></p>
+<p><a href="http://www.cnblogs.com/zhuqil/archive/2012/10/06/ssl_detail.html" target="_blank" rel="external">SSL协议详解</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/01/07/internet/https/" data-id="cisimnrla000kzls8onn3irzu" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/01/07/internet/https/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HTTPS/">HTTPS</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/lib/big_data_resource" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -526,7 +638,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/06/algo/lib/big_data_resource/" data-id="cise97f7w004fsfjeiiuv8e4r" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/06/algo/lib/big_data_resource/" data-id="cisimnrq7003vzls8ifk11mqa" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/06/algo/lib/big_data_resource/#ds-thread" class="article-comment-link">评论</a>
       
@@ -603,7 +715,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/06/dev/CPP/c_opensource/" data-id="cise97f86005fsfjetqctyb45" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/06/dev/CPP/c_opensource/" data-id="cisimnrqy0058zls8rpbr93so" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/06/dev/CPP/c_opensource/#ds-thread" class="article-comment-link">评论</a>
       
@@ -960,7 +1072,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib2/" data-id="cise97f7v004csfjemmkroks9" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib2/" data-id="cisimnrqh004fzls8kl0udbvi" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib2/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1322,114 +1434,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib/" data-id="cise97f7r003usfje2fxluxer" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib/" data-id="cisimnrq4003nzls8detw3m9x" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/05/algo/lib/big_data_lib/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/lib/java_ml_lib" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/01/05/algo/lib/java_ml_lib/">25个Java机器学习工具&amp;库</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/01/05/algo/lib/java_ml_lib/">
-      <time datetime="2016-01-05T07:07:12.000Z" itemprop="datePublished">2016-01-05</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <ol>
-<li><p>Weka集成了数据挖掘工作的机器学习算法。这些算法可以直接应用于一个数据集上或者你可以自己编写代码来调用。Weka包括一系列的工具，如数据预处理、分类、回归、聚类、关联规则以及可视化。</p>
-</li>
-<li><p>Massive Online Analysis（MOA）是一个面向数据流挖掘的流行开源框架，有着非常活跃的成长社区。它包括一系列的机器学习算法（分类、回归、聚类、异常检测、概念漂移检测和推荐系统）和评估工具。关联了WEKA项目，MOA也是用Java编写的，其扩展性更强。</p>
-</li>
-<li><p>MEKA项目提供了一个面向多标签学习和评价方法的开源实现。在多标签分类中，我们要预测每个输入实例的多个输出变量。这与“普通”情况下只涉及一个单一目标变量的情形不同。此外，MEKA基于WEKA的机器学习工具包。</p>
-</li>
-<li><p>Advanced Data mining And Machine learning System（ADAMS）是一种新型的柔性工作流引擎，旨在迅速建立并保持真实世界的复杂知识流，它是基于GPLv3发行的。</p>
-</li>
-<li><p>Environment for Developing KDD-Applications Supported by Index-Structure（ELKI）是一款基于Java的开源（AGPLv3）数据挖掘软件。ELKI主要集中于算法研究，重点研究聚类分析中的无监督方法和异常检测。</p>
-</li>
-<li><p>Mallet是一个基于Java的面向文本文件的机器学习工具包。Mallet支持分类算法，如最大熵、朴素贝叶斯和决策树分类。</p>
-</li>
-<li><p>Encog是一个先进的机器学习框架，集成了支持向量机（SVM）、人工神经网络、遗传算法、贝叶斯网络、隐马尔可夫模型（HMM）、遗传编程和遗传算法。</p>
-</li>
-<li><p>Datumbox机器学习框架是一个用Java编写的开源框架，允许快速地开发机器学习和统计应用。该框架的核心重点包括大量的机器学习算法以及统计测试，能够处理中等规模的数据集。</p>
-</li>
-<li><p>Deeplearning4j是使用Java和Scala编写的第一个商业级的、开源的、分布式深入学习库。其设计的目的是用于商业环境中，而不是作为一个研究工具。</p>
-</li>
-<li><p>Mahout是一个内置算法的机器学习框架。Mahout-Samsara帮助人们创建他们自己的数学，并提供了一些现成的算法实现。</p>
-</li>
-<li><p>Rapid Miner是德国多特蒙特技术大学开发的。它为开发者开发应用程序提供了一个GUI（图形用户界面）和Java API。它还提供了一些机器学习算法，用来做数据处理、可视化以及建模。</p>
-</li>
-<li><p>Apache SAMOA是一个机器学习（ML）框架，内嵌面向分布式流ML算法的编程抽象，并且允许在没有直接处理底层分布式流处理引擎（DSPEe，如Apache Storm、Apache S4和Apache samza）复杂性的情况下，开发新的ML算法。用户可以开发分布式流ML算法，而且可以在多个DSPEs上执行。</p>
-</li>
-<li><p>Neuroph通过提供支持创建、训练和保存神经网络的Java网络库和GUI工具，简化了神经网络开发。</p>
-</li>
-<li><p>Oryx 2是一个建立在Apache Spark和Apache Kafka的Lambda架构实现，但随着实时大规模机器学习而逐渐开始专业化。这是一个用于构建应用程序的框架，但也包括打包，以及面向协同过滤、分类、回归和聚类的端到端的应用程序。</p>
-</li>
-<li><p>Stanford Classifier是一个机器学习工具，它可以将数据项归置到一个类别。一个概率分类器，比如这个，它可以对一个数据项给出类分配的概率分布。该软件是最大熵分类器的一个Java实现。</p>
-</li>
-<li><p>io是一个Retina API，有着快速精确的类似大脑的自然语言处理算法。</p>
-</li>
-<li><p>JSAT是一个快速入门的机器学习库。该库是我在业余时间开发的，基于GPL3发行的。库中的一部分内容可自主学习，例如所有的代码都是独立的。JSAT没有外部依赖，而且是纯Java编写的。</p>
-</li>
-<li><p>N-Dimensional Arrays for Java(ND4J)是一个用于JVM的科学计算库。它们是用来在生产环境中使用的，这表明例程的设计是以最小的内存需求来运行的。</p>
-</li>
-<li><p>Java Machine Learning Library（Java机器学习库）是一系列机器学习算法的相关实现。这些算法，无论是源代码还是文档，都编写的很出色。其主要语言是Java。</p>
-</li>
-<li><p>Java-ML是一个使用Java编写的一系列机器学习算法的Java API。它只提供了一个标准的算法接口。</p>
-</li>
-<li><p>MLlib (Spark)是Apache Spark的可扩展机器学习库。虽然是Java，但该库与平台还支持Java，Scala和Python绑定。此库是最新的，并且算法很多。</p>
-</li>
-<li><p>H2O是用于智能应用的机器学习API。它在大数据上对统计学、机器学习和数学进行了规模化。H2O可扩展，开发者可以在核心部分使用简单的数学知识。</p>
-</li>
-<li><p>WalnutiQ是人脑部分面向对象模型，有着理论常用的学习算法（正在向简单强烈的情感人工智能模型方向研究）。</p>
-</li>
-<li><p>RankLib是一个排名学习算法库。目前已经实现八种流行的算法。</p>
-</li>
-<li><p>htm.java（基于Java的Hierarchical Temporal Memory算法实现）是一个面向智能计算的Numenta平台的Java接口。源码</p>
-</li>
-</ol>
-<p>原文： <a href="http://bigdataanalyticsnews.com/25-java-machine-learning-tools-libraries/" target="_blank" rel="external">http://bigdataanalyticsnews.com/25-java-machine-learning-tools-libraries/</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/lib/java_ml_lib/" data-id="cise97f7y004osfjefz3fn8aw" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/01/05/algo/lib/java_ml_lib/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -1452,6 +1459,23 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/08/31/dev/python/python_print_chs/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/08/31/dev/python/python_print_chs/" class="title">Python print 中文乱码问题</a></p>
+              <p class="item-date"><time datetime="2016-08-31T02:19:56.000Z" itemprop="datePublished">2016-08-31</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -1522,23 +1546,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/21/algo/kaggle/image_recognize/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
-              <p class="item-title"><a href="/2016/08/21/algo/kaggle/image_recognize/" class="title">kaggle之识别谷歌街景图片中的字母</a></p>
-              <p class="item-date"><time datetime="2016-08-21T05:48:13.000Z" itemprop="datePublished">2016-08-21</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1548,7 +1555,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">29</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">30</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -1557,7 +1564,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GridSearchCV/">GridSearchCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pipeline/">Pipeline</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GridSearchCV/">GridSearchCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pipeline/">Pipeline</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1566,7 +1573,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 17.5px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 17.5px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 17.5px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -1575,7 +1582,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
