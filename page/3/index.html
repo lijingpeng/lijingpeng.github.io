@@ -92,7 +92,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        100
+        101
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -125,6 +125,412 @@
 
       
       <section id="main">
+      <article id="post-algo/kaggle/movie_reviews" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/16/algo/kaggle/movie_reviews/">kaggle之电影文本情感分类</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/08/16/algo/kaggle/movie_reviews/">
+      <time datetime="2016-08-16T05:48:13.000Z" itemprop="datePublished">2016-08-16</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/kaggle/">kaggle</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="u7535_u5F71_u6587_u672C_u60C5_u611F_u5206_u7C7B"><a href="#u7535_u5F71_u6587_u672C_u60C5_u611F_u5206_u7C7B" class="headerlink" title="电影文本情感分类"></a>电影文本情感分类</h2><p><a href="https://github.com/lijingpeng/kaggle/tree/master/competitions/Bag_of_Words" target="_blank" rel="external">Github地址</a><br><a href="https://www.kaggle.com/c/word2vec-nlp-tutorial/" target="_blank" rel="external">Kaggle地址</a></p>
+<p>这个任务主要是对电影评论文本进行情感分类，主要分为正面评论和负面评论，所以是一个二分类问题，二分类模型我们可以选取一些常见的模型比如贝叶斯、逻辑回归等，这里挑战之一是文本内容的向量化，因此，我们首先尝试基于TF-IDF的向量化方法，然后尝试word2vec。</p>
+<pre><code class="python"># -*- coding: UTF-8 -*-
+import pandas as pd
+import numpy as np
+import re
+from bs4 import BeautifulSoup
+
+def review_to_wordlist(review):
+    &#39;&#39;&#39;
+    把IMDB的评论转成词序列
+    参考：http://blog.csdn.net/longxinchen_ml/article/details/50629613
+    &#39;&#39;&#39;
+    # 去掉HTML标签，拿到内容
+    review_text = BeautifulSoup(review, &quot;html.parser&quot;).get_text()
+    # 用正则表达式取出符合规范的部分
+    review_text = re.sub(&quot;[^a-zA-Z]&quot;,&quot; &quot;, review_text)
+    # 小写化所有的词，并转成词list
+    words = review_text.lower().split()
+    # 返回words
+    return words
+</code></pre>
+<h2 id="u8F7D_u5165_u6570_u636E_u96C6"><a href="#u8F7D_u5165_u6570_u636E_u96C6" class="headerlink" title="载入数据集"></a>载入数据集</h2><pre><code class="python"># 载入数据集
+train = pd.read_csv(&#39;/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/labeledTrainData.tsv&#39;, header=0, delimiter=&quot;\t&quot;, quoting=3)
+test = pd.read_csv(&#39;/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/testData.tsv&#39;, header=0, delimiter=&quot;\t&quot;, quoting=3)
+print train.head()
+print test.head()
+</code></pre>
+<pre><code>         id  sentiment                                             review
+0  &quot;5814_8&quot;          1  &quot;With all this stuff going down at the moment ...
+1  &quot;2381_9&quot;          1  &quot;\&quot;The Classic War of the Worlds\&quot; by Timothy ...
+2  &quot;7759_3&quot;          0  &quot;The film starts with a manager (Nicholas Bell...
+3  &quot;3630_4&quot;          0  &quot;It must be assumed that those who praised thi...
+4  &quot;9495_8&quot;          1  &quot;Superbly trashy and wondrously unpretentious ...
+           id                                             review
+0  &quot;12311_10&quot;  &quot;Naturally in a film who&#39;s main themes are of ...
+1    &quot;8348_2&quot;  &quot;This movie is a disaster within a disaster fi...
+2    &quot;5828_4&quot;  &quot;All in all, this is a movie for kids. We saw ...
+3    &quot;7186_2&quot;  &quot;Afraid of the Dark left me with the impressio...
+4   &quot;12128_7&quot;  &quot;A very accurate depiction of small time mob l...
+</code></pre><h2 id="u9884_u5904_u7406_u6570_u636E"><a href="#u9884_u5904_u7406_u6570_u636E" class="headerlink" title="预处理数据"></a>预处理数据</h2><pre><code class="python"># 预处理数据
+label = train[&#39;sentiment&#39;]
+train_data = []
+for i in range(len(train[&#39;review&#39;])):
+    train_data.append(&#39; &#39;.join(review_to_wordlist(train[&#39;review&#39;][i])))
+test_data = []
+for i in range(len(test[&#39;review&#39;])):
+    test_data.append(&#39; &#39;.join(review_to_wordlist(test[&#39;review&#39;][i])))
+
+# 预览数据
+print train_data[0], &#39;\n&#39;
+print test_data[0]
+</code></pre>
+<pre><code>with all this stuff going down at the moment with mj i ve started listening to his music watching the odd documentary here and there watched the wiz and watched moonwalker again maybe i just want to get a certain insight into this guy who i thought was really cool in the eighties just to maybe make up my mind whether he is guilty or innocent moonwalker is part biography part feature film which i remember going to see at the cinema when it was originally released some of it has subtle messages about mj s feeling towards the press and also the obvious message of drugs are bad m kay visually impressive but of course this is all about michael jackson so unless you remotely like mj in anyway then you are going to hate this and find it boring some may call mj an egotist for consenting to the making of this movie but mj and most of his fans would say that he made it for the fans which if true is really nice of him the actual feature film bit when it finally starts is only on for minutes or so excluding the smooth criminal sequence and joe pesci is convincing as a psychopathic all powerful drug lord why he wants mj dead so bad is beyond me because mj overheard his plans nah joe pesci s character ranted that he wanted people to know it is he who is supplying drugs etc so i dunno maybe he just hates mj s music lots of cool things in this like mj turning into a car and a robot and the whole speed demon sequence also the director must have had the patience of a saint when it came to filming the kiddy bad sequence as usually directors hate working with one kid let alone a whole bunch of them performing a complex dance scene bottom line this movie is for people who like mj on one level or another which i think is most people if not then stay away it does try and give off a wholesome message and ironically mj s bestest buddy in this movie is a girl michael jackson is truly one of the most talented people ever to grace this planet but is he guilty well with all the attention i ve gave this subject hmmm well i don t know because people can be different behind closed doors i know this for a fact he is either an extremely nice but stupid guy or one of the most sickest liars i hope he is not the latter
+
+naturally in a film who s main themes are of mortality nostalgia and loss of innocence it is perhaps not surprising that it is rated more highly by older viewers than younger ones however there is a craftsmanship and completeness to the film which anyone can enjoy the pace is steady and constant the characters full and engaging the relationships and interactions natural showing that you do not need floods of tears to show emotion screams to show fear shouting to show dispute or violence to show anger naturally joyce s short story lends the film a ready made structure as perfect as a polished diamond but the small changes huston makes such as the inclusion of the poem fit in neatly it is truly a masterpiece of tact subtlety and overwhelming beauty
+</code></pre><h2 id="u7279_u5F81_u5904_u7406"><a href="#u7279_u5F81_u5904_u7406" class="headerlink" title="特征处理"></a>特征处理</h2><p>直接丢给计算机这些词文本，计算机是无法计算的，因此我们需要把文本转换为向量，有几种常见的文本向量处理方法，比如：</p>
+<ol>
+<li>单词计数  </li>
+<li>TF-IDF向量  </li>
+<li>Word2vec向量<br>我们先使用TF-IDF来试一下。</li>
+</ol>
+<pre><code class="python">from sklearn.feature_extraction.text import TfidfVectorizer as TFIDF
+# 参考：http://blog.csdn.net/longxinchen_ml/article/details/50629613
+tfidf = TFIDF(min_df=2, # 最小支持度为2
+           max_features=None,
+           strip_accents=&#39;unicode&#39;,
+           analyzer=&#39;word&#39;,
+           token_pattern=r&#39;\w{1,}&#39;,
+           ngram_range=(1, 3),  # 二元文法模型
+           use_idf=1,
+           smooth_idf=1,
+           sublinear_tf=1,
+           stop_words = &#39;english&#39;) # 去掉英文停用词
+
+# 合并训练和测试集以便进行TFIDF向量化操作
+data_all = train_data + test_data
+len_train = len(train_data)
+
+tfidf.fit(data_all)
+data_all = tfidf.transform(data_all)
+# 恢复成训练集和测试集部分
+train_x = data_all[:len_train]
+test_x = data_all[len_train:]
+print &#39;TF-IDF处理结束.&#39;
+</code></pre>
+<pre><code>TF-IDF处理结束.
+</code></pre><h2 id="u6734_u7D20_u8D1D_u53F6_u65AF_u8BAD_u7EC3"><a href="#u6734_u7D20_u8D1D_u53F6_u65AF_u8BAD_u7EC3" class="headerlink" title="朴素贝叶斯训练"></a>朴素贝叶斯训练</h2><pre><code class="python">from sklearn.naive_bayes import MultinomialNB as MNB
+
+model_NB = MNB()
+model_NB.fit(train_x, label)
+MNB(alpha=1.0, class_prior=None, fit_prior=True)
+
+from sklearn.cross_validation import cross_val_score
+import numpy as np
+
+print &quot;多项式贝叶斯分类器10折交叉验证得分: &quot;, np.mean(cross_val_score(model_NB, train_x, label, cv=10, scoring=&#39;roc_auc&#39;))
+</code></pre>
+<pre><code>多项式贝叶斯分类器10折交叉验证得分:  0.94983968
+</code></pre><pre><code class="python">test_predicted = np.array(model_NB.predict(test_x))
+print &#39;保存结果...&#39;
+nb_output = pd.DataFrame(data=test_predicted, columns=[&#39;sentiment&#39;])
+nb_output[&#39;id&#39;] = test[&#39;id&#39;]
+nb_output = nb_output[[&#39;id&#39;, &#39;sentiment&#39;]]
+nb_output.to_csv(&#39;nb_output.csv&#39;, index=False)
+print &#39;结束.&#39;
+</code></pre>
+<pre><code>保存结果...
+结束.
+</code></pre><ol>
+<li>提交最终的结果到kaggle，AUC为：0.85728，排名300左右，50%的水平  </li>
+<li>ngram_range = 3, 三元文法，AUC为0.85924</li>
+</ol>
+<h2 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><pre><code class="python">from sklearn.linear_model import LogisticRegression as LR
+from sklearn.grid_search import GridSearchCV
+
+# 设定grid search的参数
+grid_values = {&#39;C&#39;:[30]}  
+# 设定打分为roc_auc
+model_LR = GridSearchCV(LR(penalty = &#39;L2&#39;, dual = True, random_state = 0), grid_values, scoring = &#39;roc_auc&#39;, cv = 20)
+model_LR.fit(train_x, label)
+# 20折交叉验证
+GridSearchCV(cv=20, estimator=LR(C=1.0, class_weight=None, dual=True,
+             fit_intercept=True, intercept_scaling=1, penalty=&#39;L2&#39;, random_state=0, tol=0.0001),
+        fit_params={}, iid=True, n_jobs=1,
+        param_grid={&#39;C&#39;: [30]}, pre_dispatch=&#39;2*n_jobs&#39;, refit=True,
+        scoring=&#39;roc_auc&#39;, verbose=0)
+#输出结果
+print model_LR.grid_scores_
+</code></pre>
+<pre><code>[mean: 0.96497, std: 0.00476, params: {&#39;C&#39;: 30}]
+</code></pre><pre><code class="python">test_predicted = np.array(model_LR.predict(test_x))
+print &#39;保存结果...&#39;
+lr_output = pd.DataFrame(data=test_predicted, columns=[&#39;sentiment&#39;])
+lr_output[&#39;id&#39;] = test[&#39;id&#39;]
+lr_output = lr_output[[&#39;id&#39;, &#39;sentiment&#39;]]
+lr_output.to_csv(&#39;lr_output.csv&#39;, index=False)
+print &#39;结束.&#39;
+</code></pre>
+<pre><code>保存结果...
+结束.
+</code></pre><ol>
+<li>提交最终的结果到kaggle，AUC为：0.88956，排名260左右，比之前贝叶斯模型有所提高   </li>
+<li>三元文法，AUC为0.89076</li>
+</ol>
+<h2 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h2><p>神经网络语言模型L = SUM[log(p(w|contect(w))]，即在w的上下文下计算当前词w的概率，由公式可以看到，我们的核心是计算p(w|contect(w)， Word2vec给出了构造这个概率的一个方法。</p>
+<pre><code class="python">import gensim
+import nltk
+from nltk.corpus import stopwords
+
+tokenizer = nltk.data.load(&#39;tokenizers/punkt/english.pickle&#39;)
+
+def review_to_wordlist( review, remove_stopwords=False ):
+    review_text = BeautifulSoup(review, &quot;html.parser&quot;).get_text()
+    review_text = re.sub(&quot;[^a-zA-Z]&quot;,&quot; &quot;, review_text)
+
+    words = review_text.lower().split()
+
+    if remove_stopwords:
+        stops = set(stopwords.words(&quot;english&quot;))
+        words = [w for w in words if not w in stops]
+
+    return(words)
+
+def review_to_sentences( review, tokenizer, remove_stopwords=False ):
+    &#39;&#39;&#39;
+    将评论段落转换为句子，返回句子列表，每个句子由一堆词组成
+    &#39;&#39;&#39;
+    raw_sentences = tokenizer.tokenize(review.strip().decode(&#39;utf8&#39;))
+
+    sentences = []
+    for raw_sentence in raw_sentences:
+        if len(raw_sentence) &gt; 0:
+            # 获取句子中的词列表
+            sentences.append( review_to_wordlist( raw_sentence, remove_stopwords ))
+    return sentences
+</code></pre>
+<pre><code class="python">sentences = []
+for i, review in enumerate(train[&quot;review&quot;]):
+    sentences += review_to_sentences(review, tokenizer)
+</code></pre>
+<pre><code class="python">unlabeled_train = pd.read_csv(&quot;/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/unlabeledTrainData.tsv&quot;, header=0, delimiter=&quot;\t&quot;, quoting=3 )
+for review in unlabeled_train[&quot;review&quot;]:
+    sentences += review_to_sentences(review, tokenizer)
+print &#39;预处理unlabeled_train data...&#39;
+print len(train_data)
+print len(sentences)
+</code></pre>
+<pre><code>    预处理unlabeled_train data...
+    25000
+    795538
+</code></pre><h3 id="u6784_u5EFAword2vec_u6A21_u578B"><a href="#u6784_u5EFAword2vec_u6A21_u578B" class="headerlink" title="构建word2vec模型"></a>构建word2vec模型</h3><pre><code class="python">import time
+from gensim.models import Word2Vec
+# 模型参数
+num_features = 300    # Word vector dimensionality                      
+min_word_count = 40   # Minimum word count                        
+num_workers = 4       # Number of threads to run in parallel
+context = 10          # Context window size                                                                                    
+downsampling = 1e-3   # Downsample setting for frequent words
+</code></pre>
+<pre><code class="python">%%time
+# 训练模型
+print(&quot;训练模型中...&quot;)
+model = Word2Vec(sentences, workers=num_workers, \
+            size=num_features, min_count = min_word_count, \
+            window = context, sample = downsampling)
+</code></pre>
+<pre><code>训练模型中...
+CPU times: user 6min 16s, sys: 8.34 s, total: 6min 24s
+Wall time: 2min 27s
+</code></pre><pre><code class="python">print &#39;保存模型...&#39;
+model.init_sims(replace=True)
+model_name = &quot;300features_40minwords_10context&quot;
+model.save(model_name)
+</code></pre>
+<pre><code>保存模型...
+</code></pre><h3 id="u9884_u89C8_u6A21_u578B"><a href="#u9884_u89C8_u6A21_u578B" class="headerlink" title="预览模型"></a>预览模型</h3><pre><code class="python">model.doesnt_match(&quot;man woman child kitchen&quot;.split())
+</code></pre>
+<pre><code>&#39;kitchen&#39;
+</code></pre><pre><code class="python">model.doesnt_match(&quot;france england germany berlin&quot;.split())
+</code></pre>
+<pre><code>&#39;berlin&#39;
+</code></pre><pre><code class="python">model.doesnt_match(&quot;paris berlin london austria&quot;.split())
+</code></pre>
+<pre><code>&#39;london&#39;
+</code></pre><pre><code class="python">model.most_similar(&quot;man&quot;)
+</code></pre>
+<pre><code>[(u&#39;woman&#39;, 0.6246455907821655),
+ (u&#39;lady&#39;, 0.6008599400520325),
+ (u&#39;lad&#39;, 0.5698915719985962),
+ (u&#39;businessman&#39;, 0.5431989431381226),
+ (u&#39;chap&#39;, 0.53116375207901),
+ (u&#39;monk&#39;, 0.5250570774078369),
+ (u&#39;men&#39;, 0.5177899599075317),
+ (u&#39;guy&#39;, 0.517480731010437),
+ (u&#39;farmer&#39;, 0.5114585757255554),
+ (u&#39;person&#39;, 0.5109285116195679)]
+</code></pre><pre><code class="python">model.most_similar(&quot;queen&quot;)
+</code></pre>
+<pre><code>[(u&#39;princess&#39;, 0.6759523153305054),
+ (u&#39;bride&#39;, 0.6207793951034546),
+ (u&#39;belle&#39;, 0.6001157760620117),
+ (u&#39;shearer&#39;, 0.5995810031890869),
+ (u&#39;stepmother&#39;, 0.596365749835968),
+ (u&#39;victoria&#39;, 0.5917614698410034),
+ (u&#39;dame&#39;, 0.589063286781311),
+ (u&#39;latifah&#39;, 0.5790275931358337),
+ (u&#39;countess&#39;, 0.5776904821395874),
+ (u&#39;widow&#39;, 0.5727116465568542)]
+</code></pre><pre><code class="python">model.most_similar(&quot;awful&quot;)
+</code></pre>
+<pre><code>[(u&#39;terrible&#39;, 0.7642339468002319),
+ (u&#39;atrocious&#39;, 0.7405279874801636),
+ (u&#39;horrible&#39;, 0.7376815676689148),
+ (u&#39;abysmal&#39;, 0.7010303139686584),
+ (u&#39;dreadful&#39;, 0.6942194104194641),
+ (u&#39;appalling&#39;, 0.6887971758842468),
+ (u&#39;lousy&#39;, 0.6646767854690552),
+ (u&#39;horrid&#39;, 0.6554058194160461),
+ (u&#39;horrendous&#39;, 0.6533403992652893),
+ (u&#39;amateurish&#39;, 0.6079087853431702)]
+</code></pre><h3 id="u4F7F_u7528Word2vec_u7279_u5F81"><a href="#u4F7F_u7528Word2vec_u7279_u5F81" class="headerlink" title="使用Word2vec特征"></a>使用Word2vec特征</h3><pre><code class="python">def makeFeatureVec(words, model, num_features):
+    &#39;&#39;&#39;
+    对段落中的所有词向量进行取平均操作
+    &#39;&#39;&#39;
+    featureVec = np.zeros((num_features,), dtype=&quot;float32&quot;)
+    nwords = 0.
+
+    # Index2word包含了词表中的所有词，为了检索速度，保存到set中
+    index2word_set = set(model.index2word)
+    for word in words:
+        if word in index2word_set:
+            nwords = nwords + 1.
+            featureVec = np.add(featureVec, model[word])
+
+    # 取平均
+    featureVec = np.divide(featureVec, nwords)
+    return featureVec
+
+
+def getAvgFeatureVecs(reviews, model, num_features):
+    &#39;&#39;&#39;
+    给定一个文本列表，每个文本由一个词列表组成，返回每个文本的词向量平均值
+    &#39;&#39;&#39;
+    counter = 0.
+
+    reviewFeatureVecs = np.zeros((len(reviews), num_features), dtype=&quot;float32&quot;)
+
+    for review in reviews:
+       if counter % 5000. == 0.:
+           print(&quot;Review %d of %d&quot; % (counter, len(reviews)))
+
+       reviewFeatureVecs[counter] = makeFeatureVec(review, model, \
+           num_features)
+
+       counter = counter + 1.
+    return reviewFeatureVecs
+</code></pre>
+<pre><code class="python">%time trainDataVecs = getAvgFeatureVecs( train_data, model, num_features )
+</code></pre>
+<pre><code>Review 0 of 25000
+Review 5000 of 25000
+Review 10000 of 25000
+Review 15000 of 25000
+Review 20000 of 25000
+CPU times: user 1min 49s, sys: 1.9 s, total: 1min 51s
+Wall time: 1min 54s
+</code></pre><pre><code class="python">%time testDataVecs = getAvgFeatureVecs(test_data, model, num_features)
+</code></pre>
+<pre><code>Review 0 of 25000
+Review 5000 of 25000
+Review 10000 of 25000
+Review 15000 of 25000
+Review 20000 of 25000
+CPU times: user 1min 44s, sys: 1.56 s, total: 1min 46s
+Wall time: 1min 48s
+</code></pre><h3 id="u9AD8_u65AF_u8D1D_u53F6_u65AF+Word2vec_u8BAD_u7EC3"><a href="#u9AD8_u65AF_u8D1D_u53F6_u65AF+Word2vec_u8BAD_u7EC3" class="headerlink" title="高斯贝叶斯+Word2vec训练"></a>高斯贝叶斯+Word2vec训练</h3><pre><code class="python">from sklearn.naive_bayes import GaussianNB as GNB
+
+model_GNB = GNB()
+model_GNB.fit(trainDataVecs, label)
+
+from sklearn.cross_validation import cross_val_score
+import numpy as np
+
+print &quot;高斯贝叶斯分类器10折交叉验证得分: &quot;, np.mean(cross_val_score(model_GNB, trainDataVecs, label, cv=10, scoring=&#39;roc_auc&#39;))
+
+result = forest.predict( testDataVecs )
+
+output = pd.DataFrame( data={&quot;id&quot;:test[&quot;id&quot;], &quot;sentiment&quot;:result} )
+output.to_csv( &quot;gnb_word2vec.csv&quot;, index=False, quoting=3 )
+</code></pre>
+<pre><code>多项式贝叶斯分类器10折交叉验证得分:  0.625579296
+</code></pre><p>从验证结果来看，没有超过基于TF-IDF多项式贝叶斯模型</p>
+<h3 id="u968F_u673A_u68EE_u6797+Word2vec_u8BAD_u7EC3"><a href="#u968F_u673A_u68EE_u6797+Word2vec_u8BAD_u7EC3" class="headerlink" title="随机森林+Word2vec训练"></a>随机森林+Word2vec训练</h3><pre><code class="python">from sklearn.ensemble import RandomForestClassifier
+
+forest = RandomForestClassifier( n_estimators = 100, n_jobs=2)
+
+print(&quot;Fitting a random forest to labeled training data...&quot;)
+%time forest = forest.fit( trainDataVecs, label )
+print &quot;随机森林分类器10折交叉验证得分: &quot;, np.mean(cross_val_score(forest, trainDataVecs, label, cv=10, scoring=&#39;roc_auc&#39;))
+
+# 测试集
+result = forest.predict( testDataVecs )
+
+output = pd.DataFrame( data={&quot;id&quot;:test[&quot;id&quot;], &quot;sentiment&quot;:result} )
+output.to_csv( &quot;rf_word2vec.csv&quot;, index=False, quoting=3 )
+</code></pre>
+<pre><code>Fitting a random forest to labeled training data...
+CPU times: user 45 s, sys: 460 ms, total: 45.5 s
+Wall time: 24.2 s
+随机森林分类器10折交叉验证得分:  0.648426368
+</code></pre><p>改用随机森林之后，效果有提升，但是依然没有超过基于TF-IDF多项式贝叶斯模型</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/" data-id="cisvrkd8b0024s9je6ur7fi7r" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/kaggle/digit" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -253,7 +659,7 @@ print &#39;done.&#39;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/" data-id="cistrcah6006bw8s8cyt3lhnp" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/" data-id="cisvrkd8d0027s9jeef9euq3w" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/#ds-thread" class="article-comment-link">评论</a>
       
@@ -522,7 +928,7 @@ result.to_csv(&#39;output.csv&#39;, index=False)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-id="cistrcagx005vw8s88rjjmgct" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-id="cisvrkd8e002bs9jei3ur59kw" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/#ds-thread" class="article-comment-link">评论</a>
       
@@ -718,7 +1124,7 @@ for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="cistrcacr0019w8s88zzjieaz" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="cisvrkd7f001qs9je147vw470" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/11/system/search_system_sample/#ds-thread" class="article-comment-link">评论</a>
       
@@ -814,7 +1220,7 @@ for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/" data-id="cistrcag1003rw8s8nq36tznn" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/" data-id="cisvrkday004ks9jesniwtzub" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/#ds-thread" class="article-comment-link">评论</a>
       
@@ -827,68 +1233,8 @@ for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
 
 
     
-      <article id="post-dev/python/python_encoding" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/23/dev/python/python_encoding/">Python编码问题</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/05/23/dev/python/python_encoding/">
-      <time datetime="2016-05-23T02:19:56.000Z" itemprop="datePublished">2016-05-23</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>解决Python2.7的UnicodeEncodeError: ‘ascii’ codec can’t encode异常错误</p>
-<pre><code class="python">import sys
-reload(sys)
-print sys.getdefaultencoding()
-sys.setdefaultencoding(&#39;utf-8&#39;)
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/" data-id="cistrcag40040w8s8ponvcqpj" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/4/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/2/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/4/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -899,6 +1245,23 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/09/algo/kaggle/gbid/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
+              <p class="item-title"><a href="/2016/09/09/algo/kaggle/gbid/" class="title">kaggle之Grupo Bimbo Inventory Demand</a></p>
+              <p class="item-date"><time datetime="2016-09-09T05:48:13.000Z" itemprop="datePublished">2016-09-09</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -969,23 +1332,6 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/24/algo/sklearn/GridSearchCV/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/sklearn/">sklearn</a></p>
-              <p class="item-title"><a href="/2016/08/24/algo/sklearn/GridSearchCV/" class="title">sklearn GridSearchCV简介</a></p>
-              <p class="item-date"><time datetime="2016-08-24T05:48:13.000Z" itemprop="datePublished">2016-08-24</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -995,7 +1341,7 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -1004,7 +1350,7 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
   <div class="widget-wrap">
     <h3 class="widget-title">标签</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GridSearchCV/">GridSearchCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pipeline/">Pipeline</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Apache/">Apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Bandits/">Bandits</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Google/">Google</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Granger-causality/">Granger causality</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GridSearchCV/">GridSearchCV</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HTTPS/">HTTPS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jquery/">Jquery</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MapReduce/">MapReduce</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mock/">Mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Monument-Vallay/">Monument Vallay</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Mysql/">Mysql</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Photoshop/">Photoshop</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pipeline/">Pipeline</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ad/">ad</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/apache/">apache</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/blade/">blade</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crontab/">crontab</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/elasticsearch/">elasticsearch</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/font/">font</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/">go</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hashmap/">hashmap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kaggle/">kaggle</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux-ldd-依赖关系/">linux, ldd, 依赖关系</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lucene/">lucene</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nio/">nio</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pagerank/">pagerank</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/photo/">photo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/swift-llvm/">swift, llvm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/前端/">前端</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/广告/">广告</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/开源，许可/">开源，许可</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/澳门/">澳门</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/监控，zabbix/">监控，zabbix</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/贝叶斯/">贝叶斯</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1013,7 +1359,7 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 14px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 16px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 18px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 17.5px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -1022,7 +1368,7 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
