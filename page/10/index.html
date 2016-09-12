@@ -93,11 +93,11 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        102
+        103
         <span>文章</span>
       </div>
       <div class="article-info-block">
-        41
+        42
         <span>标签</span>
       </div>
     </div>
@@ -126,7 +126,7 @@
 
       
       <section id="main">
-      <article id="post-dev/go/go_dynamic_args" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-dev/go/go_set" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -135,7 +135,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/24/dev/go/go_dynamic_args/">Go可变长参数函数</a>
+      <a class="article-title" href="/2015/11/24/dev/go/go_set/">Go语言实现set</a>
     </h1>
   
 
@@ -143,8 +143,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/11/24/dev/go/go_dynamic_args/">
-      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
+    <a href="/2015/11/24/dev/go/go_set/">
+      <time datetime="2015-11-24T09:19:56.000Z" itemprop="datePublished">2015-11-24</time>
     </a>
   </div>
 
@@ -161,43 +161,223 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。</p>
-<pre><code class="go">package main
+        <pre><code class="go">package set
 
-import &quot;fmt&quot;
-
-// 这个函数可以传入任意数量的整型参数
-func sum(nums ...int) {
-    fmt.Print(nums, &quot; &quot;)
-    total := 0
-    for _, num := range nums {
-        total += num
-    }
-    fmt.Println(total)
+type Set interface {
+    Add(e interface{}) bool
+    Remove(e interface{})
+    Clear()
+    Contains(e interface{}) bool
+    Len() int
+    Same(other Set) bool
+    Elements() []interface{}
+    String() string
 }
 
-func main() {
+// 判断集合 one 是否是集合 other 的超集
+func IsSuperset(one Set, other Set) bool {
+    if one == nil || other == nil {
+        return false
+    }
+    oneLen := one.Len()
+    otherLen := other.Len()
+    if oneLen == 0 || oneLen == otherLen {
+        return false
+    }
+    if oneLen &gt; 0 &amp;&amp; otherLen == 0 {
+        return true
+    }
+    for _, v := range other.Elements() {
+        if !one.Contains(v) {
+            return false
+        }
+    }
+    return true
+}
 
-    // 支持可变长参数的函数调用方法和普通函数一样
-    // 也支持只有一个参数的情况
-    sum(1, 2)
-    sum(1, 2, 3)
+// 生成集合 one 和集合 other 的并集
+func Union(one Set, other Set) Set {
+    if one == nil || other == nil {
+        return nil
+    }
+    unionedSet := NewSimpleSet()
+    for _, v := range one.Elements() {
+        unionedSet.Add(v)
+    }
+    if other.Len() == 0 {
+        return unionedSet
+    }
+    for _, v := range other.Elements() {
+        unionedSet.Add(v)
+    }
+    return unionedSet
+}
 
-    // 如果你需要传入的参数在一个切片中，像下面一样
-    // &quot;func(slice...)&quot;把切片打散传入
-    nums := []int{1, 2, 3, 4}
-    sum(nums...)
+// 生成集合 one 和集合 other 的交集
+func Intersect(one Set, other Set) Set {
+    if one == nil || other == nil {
+        return nil
+    }
+    intersectedSet := NewSimpleSet()
+    if other.Len() == 0 {
+        return intersectedSet
+    }
+    if one.Len() &lt; other.Len() {
+        for _, v := range one.Elements() {
+            if other.Contains(v) {
+                intersectedSet.Add(v)
+            }
+        }
+    } else {
+        for _, v := range other.Elements() {
+            if one.Contains(v) {
+                intersectedSet.Add(v)
+            }
+        }
+    }
+    return intersectedSet
+}
+
+// 生成集合 one 对集合 other 的差集
+func Difference(one Set, other Set) Set {
+    if one == nil || other == nil {
+        return nil
+    }
+    differencedSet := NewSimpleSet()
+    if other.Len() == 0 {
+        for _, v := range one.Elements() {
+            differencedSet.Add(v)
+        }
+        return differencedSet
+    }
+    for _, v := range one.Elements() {
+        if !other.Contains(v) {
+            differencedSet.Add(v)
+        }
+    }
+    return differencedSet
+}
+
+// 生成集合 one 和集合 other 的对称差集
+func SymmetricDifference(one Set, other Set) Set {
+    if one == nil || other == nil {
+        return nil
+    }
+    diffA := Difference(one, other)
+    if other.Len() == 0 {
+        return diffA
+    }
+    diffB := Difference(other, one)
+    return Union(diffA, diffB)
+}
+
+func NewSimpleSet() Set {
+    return NewHashSet()
+}
+
+func IsSet(value interface{}) bool {
+    if _, ok := value.(Set); ok {
+        return true
+    }
+    return false
 }
 </code></pre>
-<p>输出结果为</p>
-<p>[1 2] 3<br>[1 2 3] 6<br>[1 2 3 4] 10<br>需要注意的是，可变长参数应该是函数定义的最右边的参数，即最后一个参数。</p>
+<p>HashSet：</p>
+<pre><code class="go">package set
+
+import (
+    &quot;bytes&quot;
+    &quot;fmt&quot;
+)
+
+type HashSet struct {
+    m map[interface{}]bool
+}
+
+func NewHashSet() *HashSet {
+    return &amp;HashSet{m: make(map[interface{}]bool)}
+}
+
+func (set *HashSet) Add(e interface{}) bool {
+    if !set.m[e] {
+        set.m[e] = true
+        return true
+    }
+    return false
+}
+
+func (set *HashSet) Remove(e interface{}) {
+    delete(set.m, e)
+}
+
+func (set *HashSet) Clear() {
+    set.m = make(map[interface{}]bool)
+}
+
+func (set *HashSet) Contains(e interface{}) bool {
+    return set.m[e]
+}
+
+func (set *HashSet) Len() int {
+    return len(set.m)
+}
+
+func (set *HashSet) Same(other Set) bool {
+    if other == nil {
+        return false
+    }
+    if set.Len() != other.Len() {
+        return false
+    }
+    for key := range set.m {
+        if !other.Contains(key) {
+            return false
+        }
+    }
+    return true
+}
+
+func (set *HashSet) Elements() []interface{} {
+    initialLen := len(set.m)
+    snapshot := make([]interface{}, initialLen)
+    actualLen := 0
+    for key := range set.m {
+        if actualLen &lt; initialLen {
+            snapshot[actualLen] = key
+        } else {
+            snapshot = append(snapshot, key)
+        }
+        actualLen++
+    }
+    if actualLen &lt; initialLen {
+        snapshot = snapshot[:actualLen]
+    }
+    return snapshot
+}
+
+func (set *HashSet) String() string {
+    var buf bytes.Buffer
+    buf.WriteString(&quot;HashSet{&quot;)
+    first := true
+    for key := range set.m {
+        if first {
+            first = false
+        } else {
+            buf.WriteString(&quot; &quot;)
+        }
+        buf.WriteString(fmt.Sprintf(&quot;%v&quot;, key))
+    }
+    buf.WriteString(&quot;}&quot;)
+    return buf.String()
+}
+</code></pre>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="ciszflw160063kvs868fhgemm" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="ciszfodzh006hmds81y0boq8d" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_set/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -282,9 +462,93 @@ for k, v := range m1 {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="ciszflw19006bkvs8nx43nwwr" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="ciszfodzg006fmds8wjeqzf6g" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_map/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/go/go_dynamic_args" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/24/dev/go/go_dynamic_args/">Go可变长参数函数</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/24/dev/go/go_dynamic_args/">
+      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。</p>
+<pre><code class="go">package main
+
+import &quot;fmt&quot;
+
+// 这个函数可以传入任意数量的整型参数
+func sum(nums ...int) {
+    fmt.Print(nums, &quot; &quot;)
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    fmt.Println(total)
+}
+
+func main() {
+
+    // 支持可变长参数的函数调用方法和普通函数一样
+    // 也支持只有一个参数的情况
+    sum(1, 2)
+    sum(1, 2, 3)
+
+    // 如果你需要传入的参数在一个切片中，像下面一样
+    // &quot;func(slice...)&quot;把切片打散传入
+    nums := []int{1, 2, 3, 4}
+    sum(nums...)
+}
+</code></pre>
+<p>输出结果为</p>
+<p>[1 2] 3<br>[1 2 3] 6<br>[1 2 3 4] 10<br>需要注意的是，可变长参数应该是函数定义的最右边的参数，即最后一个参数。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="ciszfodzf006dmds8zl5bdh9o" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -370,7 +634,7 @@ fmt.Println(js)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="ciszflw170065kvs8wbdq1kcu" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="ciszfodzd0069mds8lbeyi69w" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_json/#ds-thread" class="article-comment-link">评论</a>
       
@@ -435,191 +699,12 @@ b = b[1:]      // len(b)=4, cap(b)=4
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="ciszflw190069kvs8guadlz9f" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="ciszfodzb0065mds8c43v9kea" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/flatbuffers" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/20/dev/flatbuffers/">FlatBuffers使用简介</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/11/20/dev/flatbuffers/">
-      <time datetime="2015-11-20T02:01:56.000Z" itemprop="datePublished">2015-11-20</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h3 id="u6982_u8FF0"><a href="#u6982_u8FF0" class="headerlink" title="概述"></a>概述</h3><hr>
-<p>Google在今年6月份发布了跨平台序列化工具FlatBuffers，提供了C++/Java/Go/C#接口支持，这是一个注重性能和资源使用的序列化类库。相较于Protocol Buffers，其更适用于移动设备，FlatBuffers提供更高的性能以及更低的资源需求。</p>
-<p>特点</p>
-<ul>
-<li>不需要打包/解包。它的结构化数据都以二进制形式保存，不需要数据解析过程，数据也可以方便传递</li>
-<li>省内存、性能好</li>
-<li>强类型系统，在编译阶段就能预防一些bug的产生</li>
-<li>跨平台（C++11/Java/Go/C#）</li>
-</ul>
-<h3 id="FlatBuffers_u548CProtocol_Buffers_u4EE5_u53CAJson_u7684_u6BD4_u8F83_uFF1A"><a href="#FlatBuffers_u548CProtocol_Buffers_u4EE5_u53CAJson_u7684_u6BD4_u8F83_uFF1A" class="headerlink" title="FlatBuffers和Protocol Buffers以及Json的比较："></a>FlatBuffers和Protocol Buffers以及Json的比较：</h3><ul>
-<li>FlatBuffers的功能和Protocol Buffers很像，他们的最大不同点是在使用具体的数据之前，FlatBuffers不需要解析/解包的过程。同时，在工程中使用时，FlatBuffers的引用比Protocol Buffers方便很多，只需要包含两三个头文件即可</li>
-<li>JSON作为数据交换格式，被广泛用户各种动态语言之间（当然也包括静态语言）。它的优点是易于理解（可读性好），同时它的最大的缺点那就是解析时的性能问题了。而且因为它的动态类型特点，你的代码可能还需要多写好多类型、数据检查逻辑。</li>
-</ul>
-<h3 id="FlatBuffers_u7684_u4F7F_u7528_u6B65_u9AA4"><a href="#FlatBuffers_u7684_u4F7F_u7528_u6B65_u9AA4" class="headerlink" title="FlatBuffers的使用步骤"></a>FlatBuffers的使用步骤</h3><p>编写一个用来定义数据结构的schema(IDL，接口定义)文件，如下所示：</p>
-<pre><code class="FlatBuffers">  //flatbuffers test struct
-
-  namespace Jason.Flat.Test;
-
-  enum Color : byte { Red = 1, Green, Blue }
-
-  union Any { TextureData, Texture }
-
-  table TestAppend {
-      test_num:int;
-      test_num2:int;
-  }
-
-  table TextureData {
-      image_size:int (id:0);
-      image_data:[ubyte] (id:1);
-      image_test:short(id:3);
-      test_num2:int(id:2);
-  }
-
-  table Texture {
-      num_textures:short;
-      textures:[TextureData];
-      num_test:short = 30;
-      num_test1:short (deprecated);
-          num_test2:short;
-      test_append:TestAppend;
-  }
-
-  root_type Texture;
-</code></pre>
-<p>将上述代码保存为TestFlat.fbs文件之后，即可用flatc来编译了</p>
-<ul>
-<li><p>使用FlatBuffer编译器flatc生成数据结构源代码（C++头文件或者Java类）<br>登录GitHub，下载所需版本的源码及工程文件，在build目录下有VS2010的工程文件（当然，你也可以选择利用CMake自己本地创建工程），打开配置好flatc工程的传入参数，如下：<br>-c -o ./ ./TestFlat.fbs<br>运行flatc工程，即可在当前工程目录下生成TestFlat_generated.h头文件，这个头文件中包含了我们所需的所有结构体、枚举类型等以及相应的存取方法和验证方法</p>
-</li>
-<li><p>使用FlatBufferBuilder类创建flat的二进制buffer<br>以下代码展示了如何利用FlatBufferBuilder创建相应buffer：</p>
-</li>
-</ul>
-<pre><code class="c++"> //read serialized buffer
- flatbuffers::FlatBufferBuilder builder_data;
-
- int test_append = 300;
- auto name_test = builder_data.CreateString(&quot;TestAppend&quot;);
- auto testApp = CreateTestAppend(builder_data, test_append, test_append);
-
- int image_size = 12;
- unsigned char inv_data[] = { 11, 2, 4, 2, 10, 3, 5 ,7, 10, 39, 45, 23 };
- auto name = builder_data.CreateString(&quot;TextureData&quot;);
- auto image_data = builder_data.CreateVector(inv_data, image_size);
-
- int image_test = 900;
- auto texture_data = CreateTextureData(builder_data, image_size, image_data, image_test, image_test);
-
- //flatbuffers::FlatBufferBuilder builder_tex;
- int texture_num = 1;
-
- auto name_tex = builder_data.CreateString(&quot;Texture&quot;);
-
- vector&lt;flatbuffers::Offset&lt;TextureData&gt;&gt; tex_vec;
- tex_vec.push_back(texture_data);
- auto tex_data = builder_data.CreateVector(tex_vec);
-
- int num_text = 100, num_text2 = 200, num_text3 = 300;
- auto texture = CreateTexture(builder_data, texture_num, tex_data, num_text, num_text2, testApp);
- builder_data.Finish(texture);
-</code></pre>
-<p>要使上述正确运行，除了引用C++基本库之外，需在文件头部添加以下代码：</p>
-<pre><code class="c++">#include &quot;flatbuffers/flatbuffers.h&quot;
-#include &quot;idl.h&quot;
-#include &quot;util.h&quot;
-#include &quot;TestFlat_generated.h&quot;
-using namespace Jason::Flat::Test;
-</code></pre>
-<p>上述代码的编写中规中矩，其中CreateString和CreateVector都是FlatBufferBuilder类的成员函数，分别用于创建适用于FlatBuffer内存结构的字符串数据以及向量数据。其余的方法，如CreateTextureData、CreateTexture均是由flatc根据IDL文件（TestFlat.fbs）自动生成的头文件中用于创建相应结构体的函数。最后一句builder_data.Finish(texture)用于优化对齐写入builder_data的内存结构。</p>
-<ul>
-<li>保存buffer到本地或者直接通过网络发送<br>保存buffer到本地的代码，如下：</li>
-</ul>
-<p>std::cout &lt;&lt; builder_data.GetSize() &lt;&lt; std::endl;<br>flatbuffers::SaveFile(“texture.bin”, reinterpret_cast<char *="">(builder_data.GetBufferPointer()), builder_data.GetSize(), true);<br>将数据保存到名为texture.bin的二进制文件中，其中通过builder_data.GetBufferPointer()获取内存指针，builder_data.GetSize()获取内存大小，最后一个参数用于制定是否生成二进制文件。</char></p>
-<ul>
-<li>接收并buffer并读取数据内容<br>读取二进制文件的代码如下：</li>
-</ul>
-<pre><code class="c++"> string binaryfile;
- bool ok = flatbuffers::LoadFile(&quot;texture.bin&quot;, false, &amp;binaryfile);
-
- flatbuffers::Verifier tex_verify(builderOut.GetBufferPointer(), builderOut.GetSize());
- bool verify_flag = VerifyTextureBuffer(tex_verify);
-
- flatbuffers::FlatBufferBuilder builderOut;
- TextureBuilder* texBuilder = new TextureBuilder(builderOut);
- builderOut.PushBytes(reinterpret_cast&lt;unsigned char*&gt;(const_cast&lt;char *&gt;(binaryfile.c_str())), binaryfile.size());
- std::cout &lt;&lt; builderOut.GetSize() &lt;&lt; std::endl;
-
- auto model = GetTexture(builderOut.GetBufferPointer());
-
- int outNum = model-&gt;num_textures();
- const flatbuffers::Vector&lt;flatbuffers::Offset&lt;TextureData&gt;&gt;* outTex = model-&gt;textures();
- TextureData* outTexData = (TextureData *)outTex-&gt;Get(0);
- int outSize = outTexData-&gt;image_size();
- const flatbuffers::Vector&lt;unsigned char&gt;* outData = outTexData-&gt;image_data();
- int x = outData-&gt;Get(5);
- int len = outData-&gt;Length();
- delete texBuilder;
-</code></pre>
-<p>上述代码中VerifyTextureBuffer用于验证读取的内存是否为FlatBuffers的内存块，是则返回true，不是则返回false。通过GetTexture获取指针之后，结构体中的变量均可以通过相应方法（各方法名请查看自动生成的头文件）获取。</p>
-<h3 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h3><p>利用FlatBuffers来进行数据保存及传输的优点显而易见，它利用自身特殊的编码格式，能一定程度上减少内存的占用，优化读取的性能。更重要的是，对于数据结构的向前向后兼容提供了很好的扩展性，方便又高效：</p>
-<ul>
-<li>要想让数据结构具有可扩展性，需将数据结构定义为table，它是数据扩展的基础，FlatBuffers中的struct类型不支持扩展</li>
-<li>如果想在后续的版本中删除数据结构中的某些字段，只要在将要删除的字段后面添加(deprecated)即可，当然需要保证删除的字段在之前版本的程序中不会引起程序崩溃（该删掉的字段在上一版本的程序中获取到的会是个空指针或空值，只需保证程序在获取到空值或空指针之后不会出现异常即可）</li>
-<li>如果想在后续版本中向数据结构中添加某些字段，需添加到table中最后一个字段的后面，若是想table中随意位置添加字段，需如上面TextureData 的定义，给每个字段指明添加id:n（n从0开始）<br>目前FlatBuffers还不是很完善，碰到问题可以到FlatBuffers Issues Tracker去提交或则寻找答案。</li>
-</ul>
-<p>From: <a href="http://www.jianshu.com/p/6eb04a149cd8" target="_blank" rel="external">http://www.jianshu.com/p/6eb04a149cd8</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="ciszflvvn000qkvs8j6clg7mv" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/11/20/dev/flatbuffers/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FlatBuffers/">FlatBuffers</a></li></ul>
 
     </footer>
   </div>
@@ -641,6 +726,23 @@ using namespace Jason::Flat::Test;
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/12/system/linux_grep/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/system/">system</a></p>
+              <p class="item-title"><a href="/2016/09/12/system/linux_grep/" class="title">Linux查找文件内容（grep）</a></p>
+              <p class="item-date"><time datetime="2016-09-11T16:00:00.000Z" itemprop="datePublished">2016-09-12</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -710,23 +812,6 @@ using namespace Jason::Flat::Test;
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/26/algo/kaggle/facial_keypoints/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
-              <p class="item-title"><a href="/2016/08/26/algo/kaggle/facial_keypoints/" class="title">kaggle之人脸特征识别</a></p>
-              <p class="item-date"><time datetime="2016-08-26T05:48:13.000Z" itemprop="datePublished">2016-08-26</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -736,7 +821,7 @@ using namespace Jason::Flat::Test;
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -745,7 +830,7 @@ using namespace Jason::Flat::Test;
   <div class="widget-wrap">
     <h3 class="widget-title">标签云</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 17.5px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 17.5px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
     </div>
   </div>
 
@@ -754,7 +839,7 @@ using namespace Jason::Flat::Test;
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
