@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        101
+        102
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,172 @@
 
       
       <section id="main">
+      <article id="post-algo/baysian-bandit-application-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/algo/baysian-bandit-application-md/">Bayesian Bandits原理及在互联网广告行业的应用</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/algo/baysian-bandit-application-md/">
+      <time datetime="2015-09-03T05:48:13.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="1-_The_Multi-Armed_Bandit_Problem"><a href="#1-_The_Multi-Armed_Bandit_Problem" class="headerlink" title="1. The Multi-Armed Bandit Problem"></a>1. The Multi-Armed Bandit Problem</h2><p>Suppose you are faced with N slot machines (colourfully called multi-armed bandits). Each bandit has an unknown probability of distributing a prize (assume for now the prizes are the same for each bandit, only the probabilities differ). Some bandits are very generous, others not so much. Of course, you don’t know what these probabilities are. By only choosing one bandit per round, our task is devise a strategy to maximize our winnings.</p>
+<p>Of course, if we knew the bandit with the largest probability, then always picking this bandit would yield the maximum winnings. So our task can be phrased as “Find the best bandit, and as quickly as possible”.</p>
+<p>The task is complicated by the stochastic nature of the bandits. A suboptimal bandit can return many winnings, purely by chance, which would make us believe that it is a very profitable bandit. Similarly, the best bandit can return many duds. Should we keep trying losers then, or give up?</p>
+<p>A more troublesome problem is, if we have a found a bandit that returns pretty good results, do we keep drawing from it to maintain our pretty good score, or do we try other bandits in hopes of finding an even-better bandit? This is the exploration vs. exploitation dilemma.</p>
+<h2 id="2-_Applications"><a href="#2-_Applications" class="headerlink" title="2. Applications"></a>2. Applications</h2><p>The Multi-Armed Bandit problem at first seems very artificial, something only a mathematician would love, but that is only before we address some applications:</p>
+<p>Internet display advertising: companies have a suite of potential ads they can display to visitors, but the company is not sure which ad strategy to follow to maximize sales. This is similar to A/B testing, but has the added advantage of naturally minimizing strategies that do not work (and generalizes to A/B/C/D… strategies)</p>
+<ol>
+<li>Ecology: animals have a finite amount of energy to expend, and following certain behaviours has uncertain rewards. How does the animal maximize its fitness?</li>
+<li>Finance: which stock option gives the highest return, under time-varying return profiles.</li>
+<li>Clinical trials: a researcher would like to find the best treatment, out of many possible treatments, while minimizing losses.</li>
+</ol>
+<p>Many of these questions above are fundamental to the application’s field. It turns out the optimal solution is incredibly difficult, and it took decades for an overall solution to develop. There are also many approximately-optimal solutions which are quite good. The one I wish to discuss is one of the few solutions that can scale incredibly well. The solution is known asBayesian Bandits.</p>
+<h2 id="3-_A_Proposed_Solution"><a href="#3-_A_Proposed_Solution" class="headerlink" title="3. A Proposed Solution"></a>3. A Proposed Solution</h2><p>Any proposed strategy is called an online algorithm (not in the internet sense, but in the continuously-being-updated sense), and more specifically a reinforcement learning algorithm. The algorithm starts in an ignorant state, where it knows nothing, and begins to acquire data by testing the system. As it acquires data and results, it learns what the best and worst behaviours are (in this case, it learns which bandit is the best). With this in mind, perhaps we can add an additional application of the Multi-Armed Bandit problem:</p>
+<p>Psychology: how does punishment and reward effect our behaviour? How do humans’ learn?<br>The Bayesian solution begins by assuming priors on the probability of winning for each bandit. In our vignette we assumed complete ignorance of the these probabilities. So a very natural prior is the flat prior over 0 to 1. The algorithm proceeds as follows:</p>
+<p>For each round,</p>
+<ol>
+<li>Sample a random variable Xb from the prior of bandit b, for all b.</li>
+<li>Select the bandit with largest sample, i.e. select bandit B=argmaxXb.</li>
+<li>Observe the result of pulling bandit B, and update your prior on bandit B.</li>
+<li>Return to 1.</li>
+</ol>
+<p>That’s it. Computationally, the algorithm involves sampling from N distributions. Since the initial priors are Beta(α=1,β=1) (a uniform distribution), and the observed result X (a win or loss, encoded 1 and 0 respectfully) is Binomial, the posterior is a Beta(α=1+X,β=1+1−X)(see here for why to is true). </p>
+<p>To answer a question from before, this algorithm suggests that we should not discard losers, but we should pick them at a decreasing rate as we gather confidence that there exist better bandits. This follows because there is always a non-zero chance that a loser will achieve the status of B, but the probability of this event decreases as we play more rounds (see figure below). Below is an implementation of the Bayesian Bandits strategy (which can be skipped for the less Pythonic-ly interested).</p>
+<pre><code class="python">from pymc import rbeta
+
+rand = np.random.rand
+
+class Bandits(object):
+    &quot;&quot;&quot;
+    This class represents N bandits machines.
+
+    parameters:
+        p_array: a (n,) Numpy array of probabilities &gt;0, &lt;1.
+
+    methods:
+        pull( i ): return the results, 0 or 1, of pulling 
+                   the ith bandit.
+    &quot;&quot;&quot;
+    def __init__(self, p_array):
+        self.p = p_array
+        self.optimal = np.argmax(p_array)
+
+    def pull( self, i ):
+        #i is which arm to pull
+        return rand() &lt; self.p[i]
+
+    def __len__(self):
+        return len(self.p)
+
+
+class BayesianStrategy( object ):
+    &quot;&quot;&quot;
+    Implements a online, learning strategy to solve
+    the Multi-Armed Bandit problem.
+
+    parameters:
+        bandits: a Bandit class with .pull method
+
+    methods:
+        sample_bandits(n): sample and train on n pulls.
+
+    attributes:
+        N: the cumulative number of samples
+        choices: the historical choices as a (N,) array
+        bb_score: the historical score as a (N,) array
+
+    &quot;&quot;&quot;
+
+    def __init__(self, bandits):
+
+        self.bandits = bandits
+        n_bandits = len( self.bandits )
+        self.wins = np.zeros( n_bandits )
+        self.trials = np.zeros(n_bandits )
+        self.N = 0
+        self.choices = []
+        self.bb_score = []
+
+
+    def sample_bandits( self, n=1 ):
+
+        bb_score = np.zeros( n )
+        choices = np.zeros( n )
+
+        for k in range(n):
+            #sample from the bandits&#39;s priors, and select the largest sample
+            choice = np.argmax( rbeta( 1 + self.wins, 1 + self.trials - self.wins) )
+
+            #sample the chosen bandit
+            result = self.bandits.pull( choice )
+
+            #update priors and score
+            self.wins[ choice ] += result
+            self.trials[ choice ] += 1
+            bb_score[ k ] = result 
+            self.N += 1
+            choices[ k ] = choice
+
+        self.bb_score = np.r_[ self.bb_score, bb_score ]
+        self.choices = np.r_[ self.choices, choices ]
+        return
+</code></pre>
+<p>Below we present a visualization of the algorithm sequentially learning the solution. In the figure below, the dashed lines represent the true hidden probabilities, which are (0.85, 0.60, 0.75)(this can be extended to many more dimensions, but the figure suffers, so I kept it at 3).</p>
+<p><img src="/images/bb/updating2.png" alt=""></p>
+<p>Note that we don’t real care how accurate we become about inference of the hidden probabilities — for this problem we are more interested in choosing the best bandit (or more accurately, becoming more confident in choosing the best bandit). For this reason, the distribution of the red bandit is very wide (representing ignorance about what that hidden probability might be) but we are reasonably confident that it is not the best, so the algorithm chooses to ignore it.</p>
+<h3 id="u51E0_u7BC7_u4ECB_u7ECDBayesian_Bandits_u7684_u539F_u7406_u7684_u6587_u7AE0_uFF1A"><a href="#u51E0_u7BC7_u4ECB_u7ECDBayesian_Bandits_u7684_u539F_u7406_u7684_u6587_u7AE0_uFF1A" class="headerlink" title="几篇介绍Bayesian Bandits的原理的文章："></a>几篇介绍Bayesian Bandits的原理的文章：</h3><ol>
+<li><a href="https://www.chrisstucchio.com/blog/2013/bayesian_analysis_conversion_rates.html" target="_blank" rel="external">https://www.chrisstucchio.com/blog/2013/bayesian_analysis_conversion_rates.html</a></li>
+<li>在线演示博弈过程： <a href="https://e76d6ebf22ef8d7e079810f3d1f82ba1e5f145d5.googledrive.com/host/0B2GQktu-wcTiWDB2R2t2a2tMUG8/" target="_blank" rel="external">https://e76d6ebf22ef8d7e079810f3d1f82ba1e5f145d5.googledrive.com/host/0B2GQktu-wcTiWDB2R2t2a2tMUG8/</a></li>
+<li><a href="https://www.chrisstucchio.com/blog/2013/bayesian_bandit.html" target="_blank" rel="external">https://www.chrisstucchio.com/blog/2013/bayesian_bandit.html</a></li>
+<li><a href="http://camdp.com/blogs/multi-armed-bandits" target="_blank" rel="external">http://camdp.com/blogs/multi-armed-bandits</a></li>
+<li>贝叶斯书籍：<a href="https://github.com/lijingpeng/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers" target="_blank" rel="external">https://github.com/lijingpeng/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers</a></li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-application-md/" data-id="ciszfj1rw0009j5s8jn39fb5g" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-application-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bandits/">Bandits</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/baysian-bandit-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -209,7 +375,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/" data-id="ciszf7ppz000ke4s8n5y72obz" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/" data-id="ciszfj1ru0008j5s83vzkyq1e" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -337,7 +503,7 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="ciszf7ppt000de4s8t15dgm19" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="ciszfj1sl000pj5s8ghu5126f" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -392,7 +558,7 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="ciszf7pq8000xe4s8yje5feqp" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="ciszfj1sz000yj5s857g98ehk" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/opensource/input-font-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -478,99 +644,11 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="ciszf7pq4000pe4s8qnrq12f5" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="ciszfj1ry000aj5s85wd7jvhb" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/06/06/algo/feature_d/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-system/shadowsocks" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/14/system/shadowsocks/">Shadowsocks 安装配置使用</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/05/14/system/shadowsocks/">
-      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/system/">system</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>Debian/Ubuntu安装</p>
-<pre><code class="bash">apt-get install python-pip
-pip install shadowsocks
-</code></pre>
-<p>配置:</p>
-<pre><code class="bash">{
-    &quot;server&quot;:&quot;my_server_ip&quot;,
-    &quot;server_port&quot;:8388,
-    &quot;local_address&quot;: &quot;127.0.0.1&quot;,
-    &quot;local_port&quot;:1080,
-    &quot;password&quot;:&quot;mypassword&quot;,
-    &quot;timeout&quot;:300,
-    &quot;method&quot;:&quot;aes-256-cfb&quot;,
-    &quot;fast_open&quot;: false,
-    &quot;workers&quot;: 1
-}
-</code></pre>
-<p>服务器端运行:</p>
-<pre><code class="bash">ssserver -c /etc/shadowsocks/config.json
-</code></pre>
-<p>后台运行:</p>
-<pre><code class="bash">nohup ssserver -c /etc/shadowsocks/config.json &gt; /dev/null &amp;
-</code></pre>
-<p>客户端运行:</p>
-<pre><code class="bash">sslocal -c /etc/shadowsocks/config.json
-</code></pre>
-<p>后台运行:</p>
-<pre><code class="bash">nohup sslocal -c /etc/shadowsocks/config.json &gt; /dev/null &amp;
-</code></pre>
-<p>浏览器配置，推荐使用SwithySharp插件</p>
-<pre><code class="bash">protocol: socks5
-hostname: 127.0.0.1
-port:     your local_port
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="ciszf7pr4001de4s8xn7hgoio" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/05/14/system/shadowsocks/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a></li></ul>
-
     </footer>
   </div>
   
@@ -591,6 +669,23 @@ port:     your local_port
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/11/other/public_cdn/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/other/">other</a></p>
+              <p class="item-title"><a href="/2016/09/11/other/public_cdn/" class="title">CDNJS 库以及 Google Fonts、Ajax 和 Gravatar 反代</a></p>
+              <p class="item-date"><time datetime="2016-09-10T16:00:00.000Z" itemprop="datePublished">2016-09-11</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -660,24 +755,6 @@ port:     your local_port
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/25/algo/ml/hmm_crf/" class="thumbnail">
-  
-    <span style="background-image:url(/images/条件随机场.png
-)" alt="一张关于贝叶斯、HMM、CRF的图" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/08/25/algo/ml/hmm_crf/" class="title">一张关于贝叶斯、HMM、CRF的图</a></p>
-              <p class="item-date"><time datetime="2016-08-24T16:00:00.000Z" itemprop="datePublished">2016-08-25</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -687,7 +764,7 @@ port:     your local_port
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -705,7 +782,7 @@ port:     your local_port
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

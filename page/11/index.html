@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        101
+        102
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,7 +126,7 @@
 
       
       <section id="main">
-      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-dev/web/ui_base" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -135,7 +135,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
+      <a class="article-title" href="/2015/11/18/dev/web/ui_base/">关于前端</a>
     </h1>
   
 
@@ -143,8 +143,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/11/18/dev/web/python_cgi_bin/">
-      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
+    <a href="/2015/11/18/dev/web/ui_base/">
+      <time datetime="2015-11-18T05:20:56.000Z" itemprop="datePublished">2015-11-18</time>
     </a>
   </div>
 
@@ -161,87 +161,20 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="python">import BaseHTTPServer
-import CGIHTTPServer
-import cgitb; cgitb.enable()  ## This line enables CGI error reporting
-
-server = BaseHTTPServer.HTTPServer
-handler = CGIHTTPServer.CGIHTTPRequestHandler
-server_address = (&quot;0.0.0.0&quot;, 8082)
-handler.cgi_directories = [&quot;/cgi-bin&quot;]
-
-httpd = server(server_address, handler)
-httpd.serve_forever()
-</code></pre>
-<p>CGI-BIN下的py文件要有执行权限。</p>
-<pre><code class="python">#!/usr/bin/env python
-
-import cgi
-import urllib
-import json
-
-form = cgi.FieldStorage()
-
-query_str = form.getvalue(&#39;query&#39;)
-query = &quot;http://0.0.0.0:9999/query?query=%s&quot; % query_str
-
-exec_query = urllib.urlopen(query)
-print &quot;Status: 200 OK&quot;
-print &quot;Content-Type: application/json&quot;
-print &quot;&quot;
-print exec_query.read()
-</code></pre>
-<p>HTML:</p>
-<pre><code class="html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
-
-        &lt;title&gt;test&lt;/title&gt;
-        &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;&gt;&lt;/script&gt;
-        &lt;script&gt;
-
-            $(function()
-            {
-                $(&#39;#clickme&#39;).click(function(){
-                    alert(&#39;Im going to start processing&#39;);
-
-                    $.ajax({
-                        url: &quot;/scripts/ajaxpost.py&quot;,
-                        type: &quot;post&quot;,
-                        datatype:&quot;json&quot;,
-                        data: {&#39;key&#39;:&#39;value&#39;,&#39;key2&#39;:&#39;value2&#39;},
-                        success: function(response){
-                            alert(response.message);
-                            alert(response.keys);
-                        }
-                    });
-                });
-            });
-
-        &lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;button id=&quot;clickme&quot;&gt; click me &lt;/button&gt;
-    &lt;/body&gt;
-
-&lt;/html&gt;
-</code></pre>
-<p>参考： </p>
-<ul>
-<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
-<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
-<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
-</ul>
+        <ol>
+<li>Autocomplete<br><a href="http://jqueryui.com/autocomplete" target="_blank" rel="external">http://jqueryui.com/autocomplete</a> 支持中文有问题</li>
+<li>jsTree<br><a href="https://www.jstree.com/plugins/" target="_blank" rel="external">https://www.jstree.com/plugins/</a></li>
+</ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="ciszf7ptq005te4s8l9svaf19" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="ciszfj1y3006zj5s84hunfpvi" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/11/18/dev/web/ui_base/#ds-thread" class="article-comment-link">评论</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端/">前端</a></li></ul>
 
     </footer>
   </div>
@@ -381,9 +314,134 @@ if __name__ == &#39;__main__&#39;:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="ciszf7ptp005re4s82mlbsn5e" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="ciszfj1y0006wj5s8oxpddj4w" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/18/dev/web/python_cgi_bin/">
+      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <pre><code class="python">import BaseHTTPServer
+import CGIHTTPServer
+import cgitb; cgitb.enable()  ## This line enables CGI error reporting
+
+server = BaseHTTPServer.HTTPServer
+handler = CGIHTTPServer.CGIHTTPRequestHandler
+server_address = (&quot;0.0.0.0&quot;, 8082)
+handler.cgi_directories = [&quot;/cgi-bin&quot;]
+
+httpd = server(server_address, handler)
+httpd.serve_forever()
+</code></pre>
+<p>CGI-BIN下的py文件要有执行权限。</p>
+<pre><code class="python">#!/usr/bin/env python
+
+import cgi
+import urllib
+import json
+
+form = cgi.FieldStorage()
+
+query_str = form.getvalue(&#39;query&#39;)
+query = &quot;http://0.0.0.0:9999/query?query=%s&quot; % query_str
+
+exec_query = urllib.urlopen(query)
+print &quot;Status: 200 OK&quot;
+print &quot;Content-Type: application/json&quot;
+print &quot;&quot;
+print exec_query.read()
+</code></pre>
+<p>HTML:</p>
+<pre><code class="html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+
+        &lt;title&gt;test&lt;/title&gt;
+        &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script&gt;
+
+            $(function()
+            {
+                $(&#39;#clickme&#39;).click(function(){
+                    alert(&#39;Im going to start processing&#39;);
+
+                    $.ajax({
+                        url: &quot;/scripts/ajaxpost.py&quot;,
+                        type: &quot;post&quot;,
+                        datatype:&quot;json&quot;,
+                        data: {&#39;key&#39;:&#39;value&#39;,&#39;key2&#39;:&#39;value2&#39;},
+                        success: function(response){
+                            alert(response.message);
+                            alert(response.keys);
+                        }
+                    });
+                });
+            });
+
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;button id=&quot;clickme&quot;&gt; click me &lt;/button&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>参考： </p>
+<ul>
+<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
+<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
+<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="ciszfj1xz006vj5s8ptm7ouji" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -624,7 +682,7 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="ciszf7pt3003le4s8ew1hghox" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="ciszfj1x80064j5s8lswqhny9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/#ds-thread" class="article-comment-link">评论</a>
       
@@ -708,411 +766,13 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="ciszf7pr6001fe4s81d2ifjrr" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="ciszfj1rl0005j5s83z0dstof" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ad/">ad</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/CPP/cpp_smart_pointer" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/27/dev/CPP/cpp_smart_pointer/">C++智能指针(Smart Pointer)</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/27/dev/CPP/cpp_smart_pointer/">
-      <time datetime="2015-10-27T12:47:00.000Z" itemprop="datePublished">2015-10-27</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h3 id="1-__u4F20_u7EDF_u6307_u9488_u5B58_u5728_u7684_u95EE_u9898"><a href="#1-__u4F20_u7EDF_u6307_u9488_u5B58_u5728_u7684_u95EE_u9898" class="headerlink" title="1. 传统指针存在的问题"></a>1. 传统指针存在的问题</h3><hr>
-<p>传统指针存在诸多的问题，比如指针所指向的对象的生命周期问题，挂起引用(dangling references)，以及内存泄露(memory leaks). 如下是一个传统指针的使用过程</p>
-<pre><code class="c++">void Foo() {
-    int *iPtr = new int[5];
-    // manipulate the memory block
-    // ...
-    // ...
-    // ...
-    delete[] iPtr;
-}
-</code></pre>
-<p>以上代码将正常运行且内存将被合理释放，但是使用指针常会发生一些意想不到的事情，比如访问一个非法的内存单元，除0操作，以及根据一些判断条件处理的返回return 语句。</p>
-<h3 id="2-__u4EC0_u4E48_u662F_u667A_u80FD_u6307_u9488_28Smart_Pointer_29"><a href="#2-__u4EC0_u4E48_u662F_u667A_u80FD_u6307_u9488_28Smart_Pointer_29" class="headerlink" title="2. 什么是智能指针(Smart Pointer)"></a>2. 什么是智能指针(Smart Pointer)</h3><hr>
-<p>智能指针是RAII（Resource Acquisition is initialization）用来动态的分配内存。它提供了普通指针的所有接口外加少数异常处理。在构造阶段，它将分配内存，而在非其作用域内将自动释放所占有的内存。 </p>
-<p>在C++98中，使用 auto_ptr来解决上述问题。</p>
-<h4 id="2-1_auto_ptr"><a href="#2-1_auto_ptr" class="headerlink" title="2.1 auto_ptr"></a>2.1 auto_ptr</h4><pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-using namespace std;
-
-class Test {
-public:
-    Test(int a = 0) : m_a(a) {}
-    ~Test() {
-        cout &lt;&lt; &quot;Calling destructor&quot; &lt;&lt; endl;
-    }
-
-public:
-    int m_a;
-};
-
-int main()
-{
-    auto_ptr&lt;Test&gt; p(new Test(5));
-    cout &lt;&lt; p-&gt;m_a &lt;&lt; endl;
-    return 0;
-}
-</code></pre>
-<p>输出结果： </p>
-<p><img src="/images/cpp/sp1.jpg" alt=""></p>
-<p>上述代码将智能的释放相关的内存。</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class Test {
-public:
-    Test(int a = 0) : m_a(a) {}
-    ~Test() {
-        cout &lt;&lt; &quot;Calling destructor&quot; &lt;&lt; endl;
-    }
-
-public:
-    int m_a;
-};
-
-void Fun()
-{
-    int a = 0, b = 5, c;
-    if(a == 0) {
-        throw &quot;Invalid divisor&quot;;
-    }
-    c = b / a;
-    return;
-}
-
-int main()
-{
-    try {
-        auto_ptr&lt;Test&gt; p(new Test(5));
-        Fun();
-        cout &lt;&lt; p-&gt;m_a &lt;&lt; endl;
-    }
-    catch(...) {
-        cout &lt;&lt; &quot;Something has gone wrong&quot; &lt;&lt; endl;
-    }
-
-    return 0;
-}
-</code></pre>
-<p>在上述代码中，即使异常抛出，指针照样被正常释放。这是因为当异常抛出时，栈松绑(stack unwinding)。 当所有属于try block的本地对象被销毁时，指针p不在作用域中而被释放。</p>
-<h5 id="u95EE_u98981"><a href="#u95EE_u98981" class="headerlink" title="问题1."></a>问题1.</h5><p>至少从目前来说auto_ptr是智能的。但是它有一个非常本质的缺点：auto_ptr会传递它本身的ownership当其被赋值给另一个auto_ptr对象。正如下述程序所示，一个auto_ptr对象传递给函数Fun()中的auto_ptr对象时，其ownership,或者说是smartness将不再返回给原auto_ptr所指向的p。</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class Test {
-public:
-    Test(int a = 0) : m_a(a) {}
-    ~Test() {
-        cout &lt;&lt; &quot;Calling destructor&quot; &lt;&lt; endl;
-    }
-
-public:
-    int m_a;
-};
-
-void Fun(auto_ptr&lt;Test&gt; p1)
-{
-    cout &lt;&lt; p1-&gt;m_a &lt;&lt; endl;
-    cout &lt;&lt; &quot;Fun() end&quot; &lt;&lt; endl;
-}
-
-int main()
-{
-    auto_ptr&lt;Test&gt; p(new Test(5));
-    Fun(p);
-    cout &lt;&lt; p-&gt;m_a &lt;&lt; endl;
-
-    return 0;
-}
-</code></pre>
-<p>运行结果： </p>
-<p><img src="/images/cpp/sp2.jpg" alt=""></p>
-<p>以上程序将crash因为存在野指针auto_ptr。上述代码奔溃的主要原因是，原先的p占有对其自身分配内存的管理权。然而通过Fun()函数将其管理权转给p1，此时因为p1的smartness，在其结束时将释放其所指向的内存块。而此时原先的p将再拥有任何内存，而导致在访问时出现了空指针，野指针的引用问题。</p>
-<h5 id="u95EE_u98982"><a href="#u95EE_u98982" class="headerlink" title="问题2."></a>问题2.</h5><p>auto_ptr不能使用于数组对象。 这里的意思是不能使用于操作符new[]。</p>
-<pre><code class="c++">int main()
-{
-    auto_ptr&lt;Test&gt; p(new Test[5]);
-    return 0;
-}
-</code></pre>
-<p>上述代码将runtime error。因为对于auto_ptr而言，其调用的是delete而非delete []。</p>
-<h5 id="u95EE_u98983"><a href="#u95EE_u98983" class="headerlink" title="问题3."></a>问题3.</h5><p>auto_ptr不能使用于一些标准的容器库。比如vector，list，map等等。</p>
-<p>C++11提出了新型的智能指针，并且都赋予了其相应的意图。</p>
-<h4 id="2-2_shared_ptr"><a href="#2-2_shared_ptr" class="headerlink" title="2.2 shared_ptr"></a>2.2 shared_ptr</h4><p>creation :<br>shared_ptr设计的目的很简单：多个共享指针可以指向同一个对象，而当最后一个共享指针在作用域范围内结束时，内存才会被自动的释放。</p>
-<pre><code class="c++">int main()
-{
-    // share_ptr 常规的创建过程
-    shared_ptr&lt;int&gt; sptr1( new int );
-    // 使用make_shared 来加速创建过程
-    // shared_ptr 自动分配内存，并且保证引用计数
-    // 而make_shared则是按照这种方法来初始化
-    shared_ptr&lt;int&gt; sptr2 = make_shared&lt;int&gt;( 100 );
-    // 可以通过use_count() 来查看引用计数
-    cout &lt;&lt; &quot;sptr2 referenced count: &quot; &lt;&lt; sptr2.use_count() &lt;&lt; endl;
-    shared_ptr&lt;int&gt; sptr3 = sptr2;
-    cout &lt;&lt; &quot;sptr2 referenced count: &quot; &lt;&lt; sptr2.use_count() &lt;&lt; endl;
-    cout &lt;&lt; &quot;*sptr2 = &quot; &lt;&lt; *sptr2 &lt;&lt; endl;
-    return 0;
-}
-</code></pre>
-<p><img src="/images/cpp/sp3.jpg" alt=""></p>
-<p>上述代码创建了一个shared_ptr指针指向了一个装着整型值且值为100的内存块，并且引用计数为1,。当其他共享指针通过sptr1来创建时，引用计数将为2。这种引用称为强引用strong reference。除此之外，还有弱引用weak reference。可以通过</p>
-<p>destruction ：</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class Test {
-public:
-    Test(int a = 0) : m_a(a) {}
-    ~Test() {
-        cout &lt;&lt; &quot;Calling destructor&quot; &lt;&lt; endl;
-    }
-
-public:
-    int m_a;
-};
-
-
-int main()
-{
-    // 如果用以下形式，则只会调用delete，则不会调用
-    // delete[ ]; 此时只会调用一次析构函数
-    shared_ptr&lt;Test&gt; sptr1(new Test[5]);
-
-    // 采用以下形式，lambda表达式，显示调用
-    // delete[] 来删除所有的对象。
-    shared_ptr&lt;Test&gt; sptr2(new Test[5],
-                           [](Test* p) {delete[] p;});
-    return 0;
-}
-</code></pre>
-<p>用户可以显式的调用函数，lambda表达式，函数对象来调用对于shared_ptr为数组对象的析构函数delete[]。</p>
-<h5 id="Interface_uFF08_u63A5_u53E3_uFF09"><a href="#Interface_uFF08_u63A5_u53E3_uFF09" class="headerlink" title="Interface（接口）"></a>Interface（接口）</h5><p>shared_ptr提供解引用*， 以及-&gt;来普通指针的相关操作。同时，还提供了以下的接口:</p>
-<pre><code class="C++">- get()： To get the resource associated with the shared_ptr.
-- reset()： To yield the ownership of the associated memory block. If this is the last shared_ptrowning the resource, then the resource is released automatically.
-- unique: To know whether the resource is managed by only this shared_ptr instance.
-- operator bool: To check whether the shared_ptr owns a memory block or not. Can be used with an if condition.
-</code></pre>
-<h4 id="Issue_uFF08_u95EE_u9898_uFF09"><a href="#Issue_uFF08_u95EE_u9898_uFF09" class="headerlink" title="Issue（问题）"></a>Issue（问题）</h4><ul>
-<li>当一个内存块与shared_ptr绑定相关，并且属于不同组时，将会发生错误。所有的shared_ptr共享一个组的同一个共享引用。</li>
-</ul>
-<pre><code class="c++">int main()
-{
-    shared_ptr&lt;int&gt; sptr1(new int);
-    shared_ptr&lt;int&gt; sptr2 = sptr1;
-    shared_ptr&lt;int&gt; sptr3;
-    sptr3 = sptr2;
-    return 0;
-}
-</code></pre>
-<p>以下表格给出了相应的引用计数 </p>
-<p><img src="/images/cpp/sp4.jpg" alt=""></p>
-<p>以上代码运行正常。<br>然而当使用以下代码时：</p>
-<pre><code class="c++">int main() 
-{
-    int *p = new int;
-    shared_ptr&lt;int&gt; sptr1(p);
-    shared_ptr&lt;int&gt; sptr2(p);
-    return 0;
-}
-</code></pre>
-<p>引用计数表如下： </p>
-<p><img src="/images/cpp/sp5.jpg" alt=""></p>
-<p>为了避免这种情况的发生，最好不用从裸指针中建立共享指针。</p>
-<ul>
-<li><p>另一个问题是，正如上述问题，如果从一个裸指针中创建一个共享指针，只有一个共享指针时，可以正常运行，但是当裸指针被释放时，共享指针也会crash。</p>
-</li>
-<li><p>循环引用时，如果资源被非恰当释放，也会出现问题。</p>
-</li>
-</ul>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class B;
-class A
-{
-public:
-    A() : m_sptrB(nullptr) {} ;
-    ~A() {
-        cout &lt;&lt; &quot;A is destroyed&quot; &lt;&lt; endl;
-    }
-    shared_ptr&lt;B&gt; m_sptrB;
-};
-
-class B
-{
-public:
-    B() : m_sptrA(nullptr) {};
-    ~B() {
-        cout &lt;&lt; &quot;B is destroyed&quot; &lt;&lt; endl;
-    }
-    shared_ptr&lt;A&gt; m_sptrA;
-};
-
-int main()
-{
-    shared_ptr&lt;B&gt; sptrB(new B);
-    shared_ptr&lt;A&gt; sptrA(new A);
-    sptrB-&gt;m_sptrA = sptrA;
-    sptrA-&gt;m_sptrB = sptrB;
-    return 0;
-}
-</code></pre>
-<p>当类A包含了指向B的共享指针，而类B包含了指向A的共享指针时，sptrA和sptrB相关的资源都将不会被释放。结果如下图： </p>
-<p><img src="/images/cpp/sp6.jpg" alt=""></p>
-<h4 id="2-3_weak_ptr"><a href="#2-3_weak_ptr" class="headerlink" title="2.3 weak_ptr"></a>2.3 weak_ptr</h4><p>一个弱指针，提供的是一种共享语义定义而不是拥有语义定义。这就意味着一个弱指针可以通过shared_ptr共享资源。所以要创建弱指针，必须是已经拥有资源但是是一个共享指针。</p>
-<p>一个弱指针并不允许诸如普通指针所提供的*和-&gt;。因为他并不是资源的拥有者。</p>
-<h5 id="u90A3_u4E48_u5982_u4F55_u5229_u7528_u5F31_u6307_u9488_u5462_uFF1F"><a href="#u90A3_u4E48_u5982_u4F55_u5229_u7528_u5F31_u6307_u9488_u5462_uFF1F" class="headerlink" title="那么如何利用弱指针呢？"></a>那么如何利用弱指针呢？</h5><p><strong>weak_ptr只能用于跟踪一个共享的资源，但并不实际拥有，也不会阻碍资源的释放。读取共享资源前需要先执行lock，得到shared_ptr后才能进行访问。<br>当两个对象需要互相引用时，我们总希望其中一个对象拥有另一个对象的强引用，而另一个对象拥有自己的弱引用，如果两个对象都是强引用，则容易引起循环引用，导致两个对象都无法正确释放。</strong></p>
-<h5 id="u7528weak_ptr_u4F5C_u4E3A_u4E00_u4E2A_u7C7B_u4F3Cshare_ptr_u4F46_u5374_u80FD_u60AC_u6D6E_u7684_u6307_u9488"><a href="#u7528weak_ptr_u4F5C_u4E3A_u4E00_u4E2A_u7C7B_u4F3Cshare_ptr_u4F46_u5374_u80FD_u60AC_u6D6E_u7684_u6307_u9488" class="headerlink" title="用weak_ptr作为一个类似share_ptr但却能悬浮的指针"></a>用weak_ptr作为一个类似share_ptr但却能悬浮的指针</h5><p>有一个矛盾，一个灵巧指针可以像shared_ptr 一样方便，但又不参与管理被指对象的所有权。换句话说，需要一个像shared_ptr但又不影响对象引用计数的指针。这类指针会有一个shared_ptr没有的问题：被指的对象有可能已经被销毁。一个良好的灵巧指针应该能处理这种情况，通过跟踪什么时候指针会悬浮，比如在被指对象不复存在的时候。这正是weak_ptr这类型灵巧指针所能做到的。</p>
-<p>weak_ptr一般是通过shared_ptr来构造的。当使用shared_ptr来初始化weak_ptr时，weak_ptr就指向了相同的地方，但是不改变所指对象的引用计数。</p>
-<pre><code class="c++">int main()
-{
-    shared_ptr&lt;A&gt; sptr&lt;new A&gt;
-    weak_ptr&lt;A&gt; wptr(sptr);
-    weak_ptr&lt;A&gt; wptr1 = wptr; 
-    return 0;
-}
-</code></pre>
-<p>weak_ptr创建引用情况 </p>
-<p><img src="/images/cpp/sp7.jpg" alt=""></p>
-<p>从上图可以看书，通过将一个weak_ptr赋值给另一个时会增加其弱引用计数。</p>
-<p>如果弱引用指针所指向的资源，被其共享指针所释放时，这时候弱指针将会过期。如何检测一个弱指针是否指向一个合法的资源呢？有以下两种途径。</p>
-<p>调用use_count()来得到引用计数。注意这里返回的是强引用计数。<br>调用expired()函数，这比调用use_count要快的多。<br>同时，我们可以通过对一个weak_ptr调用函数lock()来得到一个shared_ptr。或者直接对一个weak_ptr进行强制转换。</p>
-<pre><code class="c++">int main()
-{
-
-    shared_ptr&lt;A&gt; sptr&lt;new A&gt;
-    weak_ptr&lt;A&gt; wptr(sptr);
-    shared_ptr&lt;A&gt; sptr2 = wptr.lock(); 
-
-
-    shared_ptr&lt;B&gt; sptrB(new B);
-    shared_ptr&lt;A&gt; sptrA(new A);
-    sptrB-&gt;m_sptrA = sptrA;
-    sptrA-&gt;m_sptrB = sptrB;
-    return 0;
-}
-</code></pre>
-<p>如上方法将增加强引用计数。</p>
-<p>以下例子将展示如何使用weak_ptr解决循环引用的问题。</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class B;
-class A
-{
-public:
-    A() : m_a(5) {} ;
-    ~A() {
-        cout &lt;&lt; &quot;A is destroyed&quot; &lt;&lt; endl;
-    }
-    void PrintSpB() ;
-    weak_ptr&lt;B&gt; m_sptrB;
-    int m_a;
-};
-
-class B {
-public:
-    B() : m_b(10) {} ;
-    ~B() {
-        cout &lt;&lt; &quot;B is destroyed&quot; &lt;&lt; endl;
-    }
-    weak_ptr&lt;A&gt; m_sptrA;
-    int m_b;
-};
-
-void A::PrintSpB()
-{
-    if( !m_sptrB.expired() )
-        cout &lt;&lt; m_sptrB.lock()-&gt;m_b &lt;&lt; endl;
-}
-
-int main()
-{
-    shared_ptr&lt;B&gt; sptrB(new B);
-    shared_ptr&lt;A&gt; sptrA(new A);
-    sptrB-&gt;m_sptrA = sptrA;
-    sptrA-&gt;m_sptrB = sptrB;
-    sptrA-&gt;PrintSpB();
-
-    return 0;
-}
-</code></pre>
-<h4 id="2-4_unique_ptr"><a href="#2-4_unique_ptr" class="headerlink" title="2.4 unique_ptr"></a>2.4 unique_ptr</h4><p>unique_ptr几乎是易出错的auto_ptr的另一种形式。unique_ptr遵循专用所有权语义。在任何时刻，资源只被唯一的一个unique_ptr所占有。当auto_ptr不在作用域范围内时，资源就会被释放。当一个资源被其他资源重写时，如果先前的资源已经被释放，这保证了相关的资源也会被释放。</p>
-<p>creation（创建）</p>
-<p>unique_ptr创建的过程和shared_ptr创建的过程大同小异，所不同的是创建的数组形式的对象。</p>
-<pre><code class="c++">unique_ptr&lt;int&gt; uptr(new int);
-</code></pre>
-<p>unique_ptr提供了专用创建数组对象的析构调用delete[]而不是delete当其不在作用域范围内。</p>
-<pre><code class="c++">unique_ptr&lt;int[]&gt; uptr1(new int[5]);
-</code></pre>
-<p>对于资源的拥有权(ownership)可以从一个unique_ptr通过另一个进行赋值来传递。</p>
-<p>需要记住的是：unique_ptr并不提供复制机制copy semantics（包括复制赋值copy assignment以及复制构造函数copy construction）而是一种移动机制。</p>
-<p>Interface（接口）</p>
-<p>unique_ptr提供的接口与普通常规指针的接口非常相似，但是并不提供指针运算。<br>unique_ptr提供release()函数来进行yield the ownership。release()和reset()函数的区别在于，reset()会对资源进行销毁。</p>
-<p>参考文献：</p>
-<p><a href="http://blog.csdn.net/coolmeme/article/details/43266319" target="_blank" rel="external">http://blog.csdn.net/coolmeme/article/details/43266319</a><br><a href="http://www.codeproject.com/Articles/541067/Cplusplus-Smart-Pointers" target="_blank" rel="external">http://www.codeproject.com/Articles/541067/Cplusplus-Smart-Pointers</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="ciszf7pt7003ue4s8bqwjyget" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/#ds-thread" class="article-comment-link">评论</a>
-      
-      
     </footer>
   </div>
   
@@ -1133,6 +793,23 @@ int main()
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/11/other/public_cdn/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/other/">other</a></p>
+              <p class="item-title"><a href="/2016/09/11/other/public_cdn/" class="title">CDNJS 库以及 Google Fonts、Ajax 和 Gravatar 反代</a></p>
+              <p class="item-date"><time datetime="2016-09-10T16:00:00.000Z" itemprop="datePublished">2016-09-11</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -1202,24 +879,6 @@ int main()
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/25/algo/ml/hmm_crf/" class="thumbnail">
-  
-    <span style="background-image:url(/images/条件随机场.png
-)" alt="一张关于贝叶斯、HMM、CRF的图" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/08/25/algo/ml/hmm_crf/" class="title">一张关于贝叶斯、HMM、CRF的图</a></p>
-              <p class="item-date"><time datetime="2016-08-24T16:00:00.000Z" itemprop="datePublished">2016-08-25</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1229,7 +888,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -1247,7 +906,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
