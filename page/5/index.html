@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        103
+        104
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,202 @@
 
       
       <section id="main">
+      <article id="post-dev/mysql_partition" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/20/dev/mysql_partition/">MySQL 分区表原理及使用详解</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/03/20/dev/mysql_partition/">
+      <time datetime="2016-03-20T12:19:56.000Z" itemprop="datePublished">2016-03-20</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="1-__u4EC0_u4E48_u662F_u8868_u5206_u533A_uFF1F"><a href="#1-__u4EC0_u4E48_u662F_u8868_u5206_u533A_uFF1F" class="headerlink" title="1. 什么是表分区？"></a>1. 什么是表分区？</h2><p>表分区，是指根据一定规则，将数据库中的一张表分解成多个更小的，容易管理的部分。从逻辑上看，只有一张表，但是底层却是由多个物理分区组成。</p>
+<h2 id="2-__u8868_u5206_u533A_u4E0E_u5206_u8868_u7684_u533A_u522B"><a href="#2-__u8868_u5206_u533A_u4E0E_u5206_u8868_u7684_u533A_u522B" class="headerlink" title="2. 表分区与分表的区别"></a>2. 表分区与分表的区别</h2><p>分表：指的是通过一定规则，将一张表分解成多张不同的表。比如将用户订单记录根据时间成多个表。 分表与分区的区别在于：分区从逻辑上来讲只有一张表，而分表则是将一张表分解成多张表。</p>
+<h2 id="3-__u8868_u5206_u533A_u6709_u4EC0_u4E48_u597D_u5904_uFF1F"><a href="#3-__u8868_u5206_u533A_u6709_u4EC0_u4E48_u597D_u5904_uFF1F" class="headerlink" title="3. 表分区有什么好处？"></a>3. 表分区有什么好处？</h2><p>1） 分区表的数据可以分布在不同的物理设备上，从而高效地利用多个硬件设备。<br>2） 和单个磁盘或者文件系统相比，可以存储更多数据<br>3） 优化查询。在where语句中包含分区条件时，可以只扫描一个或多个分区表来提高查询效率；涉及sum和count语句时，也可以在多个分区上并行处理，最后汇总结果。<br>4） 分区表更容易维护。例如：想批量删除大量数据可以清除整个分区。<br>5） 可以使用分区表来避免某些特殊的瓶颈，例如InnoDB的单个索引的互斥访问，ext3问价你系统的inode锁竞争等。</p>
+<h2 id="4-__u5206_u533A_u8868_u7684_u9650_u5236_u56E0_u7D20"><a href="#4-__u5206_u533A_u8868_u7684_u9650_u5236_u56E0_u7D20" class="headerlink" title="4. 分区表的限制因素"></a>4. 分区表的限制因素</h2><p>1） 一个表最多只能有1024个分区<br>2） MySQL5.1中，分区表达式必须是整数，或者返回整数的表达式。在MySQL5.5中提供了非整数表达式分区的支持。<br>3） 如果分区字段中有主键或者唯一索引的列，那么多有主键列和唯一索引列都必须包含进来。即：分区字段要么不包含主键或者索引列，要么包含全部主键和索引列。<br>4） 分区表中无法使用外键约束<br>5） MySQL的分区适用于一个表的所有数据和索引，不能只对表数据分区而不对索引分区，也不能只对索引分区而不对表分区，也不能只对表的一部分数据分区。</p>
+<h2 id="5-__u5982_u4F55_u5224_u65AD_u5F53_u524DMySQL_u662F_u5426_u652F_u6301_u5206_u533A_uFF1F"><a href="#5-__u5982_u4F55_u5224_u65AD_u5F53_u524DMySQL_u662F_u5426_u652F_u6301_u5206_u533A_uFF1F" class="headerlink" title="5. 如何判断当前MySQL是否支持分区？"></a>5. 如何判断当前MySQL是否支持分区？</h2><p>命令：<code>show variables like &#39;%partition%&#39;</code> 运行结果:</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; show variables like '%partition%';
++-------------------+-------+
+| Variable_name     | Value |
++-------------------+-------+
+| have_partitioning | YES   |
++-------------------+-------+
+1 row in set (0.00 sec)</pre>
+
+<p>have_partintioning 的值为YES，表示支持分区。</p>
+<h2 id="6-_MySQL_u652F_u6301_u7684_u5206_u533A_u7C7B_u578B_u6709_u54EA_u4E9B_uFF1F"><a href="#6-_MySQL_u652F_u6301_u7684_u5206_u533A_u7C7B_u578B_u6709_u54EA_u4E9B_uFF1F" class="headerlink" title="6. MySQL支持的分区类型有哪些？"></a>6. MySQL支持的分区类型有哪些？</h2><p>1） RANGE分区：按照数据的区间范围分区<br>2） LIST分区：按照List中的值分区，与RANGE的区别是，range分区的区间范围值是连续的。<br>3） HASH分区<br>4） KEY分区 <strong>说明</strong> 在MySQL5.1版本中，RANGE,LIST,HASH分区要求分区键必须是INT类型，或者通过表达式返回INT类型。但KEY分区的时候，可以使用其他类型的列（BLOB，TEXT类型除外）作为分区键。</p>
+<h2 id="7-_Range_u5206_u533A"><a href="#7-_Range_u5206_u533A" class="headerlink" title="7. Range分区"></a>7. Range分区</h2><p>利用取值范围进行分区，区间要连续并且不能互相重叠。 语法：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">partition by range(exp)( //exp可以为列名或者表达式，比如to_date(created_date)
+    partition p0 values less than(num)
+)</pre>
+
+<p>例如：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; create table emp(
+    -&gt; id INT NOT null,
+    -&gt; store_id int not null
+    -&gt; )
+    -&gt; partition by range(store_id)(
+    -&gt;   partition p0 values less than(10),
+    -&gt;   partition p1 values less than(20)
+    -&gt; );</pre>
+
+<p>上面的语句创建了emp表，并根据store_id字段进行分区，小于10的值存在分区p0中，大于等于10，小于20的值存在分区p1中。 <strong>注意</strong> 每个分区都是按顺序定义的，从最低到最高。上面的语句，如果将less than(10) 和less than (20)的顺序颠倒过来，那么将报错，如下：</p>
+<pre class="brush: bash; gutter: false; first-line: 1">ERROR 1493 (HY000): VALUES LESS THAN value must be strictly increasing for each partition</pre>
+
+<p><strong>RANGE分区存在的问题</strong></p>
+<ol>
+<li>range范围覆盖问题：当插入的记录中对应的分区键的值不在分区定义的范围中的时候，插入语句会失败。 上面的例子，如果我插入一条store_id = 30的记录会怎么样呢？ 我们上面分区的时候，最大值是20，如果插入一条超过20的记录，会报错:<pre class="brush: bash; gutter: false; first-line: 1">mysql&gt; insert into emp(id,store_id) values(2,30);
+ERROR 1526 (HY000): Table has no partition for value 30</pre>
+
+</li>
+</ol>
+<p>提示30这个值没有对应的分区。 <strong>解决办法</strong> A. 预估分区键的值，及时新增分区。 B. 设置分区的时候，使用<code>values less than maxvalue</code> 子句,MAXVALUE表示最大的可能的整数值。 C. 尽量选择能够全部覆盖的字段作为分区键，比如一年的十二个月等。</p>
+<ol>
+<li>Range分区中，分区键的值如果是NULL，将被作为一个最小值来处理。</li>
+</ol>
+<h2 id="8-_LIST_u5206_u533A"><a href="#8-_LIST_u5206_u533A" class="headerlink" title="8. LIST分区"></a>8. LIST分区</h2><p></p><p>List分区是建立离散的值列表告诉数据库特定的值属于哪个分区。 语法：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">   partition by list(exp)( //exp为列名或者表达式
+        partition p0 values in (3,5)  //值为3和5的在p0分区
+    )</pre>
+
+<p>与Range不同的是，list分区不必生命任何特定的顺序。例如：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; create table emp1(
+    -&gt; id int not null,
+    -&gt; store_id int not null
+    -&gt; )
+    -&gt; partition by list(store_id)(
+    -&gt;   partition p0 values in (3,5),
+    -&gt;   partition p1 values in (2,6,7,9)
+    -&gt; );</pre>
+
+<p><strong>注意</strong> 如果插入的记录对应的分区键的值不在list分区指定的值中，将会插入失败。并且，list不能像range分区那样提供maxvalue。</p>
+<h2 id="9-_Columns_u5206_u533A"><a href="#9-_Columns_u5206_u533A" class="headerlink" title="9. Columns分区"></a>9. Columns分区</h2><p>MySQL5.5中引入的分区类型，解决了5.5版本之前range分区和list分区只支持整数分区的问题。 Columns分区可以细分为 range columns分区和 list columns分区，他们都支持整数，日期时间，字符串三大数据类型。（不支持text和blob类型作为分区键） columns分区还支持多列分区（这里不详细展开）。</p>
+<h2 id="10-_Hash_u5206_u533A"><a href="#10-_Hash_u5206_u533A" class="headerlink" title="10. Hash分区"></a>10. Hash分区</h2><p>Hash分区主要用来分散热点读，确保数据在预先确定个数的分区中尽可能平均分布。 MySQL支持两种Hash分区:常规Hash分区和线性Hash分区。 A. 常规Hash分区:使用取模算法 语法：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">partition by hash(store_id) partitions 4;</pre>
+
+<p>上面的语句，根据store_id对4取模，决定记录存储位置。 比如store_id = 234的记录，MOD(234,4)=2,所以会被存储在第二个分区。</p>
+<p><strong>常规Hash分区的优点和不足</strong> 优点：能够使数据尽可能的均匀分布。 缺点：不适合分区经常变动的需求。假如我要新增加两个分区，现在有6个分区，那么MOD(234,6)的结果与之前MOD(234,4)的结果就会出现不一致，这样大部分数据就需要重新计算分区。为解决此问题，MySQL提供了线性Hash分区。</p>
+<p>B. 线性Hash分区：分区函数是一个线性的2的幂的运算法则。 语法：</p>
+<pre class="brush: bash; gutter: false; first-line: 1">partition by LINER hash(store_id) partitions 4;</pre>
+
+<p>与常规Hash的不同在于，“Liner”关键字。 算法介绍: 假设要保存记录的分区编号为N,num为一个非负整数,表示分割成的分区的数量，那么N可以通过以下步骤得到：</p>
+<p>Step 1. 找到一个大于等于num的2的幂，这个值为V，V可以通过下面公式得到：</p>
+<p>V = Power(2,Ceiling(Log(2,num)))</p>
+<p>例如：刚才设置了4个分区，num=4，Log(2,4)=2,Ceiling(2)=2,power(2,2)=4,即V=4</p>
+<p>Step 2. 设置N=F(column_list)&amp;(V-1)</p>
+<p>例如：刚才V=4，store_id=234对应的N值，N = 234&amp;（4-1） =2</p>
+<p>Step 3. 当N&gt;=num,设置V=Ceiling(V/2),N=N&amp;(V-1)</p>
+<p>例如：store_id=234,N=2&lt;4,所以N就取值2，即可。</p>
+<p>假设上面算出来的N=5，那么V=Ceiling(2.5)=3,N=234&amp;(3-1)=1,即在第一个分区。</p>
+<p><strong>线性Hash的优点和不足</strong> 优点：在分区维护（增加，删除，合并，拆分分区）时，MySQL能够处理得更加迅速。 缺点：与常规Hash分区相比，线性Hash各个分区之间的数据分布不太均衡。</p>
+<h2 id="11-_Key_u5206_u533A"><a href="#11-_Key_u5206_u533A" class="headerlink" title="11. Key分区"></a>11. Key分区</h2><p>类似Hash分区，Hash分区允许使用用户自定义的表达式，但Key分区不允许使用用户自定义的表达式。Hash仅支持整数分区，而Key分区支持除了Blob和text的其他类型的列作为分区键。 语法:</p>
+<pre class="brush: bash; gutter: false; first-line: 1">partition by key(exp) partitions 4;//exp是零个或多个字段名的列表</pre>
+
+<p>key分区的时候，exp可以为空，如果为空，则默认使用主键作为分区键，没有主键的时候，会选择非空惟一键作为分区键。</p>
+<h2 id="12-__u5B50_u5206_u533A"><a href="#12-__u5B50_u5206_u533A" class="headerlink" title="12. 子分区"></a>12. 子分区</h2><p>分区表中对每个分区再次分割，又成为复合分区。</p>
+<h2 id="13-__u5206_u533A_u5BF9_u4E8ENULL_u503C_u7684_u5904_u7406"><a href="#13-__u5206_u533A_u5BF9_u4E8ENULL_u503C_u7684_u5904_u7406" class="headerlink" title="13. 分区对于NULL值的处理"></a>13. 分区对于NULL值的处理</h2><p>MySQ允许分区键值为NULL，分区键可能是一个字段或者一个用户定义的表达式。一般情况下，MySQL在分区的时候会把NULL值当作零值或者一个最小值进行处理。</p>
+<p><strong>注意</strong></p>
+<p>Range分区中：NULL值被当作最小值来处理</p>
+<p>List分区中：NULL值必须出现在列表中，否则不被接受</p>
+<p>Hash/Key分区中：NULL值会被当作零值来处理</p>
+<h2 id="14-__u5206_u533A_u7BA1_u7406"><a href="#14-__u5206_u533A_u7BA1_u7406" class="headerlink" title="14. 分区管理"></a>14. 分区管理</h2><p>分区管理包括对于分区的增加，删除，以及查询。</p>
+<p><strong>增加分区：</strong></p>
+<p>对于Range分区和LIst分区来说：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name add partition (partition p0 values ...(exp))</pre>
+
+<p>values后面的内容根据分区的类型不同而不同。</p>
+<p>对于Hash分区和Key分区来说：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name add partition partitions 8;</pre>
+
+<p>上面的语句，指的是新增8个分区 。</p>
+<p><strong>删除分区</strong></p>
+<p>对于Range分区和List分区：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name drop partition p0; //p0为要删除的分区名称</pre>
+
+<p>删除了分区，同时也将删除该分区中的所有数据。同时，如果删除了分区导致分区不能覆盖所有值，那么插入数据的时候会报错。</p>
+<p>对于Hash和Key分区：</p>
+<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name coalesce partition 2; //将分区缩减到2个</pre>
+
+<p><strong>coalesce [ˌkəʊəˈles] vi. 联合，合并</strong></p>
+<p>分区查询 1）查询某张表一共有多少个分区</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; select 
+ -&gt;   partition_name,
+ -&gt;   partition_expression,
+ -&gt;   partition_description,
+ -&gt;   table_rows
+ -&gt; from 
+ -&gt;   INFORMATION_SCHEMA.partitions
+ -&gt; where
+ -&gt;   table_schema='test'
+ -&gt;   and table_name = 'emp';
++----------------+----------------------+-----------------------+------------+
+| partition_name | partition_expression | partition_description | table_rows |
++----------------+----------------------+-----------------------+------------+
+| p0             | store_id             | 10                    |          0 |
+| p1             | store_id             | 20                    |          1 |
++----------------+----------------------+-----------------------+------------+</pre>
+
+<p>即，可以从information_schema.partitions表中查询。</p>
+<p>2）查看执行计划，判断查询数据是否进行了分区过滤</p>
+<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; explain partitions select * from emp where store_id=10 \G;
+*************************** 1. row ***************************
+        id: 1
+select_type: SIMPLE
+     table: emp
+partitions: p1
+      type: system
+possible_keys: NULL
+       key: NULL
+   key_len: NULL
+       ref: NULL
+      rows: 1
+     Extra: 
+1 row in set (0.00 sec)</pre>
+
+<p>上面的结果：partitions:p1 表示数据在p1分区进行检索。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/03/20/dev/mysql_partition/" data-id="cit2b1lf6000xhns8cehclm88" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/03/20/dev/mysql_partition/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/web/jquery_datatable_ajax" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -204,7 +400,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/" data-id="ciszfodzt006zmds890uik7ki" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/" data-id="cit2b1ll1006nhns83rq52tah" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/#ds-thread" class="article-comment-link">评论</a>
       
@@ -265,7 +461,7 @@ dbc.execute(&#39;SET character_set_connection=utf8;&#39;)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/" data-id="ciszfodzx0072mds8wdkiy09u" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/" data-id="cit2b1llb0070hns8m14hwclv" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/#ds-thread" class="article-comment-link">评论</a>
       
@@ -414,7 +610,7 @@ class MySQLQueryPagination(object):
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql_page/" data-id="ciszfodzo006tmds8hqefg28o" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql_page/" data-id="cit2b1ll0006lhns8cl60cqgn" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/python/python_mysql_page/#ds-thread" class="article-comment-link">评论</a>
       
@@ -712,234 +908,12 @@ except:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql/" data-id="ciszfodzm006pmds8dm6n527n" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql/" data-id="cit2b1llk0079hns85opnmgmj" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/python/python_mysql/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mysql/">Mysql</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/python/python_logging" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/10/dev/python/python_logging/">Python日志输出——logging模块</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/03/10/dev/python/python_logging/">
-      <time datetime="2016-03-10T02:19:56.000Z" itemprop="datePublished">2016-03-10</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h3 id="1-_logging_u4ECB_u7ECD"><a href="#1-_logging_u4ECB_u7ECD" class="headerlink" title="1. logging介绍"></a>1. logging介绍</h3><p>Python的logging模块提供了通用的日志系统，可以方便第三方模块或者是应用使用。这个模块提供不同的日志级别，并可以采用不同的方式记录日志，比如文件，HTTP GET/POST，SMTP，Socket等，甚至可以自己实现具体的日志记录方式。<br>logging模块与log4j的机制是一样的，只是具体的实现细节不同。模块提供logger，handler，filter，formatter。<br>logger：提供日志接口，供应用代码使用。logger最长用的操作有两类：配置和发送日志消息。可以通过logging.getLogger(name)获取logger对象，如果不指定name则返回root对象，多次使用相同的name调用getLogger方法返回同一个logger对象。<br>handler：将日志记录（log record）发送到合适的目的地（destination），比如文件，socket等。一个logger对象可以通过addHandler方法添加0到多个handler，每个handler又可以定义不同日志级别，以实现日志分级过滤显示。<br>filter：提供一种优雅的方式决定一个日志记录是否发送到handler。<br>formatter：指定日志记录输出的具体格式。formatter的构造方法需要两个参数：消息的格式字符串和日期字符串，这两个参数都是可选的。<br>与log4j类似，logger，handler和日志消息的调用可以有具体的日志级别（Level），只有在日志消息的级别大于logger和handler的级别。</p>
-<pre><code class="python">import logging  
-import logging.handlers  
-
-LOG_FILE = &#39;tst.log&#39;  
-
-handler = logging.handlers.RotatingFileHandler(LOG_FILE, maxBytes = 1024*1024, backupCount = 5) # 实例化handler   
-fmt = &#39;%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s&#39;  
-
-formatter = logging.Formatter(fmt)   # 实例化formatter  
-handler.setFormatter(formatter)      # 为handler添加formatter  
-
-logger = logging.getLogger(&#39;tst&#39;)    # 获取名为tst的logger  
-logger.addHandler(handler)           # 为logger添加handler  
-logger.setLevel(logging.DEBUG)  
-
-logger.info(&#39;first info message&#39;)  
-logger.debug(&#39;first debug message&#39;)
-</code></pre>
-<p>输出：</p>
-<pre><code>2012-03-04 23:21:59,682 - log_test.py:16 - tst - first info message   
-2012-03-04 23:21:59,682 - log_test.py:17 - tst - first debug message
-</code></pre><h3 id="2-_logging_u7684_u914D_u7F6E"><a href="#2-_logging_u7684_u914D_u7F6E" class="headerlink" title="2. logging的配置"></a>2. logging的配置</h3><p>logging的配置可以采用python代码或是配置文件。python代码的方式就是在应用的主模块中，构建handler，handler，formatter等对象。而配置文件的方式是将这些对象的依赖关系分离出来放在文件中。比如前面的例子就类似于python代码的配置方式。这里看一下采用配置文件的方式。</p>
-<pre><code class="python">import logging  
-import logging.config  
-
-logging.config.fileConfig(&quot;logging.conf&quot;)    # 采用配置文件  
-
-# create logger  
-logger = logging.getLogger(&quot;simpleExample&quot;)  
-
-# &quot;application&quot; code  
-logger.debug(&quot;debug message&quot;)  
-logger.info(&quot;info message&quot;)  
-logger.warn(&quot;warn message&quot;)  
-logger.error(&quot;error message&quot;)  
-logger.critical(&quot;critical message&quot;)
-</code></pre>
-<p>loggin.conf采用了模式匹配的方式进行配置，正则表达式是r’^[(.*)]$’，从而匹配出所有的组件。对于同一个组件具有多个实例的情况使用逗号‘，’进行分隔。对于一个实例的配置采用componentName_instanceName配置块。使用这种方式还是蛮简单的。</p>
-<pre><code>[loggers]  
-keys=root,simpleExample  
-
-[handlers]  
-keys=consoleHandler  
-
-[formatters]  
-keys=simpleFormatter  
-
-[logger_root]  
-level=DEBUG  
-handlers=consoleHandler  
-
-[logger_simpleExample]  
-level=DEBUG  
-handlers=consoleHandler  
-qualname=simpleExample  
-propagate=0  
-
-[handler_consoleHandler]  
-class=StreamHandler  
-level=DEBUG  
-formatter=simpleFormatter  
-args=(sys.stdout,)  
-
-[formatter_simpleFormatter]  
-format=%(asctime)s - %(name)s - %(levelname)s - %(message)s  
-datefmt=
-</code></pre><p>在指定handler的配置时，class是具体的handler类的类名，可以是相对logging模块或是全路径类名，比如需要RotatingFileHandler，则class的值可以为：RotatingFileHandler或者logging.handlers.RotatingFileHandler。args就是要传给这个类的构造方法的参数，就是一个元组，按照构造方法声明的参数的顺序。</p>
-<p>输出：</p>
-<pre><code>2012-03-06 00:09:35,713 - simpleExample - DEBUG - debug message  
-2012-03-06 00:09:35,713 - simpleExample - INFO - info message  
-2012-03-06 00:09:35,714 - simpleExample - WARNING - warn message  
-2012-03-06 00:09:35,714 - simpleExample - ERROR - error message  
-2012-03-06 00:09:35,714 - simpleExample - CRITICAL - critical message
-</code></pre><p>这里还要明确一点，logger对象是有继承关系的，比如名为a.b和a.c的logger都是名为a的子logger，并且所有的logger对象都继承于root。如果子对象没有添加handler等一些配置，会从父对象那继承。这样就可以通过这种继承关系来复用配置。</p>
-<h3 id="3-__u591A_u6A21_u5757_u4F7F_u7528logging"><a href="#3-__u591A_u6A21_u5757_u4F7F_u7528logging" class="headerlink" title="3. 多模块使用logging"></a>3. 多模块使用logging</h3><p>logging模块保证在同一个python解释器内，多次调用logging.getLogger(‘log_name’)都会返回同一个logger实例，即使是在多个模块的情况下。所以典型的多模块场景下使用logging的方式是在main模块中配置logging，这个配置会作用于多个的子模块，然后在其他模块中直接通过getLogger获取Logger对象即可。</p>
-<p>这里使用上面配置文件：</p>
-<pre><code>[loggers]  
-keys=root,main  
-
-[handlers]  
-keys=consoleHandler,fileHandler  
-
-[formatters]  
-keys=fmt  
-
-[logger_root]  
-level=DEBUG  
-handlers=consoleHandler  
-
-[logger_main]  
-level=DEBUG  
-qualname=main  
-handlers=fileHandler  
-
-[handler_consoleHandler]  
-class=StreamHandler  
-level=DEBUG  
-formatter=fmt  
-args=(sys.stdout,)  
-
-[handler_fileHandler]  
-class=logging.handlers.RotatingFileHandler  
-level=DEBUG  
-formatter=fmt  
-args=(&#39;tst.log&#39;,&#39;a&#39;,20000,5,)  
-
-[formatter_fmt]  
-format=%(asctime)s - %(name)s - %(levelname)s - %(message)s  
-datefmt=
-</code></pre><p>主模块main.py：</p>
-<pre><code class="python">import logging  
-import logging.config  
-
-logging.config.fileConfig(&#39;logging.conf&#39;)  
-root_logger = logging.getLogger(&#39;root&#39;)  
-root_logger.debug(&#39;test root logger...&#39;)  
-
-logger = logging.getLogger(&#39;main&#39;)  
-logger.info(&#39;test main logger&#39;)  
-logger.info(&#39;start import module \&#39;mod\&#39;...&#39;)  
-import mod  
-
-logger.debug(&#39;let\&#39;s test mod.testLogger()&#39;)  
-mod.testLogger()  
-
-root_logger.info(&#39;finish test...&#39;)
-</code></pre>
-<p>子模块mod.py：</p>
-<pre><code class="python">import logging  
-import submod  
-
-logger = logging.getLogger(&#39;main.mod&#39;)  
-logger.info(&#39;logger of mod say something...&#39;)  
-
-def testLogger():  
-    logger.debug(&#39;this is mod.testLogger...&#39;)  
-    submod.tst()
-</code></pre>
-<p>子子模块submod.py：</p>
-<pre><code class="python">import logging  
-
-logger = logging.getLogger(&#39;main.mod.submod&#39;)  
-logger.info(&#39;logger of submod say something...&#39;)  
-
-def tst():  
-    logger.info(&#39;this is submod.tst()...&#39;)
-</code></pre>
-<p>然后运行python main.py，控制台输出：</p>
-<pre><code>2012-03-09 18:22:22,793 - root - DEBUG - test root logger...  
-2012-03-09 18:22:22,793 - main - INFO - test main logger  
-2012-03-09 18:22:22,809 - main - INFO - start import module &#39;mod&#39;...  
-2012-03-09 18:22:22,809 - main.mod.submod - INFO - logger of submod say something...  
-2012-03-09 18:22:22,809 - main.mod - INFO - logger say something...  
-2012-03-09 18:22:22,809 - main - DEBUG - let&#39;s test mod.testLogger()  
-2012-03-09 18:22:22,825 - main.mod - DEBUG - this is mod.testLogger...  
-2012-03-09 18:22:22,825 - main.mod.submod - INFO - this is submod.tst()...  
-2012-03-09 18:22:22,841 - root - INFO - finish test...
-</code></pre><p>可以看出，和预想的一样，然后在看一下tst.log，logger配置中的输出的目的地：</p>
-<pre><code>2012-03-09 18:22:22,793 - main - INFO - test main logger  
-2012-03-09 18:22:22,809 - main - INFO - start import module &#39;mod&#39;...  
-2012-03-09 18:22:22,809 - main.mod.submod - INFO - logger of submod say something...  
-2012-03-09 18:22:22,809 - main.mod - INFO - logger say something...  
-2012-03-09 18:22:22,809 - main - DEBUG - let&#39;s test mod.testLogger()  
-2012-03-09 18:22:22,825 - main.mod - DEBUG - this is mod.testLogger...  
-2012-03-09 18:22:22,825 - main.mod.submod - INFO - this is submod.tst()...
-</code></pre><p>tst.log中没有root logger输出的信息，因为logging.conf中配置了只有main logger及其子logger使用RotatingFileHandler，而root logger是输出到标准输出。</p>
-<p>FROM： <a href="http://blog.csdn.net/chosen0ne/article/details/7319306" target="_blank" rel="external">http://blog.csdn.net/chosen0ne/article/details/7319306</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/10/dev/python/python_logging/" data-id="ciszfodzk006lmds8bzspscyl" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/03/10/dev/python/python_logging/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
 
     </footer>
   </div>
@@ -961,6 +935,23 @@ def tst():
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/14/algo/one_hot_encode/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/14/algo/one_hot_encode/" class="title">One-Hot Encoding</a></p>
+              <p class="item-date"><time datetime="2016-09-13T16:00:00.000Z" itemprop="datePublished">2016-09-14</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -1030,23 +1021,6 @@ def tst():
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/31/dev/python/python_print_chs/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/08/31/dev/python/python_print_chs/" class="title">Python print 中文乱码问题</a></p>
-              <p class="item-date"><time datetime="2016-08-31T02:19:56.000Z" itemprop="datePublished">2016-08-31</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1056,7 +1030,7 @@ def tst():
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -1074,7 +1048,7 @@ def tst():
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

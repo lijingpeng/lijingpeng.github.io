@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        103
+        104
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,110 @@
 
       
       <section id="main">
+      <article id="post-dev/java_math_stat" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/12/dev/java_math_stat/">Java Math StatExample</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/10/12/dev/java_math_stat/">
+      <time datetime="2015-10-12T04:57:56.000Z" itemprop="datePublished">2015-10-12</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <pre><code class="java">import org.apache.commons.math.stat.StatUtils;
+import org.apache.commons.math.stat.descriptive.moment.GeometricMean;
+import org.apache.commons.math.stat.descriptive.moment.Kurtosis;
+import org.apache.commons.math.stat.descriptive.moment.Mean;
+import org.apache.commons.math.stat.descriptive.moment.Skewness;
+import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
+import org.apache.commons.math.stat.descriptive.moment.Variance;
+import org.apache.commons.math.stat.descriptive.rank.Max;
+import org.apache.commons.math.stat.descriptive.rank.Min;
+import org.apache.commons.math.stat.descriptive.rank.Percentile;
+import org.apache.commons.math.stat.descriptive.summary.Product;
+import org.apache.commons.math.stat.descriptive.summary.Sum;
+
+public class StatExample {
+    public static void main(String[] args) {
+        double[] values = new double[] { 2.3, 5.4, 6.2, 7.3, 23.3 };
+
+        System.out.println( &quot;min: &quot; + StatUtils.min( values ) );
+        System.out.println( &quot;max: &quot; + StatUtils.max( values ) );
+        System.out.println( &quot;mean: &quot; + StatUtils.mean( values ) );
+        System.out.println( &quot;product: &quot; + StatUtils.product( values ) );
+        System.out.println( &quot;sum: &quot; + StatUtils.sum( values ) );
+        System.out.println( &quot;variance: &quot; + StatUtils.variance( values ) );
+
+        // Measures from previous example
+        Min min = new Min();
+        System.out.println( &quot;min: &quot; + min.evaluate( values ) );
+        Max max = new Max();
+        System.out.println( &quot;max: &quot; + max.evaluate( values ) );
+        Mean mean = new Mean();
+        System.out.println( &quot;mean: &quot; + mean.evaluate( values ) );
+        Product product = new Product();
+        System.out.println( &quot;product: &quot; + product.evaluate( values ) );
+        Sum sum = new Sum();
+        System.out.println( &quot;sum: &quot; + sum.evaluate( values ) );
+        Variance variance = new Variance();
+        System.out.println( &quot;variance: &quot; + variance.evaluate( values ) );
+
+        // New measures
+        Percentile percentile = new Percentile();
+        System.out.println( &quot;80 percentile value: &quot; + percentile.evaluate( values, 80.0 ) );
+        GeometricMean geoMean = new GeometricMean();
+        System.out.println( &quot;geometric mean: &quot; + geoMean.evaluate( values ) );
+        StandardDeviation stdDev = new StandardDeviation();
+        System.out.println( &quot;standard dev: &quot; + stdDev.evaluate( values ) );
+        Skewness skewness = new Skewness();
+        System.out.println( &quot;skewness: &quot; + skewness.evaluate( values ) );
+        Kurtosis kurtosis = new Kurtosis();
+        System.out.println( &quot;kurtosis: &quot; + kurtosis.evaluate( values ) );
+
+    }
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="cit2b1lf2000thns88d3i2ur1" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/10/12/dev/java_math_stat/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-internet/ad/ad_cheating" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -177,7 +281,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="ciszfoe000075mds8yfamuguo" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="cit2b1lld0072hns8oms2cxaq" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/#ds-thread" class="article-comment-link">评论</a>
       
@@ -239,13 +343,106 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="ciszfodzz0074mds8aw56zj98" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="cit2b1llc0071hns8pxbkk4jj" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li></ul>
 
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/25/algo/ml/feature_hashing/">
+      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
+<h3 id="Motivating_example"><a href="#Motivating_example" class="headerlink" title="Motivating example"></a>Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
+<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
+<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
+<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary</p>
+<pre><code>Term    Index
+John    1
+likes   2
+to      3
+watch   4
+movies  5
+Mary    6
+too     7
+also    8
+football9
+</code></pre><p>to the term-document matrix</p>
+<pre><code>1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 
+0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 
+1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1
+</code></pre><p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
+<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
+<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
+<h3 id="Feature_vectorization_using_the_hashing_trick"><a href="#Feature_vectorization_using_the_hashing_trick" class="headerlink" title="Feature vectorization using the hashing trick"></a>Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):</p>
+<pre><code>     x := new vector[N]
+     for f in features:
+         h := hash(f)
+         x[h mod N] += 1
+     return x
+</code></pre><p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):</p>
+<pre><code>     x := new vector[N]
+     for f in features:
+         h := hash(f)
+         idx := h mod N
+         if ξ(f) == 1:
+             x[idx] += 1
+         else:
+             x[idx] -= 1
+     return x
+</code></pre><p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="cit2b1ljk0051hns8edpriyuv" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
+      
+      
     </footer>
   </div>
   
@@ -370,296 +567,11 @@ blue
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="ciszfodyu004wmds8huhbti16" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="cit2b1lji004yhns8zja5pdxt" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/25/algo/ml/feature_hashing/">
-      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
-<h3 id="Motivating_example"><a href="#Motivating_example" class="headerlink" title="Motivating example"></a>Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
-<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
-<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
-<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary</p>
-<pre><code>Term    Index
-John    1
-likes   2
-to      3
-watch   4
-movies  5
-Mary    6
-too     7
-also    8
-football9
-</code></pre><p>to the term-document matrix</p>
-<pre><code>1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 
-0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 
-1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1
-</code></pre><p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
-<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
-<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
-<h3 id="Feature_vectorization_using_the_hashing_trick"><a href="#Feature_vectorization_using_the_hashing_trick" class="headerlink" title="Feature vectorization using the hashing trick"></a>Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):</p>
-<pre><code>     x := new vector[N]
-     for f in features:
-         h := hash(f)
-         x[h mod N] += 1
-     return x
-</code></pre><p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):</p>
-<pre><code>     x := new vector[N]
-     for f in features:
-         h := hash(f)
-         idx := h mod N
-         if ξ(f) == 1:
-             x[idx] += 1
-         else:
-             x[idx] -= 1
-     return x
-</code></pre><p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="ciszfodyw0052mds8xgs7egrb" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/ml" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/23/algo/ml/">机器学习资料大汇总</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/23/algo/ml/">
-      <time datetime="2015-09-22T16:00:00.000Z" itemprop="datePublished">2015-09-23</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p><img src="/images/other/ml.jpg" alt=""></p>
-<p>注：本页面主要针对想快速上手机器学习而又不想深入研究的同学，对于专门的researcher，建议直接啃PRML，ESL，MLAPP以及你相应方向的书（比如Numerical Optimization，Graphic Model等），另外就是Follow牛会牛paper，如果谁有兴趣也可以一起来整理个专业的汇总页。本页面将持续更新，敬请关注，如有推荐的文章请留言，谢谢！</p>
-<h3 id="u5F00_u6E90_u5DE5_u5177"><a href="#u5F00_u6E90_u5DE5_u5177" class="headerlink" title="开源工具"></a>开源工具</h3><hr>
-<p><a href="http://www.52ml.net/12043.html" target="_blank" rel="external">机器学习的开源工具</a><br><a href="http://www.52ml.net/13547.html" target="_blank" rel="external">Python机器学习库</a><br><a href="http://www.52ml.net/13002.html" target="_blank" rel="external">C++矩阵运算库推荐</a></p>
-<h3 id="u516C_u5F00_u8BFE"><a href="#u516C_u5F00_u8BFE" class="headerlink" title="公开课"></a>公开课</h3><hr>
-<ul>
-<li>Machine Learning | Coursera Andrew NG在coursera上的课，难度比公开课略低，适合入门</li>
-<li>斯坦福大学公开课 ：机器学习课程 Andrew NG在学校里面的课程，网易公开课有中英文字幕，可以配合笔记来看</li>
-<li>CMU机器学习系主任Tom Mitchell院士机器学习课程视频及课件（英文）</li>
-<li>机器学习|加州理工，老师是Yaser Abu-Mostafa，会从最基本的理论开始，为你构建机器学习的基础。</li>
-<li>机器学习基石 如果想听中文课程，台湾大学的这门就很合适，友情提示，台大的课程基本上都可以加快语速来听，原因你懂的</li>
-<li>神经网络|多伦多大学 鼎鼎大名的Geoffrey Hinton ，这门课着实不容错过</li>
-<li>凸优化课程|斯坦福 授课老师是凸优化经典教材的作者Stephen Boyd！有难度有挑战！</li>
-<li>概率图模型  coursera的另外一个创始人，Daphne Koller的课程，值得一提的是，Koller因提出了Probabilistic Relational Models拿到了2001年的IJCAI Computers and Thought Award</li>
-<li>统计学习|斯坦福 授课老师是ESL作者 ，还有同学把视频放在了百度网盘上～ 这个更快一些</li>
-</ul>
-<h3 id="1-__u673A_u5668_u5B66_u4E60_u5165_u95E8_u7BC7"><a href="#1-__u673A_u5668_u5B66_u4E60_u5165_u95E8_u7BC7" class="headerlink" title="1. 机器学习入门篇"></a>1. 机器学习入门篇</h3><h4 id="1-1__u673A_u5668_u5B66_u4E60_u4ECB_u7ECD"><a href="#1-1__u673A_u5668_u5B66_u4E60_u4ECB_u7ECD" class="headerlink" title="1.1 机器学习介绍"></a>1.1 机器学习介绍</h4><ul>
-<li>机器学习-维基百科  Machine Learning-Wikipedia</li>
-<li>机器学习简史</li>
-<li>规则与机器学习 不建议为了机器学习而机器学习，对于初学者应该是先规则再机器学习，规则直观，可以深入理解领域知识和特征，要记住一个机器学习的专家必须首先是该领域知识的专家。</li>
-<li>贝叶斯思想 MLAPP 第5章 Bayesian statistics 第6章 Frequentist statistics 机器学习第6章 贝叶斯学习</li>
-<li>监督学习 ESL 第2章 Overview of Supervised Learning</li>
-</ul>
-<h4 id="1-2__u4E66_u7C4D"><a href="#1-2__u4E66_u7C4D" class="headerlink" title="1.2 书籍"></a>1.2 书籍</h4><ul>
-<li>《统计学习方法》 第1章 统计学习方法概论</li>
-<li>《机器学习》（Mitchell） 第1章 引言</li>
-<li>PRML 第1章 Introduction</li>
-<li>MLAPP 第1章 Introduction 第2章 Probability</li>
-<li>ESL 第1章 Introduction</li>
-<li>Some Notes on Applied Mathematics for Machine (选修)</li>
-<li>Machine Learning Textbook minireviews</li>
-<li>List of Cool Machine Learning Books</li>
-</ul>
-<h4 id="1-3__u6570_u5B66_u57FA_u7840"><a href="#1-3__u6570_u5B66_u57FA_u7840" class="headerlink" title="1.3 数学基础"></a>1.3 数学基础</h4><ul>
-<li>线性代数：公开课： 线性代数；推荐文章 ： 线性代数的本质，</li>
-<li>概率论：公开课： 概率课|台大 叶老师为人风趣幽默，课程也比较简单，容易听进去</li>
-<li>书籍：MLAPP第二章</li>
-<li>微积分：公开课：单变量微积分|MIT 多变量微积分|MIT</li>
-</ul>
-<p>——————————————-</p>
-<h4 id="1-4_LDA"><a href="#1-4_LDA" class="headerlink" title="1.4 LDA"></a>1.4 LDA</h4><ul>
-<li>LDA最佳学习资料汇总</li>
-</ul>
-<h4 id="1-4_Spectral_Clustering"><a href="#1-4_Spectral_Clustering" class="headerlink" title="1.4 Spectral Clustering"></a>1.4 Spectral Clustering</h4><ul>
-<li>Spectral Clustering最佳学习资料汇总</li>
-</ul>
-<h4 id="1-5__u56FE_u50CF_u5904_u7406"><a href="#1-5__u56FE_u50CF_u5904_u7406" class="headerlink" title="1.5 图像处理"></a>1.5 图像处理</h4><ul>
-<li>图像处理和计算机视觉中的经典论文</li>
-</ul>
-<h4 id="2__u7EBF_u6027_u56DE_u5F52_u6A21_u578B"><a href="#2__u7EBF_u6027_u56DE_u5F52_u6A21_u578B" class="headerlink" title="2 线性回归模型"></a>2 线性回归模型</h4><ul>
-<li>PRML 第3章 Linear Models for Regression</li>
-<li>MLAPP 第7章 Linear Regression 第13章 Sparse Linear Models</li>
-<li>ESL 第3章 Linear Method for Regression</li>
-</ul>
-<h4 id="3__u7EBF_u6027_u5206_u7C7B_u6A21_u578B"><a href="#3__u7EBF_u6027_u5206_u7C7B_u6A21_u578B" class="headerlink" title="3 线性分类模型"></a>3 线性分类模型</h4><ul>
-<li>PRML 第4章 Linear Models for Classification</li>
-<li>MLAPP 第8章 Logistic Regression 第9章 Generalized Linear Models and the exponential family</li>
-<li>ESL 第4章 Linear Method for Classification</li>
-<li>统计机器学习 第6章 逻辑斯谛回归与最大熵模型</li>
-</ul>
-<h4 id="4__u795E_u7ECF_u7F51_u7EDC"><a href="#4__u795E_u7ECF_u7F51_u7EDC" class="headerlink" title="4 神经网络"></a>4 神经网络</h4><ul>
-<li>PRML 第5章 Neural Networks</li>
-<li>ESL 第11章 Neural Networks</li>
-<li>统计学习方法 第2章 感知机</li>
-<li>机器学习 第4章 人工神经网络</li>
-</ul>
-<h4 id="5__u652F_u6301_u5411_u91CF_u673A"><a href="#5__u652F_u6301_u5411_u91CF_u673A" class="headerlink" title="5 支持向量机"></a>5 支持向量机</h4><ul>
-<li>统计学习方法 第7章 支持向量机 (强烈推荐)</li>
-<li>PRML 第6章 Kernel Methods 第7章 Sparse Kernel Machine</li>
-<li>ESL 第12章 Support Vector Machines and Flexible Discriminants</li>
-<li>MLAPP 第14章 Kernels</li>
-</ul>
-<h4 id="6__u56FE_u6A21_u578B"><a href="#6__u56FE_u6A21_u578B" class="headerlink" title="6 图模型"></a>6 图模型</h4><ul>
-<li>PRML 第8章 Graphical Models</li>
-<li>MLAPP 第10章 Directed graphical models（Bayes nets） 第19章 Undirected Graphical Models（Marcov random fields）第20章 Exact inference for graphical models 第26章 Graphical model structure learning</li>
-<li>统计学习方法 第10章 隐马尔可夫模型 第11章 条件随机场</li>
-<li>机器学习 6.11 贝叶斯信念网</li>
-<li>ESL 第17章 Undirected Graphical Models</li>
-<li>Koller 的书</li>
-<li>Jordan 的书</li>
-</ul>
-<h4 id="7__u6DF7_u5408_u6A21_u578B_u548CEM"><a href="#7__u6DF7_u5408_u6A21_u578B_u548CEM" class="headerlink" title="7 混合模型和EM"></a>7 混合模型和EM</h4><ul>
-<li>PRML 第9章 Mixture Models and EM</li>
-<li>MLAPP 第11章 Mixture models and the EM algorithm</li>
-<li>ESL 8.5 The EM Algorithm</li>
-<li>统计学习方法 第9章 EM算法及其推广</li>
-</ul>
-<h4 id="8__u8FD1_u4F3C_u63A8_u7406"><a href="#8__u8FD1_u4F3C_u63A8_u7406" class="headerlink" title="8 近似推理"></a>8 近似推理</h4><ul>
-<li>PRML 第10章 Approximate Inference</li>
-<li>MLAPP 第21章 Variational Inference 第22章 More Variational Inference</li>
-</ul>
-<h4 id="9__u91C7_u6837_u65B9_u6CD5"><a href="#9__u91C7_u6837_u65B9_u6CD5" class="headerlink" title="9 采样方法"></a>9 采样方法</h4><ul>
-<li>PRML 第11章 Sampling Methods</li>
-<li>MLAPP 第23章 Monte Carlo inference 第24章 Markov Chain Monte Carlo (MCMC) inference</li>
-<li>ESL 8.6 MCMC for Sampling from Posterior</li>
-</ul>
-<h4 id="10_PCA"><a href="#10_PCA" class="headerlink" title="10 PCA"></a>10 PCA</h4><ul>
-<li>PRML 第12章 Continuous Latent Variables</li>
-<li>MLAPP 第12章 Latent Linear Models</li>
-<li>ESL 14.5 Principal Componens， Curves and Surfaces</li>
-</ul>
-<h4 id="11_HMM"><a href="#11_HMM" class="headerlink" title="11 HMM"></a>11 HMM</h4><ul>
-<li>PRML 13.1 13.2 Hidden Marcov Models</li>
-<li>MLAPP 第17章 Marcov and Hidden Marcov Models</li>
-</ul>
-<h4 id="12__u7EC4_u5408_u6A21_u578B"><a href="#12__u7EC4_u5408_u6A21_u578B" class="headerlink" title="12 组合模型"></a>12 组合模型</h4><ul>
-<li>(投票，boosting，bagging，树模型，model averaging)</li>
-<li>PRML 第14章 Combining Models</li>
-<li>统计学习方法 第5章 决策树 第8章 提升方法</li>
-<li>MLAPP 第16章 Adaptive basis function models</li>
-<li>ESL 第15章 Random Forests 第16章 Ensemble Learning 8.7 Bagging 第9章 Additive Models, Trees, and Related Methods 第10章 Boosting and Additive Trees</li>
-<li>机器学习 第3章 决策树学习</li>
-</ul>
-<h4 id="14__u805A_u7C7B"><a href="#14__u805A_u7C7B" class="headerlink" title="14 聚类"></a>14 聚类</h4><ul>
-<li>ESL 14.3 Cluster Analysis</li>
-<li>MLAPP 25章 Clustering</li>
-<li>PRML 9.1 K-means Clustering</li>
-</ul>
-<h4 id="15__u8FD1_u90BB"><a href="#15__u8FD1_u90BB" class="headerlink" title="15 近邻"></a>15 近邻</h4><ul>
-<li>ELS 第13章 Protype Methods and Nearest-Neighbors</li>
-</ul>
-<h4 id="16_Deep_Learning"><a href="#16_Deep_Learning" class="headerlink" title="16 Deep Learning"></a>16 Deep Learning</h4><ul>
-<li><a href="http://deeplearning.net/" target="_blank" rel="external">http://deeplearning.net/</a></li>
-<li>Deep Learning Tutorial</li>
-<li>MLAPP 第28章 Deep Learning</li>
-</ul>
-<h4 id="2-2_Deep_Learning_u6559_u7A0B"><a href="#2-2_Deep_Learning_u6559_u7A0B" class="headerlink" title="2.2 Deep Learning教程"></a>2.2 Deep Learning教程</h4><ul>
-<li>UFLDL-斯坦福大学Andrew Ng教授“Deep Learning”教程</li>
-</ul>
-<h3 id="3-__u81EA_u7136_u8BED_u8A00_u5904_u7406_u5165_u95E8_u7BC7"><a href="#3-__u81EA_u7136_u8BED_u8A00_u5904_u7406_u5165_u95E8_u7BC7" class="headerlink" title="3. 自然语言处理入门篇"></a>3. 自然语言处理入门篇</h3><h4 id="3-1__u65AF_u5766_u798F_u5927_u5B66_u81EA_u7136_u8BED_u8A00_u5904_u7406_u516C_u5F00_u8BFE"><a href="#3-1__u65AF_u5766_u798F_u5927_u5B66_u81EA_u7136_u8BED_u8A00_u5904_u7406_u516C_u5F00_u8BFE" class="headerlink" title="3.1 斯坦福大学自然语言处理公开课"></a>3.1 斯坦福大学自然语言处理公开课</h4><ul>
-<li>NLP | 斯坦福  授课教师是 Dan Jurafsky 以及 Christopher Manning，英文不是很有信心的可以参考《斯坦福大学自然语言处理公开课中文解读》</li>
-<li>NLP | 哥伦比亚 授课老师是Michael Collins大神</li>
-</ul>
-<h4 id="3-2__u7EDF_u8BA1_u673A_u5668_u7FFB_u8BD1"><a href="#3-2__u7EDF_u8BA1_u673A_u5668_u7FFB_u8BD1" class="headerlink" title="3.2 统计机器翻译"></a>3.2 统计机器翻译</h4><ul>
-<li>Statistical Machine Translation</li>
-<li>统计机器翻译开源软件汇总</li>
-</ul>
-<p>转自：<a href="http://www.52ml.net/star?hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io" target="_blank" rel="external">http://www.52ml.net/star?hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/23/algo/ml/" data-id="ciszfodv5000jmds85bmkaosj" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/23/algo/ml/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a></li></ul>
-
     </footer>
   </div>
   
@@ -680,6 +592,23 @@ football9
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/14/algo/one_hot_encode/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/14/algo/one_hot_encode/" class="title">One-Hot Encoding</a></p>
+              <p class="item-date"><time datetime="2016-09-13T16:00:00.000Z" itemprop="datePublished">2016-09-14</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -749,23 +678,6 @@ football9
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/08/31/dev/python/python_print_chs/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/08/31/dev/python/python_print_chs/" class="title">Python print 中文乱码问题</a></p>
-              <p class="item-date"><time datetime="2016-08-31T02:19:56.000Z" itemprop="datePublished">2016-08-31</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -775,7 +687,7 @@ football9
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">20</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -793,7 +705,7 @@ football9
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
