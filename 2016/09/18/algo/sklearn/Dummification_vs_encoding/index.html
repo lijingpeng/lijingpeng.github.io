@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>XGBoost Categorical Variables - Dummification vs encoding | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Question:
+When using XGBoost we need to convert categorical variables into numeric.
+Would there be any difference in performance/evaluation metrics between the methods of:
+dummifying your categorical">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XGBoost Categorical Variables - Dummification vs encoding">
+<meta property="og:url" content="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="Question:
+When using XGBoost we need to convert categorical variables into numeric.
+Would there be any difference in performance/evaluation metrics between the methods of:
+dummifying your categorical">
+<meta property="og:updated_time" content="2016-09-18T03:37:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XGBoost Categorical Variables - Dummification vs encoding">
+<meta name="twitter:description" content="Question:
+When using XGBoost we need to convert categorical variables into numeric.
+Would there be any difference in performance/evaluation metrics between the methods of:
+dummifying your categorical">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.css.network/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.css.network/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  
+
+  
+</head>
+
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        105
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        42
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-algo/sklearn/Dummification_vs_encoding" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      XGBoost Categorical Variables - Dummification vs encoding
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/">
+      <time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>Question:</p>
+<p>When using XGBoost we need to convert categorical variables into numeric.</p>
+<p>Would there be any difference in performance/evaluation metrics between the methods of:</p>
+<p>dummifying your categorical variables<br>encoding your categorical variables from e.g. (a,b,c) to (1,2,3)<br>ALSO:</p>
+<p>Would there be any reasons not to go with method 2 by using for example labelencoder?</p>
+<p>Answer:</p>
+<p>xgboost only deals with numeric columns.</p>
+<p>if you have a feature [a,b,b,c] which describes a categorical variable (i.e. no numeric relationship)</p>
+<p>Using LabelEncoder you will simply have this:</p>
+<pre><code>array([0, 1, 1, 2])
+</code></pre><p>Xgboost will wrongly interpret this feature as having a numeric relationship! This just maps each string (‘a’,’b’,’c’) to an integer, nothing more.</p>
+<p>Proper way</p>
+<p>Using OneHotEncoder you will eventually get to this:</p>
+<pre><code>array([[ 1.,  0.,  0.],
+       [ 0.,  1.,  0.],
+       [ 0.,  1.,  0.],
+       [ 0.,  0.,  1.]])
+</code></pre><p>This is the proper representation of a categorical variable for xgboost or any other machine learning tool.</p>
+<p>Pandas get_dummies is a nice tool for creating dummy variables (which is easier to use, in my opinion).</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="cit82orc80054p5s88lqydgyj" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/09/14/algo/one_hot_encode/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">One-Hot Encoding</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-title="XGBoost Categorical Variables - Dummification vs encoding" data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
+              <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/14/algo/one_hot_encode/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/14/algo/one_hot_encode/" class="title">One-Hot Encoding</a></p>
+              <p class="item-date"><time datetime="2016-09-13T16:00:00.000Z" itemprop="datePublished">2016-09-14</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/12/system/linux_grep/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/system/">system</a></p>
+              <p class="item-title"><a href="/2016/09/12/system/linux_grep/" class="title">Linux查找文件内容（grep）</a></p>
+              <p class="item-date"><time datetime="2016-09-11T16:00:00.000Z" itemprop="datePublished">2016-09-12</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/11/other/public_cdn/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/other/">other</a></p>
+              <p class="item-title"><a href="/2016/09/11/other/public_cdn/" class="title">CDNJS 库以及 Google Fonts、Ajax 和 Gravatar 反代</a></p>
+              <p class="item-date"><time datetime="2016-09-10T16:00:00.000Z" itemprop="datePublished">2016-09-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/09/algo/kaggle/gbid/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
+              <p class="item-title"><a href="/2016/09/09/algo/kaggle/gbid/" class="title">kaggle之Grupo Bimbo Inventory Demand</a></p>
+              <p class="item-date"><time datetime="2016-09-09T05:48:13.000Z" itemprop="datePublished">2016-09-09</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 17.5px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.css.network/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
