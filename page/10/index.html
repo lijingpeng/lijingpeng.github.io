@@ -185,7 +185,7 @@ func deepCopy(dst, src interface{}) error {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/" data-id="cit81zufa00657hs8yhts4r5o" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/" data-id="cit82639q006daos8j3vhyydn" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/25/dev/go/go_deep_copy/#ds-thread" class="article-comment-link">评论</a>
       
@@ -449,93 +449,9 @@ func (set *HashSet) String() string {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="cit81zufe006d7hs8ewv2ezdd" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="cit82639v006naos85dkij7jm" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_set/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/go/go_dynamic_args" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/24/dev/go/go_dynamic_args/">Go可变长参数函数</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/11/24/dev/go/go_dynamic_args/">
-      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。</p>
-<pre><code class="go">package main
-
-import &quot;fmt&quot;
-
-// 这个函数可以传入任意数量的整型参数
-func sum(nums ...int) {
-    fmt.Print(nums, &quot; &quot;)
-    total := 0
-    for _, num := range nums {
-        total += num
-    }
-    fmt.Println(total)
-}
-
-func main() {
-
-    // 支持可变长参数的函数调用方法和普通函数一样
-    // 也支持只有一个参数的情况
-    sum(1, 2)
-    sum(1, 2, 3)
-
-    // 如果你需要传入的参数在一个切片中，像下面一样
-    // &quot;func(slice...)&quot;把切片打散传入
-    nums := []int{1, 2, 3, 4}
-    sum(nums...)
-}
-</code></pre>
-<p>输出结果为</p>
-<p>[1 2] 3<br>[1 2 3] 6<br>[1 2 3 4] 10<br>需要注意的是，可变长参数应该是函数定义的最右边的参数，即最后一个参数。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="cit81zuf800617hs8ttb6ugx9" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -620,9 +536,93 @@ for k, v := range m1 {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="cit81zufc00697hs8dde9ff8g" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_map/" data-id="cit82639u006laos846oam4nn" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_map/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/go/go_dynamic_args" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/24/dev/go/go_dynamic_args/">Go可变长参数函数</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/24/dev/go/go_dynamic_args/">
+      <time datetime="2015-11-24T06:19:56.000Z" itemprop="datePublished">2015-11-24</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>支持可变长参数列表的函数可以支持任意个传入参数，比如fmt.Println函数就是一个支持可变长参数列表的函数。</p>
+<pre><code class="go">package main
+
+import &quot;fmt&quot;
+
+// 这个函数可以传入任意数量的整型参数
+func sum(nums ...int) {
+    fmt.Print(nums, &quot; &quot;)
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    fmt.Println(total)
+}
+
+func main() {
+
+    // 支持可变长参数的函数调用方法和普通函数一样
+    // 也支持只有一个参数的情况
+    sum(1, 2)
+    sum(1, 2, 3)
+
+    // 如果你需要传入的参数在一个切片中，像下面一样
+    // &quot;func(slice...)&quot;把切片打散传入
+    nums := []int{1, 2, 3, 4}
+    sum(nums...)
+}
+</code></pre>
+<p>输出结果为</p>
+<p>[1 2] 3<br>[1 2 3] 6<br>[1 2 3 4] 10<br>需要注意的是，可变长参数应该是函数定义的最右边的参数，即最后一个参数。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/" data-id="cit82639r006faos8smirga6d" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/24/dev/go/go_dynamic_args/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
@@ -708,7 +708,7 @@ fmt.Println(js)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="cit81zufs006z7hs8fjhq7rw0" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="cit82639s006haos8f5n8hnb0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_json/#ds-thread" class="article-comment-link">评论</a>
       
