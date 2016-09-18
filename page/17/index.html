@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        105
+        106
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,104 @@
 
       
       <section id="main">
+      <article id="post-algo/baysian-bandit-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/algo/baysian-bandit-md/">Bayesian Bandits – optimizing click throughs with statistics</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/algo/baysian-bandit-md/">
+      <time datetime="2015-09-03T05:36:48.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>Great news! A murder victim has been found. No slow news day today! The story is already written, now a title needs to be selected. The clever reporter who wrote the story has come up with two potential titles – “Murder victim found in adult entertainment venue” and “Headless Body found in Topless Bar”. (The latter title is one I’ve shamelessly stolen from the NY Daily News.) Once upon a time, deciding which title to run was a matter for a news editor to decide. Those days are now over – the geeks now rule the earth. Title selection is now primarily an algorithmic problem, not an editorial one.</p>
+<p>One common approach is to display both potential versions of the title on the homepage or news feed, and measure the Click Through Rate (CTR) of each version of the title. At some point, when the measured CTR for one title exceeds that of the other title, you’ll switch to the one with the highest for all users. Algorithms for solving this problem are called bandit algorithms.</p>
+<p>In this blog post I’ll describe one of my favorite bandit algorithms, the Bayesian Bandit, and show why it is an excellent method to use for problems which give us more information than typical bandit algorithms.</p>
+<p>Unless you are already familiar with Bayesian statistics and beta distributions, I strongly recommend reading the previous blog post. That post provides much introductory material, and I’ll depend on it heavily.</p>
+<h2 id="1-_The_problem_to_be_solved_2C_and_the_underlying_model"><a href="#1-_The_problem_to_be_solved_2C_and_the_underlying_model" class="headerlink" title="1. The problem to be solved, and the underlying model"></a>1. The problem to be solved, and the underlying model</h2><hr>
+<p>Ultimately the problem we want to solve is the following. Consider an article being published on a website. The author or editor has come up with several possible titles – “Murder victim found in adult entertainment venue”, “Headless Body found in Topless Bar”, etc. We want to choose the title with the best click through rate (CTR). Let us represent each CTR by θi – i.e., θi is the true probability that an individual user will click on the i-th title. As a simplifying assumption, we assume that these rates θi do not change over time. It is important to note that we don’t actually know what θi is – if we did, we could simply choose i for which θi was largest and move on.</p>
+<p>The goal of the bandit algorithm is to do the following. To begin with, it should display all possible titles to a random selection of users, and measure which titles are clicked on more frequently. Over time, it will use these observations to infer which articles have the higher CTR. Then, once the estimation of the CTR becomes more precise, it will preferentially display articles with the higher CTR.</p>
+<h2 id="2-_The_Bayesian_Approach"><a href="#2-_The_Bayesian_Approach" class="headerlink" title="2. The Bayesian Approach"></a>2. The Bayesian Approach</h2><hr>
+<p>In the model described above, we have N possible story titles, each of which has a click through rate θi. Unfortunately we do not know what θi is. As the astute reader can guess from the title, we are following a Bayesian approach, so we will construct a probability distribution which represents our belief about what the actual value of θi is.<br><img src="/images/bb/beliefs_about_theta.png" alt=""><br>In the figure above, we believe that θi is somewhere between 0.1 and 0.7, with values of 0.3-0.4 being considerably more likely than values of 0.1-0.2 or 0.6-0.7. For those who forgot STATS 101, the area under this curve between the points a and b is the probability thta θi lies between a and b. I.e.:<br><img src="/images/bb/11.png" alt=""><br>The basic idea behind Bayesian methods is to update our beliefs based on evidence. As we gather more data by showing different titles to other users and observing click throughs, we can incrementally narrow the width of the probability distribution.</p>
+<p>As in all Bayesian inference, we need to choose a prior. The prior is something we believe to be true before we have any evidence – i.e., before we have shown the title to any visitors. This is just a starting point – after enough evidence is gathered, our prior will play a very minimal role in what we actually believe. Choosing a good prior is important both for mathematical simplicity, and because if your prior is accurate, you don’t need as much evidence to get the correct answer.</p>
+<p>I’ll follow the approach I described in a previous blog post, and I’ll use a beta distribution as the prior:<br><img src="/images/bb/31.png" alt=""><br>The parameters αi,βi&gt;1 are the prior parameters. One reasonable choice is αi=βi=1, which amounts to the uniform distribution on [0,1]. What this means is that we are assuming that all possible values of θi are equally likely. Depending on the circumstances (which I’ll explain shortly), we might want to choose other possible values.</p>
+<h2 id="3-_Updating_our_beliefs"><a href="#3-_Updating_our_beliefs" class="headerlink" title="3. Updating our beliefs"></a>3. Updating our beliefs</h2><p>Now we address the question of using evidence. After showing title i to ni visitors, we have observed that si of them have actually clicked on the title. We now want to compute theposterior distribution, which is to say the distribution that represents our beliefs after we have evidence.</p>
+<p>I did a little bit of algebra previously, in which I showed that if the prior is fαi,βi(θi), then the posterior distribution is:<br><img src="/images/bb/21.png" alt=""><br>The key idea here is that to update our probability distribution describing θi, we need only update the parameters of our beta distribution.</p>
+<p>So what does this mean in practice? As we run more experiments, our probability distribution on where θi lives becomes sharper:</p>
+<p><img src="/images/bb/beta_distribution_evolution.png" alt=""><br>Before we run any experiments, θi could be anything (as represented by the blue line). Once we have run 700 experiments, yielding 175 click throughs, we are reasonably confident that θi lives roughly between 0.2 and 0.3.</p>
+<p>What we’ve done so far is figured out how to estimate what our click through rates actually are based on empirical evidence. But that doesn’t actually give us a method of optimizing them yet.</p>
+<h2 id="4-_Optimizing_click_throughs"><a href="#4-_Optimizing_click_throughs" class="headerlink" title="4. Optimizing click throughs"></a>4. Optimizing click throughs</h2><p>Now that we have a method of representing our beliefs about CTRs, it is useful to construct an algorithm to identify the best ones. There are many popular choices – I’ve written about the UCB Algorithm before, and I consider it a good choice.</p>
+<p>But my new favorite method is a Monte Carlo method which I’ll describe now.</p>
+<p>The ultimate goal of the bandit algorithm is to display to the user whichever title has the highest CTR. One method of estimating the CTRs of the articles is to sample the posterior distribution. I.e., suppose we have two possible titles, from which we have drawn n0=200,s0=64and n1=180,n2=40. Then one possible set of samples we might observe is this:</p>
+<p><img src="/images/bb/beta_distribution_sampling1.png" alt=""></p>
+<p>For title 0, our sample of θ0 has worked out to be 0.35, while our sample of θ1 is only 0.28. Since θ0=0.35&gt;θ1=0.28, we will display title 0 to the user.</p>
+<p>However, there was no guarantee that things worked out this way. It was possible, although less likely, that θ1 could come out larger than θ0:<br><img src="/images/bb/beta_distribution_sampling2.png" alt=""><br>In this case, we would have displayed title 1 to the user rather than title 0.</p>
+<p>The net result is that for overlapping probability distributions, we will display the title with the larger expected CTR the majority of the time. But occasionally, we will draw from the other distributions simply because it is within the realm of possibility that they are greater.</p>
+<p>As we gather more data our probability distributions will become narrower and a clear winner will become apparent. When this occurs, we will almost surely choose the winner:<br><img src="/images/bb/beta_distribution_sampling3.png" alt=""><br>In python, the algorithm looks like this:</p>
+<p>The results of this algorithm are exactly what any good bandit algorithm should do. I ran the following simulation, giving the beta bandit two titles – title 0 had a CTR of 0.25, title 1 had a CTR of 0.35. To start with, both titles were displayed to the user with roughly equal probability. Over time, evidence accumulated that title 1 was considerably better than title 0. At this point the algorithm switched to displaying primarily title 1, and the overall CTR of the experiment converged to 0.35 (the optimal CTR).</p>
+<p><img src="/images/bb/beta_bandit_results.png" alt=""></p>
+<p>Source code to generate this graph is available here. This method is called Thompson Sampling and is a a fairly popular method in Bayesian AI techniques. For the remainder of this post, I’ll call this method the Bayesian Bandit.</p>
+<h2 id="5-Incorporating_common_sense"><a href="#5-Incorporating_common_sense" class="headerlink" title="5.Incorporating common sense"></a>5.Incorporating common sense</h2><p>Anyone with common sense is now scoffing at the geekiness embodied in this post. Even before using statistics, it was fairly obvious that “Headless Body found in Topless Bar” was going to beat “Murder victim found in adult entertainment venue”. The former just sounds catchier and any good editor would run with it.</p>
+<p>The wonderful thing about Bayesian methods is that we can modify them to take into account our prior knowledge. Suppose we believe editors intuition is a real thing – can we quantify it? Certainly. We can do this with a fairly simple experiment. We require editors to rate a collection of titles as “catchy” or “not catchy”, run them on the site, and then measure the CTR of the “catchy” and “not catchy” samples. Suppose we did such an experiment, and observed the following aggregate results:</p>
+<p><img src="/images/bb/empirical_prior.png" alt=""></p>
+<p>This isn’t a solid win for the editor – some catchy titles have low CTRs, and some boring titles have good CTRs. But nevertheless, it’s better for a story to have catchy title than not.</p>
+<p>What we want to do is incorporate this information into our bandit algorithm. The beauty of a Bayesian method is that it gives you a clear and meaningful place to plug this information in, namely the prior. In contrast, for many other methods (e.g., UCB) it’s somewhat difficult to do this – there is no obvious parameter to tune as a result of our prior empirical data.</p>
+<p>The first step is to fit a theoretical distribution to the empirical data. Due to the fact that I chose the “empirical” (i.e., made up) data to be very nice, a beta distribution fits well [1] – specifically beta distributions with (α0,β0)=(9,20) and (α1,β1)=(4,20).<br><img src="/images/bb/theoretical_prior.png" alt=""></p>
+<p>Then the only modification needed to the algorithm is to plug these variables into the prior:<br><img src="/images/bb/41.png" alt=""><br>Everything else remains unchanged. In terms of modifications to source code, this is only a very small change to the previous code – an implementation can be found here.</p>
+<h2 id="6-_Empirics_of_including_priors"><a href="#6-_Empirics_of_including_priors" class="headerlink" title="6. Empirics of including priors"></a>6. Empirics of including priors</h2><p>To measure the benefits of incorporating priors into the Bayesian bandit, I ran some numerical experiments, the source code of which is available in this github gist. The methodology was the following.</p>
+<p>To compare the Bayesian bandit with priors to that without, I drew a pair (θ0,θ1) from the prior distribution given above. For each pair, I then ran the Bayes Bandit with and without priors for this pair theta, for k trials. This is modelling the scenario that we have k page views on our homepage, and we can only leave a story on the homepage for 1 day.</p>
+<p>I then repeated the experiment for 1000 different possible days, or equivalently for 1000 different pairs of (θ0,θ1). I then computed the average gain per page view over all trials and all days.</p>
+<p>The result is the following. If we get 50 page views/day (i.e., the Bayes Bandit has very little data to use), the prior gives us a big gain. Without prior knowledge, the Bandit achieved a gain of 0.3749 on average, whereas the bandit with prior knowledge achieved a gain of 0.4274. If we run 150 experiments, the Bayes Bandit improves significantly – it achieves a gain of 0.40. If we run 300 experiments, the Bayes Bandit improves to 0.4146, while the bandit with priors improves to 0.4296. If we get 1000 page views/day, the Bayes Bandit improves to 0.4211, while the bandit with priors gains 0.4249.</p>
+<p>The net result is the following – incorporating priors into the Bayes Bandit is an excellent way to improve your results when you don’t have a large number data points to use to train the bandit. If you have a lot of data points, you don’t need strong priors (but they still help a little).</p>
+<h2 id="7-Conclusion"><a href="#7-Conclusion" class="headerlink" title="7.Conclusion"></a>7.Conclusion</h2><p>Bandit algorithms are a great way of optimizing many factors of your website. There are many good options – I’ve written about UCB before and consider it a great choice. But if you have other information you want to include, consider using the Bayesian Bandit. It’s simple to implement, straightforward to use, and very importantly it’s also straightforward to extend.</p>
+<p>It’s also important to note that the theoretical properties of the Bayesian Bandit (namely logarithmic regret) have been proven. So asymptotically, you lose nothing by using it. There are also attempts at constructing a Bayesian UCB algorithm – I don’t currently understand it well enough to comment.</p>
+<p>I’ve written other articles related to this post. I have one post comparing bandit algorithms to a/b testing. I also I wrote about measuring a changing conversion rate, which provides an alternate algorithm for computing the posterior distribution if your conversion rate is not constant.</p>
+<p>[1] If a single Beta distribution doesn’t fit, one can also use a convex combination of Beta distributions. The math works out just as nicely.</p>
+<p>P.S. After I published this blog post, this related article was also pointed out to me, as was this online simulation of the Bayesian bandit.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/" data-id="cit840u6u000b3ps8kdscy9er" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bandits/">Bandits</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/hive-udf-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -239,7 +337,7 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="cit82or8b000sp5s8jj1crey3" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="cit840u76000r3ps8lb2fupxc" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -294,7 +392,7 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="cit82or8k000yp5s8u1jkkoxa" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="cit840u7b000z3ps8ja753vcq" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/opensource/input-font-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -380,99 +478,11 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="cit82or80000fp5s8ehawowdu" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="cit840u6z000g3ps8lulryhkx" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/06/06/algo/feature_d/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-system/shadowsocks" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/14/system/shadowsocks/">Shadowsocks 安装配置使用</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/05/14/system/shadowsocks/">
-      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/system/">system</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>Debian/Ubuntu安装</p>
-<pre><code class="bash">apt-get install python-pip
-pip install shadowsocks
-</code></pre>
-<p>配置:</p>
-<pre><code class="bash">{
-    &quot;server&quot;:&quot;my_server_ip&quot;,
-    &quot;server_port&quot;:8388,
-    &quot;local_address&quot;: &quot;127.0.0.1&quot;,
-    &quot;local_port&quot;:1080,
-    &quot;password&quot;:&quot;mypassword&quot;,
-    &quot;timeout&quot;:300,
-    &quot;method&quot;:&quot;aes-256-cfb&quot;,
-    &quot;fast_open&quot;: false,
-    &quot;workers&quot;: 1
-}
-</code></pre>
-<p>服务器端运行:</p>
-<pre><code class="bash">ssserver -c /etc/shadowsocks/config.json
-</code></pre>
-<p>后台运行:</p>
-<pre><code class="bash">nohup ssserver -c /etc/shadowsocks/config.json &gt; /dev/null &amp;
-</code></pre>
-<p>客户端运行:</p>
-<pre><code class="bash">sslocal -c /etc/shadowsocks/config.json
-</code></pre>
-<p>后台运行:</p>
-<pre><code class="bash">nohup sslocal -c /etc/shadowsocks/config.json &gt; /dev/null &amp;
-</code></pre>
-<p>浏览器配置，推荐使用SwithySharp插件</p>
-<pre><code class="bash">protocol: socks5
-hostname: 127.0.0.1
-port:     your local_port
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="cit82or98001gp5s8o60tihht" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/05/14/system/shadowsocks/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a></li></ul>
-
     </footer>
   </div>
   
@@ -590,7 +600,7 @@ exit 0
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="cit82or8w001dp5s8o0r3xzku" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="cit840u7j001a3ps8cp3fipdy" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/#ds-thread" class="article-comment-link">评论</a>
       
@@ -606,7 +616,7 @@ exit 0
 
     
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/16/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/18/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/16/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/18/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -631,6 +641,23 @@ exit 0
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
               <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
+              <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/18/algo/ml/categorical_features/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/18/algo/ml/categorical_features/" class="title">Handling categorical features</a></p>
               <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
             </div>
           </li>
@@ -686,23 +713,6 @@ exit 0
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/09/algo/kaggle/gbid/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
-              <p class="item-title"><a href="/2016/09/09/algo/kaggle/gbid/" class="title">kaggle之Grupo Bimbo Inventory Demand</a></p>
-              <p class="item-date"><time datetime="2016-09-09T05:48:13.000Z" itemprop="datePublished">2016-09-09</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -712,7 +722,7 @@ exit 0
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -730,7 +740,7 @@ exit 0
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

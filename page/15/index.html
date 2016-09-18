@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        105
+        106
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,99 @@
 
       
       <section id="main">
+      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/25/algo/ml/feature_hashing/">
+      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
+<h3 id="Motivating_example"><a href="#Motivating_example" class="headerlink" title="Motivating example"></a>Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
+<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
+<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
+<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary</p>
+<pre><code>Term    Index
+John    1
+likes   2
+to      3
+watch   4
+movies  5
+Mary    6
+too     7
+also    8
+football9
+</code></pre><p>to the term-document matrix</p>
+<pre><code>1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 
+0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 
+1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1
+</code></pre><p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
+<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
+<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
+<h3 id="Feature_vectorization_using_the_hashing_trick"><a href="#Feature_vectorization_using_the_hashing_trick" class="headerlink" title="Feature vectorization using the hashing trick"></a>Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):</p>
+<pre><code>     x := new vector[N]
+     for f in features:
+         h := hash(f)
+         x[h mod N] += 1
+     return x
+</code></pre><p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):</p>
+<pre><code>     x := new vector[N]
+     for f in features:
+         h := hash(f)
+         idx := h mod N
+         if ξ(f) == 1:
+             x[idx] += 1
+         else:
+             x[idx] -= 1
+     return x
+</code></pre><p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="cit840uat005d3ps8gdo4sen4" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/ml/Feature Processing" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -242,7 +335,7 @@ blue
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="cit82orc70051p5s8chkzg4rw" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="cit840uas005a3ps8j1y5uei7" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/#ds-thread" class="article-comment-link">评论</a>
       
@@ -432,7 +525,7 @@ blue
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/23/algo/ml/" data-id="cit82or83000hp5s8d9afl63u" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/23/algo/ml/" data-id="cit840u72000j3ps86cgggspw" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/23/algo/ml/#ds-thread" class="article-comment-link">评论</a>
       
@@ -629,7 +722,7 @@ public void write(DataOutput out) throws IOException {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/" data-id="cit82or86000lp5s8zwczzf1g" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/" data-id="cit840u73000m3ps8lnawjpg6" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/#ds-thread" class="article-comment-link">评论</a>
       
@@ -743,7 +836,7 @@ public void write(DataOutput out) throws IOException {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/" data-id="cit82or83000ip5s8j5lpog2k" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/" data-id="cit840u73000l3ps8tj5owk7c" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -756,112 +849,8 @@ public void write(DataOutput out) throws IOException {
 
 
     
-      <article id="post-algo/java-beta-md" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/03/algo/java-beta-md/">Java beta distribution</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/algo/java-beta-md/">
-      <time datetime="2015-09-03T06:51:59.000Z" itemprop="datePublished">2015-09-03</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>维基百科介绍：<a href="https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83" target="_blank" rel="external">https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83</a><br><a href="https://en.wikipedia.org/wiki/Beta_distribution" target="_blank" rel="external">https://en.wikipedia.org/wiki/Beta_distribution</a></p>
-<pre><code class="java">import org.apache.commons.math3.distribution.BetaDistribution;
-
-public class test {
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        double x;
-        double b;
-        BetaDistribution beta = new BetaDistribution(40.0, 40.0);
-        for (int i = 0; i &lt; 100; i++) {
-            x = Math.random();
-            b = beta.inverseCumulativeProbability(x);
-            System.out.println(b);
-        }
-    }
-}
-</code></pre>
-<p>实现：</p>
-<pre><code class="java">public class BetaDistributionE {
-    public double getBetaDistribution(double alpha, double beta){
-    double a = alpha + beta;
-    double b;
-    if(Math.min(alpha, beta) &lt;= 1){
-        b = Math.max(1/alpha, 1/beta);
-    }
-    else{
-    b = Math.sqrt((a - 2) / (2*alpha*beta - a));
-    }
-    double c = alpha + 1/b;
-
-    double W = 0;
-    boolean reject = true;
-    for (reject = true; reject; ) {
-         double U1 = Math.random();
-         double U2 = Math.random();
-         double V = b * Math.log(U1/(1-U1));
-         W = alpha * Math.exp(V);
-         reject = (a*Math.log(a/(beta+W)) + c*V - Math.log(4)) &lt; Math.log(U1*U1*U2);
-     }
-     return (W / (beta + W));
-     }
-}
-</code></pre>
-<p>相关资源：</p>
-<ol>
-<li><a href="http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html" target="_blank" rel="external">http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html</a></li>
-<li><a href="http://stackoverflow.com/questions/13634170/java-using-beta-distribution-to-generate-a-random-number-from-0-to-1" target="_blank" rel="external">http://stackoverflow.com/questions/13634170/java-using-beta-distribution-to-generate-a-random-number-from-0-to-1</a></li>
-<li>go语言实现：<a href="https://github.com/purzelrakete/bandit/blob/4fca67f963006845de83860fcd849625251fce57/math/rand.go#L21" target="_blank" rel="external">https://github.com/purzelrakete/bandit/blob/4fca67f963006845de83860fcd849625251fce57/math/rand.go#L21</a></li>
-<li>非均衡抽样，在一个概率区间内抽样：Paper：Generating Beta Variates with Nonintegral Shape Parameters</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/java-beta-md/" data-id="cit82or87000np5s8p57bi56w" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/03/algo/java-beta-md/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/14/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/16/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/14/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/16/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -886,6 +875,23 @@ public class test {
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
               <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
+              <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/18/algo/ml/categorical_features/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/18/algo/ml/categorical_features/" class="title">Handling categorical features</a></p>
               <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
             </div>
           </li>
@@ -941,23 +947,6 @@ public class test {
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/09/algo/kaggle/gbid/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
-              <p class="item-title"><a href="/2016/09/09/algo/kaggle/gbid/" class="title">kaggle之Grupo Bimbo Inventory Demand</a></p>
-              <p class="item-date"><time datetime="2016-09-09T05:48:13.000Z" itemprop="datePublished">2016-09-09</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -967,7 +956,7 @@ public class test {
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -985,7 +974,7 @@ public class test {
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

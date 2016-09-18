@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        105
+        106
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -184,9 +184,67 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="cit82orc80054p5s88lqydgyj" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="cit840uap00543ps88eahetd2" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/ml/categorical_features" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/18/algo/ml/categorical_features/">Handling categorical features</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/09/18/algo/ml/categorical_features/">
+      <time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity"><a href="#Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity" class="headerlink" title="Handling categorical features: get_dummies, OneHotEncoder and multicollinearity"></a>Handling categorical features: get_dummies, OneHotEncoder and multicollinearity</h2><p>Get_dummies is a common way to create dummy variables for categorical features. While it is widely used, there are some drawbacks. First, it modifies your dataframe. When you have a categorical feature with hundreds of categories, get_dummies adds hundreds of dummy variables to the dataframe. And you may need to drop the categorical feature after creating dummies if you want to quickly assign features to X (independent variables). Another thing about get_dummies is, if there are many categorical features in the dataset, you will have to do get_dummies for every feature. Even constructing a loop to do so is a lot code to write.  </p>
+<p>If you do not want to mess up your data frame, or you are too lazy to write too much code (like me), OneHotEncoder is for you. OneHotEncoder is a sklearn preprocessing function. Unlike get_dummies, OHE does not add variables to your data frame. It creates dummy variables by transforming X, and all the dummies are stored in X. And you can specifiy which columns you want to create dummies when you fit X by OHE.  </p>
+<p>However, there are also some cons about OHE. First, OHE only works with categories that are integers over or equal to zero, which means if the category names are strings or negative numbers, you will have to do some transformation before fitting OHE.  </p>
+<p>Secondly, you may not be able to drop one dummy variable in order to avoid multicollinearity after fitting OHE as there are no separate variables in the dataframe. One way to address this problem is to use regularization (Lasso) with the model to drop redundant dummies. As there are two dummies which provide the exact same information, one of them must be dropped when minimizing the regularization term in the cost function.  </p>
+<p>A final con about OHE is that, you may not be able to tell which dummies are left and which are dropped. So, if you are doing bottom up feature selection, get_dummies may be a better choice as you can tell which features are selected and reassign X. Or if you are trying to identify the single effect of a certain dummy on y, get_dummies is the choice.</p>
+<p>From: <a href="https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x" target="_blank" rel="external">https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/" data-id="cit840uam004v3ps8ifjw9pb7" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -248,7 +306,7 @@ print array
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/" data-id="cit82or84000jp5s8a66sr101" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/" data-id="cit840u72000k3ps84utrckan" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/#ds-thread" class="article-comment-link">评论</a>
       
@@ -304,7 +362,7 @@ print array
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/12/system/linux_grep/" data-id="cit82or8u001ap5s84mg1mjr9" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/12/system/linux_grep/" data-id="cit840u7i00193ps85ho92t2b" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/12/system/linux_grep/#ds-thread" class="article-comment-link">评论</a>
       
@@ -380,7 +438,7 @@ print array
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/11/other/public_cdn/" data-id="cit82or8q0015p5s827p0sxwr" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/11/other/public_cdn/" data-id="cit840u88001i3ps83d4hkaer" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/11/other/public_cdn/#ds-thread" class="article-comment-link">评论</a>
       
@@ -393,265 +451,8 @@ print array
 
 
     
-      <article id="post-algo/kaggle/gbid" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/09/algo/kaggle/gbid/">kaggle之Grupo Bimbo Inventory Demand</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/09/09/algo/kaggle/gbid/">
-      <time datetime="2016-09-09T05:48:13.000Z" itemprop="datePublished">2016-09-09</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/kaggle/">kaggle</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="Grupo_Bimbo_Inventory_Demand"><a href="#Grupo_Bimbo_Inventory_Demand" class="headerlink" title="Grupo Bimbo Inventory Demand"></a>Grupo Bimbo Inventory Demand</h2><p><a href="https://github.com/lijingpeng/kaggle" target="_blank" rel="external">kaggle比赛解决方案集合</a></p>
-<p><a href="https://www.kaggle.com/c/grupo-bimbo-inventory-demand" target="_blank" rel="external">Grupo Bimbo Inventory Demand</a> 在这个比赛中，我们需要预测某个产品在某个销售点每周的需求量。数据包含墨西哥9周的销售数据。每周，货运车辆把产品发往销售点，每笔交易包含销售量和退货量，其中退货量主要由未销售出的和过期的产品组成。每个产品的需求量是指该商品这周的销售量减去下周的退货量。</p>
-<p>几点注意：</p>
-<ol>
-<li><p>测试数据中可能包含训练数据中不存在的商品。这在实际的生活中是十分常见的。所以模型必须很好的适应这一点。  </p>
-</li>
-<li><p>同一个客户id可能含有不同的客户名字，因为客户名并没有归一化  </p>
-</li>
-<li><p>需求量是一个大于等于零的值，Venta_uni_hoy - Dev_uni_proxima有时候为负是因为有时候退货量有时候累计了好几星期。  </p>
-</li>
-</ol>
-<pre><code>Semana — Week number (From Thursday to Wednesday) - 星期几
-Agencia_ID — Sales Depot ID - 销售地id
-Canal_ID — Sales Channel ID - 销售渠道id
-Ruta_SAK — Route ID (Several routes = Sales Depot)
-Cliente_ID — Client ID - 客户id
-NombreCliente — Client name - 客户名
-Producto_ID — Product ID - 产品id
-NombreProducto — Product Name - 产品名
-Venta_uni_hoy — Sales unit this week (integer) - 本周销量
-Venta_hoy — Sales this week (unit: pesos) - 本周销售额
-Dev_uni_proxima — Returns unit next week (integer) - 退货量
-Dev_proxima — Returns next week (unit: pesos) - 退货销售额
-Demanda_uni_equil — Adjusted Demand (integer) (This is the target you will predict) - 需求量（目标值）
-</code></pre><p>销量预测是一个非常有意义的问题，在实际应用中有多种应用价值，例如快递的发货量预测、运输规划等等。粗看起来，这个问题很像一个时间序列的预测问题，但是销售地、人、类目的组合太多，时间累积太短，因此不足以支撑时间序列预测。因此我们把他作为一个回归问题来进行分析。很遗憾的是数据量巨大，解压缩后训练集有7000万+数据，对于我的小破本来说已经无法支撑跑这么大数据集的机器学习任务了。在Kaggle中我找到了一个使用XGBoost的解决方案，下面来简单介绍一下思路和代码。一些关键代码的注释我翻译为中文了。</p>
-<p>特征工程的基本思路：</p>
-<p>计算第三周的统计特征用来预测第四周的需求、计算第四周的统计特征用来预测第五周的需求…</p>
-<pre><code class="python"># A Python implementation of the awesome script by Bohdan Pavlyshenko: http://tinyurl.com/jd6k2kr
-# and with inspiration from Rodolfo Lomascolo&#39;s  http://tinyurl.com/z6qmxfk
-#
-# Author: willgraf
-import numpy as np
-import pandas as pd
-import xgboost as xgb
-import pdb
-
-from sklearn.metrics import mean_squared_error
-from sklearn.cross_validation import train_test_split
-
-from subprocess import check_output
-
-## --------------------------全局变量-----------------------------------------
-#
-LAG_WEEK_VAL = 3 # set to 3 to use lagged features.
-BIG_LAG = True # set to True if to use more than 1 lagged_featc
-## --------------------------函数-----------------------------------------
-
-def get_dataframe():
-    &#39;&#39;&#39;
-    载入训练集和测试集，对于训练集我们设置目标为『Demanda_uni_equil』列，测试集目标列暂设定为0.
-    这里有一个全局变量LAG_WEEK_VAL，表示week大于LAG_WEEK_VAL的数据作为训练集（训练集中只有第三周到第9周的数据，目标是预测第10和11周的数据）
-    &#39;&#39;&#39;
-    print(&#39;Loading training data&#39;)
-    train = pd.read_csv(&#39;train.csv&#39;,
-                        usecols=[&#39;Semana&#39;,&#39;Agencia_ID&#39;,&#39;Ruta_SAK&#39;,&#39;Cliente_ID&#39;,&#39;Producto_ID&#39;,&#39;Demanda_uni_equil&#39;])
-
-    print(&#39;Loading test data&#39;)
-    test = pd.read_csv(&#39;test.csv&#39;,
-                       usecols=[&#39;Semana&#39;,&#39;Agencia_ID&#39;,&#39;Ruta_SAK&#39;,&#39;Cliente_ID&#39;,&#39;Producto_ID&#39;,&#39;id&#39;])
-
-    print(&#39;Merging train &amp; test data&#39;)
-    # lagged week features
-    train = train.loc[train[&#39;Semana&#39;] &gt; LAG_WEEK_VAL,]
-    train[&#39;id&#39;] = 0
-    test[&#39;Demanda_uni_equil&#39;] = None
-    train[&#39;target&#39;] = train[&#39;Demanda_uni_equil&#39;]
-    test[&#39;target&#39;] = 0
-    # 将训练集和测试集结合到一起
-    return pd.concat([train, test])
-
-def create_lagged_feats(data, num_lag):
-    &#39;&#39;&#39;
-    构建滞后的销量特征。即使用3~8周的销售数据构造特征，为接下来9、10、11周的预测做准备。
-    举例来说，第三周的销售数据统计特征作为第四周销量影响因子
-    特征列名命名为: target_lNUMBER
-    &#39;&#39;&#39;
-    # 根据这三列生成特征
-    keys = [&#39;Semana&#39;, &#39;Cliente_ID&#39;, &#39;Producto_ID&#39;]
-    lag_feat = &#39;target_l&#39; + str(num_lag)
-    print(&#39;Creating lagged feature: %s&#39; % lag_feat)
-    data1 = df.loc[: , [&#39;Cliente_ID&#39;, &#39;Producto_ID&#39;]]
-    # 对week数加1，为接下来的join做准备
-    data1[&#39;Semana&#39;] = df.loc[: , &#39;Semana&#39;].apply(lambda x: x + 1)
-    # 拷贝训练集中的目标列，并命名为target_lNUMBER，为了接下来求平均值做准备
-    data1[lag_feat] = df.loc[: , &#39;target&#39;]
-    # groupby &#39;Semana&#39;, &#39;Cliente_ID&#39;, &#39;Producto_ID&#39;并求target列的平均值
-    data1 = pd.groupby(data1, keys).mean().reset_index()
-    # JOIN：把平均值的统计特征join到data中
-    return pd.merge(data, data1, how=&#39;left&#39;, on=keys, left_index=False, right_index=False,
-                    suffixes=(&#39;&#39;, &#39;_lag&#39; + str(num_lag)), copy=False)
-
-def create_freq_feats(data, column_name):
-    &#39;&#39;&#39;
-    求列的频率特征，也就是求对应列每周的平均值
-    &#39;&#39;&#39;
-    freq_feat = column_name + &#39;_freq&#39;
-    print(&#39;Creating frequency feature: %s&#39; % freq_feat)
-    # 列+周的target计数
-    freq_frame = pd.groupby(data, [column_name, &#39;Semana&#39;])[&#39;target&#39;].count().reset_index()
-    freq_frame.rename(columns={&#39;target&#39;: freq_feat}, inplace=True)
-    # 计算平均值
-    freq_frame = pd.groupby(freq_frame, [column_name])[freq_feat].mean().reset_index()
-
-    # 将平均值join回原来的data中
-    return pd.merge(data, freq_frame, how=&#39;left&#39;, on=[column_name], left_index=False,
-                    right_index=False, suffixes=(&#39;&#39;, &#39;_freq&#39;), copy=False)
-
-def build_model(df, features, model_params):
-    &#39;&#39;&#39;
-    构建模型训练和测试
-      df: dataframe to be modled - 用来训练和测试的数据
-      features: column names of df that should be used in model - 特征列
-      params: {xgb_param_key: &#39;xgb_param_value&#39;} - 参数
-    &#39;&#39;&#39;
-    mask = df[&#39;Demanda_uni_equil&#39;].isnull()
-    test = df[mask]
-    train = df[~mask]
-    train.loc[: , &#39;target&#39;] = train.loc[: , &#39;target&#39;].apply(lambda x: np.log(x + 1))
-
-    xlf = xgb.XGBRegressor(**model_params)
-
-    x_train, x_test, y_train, y_test = train_test_split(train[features], train[&#39;target&#39;], test_size=0.01, random_state=1)
-
-    xlf.fit(x_train, y_train, eval_metric=&#39;rmse&#39;, verbose=1, eval_set=[(x_test, y_test)], early_stopping_rounds=100)
-    preds = xlf.predict(x_test)
-    print(&#39;RMSE of log(Demanda_uni_equil[x_test]) : %s&quot; &#39; % str(mean_squared_error(y_test,preds) ** 0.5))
-
-    # 预测第10周的销量
-    print(&#39;Predicting Demanda_uni_equil for Semana 10&#39;)
-    data_test_10 = test.loc[test[&#39;Semana&#39;] == 10, features]
-    preds = xlf.predict(data_test_10)
-    data_test_10[&#39;Demanda_uni_equil&#39;] = np.exp(preds) - 1
-    data_test_10[&#39;id&#39;] = test.loc[test[&#39;Semana&#39;] == 10, &#39;id&#39;].astype(int).tolist()
-
-    # 把预测的第10周的销量结果作为特征来预测11周的数据
-    print(&#39;Creating lagged demand feature for Semana 11&#39;)
-    data_test_lag = data_test_10[[&#39;Cliente_ID&#39;, &#39;Producto_ID&#39;]]
-    data_test_lag[&#39;target_l1&#39;] = data_test_10[&#39;Demanda_uni_equil&#39;]
-    data_test_lag = pd.groupby(data_test_lag,[&#39;Cliente_ID&#39;,&#39;Producto_ID&#39;]).mean().reset_index()
-
-    # 预测第11周的销量
-    print(&#39;Predicting Demanda_uni_equil for Semana 11&#39;)
-    data_test_11 = test.loc[test[&#39;Semana&#39;] == 11, features.difference([&#39;target_l1&#39;])]
-    data_test_11 = pd.merge(data_test_11, data_test_lag, how=&#39;left&#39;, on=[&#39;Cliente_ID&#39;, &#39;Producto_ID&#39;],
-                            left_index=False, right_index=False, sort=True, copy=False)
-
-    data_test_11 = data_test_11.loc[: , features]#.replace(np.nan, 0, inplace=True)
-    preds = xlf.predict(data_test_11)
-    data_test_11[&#39;Demanda_uni_equil&#39;] = np.exp(preds) - 1
-    data_test_11[&#39;id&#39;] = test.loc[test[&#39;Semana&#39;] == 11, &#39;id&#39;].astype(int).tolist()
-
-    return pd.concat([data_test_10.loc[: , [&#39;id&#39;, &#39;Demanda_uni_equil&#39;]],
-                      data_test_11.loc[: , [&#39;id&#39;, &#39;Demanda_uni_equil&#39;]]],
-                      axis=0, copy=True)
-
-## --------------------------执行-----------------------------------------
-
-## 首先载入训练集和测试集，并进行基本的数据预处理
-df = get_dataframe()
-
-## 构建特征
-for i in range(1, 1 + 5):
-    if not BIG_LAG and i &gt; 1:
-        break
-    df = create_lagged_feats(df, num_lag=i)
-
-df = df[df[&#39;Semana&#39;] &gt; 8]
-
-## 计算列频率特征
-for col_name in [&#39;Agencia_ID&#39;, &#39;Ruta_SAK&#39;, &#39;Cliente_ID&#39;, &#39;Producto_ID&#39;]:
-    df = create_freq_feats(df, col_name)
-
-## 选择部分特征来构建模型
-feature_names = df.columns.difference([&#39;id&#39;, &#39;target&#39;, &#39;Demanda_uni_equil&#39;])
-print(&#39;Data Cleaned.  Using features: %s&#39; % feature_names)
-
-## 模型参数
-xgb_params = {
-    &#39;max_depth&#39;: 10,
-    &#39;learning_rate&#39;: 0.01,
-    &#39;n_estimators&#39;: 75,
-    &#39;subsample&#39;: .85,
-    &#39;colsample_bytree&#39;: 0.7,
-    &#39;objective&#39;: &#39;reg:linear&#39;,
-    &#39;silent&#39;: True,
-    &#39;nthread&#39;: -1,
-    &#39;gamma&#39;: 0,
-    &#39;min_child_weight&#39;: 1,
-    &#39;max_delta_step&#39;: 0,
-    &#39;subsample&#39;: 0.85,
-    &#39;colsample_bytree&#39;: 0.7,
-    &#39;colsample_bylevel&#39;: 1,
-    &#39;reg_alpha&#39;: 0,
-    &#39;reg_lambda&#39;: 1,
-    &#39;scale_pos_weight&#39;: 1,
-    &#39;missing&#39;: None,
-    &#39;seed&#39;: 1
-}
-
-## 训练模型并写入结果
-submission = build_model(df, feature_names, xgb_params)
-submission.to_csv(&#39;submission.csv&#39;, index=False)
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/09/algo/kaggle/gbid/" data-id="cit82orbr003vp5s8y1s8y5da" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/09/09/algo/kaggle/gbid/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
       </nav>
     </section>
       
@@ -676,6 +477,23 @@ submission.to_csv(&#39;submission.csv&#39;, index=False)
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
               <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
+              <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/18/algo/ml/categorical_features/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/18/algo/ml/categorical_features/" class="title">Handling categorical features</a></p>
               <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
             </div>
           </li>
@@ -731,23 +549,6 @@ submission.to_csv(&#39;submission.csv&#39;, index=False)
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/09/algo/kaggle/gbid/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/kaggle/">kaggle</a></p>
-              <p class="item-title"><a href="/2016/09/09/algo/kaggle/gbid/" class="title">kaggle之Grupo Bimbo Inventory Demand</a></p>
-              <p class="item-date"><time datetime="2016-09-09T05:48:13.000Z" itemprop="datePublished">2016-09-09</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -757,7 +558,7 @@ submission.to_csv(&#39;submission.csv&#39;, index=False)
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">22</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">31</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -775,7 +576,7 @@ submission.to_csv(&#39;submission.csv&#39;, index=False)
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
