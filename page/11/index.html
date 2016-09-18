@@ -176,7 +176,7 @@ b = b[1:]      // len(b)=4, cap(b)=4
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="cit82639t006jaos8u6b0hshu" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="cit82nib1003bmss8rfgii8k0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/#ds-thread" class="article-comment-link">评论</a>
       
@@ -355,7 +355,7 @@ using namespace Jason::Flat::Test;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="cit826343000uaos8eeemlqsj" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="cit82ni7i0009mss85mj54n0h" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/20/dev/flatbuffers/#ds-thread" class="article-comment-link">评论</a>
       
@@ -413,137 +413,12 @@ using namespace Jason::Flat::Test;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="cit8263a0006zaos88jwo9ung" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="cit82nicf005qmss8uz9wxraa" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/ui_base/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/前端/">前端</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/11/18/dev/web/python_cgi_bin/">
-      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/web/">web</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <pre><code class="python">import BaseHTTPServer
-import CGIHTTPServer
-import cgitb; cgitb.enable()  ## This line enables CGI error reporting
-
-server = BaseHTTPServer.HTTPServer
-handler = CGIHTTPServer.CGIHTTPRequestHandler
-server_address = (&quot;0.0.0.0&quot;, 8082)
-handler.cgi_directories = [&quot;/cgi-bin&quot;]
-
-httpd = server(server_address, handler)
-httpd.serve_forever()
-</code></pre>
-<p>CGI-BIN下的py文件要有执行权限。</p>
-<pre><code class="python">#!/usr/bin/env python
-
-import cgi
-import urllib
-import json
-
-form = cgi.FieldStorage()
-
-query_str = form.getvalue(&#39;query&#39;)
-query = &quot;http://0.0.0.0:9999/query?query=%s&quot; % query_str
-
-exec_query = urllib.urlopen(query)
-print &quot;Status: 200 OK&quot;
-print &quot;Content-Type: application/json&quot;
-print &quot;&quot;
-print exec_query.read()
-</code></pre>
-<p>HTML:</p>
-<pre><code class="html">&lt;html&gt;
-    &lt;head&gt;
-        &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
-
-        &lt;title&gt;test&lt;/title&gt;
-        &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;&gt;&lt;/script&gt;
-        &lt;script&gt;
-
-            $(function()
-            {
-                $(&#39;#clickme&#39;).click(function(){
-                    alert(&#39;Im going to start processing&#39;);
-
-                    $.ajax({
-                        url: &quot;/scripts/ajaxpost.py&quot;,
-                        type: &quot;post&quot;,
-                        datatype:&quot;json&quot;,
-                        data: {&#39;key&#39;:&#39;value&#39;,&#39;key2&#39;:&#39;value2&#39;},
-                        success: function(response){
-                            alert(response.message);
-                            alert(response.keys);
-                        }
-                    });
-                });
-            });
-
-        &lt;/script&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-        &lt;button id=&quot;clickme&quot;&gt; click me &lt;/button&gt;
-    &lt;/body&gt;
-
-&lt;/html&gt;
-</code></pre>
-<p>参考： </p>
-<ul>
-<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
-<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
-<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="cit82639y006taos83bavwtuq" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
 
     </footer>
   </div>
@@ -683,9 +558,134 @@ if __name__ == &#39;__main__&#39;:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cit82639z006vaos8ug5djhwu" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="cit82nich005xmss8zx6memir" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/18/dev/web/python_cgi_bin/">
+      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <pre><code class="python">import BaseHTTPServer
+import CGIHTTPServer
+import cgitb; cgitb.enable()  ## This line enables CGI error reporting
+
+server = BaseHTTPServer.HTTPServer
+handler = CGIHTTPServer.CGIHTTPRequestHandler
+server_address = (&quot;0.0.0.0&quot;, 8082)
+handler.cgi_directories = [&quot;/cgi-bin&quot;]
+
+httpd = server(server_address, handler)
+httpd.serve_forever()
+</code></pre>
+<p>CGI-BIN下的py文件要有执行权限。</p>
+<pre><code class="python">#!/usr/bin/env python
+
+import cgi
+import urllib
+import json
+
+form = cgi.FieldStorage()
+
+query_str = form.getvalue(&#39;query&#39;)
+query = &quot;http://0.0.0.0:9999/query?query=%s&quot; % query_str
+
+exec_query = urllib.urlopen(query)
+print &quot;Status: 200 OK&quot;
+print &quot;Content-Type: application/json&quot;
+print &quot;&quot;
+print exec_query.read()
+</code></pre>
+<p>HTML:</p>
+<pre><code class="html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
+
+        &lt;title&gt;test&lt;/title&gt;
+        &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script&gt;
+
+            $(function()
+            {
+                $(&#39;#clickme&#39;).click(function(){
+                    alert(&#39;Im going to start processing&#39;);
+
+                    $.ajax({
+                        url: &quot;/scripts/ajaxpost.py&quot;,
+                        type: &quot;post&quot;,
+                        datatype:&quot;json&quot;,
+                        data: {&#39;key&#39;:&#39;value&#39;,&#39;key2&#39;:&#39;value2&#39;},
+                        success: function(response){
+                            alert(response.message);
+                            alert(response.keys);
+                        }
+                    });
+                });
+            });
+
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;button id=&quot;clickme&quot;&gt; click me &lt;/button&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>参考： </p>
+<ul>
+<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
+<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
+<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="cit82nice005mmss8ydmynkl4" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
