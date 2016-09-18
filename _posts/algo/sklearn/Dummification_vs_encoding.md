@@ -1,7 +1,7 @@
-title: XGBoost Categorical Variables: Dummification vs encoding
-date: 2016-09-18 10:00:00
+date: 2016-9-18
+title: XGBoost Categorical Variables - Dummification vs encoding
 tags:
-category: sklearn
+category: machine learning
 ---
 
 
