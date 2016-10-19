@@ -165,12 +165,16 @@
 <p>“Why 1x1 convolution ? Is it not redundant ?<br>Convolution with Kernel of size 3x3 Convolution with Kernel of size 1x1</p>
 <p><img src="/images/dl/full_padding_no_strides_transposed.gif" alt=""></p>
 <p><img src="/images/dl/full_padding_no_strides_transposed_small.gif" alt=""></p>
-<p>left : Convolution with kernel of size 3x3 right : Convolution with kernel of size 1x1</p>
+<p>top : Convolution with kernel of size 3x3 bottom : Convolution with kernel of size 1x1</p>
 <h2 id="Simple_Answer"><a href="#Simple_Answer" class="headerlink" title="Simple Answer"></a>Simple Answer</h2><p>Most simplistic explanation would be that 1x1 convolution leads to dimension reductionality. For example, an image of 200 x 200 with 50 features on convolution with 20 filters of 1x1 would result in size of 200 x 200 x 20. But then again, is this is the best way to do dimensionality reduction in the convoluational neural network? What about the efficacy vs efficiency?</p>
 <h2 id="Complex_Answer"><a href="#Complex_Answer" class="headerlink" title="Complex Answer"></a>Complex Answer</h2><h3 id="Feature_transformation"><a href="#Feature_transformation" class="headerlink" title="Feature transformation"></a>Feature transformation</h3><p>Although 1x1 convolution is a ‘feature pooling’ technique, there is more to it than just sum pooling of features across various channels/feature-maps of a given layer. 1x1 convolution acts like coordinate-dependent transformation in the filter space[1]. It is important to note here that this transformation is strictly linear, but in most of application of 1x1 convolution, it is succeeded by a non-linear activation layer like ReLU. This transformation is learned through the (stochastic) gradient descent. But an important distinction is that it suffers with less over-fitting due to smaller kernel size (1x1).</p>
 <h3 id="Deeper_Network"><a href="#Deeper_Network" class="headerlink" title="Deeper Network"></a>Deeper Network</h3><p>One by One convolution was first introduced in this paper titled Network in Network. In this paper, the author’s goal was to generate a deeper network without simply stacking more layers. It replaces few filters with a smaller perceptron layer with mixture of 1x1 and 3x3 convolutions. In a way, it can be seen as “going wide” instead of “deep”, but it should be noted that in machine learning terminology, ‘going wide’ is often meant as adding more data to the training. Combination of 1x1 (x F) convolution is mathematically equivalent to a multi-layer perceptron.[2].</p>
 <h3 id="Inception_Module"><a href="#Inception_Module" class="headerlink" title="Inception Module"></a>Inception Module</h3><p>In GoogLeNet architecture, 1x1 convolution is used for two purposes</p>
-<p>– To make network deep by adding an “inception module” like Network in Network paper, as described above.<br>– To reduce the dimensions inside this “inception module”.<br>– To add more non-linearity by having ReLU immediately after every 1x1 convolution.<br>Here is the scresnshot from the paper, which elucidates above points :</p>
+<ul>
+<li>To make network deep by adding an “inception module” like Network in Network paper, as described above.  </li>
+<li>To reduce the dimensions inside this “inception module”.  </li>
+<li>To add more non-linearity by having ReLU immediately after every 1x1 convolution.<br>Here is the scresnshot from the paper, which elucidates above points :</li>
+</ul>
 <p><img src="/images/dl/inception_1x1.png" alt=""></p>
 <p>1x1 convolutions in GoogLeNet<br>It can be seen from the image on the right, that 1x1 convolutions (in yellow), are specially used before 3x3 and 5x5 convolution to reduce the dimensions. It should be noted that a two step convolution operation can always to combined into one, but in this case and in most other deep learning networks, convolutions are followed by non-linear activation and hence convolutions are no longer linear operators and cannot be combined.</p>
 <p>In designing such a network, it is important to note that initial convolution kernel should be of size larger than 1x1 to have a receptive field capable of capturing locally spatial information. According to the NIN paper, 1x1 convolution is equivalent to cross-channel parametric pooling layer. From the paper - “This cascaded cross channel parameteric pooling structure allows complex and learnable interactions of cross channel information”.</p>
@@ -178,15 +182,22 @@
 <p>different orientation tuned receptive field profiles in the human visual cortex</p>
 <p><img src="/images/dl/RotBundleFiltersListPlot3D.gif" alt=""></p>
 <p>Different orientation tuned receptive field profiles in the human visual cortex Source</p>
-<h2 id="More_Uses"><a href="#More_Uses" class="headerlink" title="More Uses"></a>More Uses</h2><p>1x1 Convolution can be combined with Max pooling<br><img src="/images/dl/numerical_max_pooling.gif" alt=""></p>
+<h2 id="More_Uses"><a href="#More_Uses" class="headerlink" title="More Uses"></a>More Uses</h2><ul>
+<li>1x1 Convolution can be combined with Max pooling<br><img src="/images/dl/numerical_max_pooling.gif" alt=""></li>
+</ul>
 <p>Pooling with 1x1 convolution Pooling with 1x1 convolution</p>
-<p>1x1 Convolution with higher strides leads to even more redution in data by decreasing resolution, while losing very little non-spatially correlated information.<br>1x1 convolution with strides 1x1 convolution with strides<br><img src="/images/dl/no_padding_strides.gif" alt=""></p>
-<p>Replace fully connected layers with 1x1 convolutions as Yann LeCun believes they are the same - &gt; In Convolutional Nets, there is no such thing as “fully-connected layers”. There are only convolution layers with 1x1 convolution kernels and a full connection table. – Yann LeCun<br>Convolution gif images generated using this wonderful code, more images on 1x1 convolutions and 3x3 convolutions can be found here</p>
+<ul>
+<li><p>1x1 Convolution with higher strides leads to even more redution in data by decreasing resolution, while losing very little non-spatially correlated information.<br>1x1 convolution with strides 1x1 convolution with strides<br><img src="/images/dl/no_padding_strides.gif" alt=""></p>
+</li>
+<li><p>Replace fully connected layers with 1x1 convolutions as Yann LeCun believes they are the same - &gt; In Convolutional Nets, there is no such thing as “fully-connected layers”. There are only convolution layers with 1x1 convolution kernels and a full connection table. – Yann LeCun</p>
+</li>
+</ul>
+<p>Convolution gif images generated using this wonderful code, more images on 1x1 convolutions and 3x3 convolutions can be found here</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/" data-id="ciuh2xpq0004za8jhjz12ylsn" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/" data-id="ciuh3337i0058cqjhnstt8ru3" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/#ds-thread" class="article-comment-link">评论</a>
       
@@ -247,7 +258,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/11/dev/node_essentail/" data-id="ciuh2xpnd000va8jhcogimm18" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/11/dev/node_essentail/" data-id="ciuh3333j000ycqjh5itqx08d" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/11/dev/node_essentail/#ds-thread" class="article-comment-link">评论</a>
       
@@ -309,7 +320,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/10/dev/esop/" data-id="ciuh2xpn9000ma8jhjsoruciw" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/10/dev/esop/" data-id="ciuh3333a000qcqjhmsqn5k5g" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/10/dev/esop/#ds-thread" class="article-comment-link">评论</a>
       
@@ -367,7 +378,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/" data-id="ciuh2xpq4005ha8jhp6qr6u6q" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/" data-id="ciuh3337l005hcqjhyill3ysf" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/#ds-thread" class="article-comment-link">评论</a>
       
@@ -438,7 +449,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="ciuh2xpq5005ka8jhtgi6bgu1" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="ciuh3337m005kcqjhv1wxf8u5" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/#ds-thread" class="article-comment-link">评论</a>
       
