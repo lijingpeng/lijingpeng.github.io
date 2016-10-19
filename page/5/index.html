@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        108
+        109
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,275 @@
 
       
       <section id="main">
+      <article id="post-algo/kaggle/cf_crime" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/12/algo/kaggle/cf_crime/">kaggle之旧金山犯罪预测</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/08/12/algo/kaggle/cf_crime/">
+      <time datetime="2016-08-12T05:48:13.000Z" itemprop="datePublished">2016-08-12</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/kaggle/">kaggle</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><a href="https://www.kaggle.com/c/sf-crime" target="_blank" rel="external">kaggle地址</a><br><a href="https://github.com/lijingpeng/kaggle" target="_blank" rel="external">github地址</a></p>
+<h2 id="u6570_u636E_u6982_u89C8"><a href="#u6570_u636E_u6982_u89C8" class="headerlink" title="数据概览"></a>数据概览</h2><pre><code class="python">import pandas as pd
+import numpy as np
+
+# 载入数据
+train = pd.read_csv(&#39;~/kaggle/dataset/San_Francisco_Crime_Classification/train.csv&#39;, parse_dates = [&#39;Dates&#39;])
+test = pd.read_csv(&#39;~/kaggle/dataset/San_Francisco_Crime_Classification/test.csv&#39;, parse_dates = [&#39;Dates&#39;])
+</code></pre>
+<p>预览训练集</p>
+<pre><code class="python">print train.head(10)
+</code></pre>
+<pre><code>                Dates        Category                        Descript  \
+0 2015-05-13 23:53:00        WARRANTS                  WARRANT ARREST   
+1 2015-05-13 23:53:00  OTHER OFFENSES        TRAFFIC VIOLATION ARREST   
+2 2015-05-13 23:33:00  OTHER OFFENSES        TRAFFIC VIOLATION ARREST   
+3 2015-05-13 23:30:00   LARCENY/THEFT    GRAND THEFT FROM LOCKED AUTO   
+4 2015-05-13 23:30:00   LARCENY/THEFT    GRAND THEFT FROM LOCKED AUTO   
+5 2015-05-13 23:30:00   LARCENY/THEFT  GRAND THEFT FROM UNLOCKED AUTO   
+6 2015-05-13 23:30:00   VEHICLE THEFT               STOLEN AUTOMOBILE   
+7 2015-05-13 23:30:00   VEHICLE THEFT               STOLEN AUTOMOBILE   
+8 2015-05-13 23:00:00   LARCENY/THEFT    GRAND THEFT FROM LOCKED AUTO   
+9 2015-05-13 23:00:00   LARCENY/THEFT    GRAND THEFT FROM LOCKED AUTO   
+
+   DayOfWeek PdDistrict      Resolution                        Address  \
+0  Wednesday   NORTHERN  ARREST, BOOKED             OAK ST / LAGUNA ST   
+1  Wednesday   NORTHERN  ARREST, BOOKED             OAK ST / LAGUNA ST   
+2  Wednesday   NORTHERN  ARREST, BOOKED      VANNESS AV / GREENWICH ST   
+3  Wednesday   NORTHERN            NONE       1500 Block of LOMBARD ST   
+4  Wednesday       PARK            NONE      100 Block of BRODERICK ST   
+5  Wednesday  INGLESIDE            NONE            0 Block of TEDDY AV   
+6  Wednesday  INGLESIDE            NONE            AVALON AV / PERU AV   
+7  Wednesday    BAYVIEW            NONE       KIRKWOOD AV / DONAHUE ST   
+8  Wednesday   RICHMOND            NONE           600 Block of 47TH AV   
+9  Wednesday    CENTRAL            NONE  JEFFERSON ST / LEAVENWORTH ST   
+
+            X          Y  
+0 -122.425892  37.774599  
+1 -122.425892  37.774599  
+2 -122.424363  37.800414  
+3 -122.426995  37.800873  
+4 -122.438738  37.771541  
+5 -122.403252  37.713431  
+6 -122.423327  37.725138  
+7 -122.371274  37.727564  
+8 -122.508194  37.776601  
+9 -122.419088  37.807802  
+</code></pre><p>预览测试集合</p>
+<pre><code class="python">print test.head(10)
+</code></pre>
+<pre><code>   Id               Dates DayOfWeek PdDistrict                   Address  \
+0   0 2015-05-10 23:59:00    Sunday    BAYVIEW   2000 Block of THOMAS AV   
+1   1 2015-05-10 23:51:00    Sunday    BAYVIEW        3RD ST / REVERE AV   
+2   2 2015-05-10 23:50:00    Sunday   NORTHERN    2000 Block of GOUGH ST   
+3   3 2015-05-10 23:45:00    Sunday  INGLESIDE  4700 Block of MISSION ST   
+4   4 2015-05-10 23:45:00    Sunday  INGLESIDE  4700 Block of MISSION ST   
+5   5 2015-05-10 23:40:00    Sunday    TARAVAL     BROAD ST / CAPITOL AV   
+6   6 2015-05-10 23:30:00    Sunday  INGLESIDE   100 Block of CHENERY ST   
+7   7 2015-05-10 23:30:00    Sunday  INGLESIDE     200 Block of BANKS ST   
+8   8 2015-05-10 23:10:00    Sunday    MISSION     2900 Block of 16TH ST   
+9   9 2015-05-10 23:10:00    Sunday    CENTRAL      TAYLOR ST / GREEN ST   
+
+            X          Y  
+0 -122.399588  37.735051  
+1 -122.391523  37.732432  
+2 -122.426002  37.792212  
+3 -122.437394  37.721412  
+4 -122.437394  37.721412  
+5 -122.459024  37.713172  
+6 -122.425616  37.739351  
+7 -122.412652  37.739750  
+8 -122.418700  37.765165  
+9 -122.413935  37.798886  
+</code></pre><p>我们看到训练集和测试集都有Dates、DayOfWeek、PdDistrict三个特征，我们先从这三个特征入手。训练集中的Category是我们的预测目标，我们先对其进行编码，这里用到sklearn的LabelEncoder()，示例如下：</p>
+<pre><code class="python">from sklearn import preprocessing
+label = preprocessing.LabelEncoder()
+label.fit([1, 2, 2, 6])
+print label.transform([1, 1, 2, 6])
+</code></pre>
+<pre><code>[0 0 1 2]
+</code></pre><p>接下来我们对类别进行编码：</p>
+<pre><code class="python">crime = label.fit_transform(train.Category)
+</code></pre>
+<p>对于离散化的特征，有一种常用的特征处理方式是二值化处理，pandas中有get_dummies()函数，函数示例如下：</p>
+<pre><code class="python">pd.get_dummies(pd.Series(list(&#39;abca&#39;)))
+</code></pre>
+<div><br><table border="1" class="dataframe"><br>  <thead><br>    <tr style="text-align: right;"><br>      <th></th><br>      <th>a</th><br>      <th>b</th><br>      <th>c</th><br>    </tr><br>  </thead><br>  <tbody><br>    <tr><br>      <th>0</th><br>      <td>1.0</td><br>      <td>0.0</td><br>      <td>0.0</td><br>    </tr><br>    <tr><br>      <th>1</th><br>      <td>0.0</td><br>      <td>1.0</td><br>      <td>0.0</td><br>    </tr><br>    <tr><br>      <th>2</th><br>      <td>0.0</td><br>      <td>0.0</td><br>      <td>1.0</td><br>    </tr><br>    <tr><br>      <th>3</th><br>      <td>1.0</td><br>      <td>0.0</td><br>      <td>0.0</td><br>    </tr><br>  </tbody><br></table><br></div>
+
+
+
+<p>接下来对Dates、DayOfWeek、PdDistrict三个特征进行二值化处理：</p>
+<pre><code class="python">days = pd.get_dummies(train.DayOfWeek)
+district = pd.get_dummies(train.PdDistrict)
+hour = pd.get_dummies(train.Dates.dt.hour)
+</code></pre>
+<p>接下来重新组合训练集，并把类别附加上：</p>
+<pre><code class="python">train_data = pd.concat([days, district, hour], axis=1)
+train_data[&#39;crime&#39;] = crime
+</code></pre>
+<p>针对测试集做同样的处理：</p>
+<pre><code class="python">days = pd.get_dummies(test.DayOfWeek)
+district = pd.get_dummies(test.PdDistrict)
+hour = pd.get_dummies(test.Dates.dt.hour)
+test_data = pd.concat([days, district, hour], axis=1)
+</code></pre>
+<p>预览新的训练集和测试集：</p>
+<pre><code class="python">print train_data.head(10)
+print test_data.head(10)
+</code></pre>
+<pre><code>   Friday  Monday  Saturday  Sunday  Thursday  Tuesday  Wednesday  BAYVIEW  \
+0     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+1     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+2     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+3     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+4     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+5     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+6     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+7     0.0     0.0       0.0     0.0       0.0      0.0        1.0      1.0   
+8     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+9     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
+
+   CENTRAL  INGLESIDE  ...     15   16   17   18   19   20   21   22   23  \
+0      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+1      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+2      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+3      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+4      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+5      0.0        1.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+6      0.0        1.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+7      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+8      0.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+9      1.0        0.0  ...    0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0   
+
+   crime  
+0     37  
+1     21  
+2     21  
+3     16  
+4     16  
+5     16  
+6     36  
+7     36  
+8     16  
+9     16  
+
+[10 rows x 42 columns]
+   Friday  Monday  Saturday  Sunday  Thursday  Tuesday  Wednesday  BAYVIEW  \
+0     0.0     0.0       0.0     1.0       0.0      0.0        0.0      1.0   
+1     0.0     0.0       0.0     1.0       0.0      0.0        0.0      1.0   
+2     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+3     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+4     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+5     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+6     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+7     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+8     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+9     0.0     0.0       0.0     1.0       0.0      0.0        0.0      0.0   
+
+   CENTRAL  INGLESIDE ...    14   15   16   17   18   19   20   21   22   23  
+0      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+1      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+2      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+3      0.0        1.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+4      0.0        1.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+5      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+6      0.0        1.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+7      0.0        1.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+8      0.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+9      1.0        0.0 ...   0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  1.0  
+
+[10 rows x 41 columns]
+</code></pre><p>分割训练集和验证集(70%训练,30%验证)准备建模：</p>
+<pre><code class="python">from sklearn.cross_validation import train_test_split
+training, validation = train_test_split(train_data, train_size=0.6)
+</code></pre>
+<h2 id="u8D1D_u53F6_u65AF_u8BAD_u7EC3"><a href="#u8D1D_u53F6_u65AF_u8BAD_u7EC3" class="headerlink" title="贝叶斯训练"></a>贝叶斯训练</h2><pre><code class="python">from sklearn.metrics import log_loss
+from sklearn.naive_bayes import BernoulliNB
+
+model = BernoulliNB()
+feature_list = training.columns.tolist()
+feature_list = feature_list[:len(feature_list) - 1]
+print &#39;选取的特征列：&#39;, feature_list
+model.fit(training[feature_list], training[&#39;crime&#39;])
+
+predicted = np.array(model.predict_proba(validation[feature_list]))
+print &quot;朴素贝叶斯log损失为 %f&quot; % (log_loss(validation[&#39;crime&#39;], predicted))
+</code></pre>
+<pre><code>选取的特征列： [&#39;Friday&#39;, &#39;Monday&#39;, &#39;Saturday&#39;, &#39;Sunday&#39;, &#39;Thursday&#39;, &#39;Tuesday&#39;, &#39;Wednesday&#39;, &#39;BAYVIEW&#39;, &#39;CENTRAL&#39;, &#39;INGLESIDE&#39;, &#39;MISSION&#39;, &#39;NORTHERN&#39;, &#39;PARK&#39;, &#39;RICHMOND&#39;, &#39;SOUTHERN&#39;, &#39;TARAVAL&#39;, &#39;TENDERLOIN&#39;, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+朴素贝叶斯log损失为 2.581561
+</code></pre><h2 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><pre><code class="python">from sklearn.linear_model import LogisticRegression
+model = LogisticRegression(C=0.1)
+model.fit(training[feature_list], training[&#39;crime&#39;])
+
+predicted = np.array(model.predict_proba(validation[feature_list]))
+print &quot;逻辑回归log损失为 %f&quot; %(log_loss(validation[&#39;crime&#39;], predicted))
+</code></pre>
+<pre><code>逻辑回归log损失为 2.580102
+</code></pre><p>在测试集上运行：</p>
+<pre><code class="python">test_predicted = np.array(model.predict_proba(test_data[feature_list]))
+</code></pre>
+<p>保存结果：</p>
+<pre><code class="python">col_names = np.sort(train[&#39;Category&#39;].unique())
+print col_names
+result = pd.DataFrame(data=test_predicted, columns=col_names)
+result[&#39;Id&#39;] = test[&#39;Id&#39;].astype(int)
+result.to_csv(&#39;output.csv&#39;, index=False)
+</code></pre>
+<pre><code>[&#39;ARSON&#39; &#39;ASSAULT&#39; &#39;BAD CHECKS&#39; &#39;BRIBERY&#39; &#39;BURGLARY&#39; &#39;DISORDERLY CONDUCT&#39;
+ &#39;DRIVING UNDER THE INFLUENCE&#39; &#39;DRUG/NARCOTIC&#39; &#39;DRUNKENNESS&#39; &#39;EMBEZZLEMENT&#39;
+ &#39;EXTORTION&#39; &#39;FAMILY OFFENSES&#39; &#39;FORGERY/COUNTERFEITING&#39; &#39;FRAUD&#39; &#39;GAMBLING&#39;
+ &#39;KIDNAPPING&#39; &#39;LARCENY/THEFT&#39; &#39;LIQUOR LAWS&#39; &#39;LOITERING&#39; &#39;MISSING PERSON&#39;
+ &#39;NON-CRIMINAL&#39; &#39;OTHER OFFENSES&#39; &#39;PORNOGRAPHY/OBSCENE MAT&#39; &#39;PROSTITUTION&#39;
+ &#39;RECOVERED VEHICLE&#39; &#39;ROBBERY&#39; &#39;RUNAWAY&#39; &#39;SECONDARY CODES&#39;
+ &#39;SEX OFFENSES FORCIBLE&#39; &#39;SEX OFFENSES NON FORCIBLE&#39; &#39;STOLEN PROPERTY&#39;
+ &#39;SUICIDE&#39; &#39;SUSPICIOUS OCC&#39; &#39;TREA&#39; &#39;TRESPASS&#39; &#39;VANDALISM&#39; &#39;VEHICLE THEFT&#39;
+ &#39;WARRANTS&#39; &#39;WEAPON LAWS&#39;]
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-id="ciuh2xppn003qa8jho1bdqpxs" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-system/search_system_sample" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -307,7 +576,7 @@ for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="ciue5vqw4001chzjhxnkw21f9" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="ciuh2xpnt001ga8jhlhs7rx1c" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/11/system/search_system_sample/#ds-thread" class="article-comment-link">评论</a>
       
@@ -403,7 +672,7 @@ for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/" data-id="ciue5vqyq005nhzjhy8bc2tmo" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/" data-id="ciuh2xpq80062a8jhbdri8aw0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/#ds-thread" class="article-comment-link">评论</a>
       
@@ -461,7 +730,7 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/" data-id="ciue5vqz2006vhzjhlp9r1sis" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/" data-id="ciuh2xpqp007da8jhk3knt0t0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/#ds-thread" class="article-comment-link">评论</a>
       
@@ -683,205 +952,9 @@ y = -1;       //语句5
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/" data-id="ciue5vqys005zhzjhppzi6gft" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/" data-id="ciuh2xpqc006fa8jh5bld3qvp" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/mysql_partition" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/20/dev/mysql_partition/">MySQL 分区表原理及使用详解</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/03/20/dev/mysql_partition/">
-      <time datetime="2016-03-20T12:19:56.000Z" itemprop="datePublished">2016-03-20</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="1-__u4EC0_u4E48_u662F_u8868_u5206_u533A_uFF1F"><a href="#1-__u4EC0_u4E48_u662F_u8868_u5206_u533A_uFF1F" class="headerlink" title="1. 什么是表分区？"></a>1. 什么是表分区？</h2><p>表分区，是指根据一定规则，将数据库中的一张表分解成多个更小的，容易管理的部分。从逻辑上看，只有一张表，但是底层却是由多个物理分区组成。</p>
-<h2 id="2-__u8868_u5206_u533A_u4E0E_u5206_u8868_u7684_u533A_u522B"><a href="#2-__u8868_u5206_u533A_u4E0E_u5206_u8868_u7684_u533A_u522B" class="headerlink" title="2. 表分区与分表的区别"></a>2. 表分区与分表的区别</h2><p>分表：指的是通过一定规则，将一张表分解成多张不同的表。比如将用户订单记录根据时间成多个表。 分表与分区的区别在于：分区从逻辑上来讲只有一张表，而分表则是将一张表分解成多张表。</p>
-<h2 id="3-__u8868_u5206_u533A_u6709_u4EC0_u4E48_u597D_u5904_uFF1F"><a href="#3-__u8868_u5206_u533A_u6709_u4EC0_u4E48_u597D_u5904_uFF1F" class="headerlink" title="3. 表分区有什么好处？"></a>3. 表分区有什么好处？</h2><p>1） 分区表的数据可以分布在不同的物理设备上，从而高效地利用多个硬件设备。<br>2） 和单个磁盘或者文件系统相比，可以存储更多数据<br>3） 优化查询。在where语句中包含分区条件时，可以只扫描一个或多个分区表来提高查询效率；涉及sum和count语句时，也可以在多个分区上并行处理，最后汇总结果。<br>4） 分区表更容易维护。例如：想批量删除大量数据可以清除整个分区。<br>5） 可以使用分区表来避免某些特殊的瓶颈，例如InnoDB的单个索引的互斥访问，ext3问价你系统的inode锁竞争等。</p>
-<h2 id="4-__u5206_u533A_u8868_u7684_u9650_u5236_u56E0_u7D20"><a href="#4-__u5206_u533A_u8868_u7684_u9650_u5236_u56E0_u7D20" class="headerlink" title="4. 分区表的限制因素"></a>4. 分区表的限制因素</h2><p>1） 一个表最多只能有1024个分区<br>2） MySQL5.1中，分区表达式必须是整数，或者返回整数的表达式。在MySQL5.5中提供了非整数表达式分区的支持。<br>3） 如果分区字段中有主键或者唯一索引的列，那么多有主键列和唯一索引列都必须包含进来。即：分区字段要么不包含主键或者索引列，要么包含全部主键和索引列。<br>4） 分区表中无法使用外键约束<br>5） MySQL的分区适用于一个表的所有数据和索引，不能只对表数据分区而不对索引分区，也不能只对索引分区而不对表分区，也不能只对表的一部分数据分区。</p>
-<h2 id="5-__u5982_u4F55_u5224_u65AD_u5F53_u524DMySQL_u662F_u5426_u652F_u6301_u5206_u533A_uFF1F"><a href="#5-__u5982_u4F55_u5224_u65AD_u5F53_u524DMySQL_u662F_u5426_u652F_u6301_u5206_u533A_uFF1F" class="headerlink" title="5. 如何判断当前MySQL是否支持分区？"></a>5. 如何判断当前MySQL是否支持分区？</h2><p>命令：<code>show variables like &#39;%partition%&#39;</code> 运行结果:</p>
-<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; show variables like '%partition%';
-+-------------------+-------+
-| Variable_name     | Value |
-+-------------------+-------+
-| have_partitioning | YES   |
-+-------------------+-------+
-1 row in set (0.00 sec)</pre>
-
-<p>have_partintioning 的值为YES，表示支持分区。</p>
-<h2 id="6-_MySQL_u652F_u6301_u7684_u5206_u533A_u7C7B_u578B_u6709_u54EA_u4E9B_uFF1F"><a href="#6-_MySQL_u652F_u6301_u7684_u5206_u533A_u7C7B_u578B_u6709_u54EA_u4E9B_uFF1F" class="headerlink" title="6. MySQL支持的分区类型有哪些？"></a>6. MySQL支持的分区类型有哪些？</h2><p>1） RANGE分区：按照数据的区间范围分区<br>2） LIST分区：按照List中的值分区，与RANGE的区别是，range分区的区间范围值是连续的。<br>3） HASH分区<br>4） KEY分区 <strong>说明</strong> 在MySQL5.1版本中，RANGE,LIST,HASH分区要求分区键必须是INT类型，或者通过表达式返回INT类型。但KEY分区的时候，可以使用其他类型的列（BLOB，TEXT类型除外）作为分区键。</p>
-<h2 id="7-_Range_u5206_u533A"><a href="#7-_Range_u5206_u533A" class="headerlink" title="7. Range分区"></a>7. Range分区</h2><p>利用取值范围进行分区，区间要连续并且不能互相重叠。 语法：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">partition by range(exp)( //exp可以为列名或者表达式，比如to_date(created_date)
-    partition p0 values less than(num)
-)</pre>
-
-<p>例如：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; create table emp(
-    -&gt; id INT NOT null,
-    -&gt; store_id int not null
-    -&gt; )
-    -&gt; partition by range(store_id)(
-    -&gt;   partition p0 values less than(10),
-    -&gt;   partition p1 values less than(20)
-    -&gt; );</pre>
-
-<p>上面的语句创建了emp表，并根据store_id字段进行分区，小于10的值存在分区p0中，大于等于10，小于20的值存在分区p1中。 <strong>注意</strong> 每个分区都是按顺序定义的，从最低到最高。上面的语句，如果将less than(10) 和less than (20)的顺序颠倒过来，那么将报错，如下：</p>
-<pre class="brush: bash; gutter: false; first-line: 1">ERROR 1493 (HY000): VALUES LESS THAN value must be strictly increasing for each partition</pre>
-
-<p><strong>RANGE分区存在的问题</strong></p>
-<ol>
-<li>range范围覆盖问题：当插入的记录中对应的分区键的值不在分区定义的范围中的时候，插入语句会失败。 上面的例子，如果我插入一条store_id = 30的记录会怎么样呢？ 我们上面分区的时候，最大值是20，如果插入一条超过20的记录，会报错:<pre class="brush: bash; gutter: false; first-line: 1">mysql&gt; insert into emp(id,store_id) values(2,30);
-ERROR 1526 (HY000): Table has no partition for value 30</pre>
-
-</li>
-</ol>
-<p>提示30这个值没有对应的分区。 <strong>解决办法</strong> A. 预估分区键的值，及时新增分区。 B. 设置分区的时候，使用<code>values less than maxvalue</code> 子句,MAXVALUE表示最大的可能的整数值。 C. 尽量选择能够全部覆盖的字段作为分区键，比如一年的十二个月等。</p>
-<ol>
-<li>Range分区中，分区键的值如果是NULL，将被作为一个最小值来处理。</li>
-</ol>
-<h2 id="8-_LIST_u5206_u533A"><a href="#8-_LIST_u5206_u533A" class="headerlink" title="8. LIST分区"></a>8. LIST分区</h2><p></p><p>List分区是建立离散的值列表告诉数据库特定的值属于哪个分区。 语法：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">   partition by list(exp)( //exp为列名或者表达式
-        partition p0 values in (3,5)  //值为3和5的在p0分区
-    )</pre>
-
-<p>与Range不同的是，list分区不必生命任何特定的顺序。例如：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; create table emp1(
-    -&gt; id int not null,
-    -&gt; store_id int not null
-    -&gt; )
-    -&gt; partition by list(store_id)(
-    -&gt;   partition p0 values in (3,5),
-    -&gt;   partition p1 values in (2,6,7,9)
-    -&gt; );</pre>
-
-<p><strong>注意</strong> 如果插入的记录对应的分区键的值不在list分区指定的值中，将会插入失败。并且，list不能像range分区那样提供maxvalue。</p>
-<h2 id="9-_Columns_u5206_u533A"><a href="#9-_Columns_u5206_u533A" class="headerlink" title="9. Columns分区"></a>9. Columns分区</h2><p>MySQL5.5中引入的分区类型，解决了5.5版本之前range分区和list分区只支持整数分区的问题。 Columns分区可以细分为 range columns分区和 list columns分区，他们都支持整数，日期时间，字符串三大数据类型。（不支持text和blob类型作为分区键） columns分区还支持多列分区（这里不详细展开）。</p>
-<h2 id="10-_Hash_u5206_u533A"><a href="#10-_Hash_u5206_u533A" class="headerlink" title="10. Hash分区"></a>10. Hash分区</h2><p>Hash分区主要用来分散热点读，确保数据在预先确定个数的分区中尽可能平均分布。 MySQL支持两种Hash分区:常规Hash分区和线性Hash分区。 A. 常规Hash分区:使用取模算法 语法：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">partition by hash(store_id) partitions 4;</pre>
-
-<p>上面的语句，根据store_id对4取模，决定记录存储位置。 比如store_id = 234的记录，MOD(234,4)=2,所以会被存储在第二个分区。</p>
-<p><strong>常规Hash分区的优点和不足</strong> 优点：能够使数据尽可能的均匀分布。 缺点：不适合分区经常变动的需求。假如我要新增加两个分区，现在有6个分区，那么MOD(234,6)的结果与之前MOD(234,4)的结果就会出现不一致，这样大部分数据就需要重新计算分区。为解决此问题，MySQL提供了线性Hash分区。</p>
-<p>B. 线性Hash分区：分区函数是一个线性的2的幂的运算法则。 语法：</p>
-<pre class="brush: bash; gutter: false; first-line: 1">partition by LINER hash(store_id) partitions 4;</pre>
-
-<p>与常规Hash的不同在于，“Liner”关键字。 算法介绍: 假设要保存记录的分区编号为N,num为一个非负整数,表示分割成的分区的数量，那么N可以通过以下步骤得到：</p>
-<p>Step 1. 找到一个大于等于num的2的幂，这个值为V，V可以通过下面公式得到：</p>
-<p>V = Power(2,Ceiling(Log(2,num)))</p>
-<p>例如：刚才设置了4个分区，num=4，Log(2,4)=2,Ceiling(2)=2,power(2,2)=4,即V=4</p>
-<p>Step 2. 设置N=F(column_list)&amp;(V-1)</p>
-<p>例如：刚才V=4，store_id=234对应的N值，N = 234&amp;（4-1） =2</p>
-<p>Step 3. 当N&gt;=num,设置V=Ceiling(V/2),N=N&amp;(V-1)</p>
-<p>例如：store_id=234,N=2&lt;4,所以N就取值2，即可。</p>
-<p>假设上面算出来的N=5，那么V=Ceiling(2.5)=3,N=234&amp;(3-1)=1,即在第一个分区。</p>
-<p><strong>线性Hash的优点和不足</strong> 优点：在分区维护（增加，删除，合并，拆分分区）时，MySQL能够处理得更加迅速。 缺点：与常规Hash分区相比，线性Hash各个分区之间的数据分布不太均衡。</p>
-<h2 id="11-_Key_u5206_u533A"><a href="#11-_Key_u5206_u533A" class="headerlink" title="11. Key分区"></a>11. Key分区</h2><p>类似Hash分区，Hash分区允许使用用户自定义的表达式，但Key分区不允许使用用户自定义的表达式。Hash仅支持整数分区，而Key分区支持除了Blob和text的其他类型的列作为分区键。 语法:</p>
-<pre class="brush: bash; gutter: false; first-line: 1">partition by key(exp) partitions 4;//exp是零个或多个字段名的列表</pre>
-
-<p>key分区的时候，exp可以为空，如果为空，则默认使用主键作为分区键，没有主键的时候，会选择非空惟一键作为分区键。</p>
-<h2 id="12-__u5B50_u5206_u533A"><a href="#12-__u5B50_u5206_u533A" class="headerlink" title="12. 子分区"></a>12. 子分区</h2><p>分区表中对每个分区再次分割，又成为复合分区。</p>
-<h2 id="13-__u5206_u533A_u5BF9_u4E8ENULL_u503C_u7684_u5904_u7406"><a href="#13-__u5206_u533A_u5BF9_u4E8ENULL_u503C_u7684_u5904_u7406" class="headerlink" title="13. 分区对于NULL值的处理"></a>13. 分区对于NULL值的处理</h2><p>MySQ允许分区键值为NULL，分区键可能是一个字段或者一个用户定义的表达式。一般情况下，MySQL在分区的时候会把NULL值当作零值或者一个最小值进行处理。</p>
-<p><strong>注意</strong></p>
-<p>Range分区中：NULL值被当作最小值来处理</p>
-<p>List分区中：NULL值必须出现在列表中，否则不被接受</p>
-<p>Hash/Key分区中：NULL值会被当作零值来处理</p>
-<h2 id="14-__u5206_u533A_u7BA1_u7406"><a href="#14-__u5206_u533A_u7BA1_u7406" class="headerlink" title="14. 分区管理"></a>14. 分区管理</h2><p>分区管理包括对于分区的增加，删除，以及查询。</p>
-<p><strong>增加分区：</strong></p>
-<p>对于Range分区和LIst分区来说：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name add partition (partition p0 values ...(exp))</pre>
-
-<p>values后面的内容根据分区的类型不同而不同。</p>
-<p>对于Hash分区和Key分区来说：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name add partition partitions 8;</pre>
-
-<p>上面的语句，指的是新增8个分区 。</p>
-<p><strong>删除分区</strong></p>
-<p>对于Range分区和List分区：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name drop partition p0; //p0为要删除的分区名称</pre>
-
-<p>删除了分区，同时也将删除该分区中的所有数据。同时，如果删除了分区导致分区不能覆盖所有值，那么插入数据的时候会报错。</p>
-<p>对于Hash和Key分区：</p>
-<pre class="brush: sql; gutter: false; first-line: 1">alter table table_name coalesce partition 2; //将分区缩减到2个</pre>
-
-<p><strong>coalesce [ˌkəʊəˈles] vi. 联合，合并</strong></p>
-<p>分区查询 1）查询某张表一共有多少个分区</p>
-<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; select 
- -&gt;   partition_name,
- -&gt;   partition_expression,
- -&gt;   partition_description,
- -&gt;   table_rows
- -&gt; from 
- -&gt;   INFORMATION_SCHEMA.partitions
- -&gt; where
- -&gt;   table_schema='test'
- -&gt;   and table_name = 'emp';
-+----------------+----------------------+-----------------------+------------+
-| partition_name | partition_expression | partition_description | table_rows |
-+----------------+----------------------+-----------------------+------------+
-| p0             | store_id             | 10                    |          0 |
-| p1             | store_id             | 20                    |          1 |
-+----------------+----------------------+-----------------------+------------+</pre>
-
-<p>即，可以从information_schema.partitions表中查询。</p>
-<p>2）查看执行计划，判断查询数据是否进行了分区过滤</p>
-<pre class="brush: sql; gutter: false; first-line: 1">mysql&gt; explain partitions select * from emp where store_id=10 \G;
-*************************** 1. row ***************************
-        id: 1
-select_type: SIMPLE
-     table: emp
-partitions: p1
-      type: system
-possible_keys: NULL
-       key: NULL
-   key_len: NULL
-       ref: NULL
-      rows: 1
-     Extra: 
-1 row in set (0.00 sec)</pre>
-
-<p>上面的结果：partitions:p1 表示数据在p1分区进行检索。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/20/dev/mysql_partition/" data-id="ciue5vqvd000vhzjhdr9cfhvx" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/03/20/dev/mysql_partition/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -904,6 +977,24 @@ possible_keys: NULL
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="thumbnail">
+  
+    <span style="background-image:url(/images/dl/full_padding_no_strides_transposed.gif
+)" alt="One by One [ 1 x 1 ] Convolution - counter-intuitively useful" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="title">One by One [ 1 x 1 ] Convolution - counter-intuitively useful</a></p>
+              <p class="item-date"><time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished">2016-10-15</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -973,23 +1064,6 @@ possible_keys: NULL
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/09/14/algo/one_hot_encode/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/09/14/algo/one_hot_encode/" class="title">One-Hot Encoding</a></p>
-              <p class="item-date"><time datetime="2016-09-13T16:00:00.000Z" itemprop="datePublished">2016-09-14</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -999,7 +1073,7 @@ possible_keys: NULL
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -1017,7 +1091,7 @@ possible_keys: NULL
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>One by One [ 1 x 1 ] Convolution - counter-intuitively useful | Frank</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Whenever I discuss or show GoogleNet architecture, one question always comes up -
+“Why 1x1 convolution ? Is it not redundant ?Convolution with Kernel of size 3x3 Convolution with Kernel of size 1x1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="One by One [ 1 x 1 ] Convolution - counter-intuitively useful">
+<meta property="og:url" content="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/index.html">
+<meta property="og:site_name" content="Frank">
+<meta property="og:description" content="Whenever I discuss or show GoogleNet architecture, one question always comes up -
+“Why 1x1 convolution ? Is it not redundant ?Convolution with Kernel of size 3x3 Convolution with Kernel of size 1x1">
+<meta property="og:image" content="http://www.notehub.cn/images/dl/full_padding_no_strides_transposed.gif">
+<meta property="og:image" content="http://www.notehub.cn/images/dl/full_padding_no_strides_transposed_small.gif">
+<meta property="og:image" content="http://www.notehub.cn/images/dl/inception_1x1.png">
+<meta property="og:image" content="http://www.notehub.cn/images/dl/RotBundleFiltersListPlot3D.gif">
+<meta property="og:image" content="http://www.notehub.cn/images/dl/numerical_max_pooling.gif">
+<meta property="og:image" content="http://www.notehub.cn/images/dl/no_padding_strides.gif">
+<meta property="og:updated_time" content="2016-10-19T15:34:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="One by One [ 1 x 1 ] Convolution - counter-intuitively useful">
+<meta name="twitter:description" content="Whenever I discuss or show GoogleNet architecture, one question always comes up -
+“Why 1x1 convolution ? Is it not redundant ?Convolution with Kernel of size 3x3 Convolution with Kernel of size 1x1">
+<meta name="twitter:image" content="http://www.notehub.cn/images/dl/full_padding_no_strides_transposed.gif">
+  
+  
+    <link rel="icon" href="favicon.png">
+  
+  <link href='//fonts.css.network/css?family=Open+Sans:400italic,400,600' rel='stylesheet' type='text/css'>
+  <link href="//fonts.css.network/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  
+
+  
+</head>
+
+<body>
+  <div id="container">
+    <header id="header">
+  <div id="header-main" class="header-inner">
+    <div class="outer">
+      <a href="/" id="logo"><i class="logo" style="background-image: url(/css/images/logo.jpg)"></i><span class="site-title">Frank</span></a>
+      <nav id="main-nav">
+        
+          <a class="main-nav-link" href="/.">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+          <a class="main-nav-link" href="/categories">Categories</a>
+        
+          <a class="main-nav-link" href="/tags">Tags</a>
+        
+          <a class="main-nav-link" href="/about">About</a>
+        
+      </nav>
+      
+        <nav id="sub-nav">
+          <div class="profile" id="profile-nav">
+            <a id="profile-anchor" href="javascript:;"><img class="avatar" src="/css/images/logo.png"><i class="fa fa-caret-down"></i></a>
+          </div>
+        </nav>
+      
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"> </button><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+      </div>
+    </div>
+  </div>
+  <div id="main-nav-mobile" class="header-sub header-inner">
+    <table class="menu outer">
+      <tr>
+        
+          <td><a class="main-nav-link" href="/.">Home</a></td>
+        
+          <td><a class="main-nav-link" href="/archives">Archives</a></td>
+        
+          <td><a class="main-nav-link" href="/categories">Categories</a></td>
+        
+          <td><a class="main-nav-link" href="/tags">Tags</a></td>
+        
+          <td><a class="main-nav-link" href="/about">About</a></td>
+        
+        <td>
+          <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><input type="hidden" name="sitesearch" value="http://www.notehub.cn"></form>
+        </td>
+      </tr>
+    </table>
+  </div>
+</header>
+
+    <div class="outer">
+      
+        <aside id="profile">
+  <div class="inner profile-inner">
+    <div class="base-info profile-block">
+      <img id="avatar" src="/css/images/logo.png">
+      <h2 id="name">Li Jingpeng</h2>
+      <!-- <h3 id="title">undefined</h3> -->
+      <span id="location"><i class="fa fa-map-marker"></i>Hangzhou, China</span>
+      <a id="follow" href="Https://weibo.com/329299516">关注我</a>
+    </div>
+    <div class="article-info profile-block">
+      <div class="article-info-block">
+        109
+        <span>文章</span>
+      </div>
+      <div class="article-info-block">
+        42
+        <span>标签</span>
+      </div>
+    </div>
+    
+    <div class="contact-info profile-block">
+      <table class="contact-list">
+        <tr>
+          
+          <td><a href="https://github.com/lijingpeng" target="_blank" title="github"><i class="fa fa-github"></i></a></td>
+          
+          <td><a href="#" target="_blank" title="twitter"><i class="fa fa-twitter"></i></a></td>
+          
+          <td><a href="#" target="_blank" title="facebook"><i class="fa fa-facebook"></i></a></td>
+          
+          <td><a href="/me@lijingpeng.org" target="_blank" title="email"><i class="fa fa-email"></i></a></td>
+          
+          <td><a href="/atom.xml" target="_blank" title="rss"><i class="fa fa-rss"></i></a></td>
+          
+        </tr>
+      </table>
+    </div>
+    
+    
+  </div>
+</aside>
+
+      
+      <section id="main"><article id="post-algo/ml/OnebyOne_Convolution" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      One by One [ 1 x 1 ] Convolution - counter-intuitively useful
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/10/15/algo/ml/OnebyOne_Convolution/">
+      <time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished">2016-10-15</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>Whenever I discuss or show GoogleNet architecture, one question always comes up -</p>
+<p>“Why 1x1 convolution ? Is it not redundant ?<br>Convolution with Kernel of size 3x3 Convolution with Kernel of size 1x1</p>
+<p><img src="/images/dl/full_padding_no_strides_transposed.gif" alt=""></p>
+<p><img src="/images/dl/full_padding_no_strides_transposed_small.gif" alt=""></p>
+<p>left : Convolution with kernel of size 3x3 right : Convolution with kernel of size 1x1</p>
+<h2 id="Simple_Answer"><a href="#Simple_Answer" class="headerlink" title="Simple Answer"></a>Simple Answer</h2><p>Most simplistic explanation would be that 1x1 convolution leads to dimension reductionality. For example, an image of 200 x 200 with 50 features on convolution with 20 filters of 1x1 would result in size of 200 x 200 x 20. But then again, is this is the best way to do dimensionality reduction in the convoluational neural network? What about the efficacy vs efficiency?</p>
+<h2 id="Complex_Answer"><a href="#Complex_Answer" class="headerlink" title="Complex Answer"></a>Complex Answer</h2><h3 id="Feature_transformation"><a href="#Feature_transformation" class="headerlink" title="Feature transformation"></a>Feature transformation</h3><p>Although 1x1 convolution is a ‘feature pooling’ technique, there is more to it than just sum pooling of features across various channels/feature-maps of a given layer. 1x1 convolution acts like coordinate-dependent transformation in the filter space[1]. It is important to note here that this transformation is strictly linear, but in most of application of 1x1 convolution, it is succeeded by a non-linear activation layer like ReLU. This transformation is learned through the (stochastic) gradient descent. But an important distinction is that it suffers with less over-fitting due to smaller kernel size (1x1).</p>
+<h3 id="Deeper_Network"><a href="#Deeper_Network" class="headerlink" title="Deeper Network"></a>Deeper Network</h3><p>One by One convolution was first introduced in this paper titled Network in Network. In this paper, the author’s goal was to generate a deeper network without simply stacking more layers. It replaces few filters with a smaller perceptron layer with mixture of 1x1 and 3x3 convolutions. In a way, it can be seen as “going wide” instead of “deep”, but it should be noted that in machine learning terminology, ‘going wide’ is often meant as adding more data to the training. Combination of 1x1 (x F) convolution is mathematically equivalent to a multi-layer perceptron.[2].</p>
+<h3 id="Inception_Module"><a href="#Inception_Module" class="headerlink" title="Inception Module"></a>Inception Module</h3><p>In GoogLeNet architecture, 1x1 convolution is used for two purposes</p>
+<p>– To make network deep by adding an “inception module” like Network in Network paper, as described above.<br>– To reduce the dimensions inside this “inception module”.<br>– To add more non-linearity by having ReLU immediately after every 1x1 convolution.<br>Here is the scresnshot from the paper, which elucidates above points :</p>
+<p><img src="/images/dl/inception_1x1.png" alt=""></p>
+<p>1x1 convolutions in GoogLeNet<br>It can be seen from the image on the right, that 1x1 convolutions (in yellow), are specially used before 3x3 and 5x5 convolution to reduce the dimensions. It should be noted that a two step convolution operation can always to combined into one, but in this case and in most other deep learning networks, convolutions are followed by non-linear activation and hence convolutions are no longer linear operators and cannot be combined.</p>
+<p>In designing such a network, it is important to note that initial convolution kernel should be of size larger than 1x1 to have a receptive field capable of capturing locally spatial information. According to the NIN paper, 1x1 convolution is equivalent to cross-channel parametric pooling layer. From the paper - “This cascaded cross channel parameteric pooling structure allows complex and learnable interactions of cross channel information”.</p>
+<p>Cross channel information learning (cascaded 1x1 convolution) is biologically inspired because human visual cortex have receptive fields (kernels) tuned to different orientation. For e.g</p>
+<p>different orientation tuned receptive field profiles in the human visual cortex</p>
+<p><img src="/images/dl/RotBundleFiltersListPlot3D.gif" alt=""></p>
+<p>Different orientation tuned receptive field profiles in the human visual cortex Source</p>
+<h2 id="More_Uses"><a href="#More_Uses" class="headerlink" title="More Uses"></a>More Uses</h2><p>1x1 Convolution can be combined with Max pooling<br><img src="/images/dl/numerical_max_pooling.gif" alt=""></p>
+<p>Pooling with 1x1 convolution Pooling with 1x1 convolution</p>
+<p>1x1 Convolution with higher strides leads to even more redution in data by decreasing resolution, while losing very little non-spatially correlated information.<br>1x1 convolution with strides 1x1 convolution with strides<br><img src="/images/dl/no_padding_strides.gif" alt=""></p>
+<p>Replace fully connected layers with 1x1 convolutions as Yann LeCun believes they are the same - &gt; In Convolutional Nets, there is no such thing as “fully-connected layers”. There are only convolution layers with 1x1 convolution kernels and a full connection table. – Yann LeCun<br>Convolution gif images generated using this wonderful code, more images on 1x1 convolutions and 3x3 convolutions can be found here</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/" data-id="ciuh2xpq0004za8jhjz12ylsn" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/10/11/dev/node_essentail/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Node/npm安装基本问题</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/" data-title="One by One [ 1 x 1 ] Convolution - counter-intuitively useful" data-url="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by DuoShuo.</a></noscript>
+      </div>
+  </section>
+
+</section>
+      
+        <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="thumbnail">
+  
+    <span style="background-image:url(/images/dl/full_padding_no_strides_transposed.gif
+)" alt="One by One [ 1 x 1 ] Convolution - counter-intuitively useful" class="thumbnail-image"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="title">One by One [ 1 x 1 ] Convolution - counter-intuitively useful</a></p>
+              <p class="item-date"><time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished">2016-10-15</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/10/11/dev/node_essentail/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/10/11/dev/node_essentail/" class="title">Node/npm安装基本问题</a></p>
+              <p class="item-date"><time datetime="2016-10-11T12:19:56.000Z" itemprop="datePublished">2016-10-11</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/10/10/dev/esop/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/10/10/dev/esop/" class="title">Elasticsearch-索引优化</a></p>
+              <p class="item-date"><time datetime="2016-10-10T02:19:56.000Z" itemprop="datePublished">2016-10-10</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/18/algo/ml/categorical_features/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/18/algo/ml/categorical_features/" class="title">Handling categorical features</a></p>
+              <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
+              <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
+            </div>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Apache/" style="font-size: 10px;">Apache</a> <a href="/tags/Bandits/" style="font-size: 12.5px;">Bandits</a> <a href="/tags/Elasticsearch-docker/" style="font-size: 10px;">Elasticsearch, docker</a> <a href="/tags/FlatBuffers/" style="font-size: 10px;">FlatBuffers</a> <a href="/tags/Google/" style="font-size: 10px;">Google</a> <a href="/tags/Granger-causality/" style="font-size: 10px;">Granger causality</a> <a href="/tags/GridSearchCV/" style="font-size: 10px;">GridSearchCV</a> <a href="/tags/HTTPS/" style="font-size: 10px;">HTTPS</a> <a href="/tags/Jquery/" style="font-size: 10px;">Jquery</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Mock/" style="font-size: 10px;">Mock</a> <a href="/tags/Monument-Vallay/" style="font-size: 10px;">Monument Vallay</a> <a href="/tags/Mysql/" style="font-size: 12.5px;">Mysql</a> <a href="/tags/PPTP-vpn/" style="font-size: 12.5px;">PPTP, vpn</a> <a href="/tags/Photoshop/" style="font-size: 10px;">Photoshop</a> <a href="/tags/Pipeline/" style="font-size: 10px;">Pipeline</a> <a href="/tags/Shadowsocks/" style="font-size: 10px;">Shadowsocks</a> <a href="/tags/ad/" style="font-size: 10px;">ad</a> <a href="/tags/apache/" style="font-size: 10px;">apache</a> <a href="/tags/blade/" style="font-size: 10px;">blade</a> <a href="/tags/crontab/" style="font-size: 10px;">crontab</a> <a href="/tags/docker/" style="font-size: 15px;">docker</a> <a href="/tags/elasticsearch/" style="font-size: 12.5px;">elasticsearch</a> <a href="/tags/font/" style="font-size: 10px;">font</a> <a href="/tags/github/" style="font-size: 10px;">github</a> <a href="/tags/go/" style="font-size: 17.5px;">go</a> <a href="/tags/hashmap/" style="font-size: 10px;">hashmap</a> <a href="/tags/kaggle/" style="font-size: 20px;">kaggle</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/linux-ldd-依赖关系/" style="font-size: 10px;">linux, ldd, 依赖关系</a> <a href="/tags/lucene/" style="font-size: 10px;">lucene</a> <a href="/tags/nio/" style="font-size: 10px;">nio</a> <a href="/tags/pagerank/" style="font-size: 10px;">pagerank</a> <a href="/tags/photo/" style="font-size: 10px;">photo</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/swift-llvm/" style="font-size: 10px;">swift, llvm</a> <a href="/tags/前端/" style="font-size: 10px;">前端</a> <a href="/tags/广告/" style="font-size: 12.5px;">广告</a> <a href="/tags/开源，许可/" style="font-size: 10px;">开源，许可</a> <a href="/tags/澳门/" style="font-size: 10px;">澳门</a> <a href="/tags/监控，zabbix/" style="font-size: 10px;">监控，zabbix</a> <a href="/tags/贝叶斯/" style="font-size: 10px;">贝叶斯</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+  <div id="toTop" class="fa fa-chevron-up"></div>
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 Li Jingpeng<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+    </div>
+  </div>
+</footer>
+    
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lijingpeng"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+<script src="//ajax.css.network/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
