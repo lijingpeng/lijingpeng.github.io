@@ -126,7 +126,7 @@
 
       
       <section id="main">
-      <article id="post-algo/ml/categorical_features" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-algo/sklearn/Dummification_vs_encoding" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -135,7 +135,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/18/algo/ml/categorical_features/">Handling categorical features</a>
+      <a class="article-title" href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/">XGBoost Categorical Variables - Dummification vs encoding</a>
     </h1>
   
 
@@ -143,7 +143,7 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2016/09/18/algo/ml/categorical_features/">
+    <a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/">
       <time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time>
     </a>
   </div>
@@ -161,19 +161,32 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <h2 id="Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity"><a href="#Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity" class="headerlink" title="Handling categorical features: get_dummies, OneHotEncoder and multicollinearity"></a>Handling categorical features: get_dummies, OneHotEncoder and multicollinearity</h2><p>Get_dummies is a common way to create dummy variables for categorical features. While it is widely used, there are some drawbacks. First, it modifies your dataframe. When you have a categorical feature with hundreds of categories, get_dummies adds hundreds of dummy variables to the dataframe. And you may need to drop the categorical feature after creating dummies if you want to quickly assign features to X (independent variables). Another thing about get_dummies is, if there are many categorical features in the dataset, you will have to do get_dummies for every feature. Even constructing a loop to do so is a lot code to write.  </p>
-<p>If you do not want to mess up your data frame, or you are too lazy to write too much code (like me), OneHotEncoder is for you. OneHotEncoder is a sklearn preprocessing function. Unlike get_dummies, OHE does not add variables to your data frame. It creates dummy variables by transforming X, and all the dummies are stored in X. And you can specifiy which columns you want to create dummies when you fit X by OHE.  </p>
-<p>However, there are also some cons about OHE. First, OHE only works with categories that are integers over or equal to zero, which means if the category names are strings or negative numbers, you will have to do some transformation before fitting OHE.  </p>
-<p>Secondly, you may not be able to drop one dummy variable in order to avoid multicollinearity after fitting OHE as there are no separate variables in the dataframe. One way to address this problem is to use regularization (Lasso) with the model to drop redundant dummies. As there are two dummies which provide the exact same information, one of them must be dropped when minimizing the regularization term in the cost function.  </p>
-<p>A final con about OHE is that, you may not be able to tell which dummies are left and which are dropped. So, if you are doing bottom up feature selection, get_dummies may be a better choice as you can tell which features are selected and reassign X. Or if you are trying to identify the single effect of a certain dummy on y, get_dummies is the choice.</p>
-<p>From: <a href="https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x" target="_blank" rel="external">https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x</a></p>
+        <p>Question:</p>
+<p>When using XGBoost we need to convert categorical variables into numeric.</p>
+<p>Would there be any difference in performance/evaluation metrics between the methods of:</p>
+<p>dummifying your categorical variables<br>encoding your categorical variables from e.g. (a,b,c) to (1,2,3)<br>ALSO:</p>
+<p>Would there be any reasons not to go with method 2 by using for example labelencoder?</p>
+<p>Answer:</p>
+<p>xgboost only deals with numeric columns.</p>
+<p>if you have a feature [a,b,b,c] which describes a categorical variable (i.e. no numeric relationship)</p>
+<p>Using LabelEncoder you will simply have this:</p>
+<pre><code>array([0, 1, 1, 2])
+</code></pre><p>Xgboost will wrongly interpret this feature as having a numeric relationship! This just maps each string (‘a’,’b’,’c’) to an integer, nothing more.</p>
+<p>Proper way</p>
+<p>Using OneHotEncoder you will eventually get to this:</p>
+<pre><code>array([[ 1.,  0.,  0.],
+       [ 0.,  1.,  0.],
+       [ 0.,  1.,  0.],
+       [ 0.,  0.,  1.]])
+</code></pre><p>This is the proper representation of a categorical variable for xgboost or any other machine learning tool.</p>
+<p>Pandas get_dummies is a nice tool for creating dummy variables (which is easier to use, in my opinion).</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/" data-id="ciusfm44x005g60jhjr2agqwk" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="ciusgjlaf0064rwjhzc328yr0" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -235,7 +248,7 @@ print array
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/" data-id="ciusfm3ya000n60jhg68zhxq1" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/" data-id="ciusgjl7c000nrwjh3qfp5pwv" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/#ds-thread" class="article-comment-link">评论</a>
       
@@ -291,7 +304,7 @@ print array
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/12/system/linux_grep/" data-id="ciusfm40w001i60jhxt49qgmw" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/12/system/linux_grep/" data-id="ciusgjl7t001hrwjhj6udo6nz" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/12/system/linux_grep/#ds-thread" class="article-comment-link">评论</a>
       
@@ -367,7 +380,7 @@ print array
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/11/other/public_cdn/" data-id="ciusfm40o001c60jhzj82ik2u" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/11/other/public_cdn/" data-id="ciusgjl7q001drwjhw5gxi7h5" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/11/other/public_cdn/#ds-thread" class="article-comment-link">评论</a>
       
@@ -622,7 +635,7 @@ submission.to_csv(&#39;submission.csv&#39;, index=False)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/09/algo/kaggle/gbid/" data-id="ciusfm447004460jhduav8kxh" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/09/algo/kaggle/gbid/" data-id="ciusgjl9y0044rwjh85qf5yd9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/09/algo/kaggle/gbid/#ds-thread" class="article-comment-link">评论</a>
       
@@ -722,7 +735,7 @@ submission.to_csv(&#39;submission.csv&#39;, index=False)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="thumbnail">
+              <a href="/2016/09/18/algo/ml/categorical_features/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -731,7 +744,7 @@ submission.to_csv(&#39;submission.csv&#39;, index=False)
             
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
+              <p class="item-title"><a href="/2016/09/18/algo/ml/categorical_features/" class="title">Handling categorical features</a></p>
               <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
             </div>
           </li>

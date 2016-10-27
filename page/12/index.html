@@ -199,7 +199,7 @@ fmt.Println(js)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="ciusfm45o006r60jhftdv4ow3" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="ciusgjlaj006lrwjhut47889a" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_json/#ds-thread" class="article-comment-link">评论</a>
       
@@ -264,7 +264,7 @@ b = b[1:]      // len(b)=4, cap(b)=4
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="ciusfm45m006p60jh799uj470" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/" data-id="ciusgjlan006vrwjhe34kvx4u" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_make_new/#ds-thread" class="article-comment-link">评论</a>
       
@@ -443,7 +443,7 @@ using namespace Jason::Flat::Test;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="ciusfm3yn000r60jhdsgfhfxf" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/20/dev/flatbuffers/" data-id="ciusgjl7e000rrwjher8p8qwv" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/20/dev/flatbuffers/#ds-thread" class="article-comment-link">评论</a>
       
@@ -501,7 +501,7 @@ using namespace Jason::Flat::Test;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="ciusfm469007g60jhbyipyjlo" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/ui_base/" data-id="ciusgjlax007lrwjholjqwntg" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/ui_base/#ds-thread" class="article-comment-link">评论</a>
       
@@ -516,7 +516,7 @@ using namespace Jason::Flat::Test;
 
 
     
-      <article id="post-dev/web/python_http_server" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -525,7 +525,7 @@ using namespace Jason::Flat::Test;
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/11/18/dev/web/python_http_server/">Python HTTP server</a>
+      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
     </h1>
   
 
@@ -533,7 +533,7 @@ using namespace Jason::Flat::Test;
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/11/18/dev/web/python_http_server/">
+    <a href="/2015/11/18/dev/web/python_cgi_bin/">
       <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
     </a>
   </div>
@@ -551,104 +551,84 @@ using namespace Jason::Flat::Test;
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <ol>
-<li>HTTP GET<br>```python<br>from BaseHTTPServer import BaseHTTPRequestHandler<br>import urlparse</li>
-</ol>
-<p>class GetHandler(BaseHTTPRequestHandler):</p>
-<pre><code>def do_GET(self):
-    parsed_path = urlparse.urlparse(self.path)
-    message_parts = [
-            &#39;CLIENT VALUES:&#39;,
-            &#39;client_address=%s (%s)&#39; % (self.client_address,
-                                        self.address_string()),
-            &#39;command=%s&#39; % self.command,
-            &#39;path=%s&#39; % self.path,
-            &#39;real path=%s&#39; % parsed_path.path,
-            &#39;query=%s&#39; % parsed_path.query,
-            &#39;request_version=%s&#39; % self.request_version,
-            &#39;&#39;,
-            &#39;SERVER VALUES:&#39;,
-            &#39;server_version=%s&#39; % self.server_version,
-            &#39;sys_version=%s&#39; % self.sys_version,
-            &#39;protocol_version=%s&#39; % self.protocol_version,
-            &#39;&#39;,
-            &#39;HEADERS RECEIVED:&#39;,
-            ]
-    for name, value in sorted(self.headers.items()):
-        message_parts.append(&#39;%s=%s&#39; % (name, value.rstrip()))
-    message_parts.append(&#39;&#39;)
-    message = &#39;\r\n&#39;.join(message_parts)
-    self.send_response(200)
-    self.end_headers()
-    self.wfile.write(message)
-    return
-</code></pre><p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    from BaseHTTPServer import HTTPServer<br>    server = HTTPServer((‘localhost’, 8080), GetHandler)<br>    print ‘Starting server, use <ctrl-c> to stop’<br>    server.serve_forever()</ctrl-c></p>
-<pre><code>
-2. HTTP POST
-```python
-from BaseHTTPServer import BaseHTTPRequestHandler
+        <pre><code class="python">import BaseHTTPServer
+import CGIHTTPServer
+import cgitb; cgitb.enable()  ## This line enables CGI error reporting
+
+server = BaseHTTPServer.HTTPServer
+handler = CGIHTTPServer.CGIHTTPRequestHandler
+server_address = (&quot;0.0.0.0&quot;, 8082)
+handler.cgi_directories = [&quot;/cgi-bin&quot;]
+
+httpd = server(server_address, handler)
+httpd.serve_forever()
+</code></pre>
+<p>CGI-BIN下的py文件要有执行权限。</p>
+<pre><code class="python">#!/usr/bin/env python
+
 import cgi
+import urllib
+import json
 
-class PostHandler(BaseHTTPRequestHandler):
+form = cgi.FieldStorage()
 
-    def do_POST(self):
-        # Parse the form data posted
-        form = cgi.FieldStorage(
-            fp=self.rfile, 
-            headers=self.headers,
-            environ={&#39;REQUEST_METHOD&#39;:&#39;POST&#39;,
-                     &#39;CONTENT_TYPE&#39;:self.headers[&#39;Content-Type&#39;],
-                     })
+query_str = form.getvalue(&#39;query&#39;)
+query = &quot;http://0.0.0.0:9999/query?query=%s&quot; % query_str
 
-        # Begin the response
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(&#39;Client: %s\n&#39; % str(self.client_address))
-        self.wfile.write(&#39;User-agent: %s\n&#39; % str(self.headers[&#39;user-agent&#39;]))
-        self.wfile.write(&#39;Path: %s\n&#39; % self.path)
-        self.wfile.write(&#39;Form data:\n&#39;)
+exec_query = urllib.urlopen(query)
+print &quot;Status: 200 OK&quot;
+print &quot;Content-Type: application/json&quot;
+print &quot;&quot;
+print exec_query.read()
+</code></pre>
+<p>HTML:</p>
+<pre><code class="html">&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
 
-        # Echo back information about what was posted in the form
-        for field in form.keys():
-            field_item = form[field]
-            if field_item.filename:
-                # The field contains an uploaded file
-                file_data = field_item.file.read()
-                file_len = len(file_data)
-                del file_data
-                self.wfile.write(&#39;\tUploaded %s as &quot;%s&quot; (%d bytes)\n&#39; % \
-                        (field, field_item.filename, file_len))
-            else:
-                # Regular form value
-                self.wfile.write(&#39;\t%s=%s\n&#39; % (field, form[field].value))
-        return
+        &lt;title&gt;test&lt;/title&gt;
+        &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js&quot;&gt;&lt;/script&gt;
+        &lt;script&gt;
 
-if __name__ == &#39;__main__&#39;:
-    from BaseHTTPServer import HTTPServer
-    server = HTTPServer((&#39;localhost&#39;, 8080), PostHandler)
-    print &#39;Starting server, use &lt;Ctrl-C&gt; to stop&#39;
-    server.serve_forever()
-</code></pre><ol>
-<li>Threading and Forking<br>```python<br>from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler<br>from SocketServer import ThreadingMixIn<br>import threading</li>
-</ol>
-<p>class Handler(BaseHTTPRequestHandler):</p>
-<pre><code>def do_GET(self):
-    self.send_response(200)
-    self.end_headers()
-    message =  threading.currentThread().getName()
-    self.wfile.write(message)
-    self.wfile.write(&#39;\n&#39;)
-    return
-</code></pre><p>class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):<br>    “””Handle requests in a separate thread.”””</p>
-<p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    server = ThreadedHTTPServer((‘localhost’, 8080), Handler)<br>    print ‘Starting server, use <ctrl-c> to stop’<br>    server.serve_forever()<br>```</ctrl-c></p>
-<p>From: <a href="https://pymotw.com/2/BaseHTTPServer/" target="_blank" rel="external">https://pymotw.com/2/BaseHTTPServer/</a></p>
+            $(function()
+            {
+                $(&#39;#clickme&#39;).click(function(){
+                    alert(&#39;Im going to start processing&#39;);
+
+                    $.ajax({
+                        url: &quot;/scripts/ajaxpost.py&quot;,
+                        type: &quot;post&quot;,
+                        datatype:&quot;json&quot;,
+                        data: {&#39;key&#39;:&#39;value&#39;,&#39;key2&#39;:&#39;value2&#39;},
+                        success: function(response){
+                            alert(response.message);
+                            alert(response.keys);
+                        }
+                    });
+                });
+            });
+
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;button id=&quot;clickme&quot;&gt; click me &lt;/button&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>参考： </p>
+<ul>
+<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
+<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
+<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="ciusfm463007c60jhiybltyvr" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="ciusgjlaw007jrwjhdfo1qdpw" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -746,7 +726,7 @@ if __name__ == &#39;__main__&#39;:
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="thumbnail">
+              <a href="/2016/09/18/algo/ml/categorical_features/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -755,7 +735,7 @@ if __name__ == &#39;__main__&#39;:
             
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
+              <p class="item-title"><a href="/2016/09/18/algo/ml/categorical_features/" class="title">Handling categorical features</a></p>
               <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
             </div>
           </li>
