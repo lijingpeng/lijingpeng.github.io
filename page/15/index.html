@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        109
+        110
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,90 @@
 
       
       <section id="main">
+      <article id="post-dev/maven_assembly" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/12/dev/maven_assembly/">Maven 依赖包打包</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/10/12/dev/maven_assembly/">
+      <time datetime="2015-10-12T12:19:56.000Z" itemprop="datePublished">2015-10-12</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/java/">java</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <pre><code class="xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
+    &lt;version&gt;2.4&lt;/version&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;com.travelsky.tdp.pkgstock&lt;/groupId&gt;
+            &lt;artifactId&gt;stock-assembly-descriptor&lt;/artifactId&gt;
+            &lt;version&gt;1.0.0&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;!-- 绑定到maven的package命令 --&gt;
+            &lt;id&gt;make-assembly&lt;/id&gt;
+            &lt;phase&gt;package&lt;/phase&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;single&lt;/goal&gt;
+            &lt;/goals&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+    &lt;configuration&gt;
+        &lt;ignoreMissingDescriptor&gt;true&lt;/ignoreMissingDescriptor&gt;
+        &lt;descriptorRefs&gt;
+            &lt;descriptorRef&gt;zipAll&lt;/descriptorRef&gt;
+            &lt;descriptorRef&gt;zipFilterConf&lt;/descriptorRef&gt;
+            &lt;descriptorRef&gt;zipJsCssOnly&lt;/descriptorRef&gt;
+            &lt;descriptorRef&gt;zipPicOnly&lt;/descriptorRef&gt;
+        &lt;/descriptorRefs&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/maven_assembly/" data-id="ciusfjf36000s4hjhrnrpndfd" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/10/12/dev/maven_assembly/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/java_math_stat" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -217,73 +301,11 @@ public class StatExample {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="ciuh35q2u000ue4jhzl46ew6p" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="ciusfjf33000p4hjhvtmxdady" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/12/dev/java_math_stat/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-internet/ad/cookie" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/10/internet/ad/cookie/">关于Cookie</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/10/internet/ad/cookie/">
-      <time datetime="2015-10-09T16:00:00.000Z" itemprop="datePublished">2015-10-10</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/internet/">internet</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="u5173_u4E8ECookie"><a href="#u5173_u4E8ECookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><hr>
-<p><img src="/images/other/cookie.jpg" alt=""></p>
-<h3 id="Cookie_u7684_u4F20_u9012_u6D41_u7A0B"><a href="#Cookie_u7684_u4F20_u9012_u6D41_u7A0B" class="headerlink" title="Cookie的传递流程"></a>Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
-<h3 id="u5173_u4E8ECookie_u7684_u4E00_u4E9B_u77E5_u8BC6_u70B9"><a href="#u5173_u4E8ECookie_u7684_u4E00_u4E9B_u77E5_u8BC6_u70B9" class="headerlink" title="关于Cookie的一些知识点"></a>关于Cookie的一些知识点</h3><ol>
-<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
-<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
-<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="ciuh35q7o007ie4jh2sb5ojnu" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li></ul>
-
     </footer>
   </div>
   
@@ -343,7 +365,7 @@ public class StatExample {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="ciuh35q7n007he4jhoi3psza9" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="ciusfjf9k006z4hjhncfua04d" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/#ds-thread" class="article-comment-link">评论</a>
       
@@ -358,7 +380,7 @@ public class StatExample {
 
 
     
-      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-internet/ad/cookie" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -367,7 +389,7 @@ public class StatExample {
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
+      <a class="article-title" href="/2015/10/10/internet/ad/cookie/">关于Cookie</a>
     </h1>
   
 
@@ -375,8 +397,8 @@ public class StatExample {
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/09/25/algo/ml/feature_hashing/">
-      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
+    <a href="/2015/10/10/internet/ad/cookie/">
+      <time datetime="2015-10-09T16:00:00.000Z" itemprop="datePublished">2015-10-10</time>
     </a>
   </div>
 
@@ -384,7 +406,7 @@ public class StatExample {
           
   <div class="article-category">
   	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+    <a class="article-category-link" href="/categories/internet/">internet</a>
   </div>
 
         </div>
@@ -393,56 +415,25 @@ public class StatExample {
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
-<h3 id="Motivating_example"><a href="#Motivating_example" class="headerlink" title="Motivating example"></a>Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
-<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
-<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
-<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary</p>
-<pre><code>Term    Index
-John    1
-likes   2
-to      3
-watch   4
-movies  5
-Mary    6
-too     7
-also    8
-football9
-</code></pre><p>to the term-document matrix</p>
-<pre><code>1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 
-0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 
-1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1
-</code></pre><p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
-<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
-<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
-<h3 id="Feature_vectorization_using_the_hashing_trick"><a href="#Feature_vectorization_using_the_hashing_trick" class="headerlink" title="Feature vectorization using the hashing trick"></a>Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):</p>
-<pre><code>     x := new vector[N]
-     for f in features:
-         h := hash(f)
-         x[h mod N] += 1
-     return x
-</code></pre><p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):</p>
-<pre><code>     x := new vector[N]
-     for f in features:
-         h := hash(f)
-         idx := h mod N
-         if ξ(f) == 1:
-             x[idx] += 1
-         else:
-             x[idx] -= 1
-     return x
-</code></pre><p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
+        <h2 id="u5173_u4E8ECookie"><a href="#u5173_u4E8ECookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><hr>
+<p><img src="/images/other/cookie.jpg" alt=""></p>
+<h3 id="Cookie_u7684_u4F20_u9012_u6D41_u7A0B"><a href="#Cookie_u7684_u4F20_u9012_u6D41_u7A0B" class="headerlink" title="Cookie的传递流程"></a>Cookie的传递流程</h3><p>Cookie利用网页代码中癿HTTP头信息，伴随着用户请求和页面在 Web 服务器和浏览器之间传递。例如：当你在浏览器地址栏中键入了Amazon的URL，浏览器会向Amazon发送一个读取网页请求，并将结果在显示器上显示。在发送前，该网页在你的电脑上寻找Amazon网站设置的Cookie文件，如果找到，浏览器会把Cookie文件中的数据连同前面输入的URL一同发送到Amazon服务器。服务器收到Cookie数据，就会在他的数据库中检索你的ID，你的购物记彔、个人喜好等信息，并记录下新的内容，增加到数据库和Cookie文件中去。如果没有检测到Cookie或者你的Cookie信息不数据库中的信息不符合，则说明你是第一次浏览该网站，服务器的CGI程序将为你创建新的ID信息，幵保存到数据库中。</p>
+<h3 id="u5173_u4E8ECookie_u7684_u4E00_u4E9B_u77E5_u8BC6_u70B9"><a href="#u5173_u4E8ECookie_u7684_u4E00_u4E9B_u77E5_u8BC6_u70B9" class="headerlink" title="关于Cookie的一些知识点"></a>关于Cookie的一些知识点</h3><ol>
+<li>Cookie是基二浏览器的，因此当电脑上安装多个浏览器时，服务器会生成多个Cookie。虽然是同一个人，但服务器是识删为多个用户。 </li>
+<li>Cookie是基二浏览器的，因此当同一台电脑有多个人使用时，服务器也叧会生成一个Cookie。虽然是多个人，但服务器会讣为是一个用户。补充：在多个人均登彔账户时，服务器可以以账户为匙分，为每个账户生成单独癿cookie，比如多人用同一台电脑登彔新浪微博。（感谢数据挖掘_PHP癿指正） </li>
+<li>Cookie是无法跨设备设置的。比如我们在单位和家里分别使用两台电脑，即使我们使用同一种同一版本的浏览器，我们迓是生成了两个Cookie，服务器会认为是两个用户。（PS：现在有些浏览器可以同步数据，比如Chrome、Friefox，可以避免这种问题） </li>
+</ol>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="ciuh35q6i005he4jhmu4qr49q" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="ciusfjf9l00704hjhh7p991ou" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/#ds-thread" class="article-comment-link">评论</a>
       
       
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/广告/">广告</a></li></ul>
+
     </footer>
   </div>
   
@@ -567,7 +558,7 @@ blue
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="ciuh35q6e0055e4jhhhtm3w9k" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="ciusfjf8u00644hjhklrc5jxt" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/#ds-thread" class="article-comment-link">评论</a>
       
@@ -592,6 +583,23 @@ blue
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/10/26/dev/soft_source/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/10/26/dev/soft_source/" class="title">常用的软件源</a></p>
+              <p class="item-date"><time datetime="2016-10-26T08:19:56.000Z" itemprop="datePublished">2016-10-26</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -648,23 +656,6 @@ blue
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
-              <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/09/18/algo/ml/categorical_features/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -688,7 +679,7 @@ blue
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">34</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -706,7 +697,7 @@ blue
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

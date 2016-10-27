@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        109
+        110
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,132 @@
 
       
       <section id="main">
+      <article id="post-dev/hive-udf-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/dev/hive-udf-md/">Hive UDF开发</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/dev/hive-udf-md/">
+      <time datetime="2015-09-03T04:49:45.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/Hive/">Hive</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>Hive进行UDAF开发，相对要比UDF复杂一些，不过也不是很难。请看一个例子:</p>
+<pre><code class="java">package org.hrj.hive.udf;
+
+import org.apache.hadoop.hive.ql.exec.UDAFEvaluator;
+import org.apache.hadoop.hive.serde2.io.DoubleWritable;
+
+public class UDAFSum_Sample extends NumericUDAF {
+    public static class Evaluator implements UDAFEvaluator {
+        private boolean mEmpty;
+        private double mSum;
+        public Evaluator() {
+            super();
+            init();
+        }
+
+        public void init() {
+            mSum = 0;
+            mEmpty = true;
+        }
+
+        public boolean iterate(DoubleWritable o) {
+            if (o != null) {
+                mSum += o.get();
+                mEmpty = false;
+            }
+            return true;
+        }
+
+        public DoubleWritable terminatePartial() {
+            // This is SQL standard - sum of zero items should be null.
+            return mEmpty ? null : new DoubleWritable(mSum);
+        }
+
+        public boolean merge(DoubleWritable o) {
+            if (o != null) {
+                mSum += o.get();
+                mEmpty = false;
+            }
+            return true;
+        }
+
+        public DoubleWritable terminate() {
+            // This is SQL standard - sum of zero items should be null.
+            return mEmpty ? null : new DoubleWritable(mSum);
+        }
+    }
+}
+</code></pre>
+<p>1.将java文件编译成Sum_Sample.jar</p>
+<p>2.进入hive</p>
+<pre><code class="bash">
+hive&gt; add jar Sum_sample.jar;
+
+hive&gt; create temporary function sum_test as &#39;com.hrj.hive.udf.UDAFSum_Sample&#39;;
+
+hive&gt; select sum_test(t.num) from t;
+
+hive&gt; drop temporary function sum_test;
+
+hive&gt; quit;
+</code></pre>
+<p>关于UDAF开发注意点：</p>
+<p>1.需要import org.apache.hadoop.hive.ql.exec.UDAF以及org.apache.hadoop.hive.ql.exec.UDAFEvaluator,这两个包都是必须的</p>
+<p>2.函数类需要继承UDAF类，内部类Evaluator实现UDAFEvaluator接口</p>
+<p>3.Evaluator需要实现 init、iterate、terminatePartial、merge、terminate这几个函数</p>
+<pre><code>1）init函数类似于构造函数，用于UDAF的初始化
+
+2）iterate接收传入的参数，并进行内部的轮转。其返回类型为boolean
+
+3）terminatePartial无参数，其为iterate函数轮转结束后，返回乱转数据，iterate和terminatePartial类似于hadoop的Combiner
+
+4）merge接收terminatePartial的返回结果，进行数据merge操作，其返回类型为boolean
+
+5）terminate返回最终的聚集函数结果
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="ciusfjf35000r4hjhz9yclr7e" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-opensource/input-font-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -168,7 +294,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="ciuh35q360012e4jhdo76dzik" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="ciusfjf3f00104hjhjgcai8nn" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/opensource/input-font-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -254,7 +380,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="ciuh35q25000ge4jhfjbfukn8" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="ciusfjf2v000g4hjhlvgkuvh0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/06/06/algo/feature_d/#ds-thread" class="article-comment-link">评论</a>
       
@@ -340,7 +466,7 @@ port:     your local_port
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="ciuh35q3l001je4jhn7jw76vv" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="ciusfjf76003d4hjhsg6w8klp" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/05/14/system/shadowsocks/#ds-thread" class="article-comment-link">评论</a>
       
@@ -464,110 +590,13 @@ exit 0
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="ciuh35q3j001he4jhfe51fckw" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="ciusfjf79003j4hjh1z9kbpc1" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/hash-map-sort-md" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/03/dev/hash-map-sort-md/">HashMap的两种排序方式</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/05/03/dev/hash-map-sort-md/">
-      <time datetime="2015-05-03T04:57:56.000Z" itemprop="datePublished">2015-05-03</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <pre><code class="java">Map&lt;String, Integer&gt; map = new HashMap&lt;String, Integer&gt;();
-map.put(“d”, 2);
-map.put(“c”, 1);
-map.put(“b”, 1);
-map.put(“a”, 3);
-
-List&lt;Map.Entry&lt;String, Integer&gt;&gt; infoIds =
-new ArrayList&lt;Map.Entry&lt;String, Integer&gt;&gt;(map.entrySet());
-
-//排序前
-for (int i = 0; i &lt; infoIds.size(); i++) {
-String id = infoIds.get(i).toString();
-System.out.println(id);
-}
-
-//d 2
-//c 1
-//b 1
-//a 3
-
-//排序
-Collections.sort(infoIds, new Comparator&lt;Map.Entry&lt;String, Integer&gt;&gt;() {
-public int compare(Map.Entry&lt;String, Integer&gt; o1, Map.Entry&lt;String, Integer&gt; o2) {
-//return (o2.getValue() – o1.getValue());
-return (o1.getKey()).toString().compareTo(o2.getKey());
-}
-});
-
-//排序后
-for (int i = 0; i &lt; infoIds.size(); i++) {
-String id = infoIds.get(i).toString();
-System.out.println(id);
-}
-
-//根据key排序
-//a 3
-//b 1
-//c 1
-//d 2
-//根据value排序
-//a 3
-//d 2
-//b 1
-//c 1
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/" data-id="ciuh35q2s000se4jhy4du0xvu" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/#ds-thread" class="article-comment-link">评论</a>
-      
-      
     </footer>
   </div>
   
@@ -588,6 +617,23 @@ System.out.println(id);
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/10/26/dev/soft_source/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/10/26/dev/soft_source/" class="title">常用的软件源</a></p>
+              <p class="item-date"><time datetime="2016-10-26T08:19:56.000Z" itemprop="datePublished">2016-10-26</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -644,23 +690,6 @@ System.out.println(id);
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/09/18/algo/sklearn/Dummification_vs_encoding/" class="title">XGBoost Categorical Variables - Dummification vs encoding</a></p>
-              <p class="item-date"><time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/09/18/algo/ml/categorical_features/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -684,7 +713,7 @@ System.out.println(id);
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">33</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">34</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -702,7 +731,7 @@ System.out.println(id);
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
