@@ -209,7 +209,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/" data-id="ciutsw3fx000piojh8gd76s5m" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/" data-id="ciutszvht001blhjhwx1vwdcm" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -337,7 +337,7 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="ciutsw3fq000eiojh20j4eoam" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/" data-id="ciutszvgk000hlhjh4nv0sx9q" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/dev/hive-udf-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -392,7 +392,7 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="ciutsw3g70014iojhr7exsh9o" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/opensource/input-font-md/" data-id="ciutszvhb000qlhjhj66k9y61" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/opensource/input-font-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -478,7 +478,7 @@ hive&gt; quit;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="ciutsw3g0000viojh7yqknods" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/06/06/algo/feature_d/" data-id="ciutszvhx001flhjh8f4fwshy" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/06/06/algo/feature_d/#ds-thread" class="article-comment-link">评论</a>
       
@@ -491,7 +491,7 @@ hive&gt; quit;
 
 
     
-      <article id="post-system/shadowsocks" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-system/pptp_vpn" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -500,7 +500,7 @@ hive&gt; quit;
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2015/05/14/system/shadowsocks/">Shadowsocks 安装配置使用</a>
+      <a class="article-title" href="/2015/05/14/system/pptp_vpn/">PPTP VPN搭建</a>
     </h1>
   
 
@@ -508,7 +508,7 @@ hive&gt; quit;
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2015/05/14/system/shadowsocks/">
+    <a href="/2015/05/14/system/pptp_vpn/">
       <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
     </a>
   </div>
@@ -526,50 +526,86 @@ hive&gt; quit;
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>Debian/Ubuntu安装</p>
-<pre><code class="bash">apt-get install python-pip
-pip install shadowsocks
-</code></pre>
-<p>配置:</p>
-<pre><code class="bash">{
-    &quot;server&quot;:&quot;my_server_ip&quot;,
-    &quot;server_port&quot;:8388,
-    &quot;local_address&quot;: &quot;127.0.0.1&quot;,
-    &quot;local_port&quot;:1080,
-    &quot;password&quot;:&quot;mypassword&quot;,
-    &quot;timeout&quot;:300,
-    &quot;method&quot;:&quot;aes-256-cfb&quot;,
-    &quot;fast_open&quot;: false,
-    &quot;workers&quot;: 1
+        <p>本文介绍在Linux下搭建VPN的过程</p>
+<pre><code class="bash">#!/bin/sh
+if [ `id -u` -ne 0 ] 
+then
+  echo &quot;please run it by root&quot;
+  exit 0
+fi
+
+apt-get -y update
+
+apt-get -y install pptpd || {
+  echo &quot;could not install pptpd&quot; 
+  exit 1
 }
+
+cat &gt;/etc/ppp/options.pptpd &lt;&lt;END
+name pptpd
+refuse-pap
+refuse-chap
+refuse-mschap
+require-mschap-v2
+require-mppe-128
+ms-dns 8.8.8.8
+ms-dns 8.8.4.4
+proxyarp
+lock
+nobsdcomp 
+novj
+novjccomp
+nologfd
+END
+
+cat &gt;/etc/pptpd.conf &lt;&lt;END
+option /etc/ppp/options.pptpd
+logwtmp
+localip 192.168.2.1
+remoteip 192.168.2.10-100
+END
+
+cat &gt;&gt; /etc/sysctl.conf &lt;&lt;END
+net.ipv4.ip_forward=1
+END
+
+sysctl -p
+
+iptables-save &gt; /etc/iptables.down.rules
+
+iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -o eth0 -j MASQUERADE
+
+iptables -I FORWARD -s 192.168.2.0/24 -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1300
+
+iptables-save &gt; /etc/iptables.up.rules
+
+cat &gt;&gt;/etc/ppp/pptpd-options&lt;&lt;EOF
+pre-up iptables-restore &lt; /etc/iptables.up.rules
+post-down iptables-restore &lt; /etc/iptables.down.rules
+EOF
+
+cat &gt;/etc/ppp/chap-secrets &lt;&lt;END
+test pptpd test *
+END
+
+service pptpd restart
+
+netstat -lntp
+
+exit 0
 </code></pre>
-<p>服务器端运行:</p>
-<pre><code class="bash">ssserver -c /etc/shadowsocks/config.json
-</code></pre>
-<p>后台运行:</p>
-<pre><code class="bash">nohup ssserver -c /etc/shadowsocks/config.json &gt; /dev/null &amp;
-</code></pre>
-<p>客户端运行:</p>
-<pre><code class="bash">sslocal -c /etc/shadowsocks/config.json
-</code></pre>
-<p>后台运行:</p>
-<pre><code class="bash">nohup sslocal -c /etc/shadowsocks/config.json &gt; /dev/null &amp;
-</code></pre>
-<p>浏览器配置，推荐使用SwithySharp插件</p>
-<pre><code class="bash">protocol: socks5
-hostname: 127.0.0.1
-port:     your local_port
-</code></pre>
+<p>实际使用中需要按照需要修改本地IP地址即可，一般情况自动安装和配置是成功的，但是在我的实际使用中使用手机网络连接的时候是没问题的，但是使用电脑连接的时候还是出现无法连接的情况，查看日志如下：</p>
+<p>Starting negotiation on /dev/pts/1<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""> <endpoint [mac:00:16:3e:d8:d7:39]="">]<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""><br>…<br>LCP: timeout sending Config-Requests<br>Connection terminated.<br>这个可能是学校路由器没有采用PPTP穿透吧</mrru></accomp></pcomp></magic></auth></asyncmap></endpoint></mrru></accomp></pcomp></magic></auth></asyncmap></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/shadowsocks/" data-id="ciutsw3ge001eiojh049kzum2" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="ciutszvhq0016lhjhiqnqm1ni" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2015/05/14/system/shadowsocks/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/#ds-thread" class="article-comment-link">评论</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Shadowsocks/">Shadowsocks</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a></li></ul>
 
     </footer>
   </div>

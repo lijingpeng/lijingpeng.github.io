@@ -23,7 +23,7 @@ Dockerfile如下：
 FROM tensorflow/tensorflow:latest
 
 RUN echo deb http://mirrors.aliyun.com/ubuntu trusty univ">
-<meta property="og:updated_time" content="2016-10-28T13:14:06.000Z">
+<meta property="og:updated_time" content="2016-10-28T13:17:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker快速搭建neural style环境">
 <meta name="twitter:description" content="概览
@@ -219,6 +219,11 @@ CMD [&quot;/run_jupyter.sh&quot;]
 <p>复制这段代码，创建名为Dockerfile的文件，然后执行：</p>
 <pre><code class="bash">docker build -t docker_neural_style .
 </code></pre>
+<p>注意：</p>
+<ol>
+<li>本镜像的构建基于Tensorflow官方，请放心使用</li>
+<li>依赖已经训练好的网络：imagenet-vgg-verydeep-19.mat，这个文件有500M多，下载站点在国外，不建议在Docker构建过程中直接下载，可以使用下载工具比如迅雷下载到本地，然后把文件映射到容器中就可以了。</li>
+</ol>
 <h2 id="u4E0B_u8F7D_u5DF2_u7ECF_u8BAD_u7EC3_u597D_u7684_u6DF1_u5EA6_u7F51_u7EDC"><a href="#u4E0B_u8F7D_u5DF2_u7ECF_u8BAD_u7EC3_u597D_u7684_u6DF1_u5EA6_u7F51_u7EDC" class="headerlink" title="下载已经训练好的深度网络"></a>下载已经训练好的深度网络</h2><hr>
 <pre><code>wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat
 </code></pre><p>假设该文件保存在 /Users/you/ 目录下</p>
@@ -233,7 +238,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="ciutsw3iz003viojhj75mg1ie" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="ciutszvks004dlhjhs5sz3hxs" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/#ds-thread" class="article-comment-link">评论</a>
       
