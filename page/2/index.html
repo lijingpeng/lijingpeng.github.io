@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        111
+        112
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,7 +126,7 @@
 
       
       <section id="main">
-      <article id="post-algo/ml/categorical_features" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-dev/esop" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -135,7 +135,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/18/algo/ml/categorical_features/">Handling categorical features</a>
+      <a class="article-title" href="/2016/10/10/dev/esop/">Elasticsearch-索引优化</a>
     </h1>
   
 
@@ -143,8 +143,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2016/09/18/algo/ml/categorical_features/">
-      <time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time>
+    <a href="/2016/10/10/dev/esop/">
+      <time datetime="2016-10-10T02:19:56.000Z" itemprop="datePublished">2016-10-10</time>
     </a>
   </div>
 
@@ -152,7 +152,7 @@
           
   <div class="article-category">
   	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
   </div>
 
         </div>
@@ -161,19 +161,23 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <h2 id="Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity"><a href="#Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity" class="headerlink" title="Handling categorical features: get_dummies, OneHotEncoder and multicollinearity"></a>Handling categorical features: get_dummies, OneHotEncoder and multicollinearity</h2><p>Get_dummies is a common way to create dummy variables for categorical features. While it is widely used, there are some drawbacks. First, it modifies your dataframe. When you have a categorical feature with hundreds of categories, get_dummies adds hundreds of dummy variables to the dataframe. And you may need to drop the categorical feature after creating dummies if you want to quickly assign features to X (independent variables). Another thing about get_dummies is, if there are many categorical features in the dataset, you will have to do get_dummies for every feature. Even constructing a loop to do so is a lot code to write.  </p>
-<p>If you do not want to mess up your data frame, or you are too lazy to write too much code (like me), OneHotEncoder is for you. OneHotEncoder is a sklearn preprocessing function. Unlike get_dummies, OHE does not add variables to your data frame. It creates dummy variables by transforming X, and all the dummies are stored in X. And you can specifiy which columns you want to create dummies when you fit X by OHE.  </p>
-<p>However, there are also some cons about OHE. First, OHE only works with categories that are integers over or equal to zero, which means if the category names are strings or negative numbers, you will have to do some transformation before fitting OHE.  </p>
-<p>Secondly, you may not be able to drop one dummy variable in order to avoid multicollinearity after fitting OHE as there are no separate variables in the dataframe. One way to address this problem is to use regularization (Lasso) with the model to drop redundant dummies. As there are two dummies which provide the exact same information, one of them must be dropped when minimizing the regularization term in the cost function.  </p>
-<p>A final con about OHE is that, you may not be able to tell which dummies are left and which are dropped. So, if you are doing bottom up feature selection, get_dummies may be a better choice as you can tell which features are selected and reassign X. Or if you are trying to identify the single effect of a certain dummy on y, get_dummies is the choice.</p>
-<p>From: <a href="https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x" target="_blank" rel="external">https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x</a></p>
+        <p>ES索引优化:</p>
+<p>ES主要是用tranlog进行各节点之间的数据平衡。所以从上我可以通过索引的settings进行第一优化：</p>
+<pre><code>&quot;index.translog.flush_threshold_ops&quot;: &quot;100000&quot;
+&quot;index.refresh_interval&quot;: &quot;-1&quot;
+</code></pre><p>这两个参数第一是到tranlog数据达到多少条进行平衡，默认为5000，而这个过程相对而言是比较浪费时间和资源的。所以我们可以将这个值调大一些还是设为-1关闭，进而手动进行tranlog平衡。<br>第二参数是刷新频率，默认为120s是指索引在生命周期内定时刷新，一但有数据进来能refresh像lucene里面commit,我们知道当数据addDoucment会，还不能检索到要commit之后才能行数据的检索所以可以将其关闭，在最初索引完后手动refresh一之，然后将索引setting里面的index.refresh_interval参数按需求进行修改，从而可以提高索引过程效率。</p>
+<p>另外的知道ES索引过程中如果有副本存在，数据也会马上同步到副本中去。我个人建议在索引过程中将副本数设为0，待索引完成后将副本数按需量改回来，这样也可以提高索引效率。</p>
+<pre><code>&quot;number_of_replicas&quot;: 0
+</code></pre><p>接下来还可以尝试修改以下参数：</p>
+<p>增大 threadpool.index.queue_size<br>增大 indices.memory.index_buffer_size<br>增大 index.translog.flush_threshold_ops<br>增大 index.translog.sync_interval<br>增大 index.engine.robin.refresh_interval</p>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules.html" target="_blank" rel="external">官方WIKI</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/" data-id="ciutszvm2007dlhjhppjod0s3" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/10/dev/esop/" data-id="civ3n896i0004e1s8grf97pvt" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2016/10/10/dev/esop/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -242,9 +246,67 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="ciutszvm7007hlhjhde5b5zyr" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="civ3n89c6008te1s8r3b48fjw" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/ml/categorical_features" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/18/algo/ml/categorical_features/">Handling categorical features</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/09/18/algo/ml/categorical_features/">
+      <time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity"><a href="#Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity" class="headerlink" title="Handling categorical features: get_dummies, OneHotEncoder and multicollinearity"></a>Handling categorical features: get_dummies, OneHotEncoder and multicollinearity</h2><p>Get_dummies is a common way to create dummy variables for categorical features. While it is widely used, there are some drawbacks. First, it modifies your dataframe. When you have a categorical feature with hundreds of categories, get_dummies adds hundreds of dummy variables to the dataframe. And you may need to drop the categorical feature after creating dummies if you want to quickly assign features to X (independent variables). Another thing about get_dummies is, if there are many categorical features in the dataset, you will have to do get_dummies for every feature. Even constructing a loop to do so is a lot code to write.  </p>
+<p>If you do not want to mess up your data frame, or you are too lazy to write too much code (like me), OneHotEncoder is for you. OneHotEncoder is a sklearn preprocessing function. Unlike get_dummies, OHE does not add variables to your data frame. It creates dummy variables by transforming X, and all the dummies are stored in X. And you can specifiy which columns you want to create dummies when you fit X by OHE.  </p>
+<p>However, there are also some cons about OHE. First, OHE only works with categories that are integers over or equal to zero, which means if the category names are strings or negative numbers, you will have to do some transformation before fitting OHE.  </p>
+<p>Secondly, you may not be able to drop one dummy variable in order to avoid multicollinearity after fitting OHE as there are no separate variables in the dataframe. One way to address this problem is to use regularization (Lasso) with the model to drop redundant dummies. As there are two dummies which provide the exact same information, one of them must be dropped when minimizing the regularization term in the cost function.  </p>
+<p>A final con about OHE is that, you may not be able to tell which dummies are left and which are dropped. So, if you are doing bottom up feature selection, get_dummies may be a better choice as you can tell which features are selected and reassign X. Or if you are trying to identify the single effect of a certain dummy on y, get_dummies is the choice.</p>
+<p>From: <a href="https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x" target="_blank" rel="external">https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/" data-id="civ3n89c3008le1s8x9py50b3" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -306,7 +368,7 @@ print array
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/" data-id="ciutszvi3001llhjhxg6xyx7h" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/" data-id="civ3n897m0014e1s8rtjcbai1" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/#ds-thread" class="article-comment-link">评论</a>
       
@@ -362,87 +424,13 @@ print array
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/12/system/linux_grep/" data-id="ciutszvhp0015lhjhtbtz8xd1" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/12/system/linux_grep/" data-id="civ3n897o0019e1s8ozta66gg" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/12/system/linux_grep/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-other/public_cdn" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/11/other/public_cdn/">CDNJS 库以及 Google Fonts、Ajax 和 Gravatar 反代</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/09/11/other/public_cdn/">
-      <time datetime="2016-09-10T16:00:00.000Z" itemprop="datePublished">2016-09-11</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/other/">other</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>由于某些众所周知的原因，好多开源的 JS 库采用的国外 CDN 托管方式在国内访问速度不如人意。所以我们特意制作了这个公益项目，托管了 CDNJS 的所有开源 JS 库以及反代了 Google Fonts、Ajax 和 Gravatar，并且全部支持 http 和 https</p>
-<h2 id="u4E00_u3001CDNJS__u5F00_u6E90_JS__u5E93"><a href="#u4E00_u3001CDNJS__u5F00_u6E90_JS__u5E93" class="headerlink" title="一、CDNJS 开源 JS 库"></a>一、CDNJS 开源 JS 库</h2><p>我们采用的方法是每天定时同步 CDNJS 的 Github</p>
-<p>所有的 JS 库可以在这儿找到您需要的链接</p>
-<p><a href="http://cdn.css.net/libs/" target="_blank" rel="external">http://cdn.css.net/libs/</a></p>
-<p>并且支持 https ，比如</p>
-<p><a href="http://cdn.css.net/libs/jquery/2.1.4/jquery.min.js" target="_blank" rel="external">http://cdn.css.net/libs/jquery/2.1.4/jquery.min.js</a><br><a href="https://cdn.css.net/libs/jquery/2.1.4/jquery.min.js" target="_blank" rel="external">https://cdn.css.net/libs/jquery/2.1.4/jquery.min.js</a></p>
-<h2 id="u4E8C_u3001Google_Fonts"><a href="#u4E8C_u3001Google_Fonts" class="headerlink" title="二、Google Fonts"></a>二、Google Fonts</h2><p>我们采用的方法是万能的 Nginx 反代 + 关键词替换，具体方法可以摸这儿。</p>
-<p>使用的时候，您只需要替换 fonts.googleapis.com 为 fonts.css.network 即可，如</p>
-<p><link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"><br>替换成</p>
-<p><link href="//fonts.css.network/css?family=Open+Sans" rel="stylesheet"><br>如果需要 Material icons ，则把</p>
-<p><a href="https://fonts.googleapis.com/icon?family=Material+Icons" target="_blank" rel="external">https://fonts.googleapis.com/icon?family=Material+Icons</a><br>替换成</p>
-<p><a href="https://fonts.css.network/icon?family=Material+Icons" target="_blank" rel="external">https://fonts.css.network/icon?family=Material+Icons</a><br>即可</p>
-<h2 id="u4E09_u3001Google__u524D_u7AEF_u516C_u5171_u5E93"><a href="#u4E09_u3001Google__u524D_u7AEF_u516C_u5171_u5E93" class="headerlink" title="三、Google 前端公共库"></a>三、Google 前端公共库</h2><p>方法同上，直接替换 ajax.googleapis.com 为 ajax.css.network 即可，如</p>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-替换成
-
-<script type="text/javascript" src="//ajax.css.network/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
-<h2 id="u56DB_u3001Gravatar__u53CD_u4EE3"><a href="#u56DB_u3001Gravatar__u53CD_u4EE3" class="headerlink" title="四、Gravatar 反代"></a>四、Gravatar 反代</h2><p>方法还是同上，直接替换 *.gravatar.com 为 gravatar.css.network 即可，如</p>
-<p><a href="https://cn.gravatar.com/avatar/8406d089bc81b664a2610b8d214c1428" target="_blank" rel="external">https://cn.gravatar.com/avatar/8406d089bc81b664a2610b8d214c1428</a><br>替换成</p>
-<p><a href="https://gravatar.css.network/avatar/8406d089bc81b664a2610b8d214c1428" target="_blank" rel="external">https://gravatar.css.network/avatar/8406d089bc81b664a2610b8d214c1428</a></p>
-<p>From: <a href="https://ttt.tt/185/" target="_blank" rel="external">https://ttt.tt/185/</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/11/other/public_cdn/" data-id="ciutszvhj000zlhjhhbh74h2v" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/09/11/other/public_cdn/#ds-thread" class="article-comment-link">评论</a>
-      
-      
     </footer>
   </div>
   
@@ -463,6 +451,23 @@ print array
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -533,23 +538,6 @@ print array
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/10/10/dev/esop/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/10/dev/esop/" class="title">Elasticsearch-索引优化</a></p>
-              <p class="item-date"><time datetime="2016-10-10T02:19:56.000Z" itemprop="datePublished">2016-10-10</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -559,7 +547,7 @@ print array
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">35</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">35</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">25</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -577,7 +565,7 @@ print array
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
