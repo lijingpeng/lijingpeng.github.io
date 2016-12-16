@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        113
+        114
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,91 @@
 
       
       <section id="main">
+      <article id="post-algo/ml/OnebyOne_Convolution" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/10/15/algo/ml/OnebyOne_Convolution/">One by One [ 1 x 1 ] Convolution - counter-intuitively useful</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/10/15/algo/ml/OnebyOne_Convolution/">
+      <time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished">2016-10-15</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>Whenever I discuss or show GoogleNet architecture, one question always comes up -</p>
+<p>“Why 1x1 convolution ? Is it not redundant ?<br>Convolution with Kernel of size 3x3 Convolution with Kernel of size 1x1</p>
+<p><img src="/images/dl/full_padding_no_strides_transposed.gif" alt=""></p>
+<p><img src="/images/dl/full_padding_no_strides_transposed_small.gif" alt=""></p>
+<p>top : Convolution with kernel of size 3x3 bottom : Convolution with kernel of size 1x1</p>
+<h2 id="Simple_Answer"><a href="#Simple_Answer" class="headerlink" title="Simple Answer"></a>Simple Answer</h2><p>Most simplistic explanation would be that 1x1 convolution leads to dimension reductionality. For example, an image of 200 x 200 with 50 features on convolution with 20 filters of 1x1 would result in size of 200 x 200 x 20. But then again, is this is the best way to do dimensionality reduction in the convoluational neural network? What about the efficacy vs efficiency?</p>
+<h2 id="Complex_Answer"><a href="#Complex_Answer" class="headerlink" title="Complex Answer"></a>Complex Answer</h2><h3 id="Feature_transformation"><a href="#Feature_transformation" class="headerlink" title="Feature transformation"></a>Feature transformation</h3><p>Although 1x1 convolution is a ‘feature pooling’ technique, there is more to it than just sum pooling of features across various channels/feature-maps of a given layer. 1x1 convolution acts like coordinate-dependent transformation in the filter space[1]. It is important to note here that this transformation is strictly linear, but in most of application of 1x1 convolution, it is succeeded by a non-linear activation layer like ReLU. This transformation is learned through the (stochastic) gradient descent. But an important distinction is that it suffers with less over-fitting due to smaller kernel size (1x1).</p>
+<h3 id="Deeper_Network"><a href="#Deeper_Network" class="headerlink" title="Deeper Network"></a>Deeper Network</h3><p>One by One convolution was first introduced in this paper titled Network in Network. In this paper, the author’s goal was to generate a deeper network without simply stacking more layers. It replaces few filters with a smaller perceptron layer with mixture of 1x1 and 3x3 convolutions. In a way, it can be seen as “going wide” instead of “deep”, but it should be noted that in machine learning terminology, ‘going wide’ is often meant as adding more data to the training. Combination of 1x1 (x F) convolution is mathematically equivalent to a multi-layer perceptron.[2].</p>
+<h3 id="Inception_Module"><a href="#Inception_Module" class="headerlink" title="Inception Module"></a>Inception Module</h3><p>In GoogLeNet architecture, 1x1 convolution is used for two purposes</p>
+<ul>
+<li>To make network deep by adding an “inception module” like Network in Network paper, as described above.  </li>
+<li>To reduce the dimensions inside this “inception module”.  </li>
+<li>To add more non-linearity by having ReLU immediately after every 1x1 convolution.<br>Here is the scresnshot from the paper, which elucidates above points :</li>
+</ul>
+<p><img src="/images/dl/inception_1x1.png" alt=""></p>
+<p>1x1 convolutions in GoogLeNet<br>It can be seen from the image on the right, that 1x1 convolutions (in yellow), are specially used before 3x3 and 5x5 convolution to reduce the dimensions. It should be noted that a two step convolution operation can always to combined into one, but in this case and in most other deep learning networks, convolutions are followed by non-linear activation and hence convolutions are no longer linear operators and cannot be combined.</p>
+<p>In designing such a network, it is important to note that initial convolution kernel should be of size larger than 1x1 to have a receptive field capable of capturing locally spatial information. According to the NIN paper, 1x1 convolution is equivalent to cross-channel parametric pooling layer. From the paper - “This cascaded cross channel parameteric pooling structure allows complex and learnable interactions of cross channel information”.</p>
+<p>Cross channel information learning (cascaded 1x1 convolution) is biologically inspired because human visual cortex have receptive fields (kernels) tuned to different orientation. For e.g</p>
+<p>different orientation tuned receptive field profiles in the human visual cortex</p>
+<p><img src="/images/dl/RotBundleFiltersListPlot3D.gif" alt=""></p>
+<p>Different orientation tuned receptive field profiles in the human visual cortex Source</p>
+<h2 id="More_Uses"><a href="#More_Uses" class="headerlink" title="More Uses"></a>More Uses</h2><ul>
+<li>1x1 Convolution can be combined with Max pooling<br><img src="/images/dl/numerical_max_pooling.gif" alt=""></li>
+</ul>
+<p>Pooling with 1x1 convolution Pooling with 1x1 convolution</p>
+<ul>
+<li><p>1x1 Convolution with higher strides leads to even more redution in data by decreasing resolution, while losing very little non-spatially correlated information.<br>1x1 convolution with strides 1x1 convolution with strides<br><img src="/images/dl/no_padding_strides.gif" alt=""></p>
+</li>
+<li><p>Replace fully connected layers with 1x1 convolutions as Yann LeCun believes they are the same - &gt; In Convolutional Nets, there is no such thing as “fully-connected layers”. There are only convolution layers with 1x1 convolution kernels and a full connection table. – Yann LeCun</p>
+</li>
+</ul>
+<p>Convolution gif images generated using this wonderful code, more images on 1x1 convolutions and 3x3 convolutions can be found here</p>
+<p><a href="http://iamaaditya.github.io/2016/03/one-by-one-convolution/" target="_blank" rel="external">FROM</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/" data-id="ciwrvbq5q007fh7s88riey9db" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/node_essentail" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -174,7 +259,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/11/dev/node_essentail/" data-id="civ3ra7ya000wwmjkj54kee5e" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/11/dev/node_essentail/" data-id="ciwrvbq1t000ih7s83squ6k7d" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/11/dev/node_essentail/#ds-thread" class="article-comment-link">评论</a>
       
@@ -236,67 +321,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/10/dev/esop/" data-id="civ3ra7xr000nwmjk5vtyuip5" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/10/dev/esop/" data-id="ciwrvbq1j0007h7s88u6wa618" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/10/dev/esop/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/ml/categorical_features" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/18/algo/ml/categorical_features/">Handling categorical features</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/09/18/algo/ml/categorical_features/">
-      <time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity"><a href="#Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity" class="headerlink" title="Handling categorical features: get_dummies, OneHotEncoder and multicollinearity"></a>Handling categorical features: get_dummies, OneHotEncoder and multicollinearity</h2><p>Get_dummies is a common way to create dummy variables for categorical features. While it is widely used, there are some drawbacks. First, it modifies your dataframe. When you have a categorical feature with hundreds of categories, get_dummies adds hundreds of dummy variables to the dataframe. And you may need to drop the categorical feature after creating dummies if you want to quickly assign features to X (independent variables). Another thing about get_dummies is, if there are many categorical features in the dataset, you will have to do get_dummies for every feature. Even constructing a loop to do so is a lot code to write.  </p>
-<p>If you do not want to mess up your data frame, or you are too lazy to write too much code (like me), OneHotEncoder is for you. OneHotEncoder is a sklearn preprocessing function. Unlike get_dummies, OHE does not add variables to your data frame. It creates dummy variables by transforming X, and all the dummies are stored in X. And you can specifiy which columns you want to create dummies when you fit X by OHE.  </p>
-<p>However, there are also some cons about OHE. First, OHE only works with categories that are integers over or equal to zero, which means if the category names are strings or negative numbers, you will have to do some transformation before fitting OHE.  </p>
-<p>Secondly, you may not be able to drop one dummy variable in order to avoid multicollinearity after fitting OHE as there are no separate variables in the dataframe. One way to address this problem is to use regularization (Lasso) with the model to drop redundant dummies. As there are two dummies which provide the exact same information, one of them must be dropped when minimizing the regularization term in the cost function.  </p>
-<p>A final con about OHE is that, you may not be able to tell which dummies are left and which are dropped. So, if you are doing bottom up feature selection, get_dummies may be a better choice as you can tell which features are selected and reassign X. Or if you are trying to identify the single effect of a certain dummy on y, get_dummies is the choice.</p>
-<p>From: <a href="https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x" target="_blank" rel="external">https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/" data-id="civ3ra81u005dwmjk9a8kyvvr" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -365,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="civ3ra821005ywmjkyoza74ek" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/" data-id="ciwrvbq5u007lh7s8m6tugwp9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/18/algo/sklearn/Dummification_vs_encoding/#ds-thread" class="article-comment-link">评论</a>
       
@@ -378,7 +405,7 @@
 
 
     
-      <article id="post-algo/one_hot_encode" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-algo/ml/categorical_features" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -387,7 +414,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/14/algo/one_hot_encode/">One-Hot Encoding</a>
+      <a class="article-title" href="/2016/09/18/algo/ml/categorical_features/">Handling categorical features</a>
     </h1>
   
 
@@ -395,8 +422,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2016/09/14/algo/one_hot_encode/">
-      <time datetime="2016-09-13T16:00:00.000Z" itemprop="datePublished">2016-09-14</time>
+    <a href="/2016/09/18/algo/ml/categorical_features/">
+      <time datetime="2016-09-17T16:00:00.000Z" itemprop="datePublished">2016-09-18</time>
     </a>
   </div>
 
@@ -413,25 +440,19 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>一、One-Hot Encoding<br>    One-Hot编码，又称为一位有效编码，主要是采用位状态寄存器来对个状态进行编码，每个状态都由他独立的寄存器位，并且在任意时候只有一位有效。<br>    在实际的机器学习的应用任务中，特征有时候并不总是连续值，有可能是一些分类值，如性别可分为“male”和“female”。在机器学习任务中，对于这样的特征，通常我们需要对其进行特征数字化，如下面的例子：<br>有如下三个特征属性：<br>性别：[“male”，”female”]<br>地区：[“Europe”，”US”，”Asia”]<br>浏览器：[“Firefox”，”Chrome”，”Safari”，”Internet Explorer”]<br>对于某一个样本，如[“male”，”US”，”Internet Explorer”]，我们需要将这个分类值的特征数字化，最直接的方法，我们可以采用序列化的方式：[0,1,3]。但是这样的特征处理并不能直接放入机器学习算法中。</p>
-<p>二、One-Hot Encoding的处理方法<br>    对于上述的问题，性别的属性是二维的，同理，地区是三维的，浏览器则是思维的，这样，我们可以采用One-Hot编码的方式对上述的样本“[“male”，”US”，”Internet Explorer”]”编码，“male”则对应着[1，0]，同理“US”对应着[0，1，0]，“Internet Explorer”对应着[0,0,0,1]。则完整的特征数字化的结果为：[1,0,0,1,0,0,0,0,1]。这样导致的一个结果就是数据会变得非常的稀疏。</p>
-<p>三、实际的Python代码</p>
-<pre><code>from sklearn import preprocessing  
+        <h2 id="Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity"><a href="#Handling_categorical_features_3A_get_dummies_2C_OneHotEncoder_and_multicollinearity" class="headerlink" title="Handling categorical features: get_dummies, OneHotEncoder and multicollinearity"></a>Handling categorical features: get_dummies, OneHotEncoder and multicollinearity</h2><p>Get_dummies is a common way to create dummy variables for categorical features. While it is widely used, there are some drawbacks. First, it modifies your dataframe. When you have a categorical feature with hundreds of categories, get_dummies adds hundreds of dummy variables to the dataframe. And you may need to drop the categorical feature after creating dummies if you want to quickly assign features to X (independent variables). Another thing about get_dummies is, if there are many categorical features in the dataset, you will have to do get_dummies for every feature. Even constructing a loop to do so is a lot code to write.  </p>
+<p>If you do not want to mess up your data frame, or you are too lazy to write too much code (like me), OneHotEncoder is for you. OneHotEncoder is a sklearn preprocessing function. Unlike get_dummies, OHE does not add variables to your data frame. It creates dummy variables by transforming X, and all the dummies are stored in X. And you can specifiy which columns you want to create dummies when you fit X by OHE.  </p>
+<p>However, there are also some cons about OHE. First, OHE only works with categories that are integers over or equal to zero, which means if the category names are strings or negative numbers, you will have to do some transformation before fitting OHE.  </p>
+<p>Secondly, you may not be able to drop one dummy variable in order to avoid multicollinearity after fitting OHE as there are no separate variables in the dataframe. One way to address this problem is to use regularization (Lasso) with the model to drop redundant dummies. As there are two dummies which provide the exact same information, one of them must be dropped when minimizing the regularization term in the cost function.  </p>
+<p>A final con about OHE is that, you may not be able to tell which dummies are left and which are dropped. So, if you are doing bottom up feature selection, get_dummies may be a better choice as you can tell which features are selected and reassign X. Or if you are trying to identify the single effect of a certain dummy on y, get_dummies is the choice.</p>
+<p>From: <a href="https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x" target="_blank" rel="external">https://medium.com/@guaisang/handling-categorical-features-get-dummies-onehotencoder-and-multicollinearity-f9d473a40417#.o5hqnz95x</a></p>
 
-enc = preprocessing.OneHotEncoder()  
-enc.fit([[0,0,3],[1,1,0],[0,2,1],[1,0,2]])  
-
-array = enc.transform([[0,1,3]]).toarray()  
-
-print array
-</code></pre><pre><code>结果：[[ 1.  0.  0.  1.  0.  0.  0.  0.  1.]]
-</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/" data-id="civ3ra7xj000gwmjkvrzuv2s8" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/" data-id="ciwrvbq5r007hh7s8ekqy30ct" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2016/09/14/algo/one_hot_encode/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2016/09/18/algo/ml/categorical_features/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -458,7 +479,7 @@ print array
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
+              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -466,9 +487,9 @@ print array
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
             </div>
           </li>
         
@@ -485,6 +506,23 @@ print array
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
               <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
               <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
@@ -523,24 +561,6 @@ print array
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="thumbnail">
-  
-    <span style="background-image:url(/images/dl/full_padding_no_strides_transposed.gif
-)" alt="One by One [ 1 x 1 ] Convolution - counter-intuitively useful" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="title">One by One [ 1 x 1 ] Convolution - counter-intuitively useful</a></p>
-              <p class="item-date"><time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished">2016-10-15</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -550,7 +570,7 @@ print array
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">35</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">36</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -568,7 +588,7 @@ print array
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

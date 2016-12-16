@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        113
+        114
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,247 @@
 
       
       <section id="main">
+      <article id="post-dev/CPP/cpp_big_number" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/15/dev/CPP/cpp_big_number/">C++ string实现加减乘除</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/15/dev/CPP/cpp_big_number/">
+      <time datetime="2015-11-15T12:19:56.000Z" itemprop="datePublished">2015-11-15</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/c/">c++</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <pre><code class="c++">#include&lt;stdio.h&gt;
+#include&lt;string&gt;
+#include&lt;string.h&gt;
+#include&lt;iostream&gt;
+using namespace std;
+
+//compare比较函数：相等返回0，大于返回1，小于返回-1
+int compare(string str1,string str2)
+{
+    if(str1.length()&gt;str2.length()) return 1;
+    else if(str1.length()&lt;str2.length())  return -1;
+    else return str1.compare(str2);
+}
+//高精度加法
+//只能是两个正数相加
+string add(string str1,string str2)//高精度加法
+{
+    string str;
+
+    int len1=str1.length();
+    int len2=str2.length();
+    //前面补0，弄成长度相同
+    if(len1&lt;len2)
+    {
+        for(int i=1;i&lt;=len2-len1;i++)
+           str1=&quot;0&quot;+str1;
+    }
+    else
+    {
+        for(int i=1;i&lt;=len1-len2;i++)
+           str2=&quot;0&quot;+str2;
+    }
+    len1=str1.length();
+    int cf=0;
+    int temp;
+    for(int i=len1-1;i&gt;=0;i--)
+    {
+        temp=str1[i]-&#39;0&#39;+str2[i]-&#39;0&#39;+cf;
+        cf=temp/10;
+        temp%=10;
+        str=char(temp+&#39;0&#39;)+str;
+    }
+    if(cf!=0)  str=char(cf+&#39;0&#39;)+str;
+    return str;
+}
+//高精度减法
+//只能是两个正数相减，而且要大减小
+string sub(string str1,string str2)//高精度减法
+{
+    string str;
+    int tmp=str1.length()-str2.length();
+    int cf=0;
+    for(int i=str2.length()-1;i&gt;=0;i--)
+    {
+        if(str1[tmp+i]&lt;str2[i]+cf)
+        {
+            str=char(str1[tmp+i]-str2[i]-cf+&#39;0&#39;+10)+str;
+            cf=1;
+        }
+        else
+        {
+            str=char(str1[tmp+i]-str2[i]-cf+&#39;0&#39;)+str;
+            cf=0;
+        }
+    }
+    for(int i=tmp-1;i&gt;=0;i--)
+    {
+        if(str1[i]-cf&gt;=&#39;0&#39;)
+        {
+            str=char(str1[i]-cf)+str;
+            cf=0;
+        }
+        else
+        {
+            str=char(str1[i]-cf+10)+str;
+            cf=1;
+        }
+    }
+    str.erase(0,str.find_first_not_of(&#39;0&#39;));//去除结果中多余的前导0
+    return str;
+}
+//高精度乘法
+//只能是两个正数相乘
+string mul(string str1,string str2)
+{
+    string str;
+    int len1=str1.length();
+    int len2=str2.length();
+    string tempstr;
+    for(int i=len2-1;i&gt;=0;i--)
+    {
+        tempstr=&quot;&quot;;
+        int temp=str2[i]-&#39;0&#39;;
+        int t=0;
+        int cf=0;
+        if(temp!=0)
+        {
+            for(int j=1;j&lt;=len2-1-i;j++)
+              tempstr+=&quot;0&quot;;
+            for(int j=len1-1;j&gt;=0;j--)
+            {
+                t=(temp*(str1[j]-&#39;0&#39;)+cf)%10;
+                cf=(temp*(str1[j]-&#39;0&#39;)+cf)/10;
+                tempstr=char(t+&#39;0&#39;)+tempstr;
+            }
+            if(cf!=0) tempstr=char(cf+&#39;0&#39;)+tempstr;
+        }
+        str=add(str,tempstr);
+    }
+    str.erase(0,str.find_first_not_of(&#39;0&#39;));
+    return str;
+}
+
+//高精度除法
+//两个正数相除，商为quotient,余数为residue
+//需要高精度减法和乘法
+void div(string str1,string str2,string &amp;quotient,string &amp;residue)
+{
+    quotient=residue=&quot;&quot;;//清空
+    if(str2==&quot;0&quot;)//判断除数是否为0
+    {
+        quotient=residue=&quot;ERROR&quot;;
+        return;
+    }
+    if(str1==&quot;0&quot;)//判断被除数是否为0
+    {
+        quotient=residue=&quot;0&quot;;
+        return;
+    }
+    int res=compare(str1,str2);
+    if(res&lt;0)
+    {
+        quotient=&quot;0&quot;;
+        residue=str1;
+        return;
+    }
+    else if(res==0)
+    {
+        quotient=&quot;1&quot;;
+        residue=&quot;0&quot;;
+        return;
+    }
+    else
+    {
+        int len1=str1.length();
+        int len2=str2.length();
+        string tempstr;
+        tempstr.append(str1,0,len2-1);
+        for(int i=len2-1;i&lt;len1;i++)
+        {
+            tempstr=tempstr+str1[i];
+            tempstr.erase(0,tempstr.find_first_not_of(&#39;0&#39;));
+            if(tempstr.empty())
+              tempstr=&quot;0&quot;;
+            for(char ch=&#39;9&#39;;ch&gt;=&#39;0&#39;;ch--)//试商
+            {
+                string str,tmp;
+                str=str+ch;
+                tmp=mul(str2,str);
+                if(compare(tmp,tempstr)&lt;=0)//试商成功
+                {
+                    quotient=quotient+ch;
+                    tempstr=sub(tempstr,tmp);
+                    break;
+                }
+            }
+        }
+        residue=tempstr;
+    }
+    quotient.erase(0,quotient.find_first_not_of(&#39;0&#39;));
+    if(quotient.empty()) quotient=&quot;0&quot;;
+}
+
+int main()
+{
+     string str1,str2;
+     string str3,str4;
+     while(cin&gt;&gt;str1&gt;&gt;str2)
+     {
+         cout&lt;&lt;add(str1,str2)&lt;&lt;endl;
+         cout&lt;&lt;sub(str1,str2)&lt;&lt;endl;
+         cout&lt;&lt;mul(str1,str2)&lt;&lt;endl;
+         div(str1,str2,str3,str4);
+         cout&lt;&lt;str3&lt;&lt;&quot;  &quot;&lt;&lt;str4&lt;&lt;endl;
+     }
+     return 0;
+}
+</code></pre>
+<p>From: <a href="http://www.cnblogs.com/kuangbin/archive/2012/08/11/2634044.html" target="_blank" rel="external">http://www.cnblogs.com/kuangbin/archive/2012/08/11/2634044.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="ciwrvbq4m003vh7s8r29l7qt6" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-ads/skip_the_ad" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -197,7 +438,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="civ3ra7xo000kwmjkc1udc4c9" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="ciwrvbq1l0009h7s86cyt47aq" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/#ds-thread" class="article-comment-link">评论</a>
       
@@ -597,7 +838,7 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="civ3ra829006fwmjkxr1s0veo" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="ciwrvbq4o0044h7s8r5hkkp28" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/#ds-thread" class="article-comment-link">评论</a>
       
@@ -671,7 +912,7 @@ grangertest(chicken ~ egg, order = 4, data = ChickEgg)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/27/algo/granger_causality/" data-id="civ3ra7xh000fwmjkquvs4cku" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/27/algo/granger_causality/" data-id="ciwrvbq1z000qh7s8zp665msb" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/27/algo/granger_causality/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1098,89 +1339,11 @@ public:
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/26/dev/CPP/cpp11/" data-id="civ3ra828006dwmjksc6imi6q" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/26/dev/CPP/cpp11/" data-id="ciwrvbq4t004jh7s8k7cj8ee0" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/26/dev/CPP/cpp11/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/about_nio" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/26/dev/about_nio/">一个故事讲清楚 NIO</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/26/dev/about_nio/">
-      <time datetime="2015-10-26T08:19:56.000Z" itemprop="datePublished">2015-10-26</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>假设某银行只有10个职员, 该银行的业务流程分为以下4个步骤：</p>
-<p>1） 顾客填申请表（5分钟）；<br>2） 职员审核（1分钟）；<br>3） 职员叫保安去金库取钱（3分钟）；<br>4） 职员打印票据，并将钱和票据返回给顾客（1分钟）。<br>我们看看银行不同的工作方式对其工作效率到底有何影响。</p>
-<h3 id="1_BIO_u65B9_u5F0F"><a href="#1_BIO_u65B9_u5F0F" class="headerlink" title="1 BIO方式"></a>1 BIO方式</h3><p>每来一个顾客，马上由一位职员来接待处理，并且这个职员需要负责以上4个完整流程。当超过10个顾客时，剩余的顾客需要排队等候。</p>
-<p>我们算算这个银行一个小时到底能处理多少顾客？一个职员处理一个顾客需要10分钟（5+1+3+1）时间，一个小时（60分钟）能处理6个顾客，一共10个职员，那就是只能处理60个顾客。</p>
-<p>可以看到银行职员的工作状态并不饱和，比如在第1步，其实是处于等待中。</p>
-<p>这种工作其实就是BIO，每次来一个请求（顾客），就分配到线程池中由一个线程（职员）处理，如果超出了线程池的最大上限（10个），就扔到队列等待 。</p>
-<h3 id="2_NIO_u65B9_u5F0F"><a href="#2_NIO_u65B9_u5F0F" class="headerlink" title="2 NIO方式"></a>2 NIO方式</h3><p>如何提高银行的吞吐量呢？</p>
-<p>思路：分而治之，将任务拆分开来，由专门的人负责专门的任务。</p>
-<p>具体来讲，银行专门指派一名职员A，A的工作就是每当有顾客到银行，他就递上表格让顾客填写，每当有顾客填好表后，A就将其随机指派给剩余的9名职员完成后续步骤。</p>
-<p>我们计算下这种工作方式下银行一个小时到底能处理多少顾客？</p>
-<p>假设顾客非常多，职员A的工作处于饱和中，他不断的将填好表的顾客带到柜台处理，柜台一个职员5分钟能处理完一个顾客，一个小时9名职员能处理：9*（60/5）=108。</p>
-<p>可见工作方式的转变能带来效率的极大提升。</p>
-<p>这种工作方式其实就NIO的思路。下图是非常经典的NIO说明图，mainReactor线程负责监听server socket，accept新连接，并将建立的socket分派给subReactor；subReactor可以是一个线程，也可以是线程池（一般可以设置为CPU核数），负责多路分离已连接的socket，读写网络数据，这里的读写网络数据可类比顾客填表这一耗时动作，对具体的业务处理功能，其扔给worker线程池完成。</p>
-<p>可以看到典型NIO有三类线程，分别是mainReactor线程、subReactor线程、work线程。不同的线程干专业的事情，最终每个线程都没空着，系统的吞吐量自然就上去了。</p>
-<h3 id="3__u5F02_u6B65_u65B9_u5F0F"><a href="#3__u5F02_u6B65_u65B9_u5F0F" class="headerlink" title="3 异步方式"></a>3 异步方式</h3><p>第二种工作方式有没有什么可以提高的地方呢？</p>
-<p>仔细查看可发现第3步骤这3分钟柜台职员是在等待中度过的，那怎么能让柜台职员保持满负荷呢？</p>
-<p>还是分而治之的思路，指派1个职员B来专门负责第3步骤。每当柜台员工完成第2步时，就通知职员B来负责与保安沟通取钱。这时候柜台员工可以继续处理下一个顾客。当职员B拿到钱之后，他会怎么办呢？他会通知顾客钱已经到柜台了，让顾客重新排队处理，当柜台职员再次服务该顾客时，发现该顾客前3步已经完成，直接执行第4步即可。</p>
-<p>我们可以算算通过这种方法，银行的吞吐量能提高到多少。</p>
-<p>假设职员B的工作非常饱和，柜台一个职员现在2分钟能处理完一个顾客，一个小时8名职员能处理：8*（60/2）=240。</p>
-<p>在当今web服务中，经常需要通过RPC或者Http等方式调用第三方服务，这里对应的就是第3步，如果这步耗时较长，通过异步方式将能极大降低资源使用率。</p>
-<p>jetty Continuations 就实现了上述异步方式，有兴趣的同学可以去尝试下（<a href="http://wiki.eclipse.org/Jetty/Feature/Continuations）。" target="_blank" rel="external">http://wiki.eclipse.org/Jetty/Feature/Continuations）。</a></p>
-<p>NIO+异步的方式能让少量的线程（资源）做大量的事情，这适用于很多应用场景，比如代理服务、api服务、长连接服务等等，这些应用如果用同步方式将耗费大量机器资源。尽管NIO+异步能提高系统吞吐量，但其并不能让一个请求的等待时间下降，相反可能会增加等待时间。</p>
-<h3 id="4__u5C0F_u7ED3"><a href="#4__u5C0F_u7ED3" class="headerlink" title="4 小结"></a>4 小结</h3><p>总结就一句：“分而治之，将任务拆分开来，由专门的人负责专门的任务”，这不仅在计算机领域生效，在整个社会领域都生效。</p>
-<p>src: <a href="http://blog.jobbole.com/88984/" target="_blank" rel="external">http://blog.jobbole.com/88984/</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/26/dev/about_nio/" data-id="civ3ra7xt000pwmjk30770w6u" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/26/dev/about_nio/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nio/">nio</a></li></ul>
-
     </footer>
   </div>
   
@@ -1205,7 +1368,7 @@ public:
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
+              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -1213,9 +1376,9 @@ public:
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
             </div>
           </li>
         
@@ -1232,6 +1395,23 @@ public:
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
               <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
               <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
@@ -1270,24 +1450,6 @@ public:
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="thumbnail">
-  
-    <span style="background-image:url(/images/dl/full_padding_no_strides_transposed.gif
-)" alt="One by One [ 1 x 1 ] Convolution - counter-intuitively useful" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="title">One by One [ 1 x 1 ] Convolution - counter-intuitively useful</a></p>
-              <p class="item-date"><time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished">2016-10-15</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -1297,7 +1459,7 @@ public:
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">35</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">36</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -1315,7 +1477,7 @@ public:
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        113
+        114
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,7 +126,7 @@
 
       
       <section id="main">
-      <article id="post-algo/ml/all_in_one_docker" class="article article-type-post" itemscope itemprop="blogPost">
+      <article id="post-dev/python/python_extra" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
     
@@ -135,7 +135,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/04/algo/ml/all_in_one_docker/">搭建深度学习常用框架的Docker环境</a>
+      <a class="article-title" href="/2016/12/16/dev/python/python_extra/">Python snippets</a>
     </h1>
   
 
@@ -143,8 +143,8 @@
           
   <div class="article-date">
     <i class="fa fa-calendar"></i>
-    <a href="/2016/11/04/algo/ml/all_in_one_docker/">
-      <time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time>
+    <a href="/2016/12/16/dev/python/python_extra/">
+      <time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time>
     </a>
   </div>
 
@@ -152,7 +152,7 @@
           
   <div class="article-category">
   	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
   </div>
 
         </div>
@@ -161,34 +161,83 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <h2 id="All_in_one_docker"><a href="#All_in_one_docker" class="headerlink" title="All in one docker"></a>All in one docker</h2><p>如果你不想单独安装每个深度学习组件，并且厌倦于安装过程中的各种依赖冲突等问题，那么推荐你使用Docker来搭建深度学习工作环境。下面是一个可以参考的 <a href="https://github.com/lijingpeng/dl-docker" target="_blank" rel="external">All in one docker</a> 环境。几乎包含了所有的流行的深度学习框架，并且分别有CPU版本和GPU版本，与虚拟机不同的是，Docker几乎没有性能损失，因此你可以放心的使用它。需要注意的是，GPU版本的Docker只能在Linux系统上运行。</p>
-<h2 id="u5305_u542B_u7684_u6846_u67B6_u53CA_u7CFB_u7EDF_u4F9D_u8D56"><a href="#u5305_u542B_u7684_u6846_u67B6_u53CA_u7CFB_u7EDF_u4F9D_u8D56" class="headerlink" title="包含的框架及系统依赖"></a>包含的框架及系统依赖</h2><ul>
-<li>Ubuntu 14.04</li>
-<li>CUDA 7.5 (GPU version only)</li>
-<li>cuDNN v4 (GPU version only)</li>
-<li>Tensorflow</li>
-<li>Caffe</li>
-<li>Theano</li>
-<li>Keras</li>
-<li>Lasagne</li>
-<li>Torch (includes nn, cutorch, cunn and cuDNN bindings)</li>
-<li>iPython/Jupyter Notebook (including iTorch kernel)</li>
-<li>Numpy, SciPy, Pandas, Scikit Learn, Matplotlib</li>
-<li>A few common libraries used for deep learning</li>
-</ul>
-<h2 id="build"><a href="#build" class="headerlink" title="build"></a>build</h2><p>CPU version</p>
-<pre><code>docker pull floydhub/dl-docker:cpu
-</code></pre><h2 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h2><p>CPU Version</p>
-<pre><code>docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:cpu bash
-</code></pre><p>GPU Version</p>
-<pre><code>nvidia-docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:gpu bash
+        <h2 id="Python_extra"><a href="#Python_extra" class="headerlink" title="Python extra"></a>Python extra</h2><hr>
+<h3 id="python_u4E2D_u5305_u542BUTF-8_u7F16_u7801_u4E2D_u6587_u7684_u5217_u8868_u6216_u5B57_u5178_u7684_u8F93_u51FA"><a href="#python_u4E2D_u5305_u542BUTF-8_u7F16_u7801_u4E2D_u6587_u7684_u5217_u8868_u6216_u5B57_u5178_u7684_u8F93_u51FA" class="headerlink" title="python中包含UTF-8编码中文的列表或字典的输出"></a>python中包含UTF-8编码中文的列表或字典的输出</h3><p>在python 下面一个包含中文字符串的列表（list）或字典，直接使用print会出现以下的结果：</p>
+<pre><code class="python">&gt;&gt;&gt; dict = {&quot;asdf&quot;: &quot;我们的python学习&quot;}
+&gt;&gt;&gt; print dict
+{&#39;asdf&#39;: &#39;\xe6\x88\x91\xe4\xbb\xac\xe7\x9a\x84python\xe5\xad\xa6\xe4\xb9\xa0&#39;}
 </code></pre>
+<p>在输出处理好的数据结构的时候很不方便，需要使用以下方法进行输出：</p>
+<pre><code class="python">&gt;&gt;&gt; import json
+&gt;&gt;&gt; print json.dumps(dict, encoding=&quot;UTF-8&quot;, ensure_ascii=False)
+{&quot;asdf&quot;: &quot;我们的python学习&quot;}
+</code></pre>
+<p>注意上面的两个参数，如果是字符串，直接输出：</p>
+<pre><code class="python">print str.encode(&quot;UTF-8&quot;)
+</code></pre>
+<h3 id="Python__u5224_u65AD_u5B57_u7B26_u4E32_u662F_u5426_u4E3A_u6570_u5B57"><a href="#Python__u5224_u65AD_u5B57_u7B26_u4E32_u662F_u5426_u4E3A_u6570_u5B57" class="headerlink" title="Python 判断字符串是否为数字"></a>Python 判断字符串是否为数字</h3><pre><code class="python"># -*- coding: UTF-8 -*-
+
+# Filename : test.py
+# author by : www.runoob.com
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+    return False
+
+# 测试字符串和数字
+print(is_number(&#39;foo&#39;))   # False
+print(is_number(&#39;1&#39;))     # True
+print(is_number(&#39;1.3&#39;))   # True
+print(is_number(&#39;-1.37&#39;)) # True
+print(is_number(&#39;1e3&#39;))   # True
+
+# 测试 Unicode
+# 阿拉伯语 5
+print(is_number(&#39;٥&#39;))  # False
+# 泰语 2
+print(is_number(&#39;๒&#39;))  # False
+# 中文数字
+print(is_number(&#39;四&#39;)) # False
+# 版权号
+print(is_number(&#39;©&#39;))  # False
+</code></pre>
+<p>执行以上代码输出结果为：</p>
+<pre><code>False
+True
+True
+True
+True
+False
+False
+False
+False
+</code></pre><p>Python isdigit() 方法检测字符串是否只由数字组成。<br>Python isnumeric() 方法检测字符串是否只由数字组成。这种方法是只针对unicode对象。</p>
+<h3 id="Python_u4E2D_u5C06_uFF08_u5B57_u5178_uFF0C_u5217_u8868_u7B49_uFF09_u53D8_u91CF_u683C_u5F0F_u5316_u6210_uFF08_u6F02_u4EAE_u7684_uFF0C_u6811_u5F62_u7684_uFF0C_u5E26_u7F29_u8FDB_u7684_uFF0CJSON_u65B9_u5F0F_u7684_uFF09_u5B57_u7B26_u4E32_u8F93_u51FA"><a href="#Python_u4E2D_u5C06_uFF08_u5B57_u5178_uFF0C_u5217_u8868_u7B49_uFF09_u53D8_u91CF_u683C_u5F0F_u5316_u6210_uFF08_u6F02_u4EAE_u7684_uFF0C_u6811_u5F62_u7684_uFF0C_u5E26_u7F29_u8FDB_u7684_uFF0CJSON_u65B9_u5F0F_u7684_uFF09_u5B57_u7B26_u4E32_u8F93_u51FA" class="headerlink" title="Python中将（字典，列表等）变量格式化成（漂亮的，树形的，带缩进的，JSON方式的）字符串输出"></a>Python中将（字典，列表等）变量格式化成（漂亮的，树形的，带缩进的，JSON方式的）字符串输出</h3><p>想要JSON输出为带缩进的，树状的，很漂亮的效果，那么可以通过这样的方法：</p>
+<pre><code class="python">import json
+
+# demoDictList is the value we want format to output
+jsonDumpsIndentStr = json.dumps(demoDictList, indent=1)
+print &quot;jsonDumpsIndentStr=&quot;, jsonDumpsIndentStr
+</code></pre>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/" data-id="civ3ra81s0057wmjk247w7cze" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/12/16/dev/python/python_extra/" data-id="ciwrvbq52005ah7s8cch5xcsc" class="article-share-link">分享到</a>
       
-        <a href="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/#ds-thread" class="article-comment-link">评论</a>
+        <a href="http://www.notehub.cn/2016/12/16/dev/python/python_extra/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -266,9 +315,82 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/" data-id="civ3ra81v005gwmjkhytdk54w" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/" data-id="ciwrvbq5q007gh7s8hofih96n" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/ml/all_in_one_docker" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/04/algo/ml/all_in_one_docker/">搭建深度学习常用框架的Docker环境</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/11/04/algo/ml/all_in_one_docker/">
+      <time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="All_in_one_docker"><a href="#All_in_one_docker" class="headerlink" title="All in one docker"></a>All in one docker</h2><p>如果你不想单独安装每个深度学习组件，并且厌倦于安装过程中的各种依赖冲突等问题，那么推荐你使用Docker来搭建深度学习工作环境。下面是一个可以参考的 <a href="https://github.com/lijingpeng/dl-docker" target="_blank" rel="external">All in one docker</a> 环境。几乎包含了所有的流行的深度学习框架，并且分别有CPU版本和GPU版本，与虚拟机不同的是，Docker几乎没有性能损失，因此你可以放心的使用它。需要注意的是，GPU版本的Docker只能在Linux系统上运行。</p>
+<h2 id="u5305_u542B_u7684_u6846_u67B6_u53CA_u7CFB_u7EDF_u4F9D_u8D56"><a href="#u5305_u542B_u7684_u6846_u67B6_u53CA_u7CFB_u7EDF_u4F9D_u8D56" class="headerlink" title="包含的框架及系统依赖"></a>包含的框架及系统依赖</h2><ul>
+<li>Ubuntu 14.04</li>
+<li>CUDA 7.5 (GPU version only)</li>
+<li>cuDNN v4 (GPU version only)</li>
+<li>Tensorflow</li>
+<li>Caffe</li>
+<li>Theano</li>
+<li>Keras</li>
+<li>Lasagne</li>
+<li>Torch (includes nn, cutorch, cunn and cuDNN bindings)</li>
+<li>iPython/Jupyter Notebook (including iTorch kernel)</li>
+<li>Numpy, SciPy, Pandas, Scikit Learn, Matplotlib</li>
+<li>A few common libraries used for deep learning</li>
+</ul>
+<h2 id="build"><a href="#build" class="headerlink" title="build"></a>build</h2><p>CPU version</p>
+<pre><code>docker pull floydhub/dl-docker:cpu
+</code></pre><h2 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h2><p>CPU Version</p>
+<pre><code>docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:cpu bash
+</code></pre><p>GPU Version</p>
+<pre><code>nvidia-docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:gpu bash
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/" data-id="ciwrvbq5p007dh7s8q1yad50r" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -373,7 +495,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="civ3ra82e006pwmjkg7bygd0z" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="ciwrvbq4r004dh7s80i1nw3md" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/#ds-thread" class="article-comment-link">评论</a>
       
@@ -432,94 +554,9 @@ CMD [&quot;/run_jupyter.sh&quot;]
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/26/dev/soft_source/" data-id="civ3ra7yb000xwmjknzda3exn" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/26/dev/soft_source/" data-id="ciwrvbq1u000jh7s8j5q52ktm" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/26/dev/soft_source/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/ml/OnebyOne_Convolution" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/15/algo/ml/OnebyOne_Convolution/">One by One [ 1 x 1 ] Convolution - counter-intuitively useful</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/10/15/algo/ml/OnebyOne_Convolution/">
-      <time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished">2016-10-15</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>Whenever I discuss or show GoogleNet architecture, one question always comes up -</p>
-<p>“Why 1x1 convolution ? Is it not redundant ?<br>Convolution with Kernel of size 3x3 Convolution with Kernel of size 1x1</p>
-<p><img src="/images/dl/full_padding_no_strides_transposed.gif" alt=""></p>
-<p><img src="/images/dl/full_padding_no_strides_transposed_small.gif" alt=""></p>
-<p>top : Convolution with kernel of size 3x3 bottom : Convolution with kernel of size 1x1</p>
-<h2 id="Simple_Answer"><a href="#Simple_Answer" class="headerlink" title="Simple Answer"></a>Simple Answer</h2><p>Most simplistic explanation would be that 1x1 convolution leads to dimension reductionality. For example, an image of 200 x 200 with 50 features on convolution with 20 filters of 1x1 would result in size of 200 x 200 x 20. But then again, is this is the best way to do dimensionality reduction in the convoluational neural network? What about the efficacy vs efficiency?</p>
-<h2 id="Complex_Answer"><a href="#Complex_Answer" class="headerlink" title="Complex Answer"></a>Complex Answer</h2><h3 id="Feature_transformation"><a href="#Feature_transformation" class="headerlink" title="Feature transformation"></a>Feature transformation</h3><p>Although 1x1 convolution is a ‘feature pooling’ technique, there is more to it than just sum pooling of features across various channels/feature-maps of a given layer. 1x1 convolution acts like coordinate-dependent transformation in the filter space[1]. It is important to note here that this transformation is strictly linear, but in most of application of 1x1 convolution, it is succeeded by a non-linear activation layer like ReLU. This transformation is learned through the (stochastic) gradient descent. But an important distinction is that it suffers with less over-fitting due to smaller kernel size (1x1).</p>
-<h3 id="Deeper_Network"><a href="#Deeper_Network" class="headerlink" title="Deeper Network"></a>Deeper Network</h3><p>One by One convolution was first introduced in this paper titled Network in Network. In this paper, the author’s goal was to generate a deeper network without simply stacking more layers. It replaces few filters with a smaller perceptron layer with mixture of 1x1 and 3x3 convolutions. In a way, it can be seen as “going wide” instead of “deep”, but it should be noted that in machine learning terminology, ‘going wide’ is often meant as adding more data to the training. Combination of 1x1 (x F) convolution is mathematically equivalent to a multi-layer perceptron.[2].</p>
-<h3 id="Inception_Module"><a href="#Inception_Module" class="headerlink" title="Inception Module"></a>Inception Module</h3><p>In GoogLeNet architecture, 1x1 convolution is used for two purposes</p>
-<ul>
-<li>To make network deep by adding an “inception module” like Network in Network paper, as described above.  </li>
-<li>To reduce the dimensions inside this “inception module”.  </li>
-<li>To add more non-linearity by having ReLU immediately after every 1x1 convolution.<br>Here is the scresnshot from the paper, which elucidates above points :</li>
-</ul>
-<p><img src="/images/dl/inception_1x1.png" alt=""></p>
-<p>1x1 convolutions in GoogLeNet<br>It can be seen from the image on the right, that 1x1 convolutions (in yellow), are specially used before 3x3 and 5x5 convolution to reduce the dimensions. It should be noted that a two step convolution operation can always to combined into one, but in this case and in most other deep learning networks, convolutions are followed by non-linear activation and hence convolutions are no longer linear operators and cannot be combined.</p>
-<p>In designing such a network, it is important to note that initial convolution kernel should be of size larger than 1x1 to have a receptive field capable of capturing locally spatial information. According to the NIN paper, 1x1 convolution is equivalent to cross-channel parametric pooling layer. From the paper - “This cascaded cross channel parameteric pooling structure allows complex and learnable interactions of cross channel information”.</p>
-<p>Cross channel information learning (cascaded 1x1 convolution) is biologically inspired because human visual cortex have receptive fields (kernels) tuned to different orientation. For e.g</p>
-<p>different orientation tuned receptive field profiles in the human visual cortex</p>
-<p><img src="/images/dl/RotBundleFiltersListPlot3D.gif" alt=""></p>
-<p>Different orientation tuned receptive field profiles in the human visual cortex Source</p>
-<h2 id="More_Uses"><a href="#More_Uses" class="headerlink" title="More Uses"></a>More Uses</h2><ul>
-<li>1x1 Convolution can be combined with Max pooling<br><img src="/images/dl/numerical_max_pooling.gif" alt=""></li>
-</ul>
-<p>Pooling with 1x1 convolution Pooling with 1x1 convolution</p>
-<ul>
-<li><p>1x1 Convolution with higher strides leads to even more redution in data by decreasing resolution, while losing very little non-spatially correlated information.<br>1x1 convolution with strides 1x1 convolution with strides<br><img src="/images/dl/no_padding_strides.gif" alt=""></p>
-</li>
-<li><p>Replace fully connected layers with 1x1 convolutions as Yann LeCun believes they are the same - &gt; In Convolutional Nets, there is no such thing as “fully-connected layers”. There are only convolution layers with 1x1 convolution kernels and a full connection table. – Yann LeCun</p>
-</li>
-</ul>
-<p>Convolution gif images generated using this wonderful code, more images on 1x1 convolutions and 3x3 convolutions can be found here</p>
-<p><a href="http://iamaaditya.github.io/2016/03/one-by-one-convolution/" target="_blank" rel="external">FROM</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/" data-id="civ3ra81x005mwmjk9hxf82qt" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/10/15/algo/ml/OnebyOne_Convolution/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -546,7 +583,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
+              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -554,9 +591,9 @@ CMD [&quot;/run_jupyter.sh&quot;]
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
             </div>
           </li>
         
@@ -573,6 +610,23 @@ CMD [&quot;/run_jupyter.sh&quot;]
             <div class="item-inner">
               <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
               <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
               <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
@@ -611,24 +665,6 @@ CMD [&quot;/run_jupyter.sh&quot;]
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="thumbnail">
-  
-    <span style="background-image:url(/images/dl/full_padding_no_strides_transposed.gif
-)" alt="One by One [ 1 x 1 ] Convolution - counter-intuitively useful" class="thumbnail-image"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/10/15/algo/ml/OnebyOne_Convolution/" class="title">One by One [ 1 x 1 ] Convolution - counter-intuitively useful</a></p>
-              <p class="item-date"><time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished">2016-10-15</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -638,7 +674,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">35</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">36</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -656,7 +692,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
