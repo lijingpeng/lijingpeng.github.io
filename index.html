@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        114
+        115
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,62 @@
 
       
       <section id="main">
+      <article id="post-dev/encode" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/16/dev/encode/">Excel导入CSV文件中文乱码</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/12/16/dev/encode/">
+      <time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>一般Windows用户在使用Excel处理数据文件时都不会关心文件的编码，因为Excel支持Windows上默认使用的简体中文编码GB2312，但使用MAC的用户就没有那么省心了，一不小心就会碰到中文乱码的问题。在Mac上的Excel中为什么会出现中文乱码的情况呢？这是就需要了解一些文件编码的背景知识。文件在计算内部采用的是二进制（0和1）的形式存放，那么给定一个0和1组成的串，计算机怎么知道这个串代表的是英文中的’a’还是中文里面的’好’呢？这时就需要用到文件的编码，不同的编码告诉了计算机怎么去识别文件的内容，例如GB2312编码告诉计算机’001’代表的是中文里面的’好’，而UTF8编码告诉计算机’001’代表的是英文里面的’a’（这个例子只是为了简述文件编码的作用，实际上的编码比这个复杂得多）。由于UTF-8编码同时支持中文、还是日文、韩文、阿拉伯文在类的各种语言，所以它在Mac中被广泛使用，而目前Mac上的Excel在导入CSV文件时虽然给出了UTF8的选项，但是导入以后的中文还是乱码，这是因为它实际上是不支持UTF8编码方式导致的，至少对于Excel 2011 for Mac是这样。那么怎么解决这个问题呢，方法很简单：将文件的编码方式由UTF8转为Excel支持的中文编码方式，Mac上的iconv工具专门就可以用来干这个事情。例如，在Excel给出的中文编码方式中有GB18030，那么我们可以通过Mac上的iconv工具将文件编码由UTF8转为GB18030。只需要在命令行中键入如下的命令：</p>
+<pre><code class="bash">iconv -f UTF8 -t GB18030 a.csv &gt; b.csv
+</code></pre>
+<p>就可以将a.csv文件的编码方式由UTF8 变为GB18030并写入到b.csv文件中，在Excel中导入b.csv文件中的内容，我们会发现烦人的中文乱码消失的无影无踪了！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/12/16/dev/encode/" data-id="ciwrvilyq001akks83mbp62af" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/12/16/dev/encode/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/python/python_extra" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -235,9 +291,82 @@ print &quot;jsonDumpsIndentStr=&quot;, jsonDumpsIndentStr
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/12/16/dev/python/python_extra/" data-id="ciwrvbq52005ah7s8cch5xcsc" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/12/16/dev/python/python_extra/" data-id="ciwrvim2x0077kks8dxaxfkia" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/12/16/dev/python/python_extra/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/ml/all_in_one_docker" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/04/algo/ml/all_in_one_docker/">搭建深度学习常用框架的Docker环境</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/11/04/algo/ml/all_in_one_docker/">
+      <time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="All_in_one_docker"><a href="#All_in_one_docker" class="headerlink" title="All in one docker"></a>All in one docker</h2><p>如果你不想单独安装每个深度学习组件，并且厌倦于安装过程中的各种依赖冲突等问题，那么推荐你使用Docker来搭建深度学习工作环境。下面是一个可以参考的 <a href="https://github.com/lijingpeng/dl-docker" target="_blank" rel="external">All in one docker</a> 环境。几乎包含了所有的流行的深度学习框架，并且分别有CPU版本和GPU版本，与虚拟机不同的是，Docker几乎没有性能损失，因此你可以放心的使用它。需要注意的是，GPU版本的Docker只能在Linux系统上运行。</p>
+<h2 id="u5305_u542B_u7684_u6846_u67B6_u53CA_u7CFB_u7EDF_u4F9D_u8D56"><a href="#u5305_u542B_u7684_u6846_u67B6_u53CA_u7CFB_u7EDF_u4F9D_u8D56" class="headerlink" title="包含的框架及系统依赖"></a>包含的框架及系统依赖</h2><ul>
+<li>Ubuntu 14.04</li>
+<li>CUDA 7.5 (GPU version only)</li>
+<li>cuDNN v4 (GPU version only)</li>
+<li>Tensorflow</li>
+<li>Caffe</li>
+<li>Theano</li>
+<li>Keras</li>
+<li>Lasagne</li>
+<li>Torch (includes nn, cutorch, cunn and cuDNN bindings)</li>
+<li>iPython/Jupyter Notebook (including iTorch kernel)</li>
+<li>Numpy, SciPy, Pandas, Scikit Learn, Matplotlib</li>
+<li>A few common libraries used for deep learning</li>
+</ul>
+<h2 id="build"><a href="#build" class="headerlink" title="build"></a>build</h2><p>CPU version</p>
+<pre><code>docker pull floydhub/dl-docker:cpu
+</code></pre><h2 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h2><p>CPU Version</p>
+<pre><code>docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:cpu bash
+</code></pre><p>GPU Version</p>
+<pre><code>nvidia-docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:gpu bash
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/" data-id="ciwrvim24005ikks8iypdhwt8" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -315,82 +444,9 @@ print &quot;jsonDumpsIndentStr=&quot;, jsonDumpsIndentStr
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/" data-id="ciwrvbq5q007gh7s8hofih96n" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/" data-id="ciwrvim25005lkks8e5f37cl9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/ml/all_in_one_docker" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/04/algo/ml/all_in_one_docker/">搭建深度学习常用框架的Docker环境</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/11/04/algo/ml/all_in_one_docker/">
-      <time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="All_in_one_docker"><a href="#All_in_one_docker" class="headerlink" title="All in one docker"></a>All in one docker</h2><p>如果你不想单独安装每个深度学习组件，并且厌倦于安装过程中的各种依赖冲突等问题，那么推荐你使用Docker来搭建深度学习工作环境。下面是一个可以参考的 <a href="https://github.com/lijingpeng/dl-docker" target="_blank" rel="external">All in one docker</a> 环境。几乎包含了所有的流行的深度学习框架，并且分别有CPU版本和GPU版本，与虚拟机不同的是，Docker几乎没有性能损失，因此你可以放心的使用它。需要注意的是，GPU版本的Docker只能在Linux系统上运行。</p>
-<h2 id="u5305_u542B_u7684_u6846_u67B6_u53CA_u7CFB_u7EDF_u4F9D_u8D56"><a href="#u5305_u542B_u7684_u6846_u67B6_u53CA_u7CFB_u7EDF_u4F9D_u8D56" class="headerlink" title="包含的框架及系统依赖"></a>包含的框架及系统依赖</h2><ul>
-<li>Ubuntu 14.04</li>
-<li>CUDA 7.5 (GPU version only)</li>
-<li>cuDNN v4 (GPU version only)</li>
-<li>Tensorflow</li>
-<li>Caffe</li>
-<li>Theano</li>
-<li>Keras</li>
-<li>Lasagne</li>
-<li>Torch (includes nn, cutorch, cunn and cuDNN bindings)</li>
-<li>iPython/Jupyter Notebook (including iTorch kernel)</li>
-<li>Numpy, SciPy, Pandas, Scikit Learn, Matplotlib</li>
-<li>A few common libraries used for deep learning</li>
-</ul>
-<h2 id="build"><a href="#build" class="headerlink" title="build"></a>build</h2><p>CPU version</p>
-<pre><code>docker pull floydhub/dl-docker:cpu
-</code></pre><h2 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h2><p>CPU Version</p>
-<pre><code>docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:cpu bash
-</code></pre><p>GPU Version</p>
-<pre><code>nvidia-docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:gpu bash
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/" data-id="ciwrvbq5p007dh7s8q1yad50r" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -495,70 +551,13 @@ CMD [&quot;/run_jupyter.sh&quot;]
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="ciwrvbq4r004dh7s80i1nw3md" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="ciwrvim2t0071kks8wddj2y36" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/soft_source" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/26/dev/soft_source/">常用的软件源</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/10/26/dev/soft_source/">
-      <time datetime="2016-10-26T08:19:56.000Z" itemprop="datePublished">2016-10-26</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="Ubuntu__u8F6F_u4EF6_u6E90"><a href="#Ubuntu__u8F6F_u4EF6_u6E90" class="headerlink" title="Ubuntu 软件源"></a>Ubuntu 软件源</h2><hr>
-<p>以Dockerfile应用为例：</p>
-<p>RUN echo deb <a href="http://mirrors.aliyun.com/ubuntu" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu</a> trusty universe &gt;&gt; /etc/apt/sources.list<br>RUN echo deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-security main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-updates main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-proposed main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-backports main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-security main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-updates main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-proposed main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN echo deb-src <a href="http://mirrors.aliyun.com/ubuntu/" target="_blank" rel="external">http://mirrors.aliyun.com/ubuntu/</a> trusty-backports main restricted universe multiverse &gt;&gt; /etc/apt/sources.list<br>RUN apt-get update</p>
-<h2 id="Pip_u6E90"><a href="#Pip_u6E90" class="headerlink" title="Pip源"></a>Pip源</h2><hr>
-<p>pip install -i <a href="http://pypi.douban.com/simple/" target="_blank" rel="external">http://pypi.douban.com/simple/</a> lxml</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/26/dev/soft_source/" data-id="ciwrvbq1u000jh7s8j5q52ktm" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/10/26/dev/soft_source/#ds-thread" class="article-comment-link">评论</a>
-      
-      
     </footer>
   </div>
   
@@ -583,6 +582,23 @@ CMD [&quot;/run_jupyter.sh&quot;]
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/16/dev/encode/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/encode/" class="title">Excel导入CSV文件中文乱码</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -594,23 +610,6 @@ CMD [&quot;/run_jupyter.sh&quot;]
               <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
               <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
               <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -634,6 +633,23 @@ CMD [&quot;/run_jupyter.sh&quot;]
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -648,23 +664,6 @@ CMD [&quot;/run_jupyter.sh&quot;]
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/10/26/dev/soft_source/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/26/dev/soft_source/" class="title">常用的软件源</a></p>
-              <p class="item-date"><time datetime="2016-10-26T08:19:56.000Z" itemprop="datePublished">2016-10-26</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -674,7 +673,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">36</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -692,7 +691,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
