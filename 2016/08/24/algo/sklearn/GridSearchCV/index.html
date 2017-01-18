@@ -5,25 +5,19 @@
   
   <title>sklearn GridSearchCV简介 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="sklearn.grid_search.GridSearchCV(estimator,
-    param_grid, scoring=None, fit_params=None,
-    n_jobs=1, iid=True, refit=True, cv=None,
-    verbose=0, pre_dispatch=&amp;#39;2*n_jobs&amp;#39;, error_score=&amp;#39">
+  <meta name="description" content="1234sklearn.grid_search.GridSearchCV(estimator,    param_grid, scoring=None, fit_params=None,    n_jobs=1, iid=True, refit=True, cv=None,    verbose=0, pre_dispatch=&apos;2*n_jobs&apos;, error_score=&apos;raise&apos;)
+Gr">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sklearn GridSearchCV简介">
 <meta property="og:url" content="http://www.notehub.cn/2016/08/24/algo/sklearn/GridSearchCV/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="sklearn.grid_search.GridSearchCV(estimator,
-    param_grid, scoring=None, fit_params=None,
-    n_jobs=1, iid=True, refit=True, cv=None,
-    verbose=0, pre_dispatch=&amp;#39;2*n_jobs&amp;#39;, error_score=&amp;#39">
+<meta property="og:description" content="1234sklearn.grid_search.GridSearchCV(estimator,    param_grid, scoring=None, fit_params=None,    n_jobs=1, iid=True, refit=True, cv=None,    verbose=0, pre_dispatch=&apos;2*n_jobs&apos;, error_score=&apos;raise&apos;)
+Gr">
 <meta property="og:updated_time" content="2016-08-24T15:03:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sklearn GridSearchCV简介">
-<meta name="twitter:description" content="sklearn.grid_search.GridSearchCV(estimator,
-    param_grid, scoring=None, fit_params=None,
-    n_jobs=1, iid=True, refit=True, cv=None,
-    verbose=0, pre_dispatch=&amp;#39;2*n_jobs&amp;#39;, error_score=&amp;#39">
+<meta name="twitter:description" content="1234sklearn.grid_search.GridSearchCV(estimator,    param_grid, scoring=None, fit_params=None,    n_jobs=1, iid=True, refit=True, cv=None,    verbose=0, pre_dispatch=&apos;2*n_jobs&apos;, error_score=&apos;raise&apos;)
+Gr">
   
   
     <link rel="icon" href="favicon.png">
@@ -103,7 +97,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -170,126 +164,15 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="python">sklearn.grid_search.GridSearchCV(estimator,
-    param_grid, scoring=None, fit_params=None,
-    n_jobs=1, iid=True, refit=True, cv=None,
-    verbose=0, pre_dispatch=&#39;2*n_jobs&#39;, error_score=&#39;raise&#39;)
-</code></pre>
-<p>GridSearchCV实现了fit，predict，predict_proba等方法，并通过交叉验证对参数空间进行求解，寻找最佳的参数。<br>下面是一个官方介绍：</p>
-<pre><code class="python">from __future__ import print_function
-from pprint import pprint
-from time import time
-import logging
-
-from sklearn.datasets import fetch_20newsgroups
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.linear_model import SGDClassifier
-from sklearn.grid_search import GridSearchCV
-from sklearn.pipeline import Pipeline
-
-print(__doc__)
-
-# Display progress logs on stdout
-logging.basicConfig(level=logging.INFO,
-                    format=&#39;%(asctime)s %(levelname)s %(message)s&#39;)
-
-
-###############################################################################
-# Load some categories from the training set
-categories = [
-    &#39;alt.atheism&#39;,
-    &#39;talk.religion.misc&#39;,
-]
-# Uncomment the following to do the analysis on all the categories
-#categories = None
-
-print(&quot;Loading 20 newsgroups dataset for categories:&quot;)
-print(categories)
-
-data = fetch_20newsgroups(subset=&#39;train&#39;, categories=categories)
-print(&quot;%d documents&quot; % len(data.filenames))
-print(&quot;%d categories&quot; % len(data.target_names))
-print()
-
-###############################################################################
-# 使用pipeline定义文本分类问题常见的工作流，包含向量化和一个简单的分类器
-pipeline = Pipeline([
-    (&#39;vect&#39;, CountVectorizer()),
-    (&#39;tfidf&#39;, TfidfTransformer()),
-    (&#39;clf&#39;, SGDClassifier()),
-])
-
-# 参数空间：
-# 定义了pipeline中各个模型的需要穷尽求解的参数空间，比如：clf__penalty&#39;: (&#39;l2&#39;, &#39;elasticnet&#39;)
-# 表示SGDClassifier分类器的正则化选项为L2和elasticnet，训练时模型会分别使用这两个正则化方法来寻求最佳的方式
-parameters = {
-    &#39;vect__max_df&#39;: (0.5, 0.75, 1.0),
-    #&#39;vect__max_features&#39;: (None, 5000, 10000, 50000),
-    &#39;vect__ngram_range&#39;: ((1, 1), (1, 2)),  # unigrams or bigrams
-    #&#39;tfidf__use_idf&#39;: (True, False),
-    #&#39;tfidf__norm&#39;: (&#39;l1&#39;, &#39;l2&#39;),
-    &#39;clf__alpha&#39;: (0.00001, 0.000001),
-    &#39;clf__penalty&#39;: (&#39;l2&#39;, &#39;elasticnet&#39;),
-    #&#39;clf__n_iter&#39;: (10, 50, 80),
-}
-
-if __name__ == &quot;__main__&quot;:
-
-    # 通过GridSearchCV来寻求最佳参数空间
-    grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=1)
-
-    print(&quot;Performing grid search...&quot;)
-    print(&quot;pipeline:&quot;, [name for name, _ in pipeline.steps])
-    print(&quot;parameters:&quot;)
-    pprint(parameters)
-    t0 = time()
-
-    # 这里只需调用一次fit函数就可以了
-    grid_search.fit(data.data, data.target)
-    print(&quot;done in %0.3fs&quot; % (time() - t0))
-    print()
-
-    # 输出best score
-    print(&quot;Best score: %0.3f&quot; % grid_search.best_score_)
-    print(&quot;Best parameters set:&quot;)
-    # 输出最佳的分类器到底使用了怎样的参数
-    best_parameters = grid_search.best_estimator_.get_params()
-    for param_name in sorted(parameters.keys()):
-        print(&quot;\t%s: %r&quot; % (param_name, best_parameters[param_name]))
-</code></pre>
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sklearn.grid_search.GridSearchCV(estimator,</div><div class="line">    param_grid, scoring=<span class="keyword">None</span>, fit_params=<span class="keyword">None</span>,</div><div class="line">    n_jobs=<span class="number">1</span>, iid=<span class="keyword">True</span>, refit=<span class="keyword">True</span>, cv=<span class="keyword">None</span>,</div><div class="line">    verbose=<span class="number">0</span>, pre_dispatch=<span class="string">'2*n_jobs'</span>, error_score=<span class="string">'raise'</span>)</div></pre></td></tr></table></figure>
+<p>GridSearchCV实现了fit，predict，predict_proba等方法，并通过交叉验证对参数空间进行求解，寻找最佳的参数。<br>下面是一个官方介绍：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</div><div class="line"><span class="keyword">from</span> pprint <span class="keyword">import</span> pprint</div><div class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> logging</div><div class="line"></div><div class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> fetch_20newsgroups</div><div class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer</div><div class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfTransformer</div><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> SGDClassifier</div><div class="line"><span class="keyword">from</span> sklearn.grid_search <span class="keyword">import</span> GridSearchCV</div><div class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</div><div class="line"></div><div class="line">print(__doc__)</div><div class="line"></div><div class="line"><span class="comment"># Display progress logs on stdout</span></div><div class="line">logging.basicConfig(level=logging.INFO,</div><div class="line">                    format=<span class="string">'%(asctime)s %(levelname)s %(message)s'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">###############################################################################</span></div><div class="line"><span class="comment"># Load some categories from the training set</span></div><div class="line">categories = [</div><div class="line">    <span class="string">'alt.atheism'</span>,</div><div class="line">    <span class="string">'talk.religion.misc'</span>,</div><div class="line">]</div><div class="line"><span class="comment"># Uncomment the following to do the analysis on all the categories</span></div><div class="line"><span class="comment">#categories = None</span></div><div class="line"></div><div class="line">print(<span class="string">"Loading 20 newsgroups dataset for categories:"</span>)</div><div class="line">print(categories)</div><div class="line"></div><div class="line">data = fetch_20newsgroups(subset=<span class="string">'train'</span>, categories=categories)</div><div class="line">print(<span class="string">"%d documents"</span> % len(data.filenames))</div><div class="line">print(<span class="string">"%d categories"</span> % len(data.target_names))</div><div class="line">print()</div><div class="line"></div><div class="line"><span class="comment">###############################################################################</span></div><div class="line"><span class="comment"># 使用pipeline定义文本分类问题常见的工作流，包含向量化和一个简单的分类器</span></div><div class="line">pipeline = Pipeline([</div><div class="line">    (<span class="string">'vect'</span>, CountVectorizer()),</div><div class="line">    (<span class="string">'tfidf'</span>, TfidfTransformer()),</div><div class="line">    (<span class="string">'clf'</span>, SGDClassifier()),</div><div class="line">])</div><div class="line"></div><div class="line"><span class="comment"># 参数空间：</span></div><div class="line"><span class="comment"># 定义了pipeline中各个模型的需要穷尽求解的参数空间，比如：clf__penalty': ('l2', 'elasticnet')</span></div><div class="line"><span class="comment"># 表示SGDClassifier分类器的正则化选项为L2和elasticnet，训练时模型会分别使用这两个正则化方法来寻求最佳的方式</span></div><div class="line">parameters = &#123;</div><div class="line">    <span class="string">'vect__max_df'</span>: (<span class="number">0.5</span>, <span class="number">0.75</span>, <span class="number">1.0</span>),</div><div class="line">    <span class="comment">#'vect__max_features': (None, 5000, 10000, 50000),</span></div><div class="line">    <span class="string">'vect__ngram_range'</span>: ((<span class="number">1</span>, <span class="number">1</span>), (<span class="number">1</span>, <span class="number">2</span>)),  <span class="comment"># unigrams or bigrams</span></div><div class="line">    <span class="comment">#'tfidf__use_idf': (True, False),</span></div><div class="line">    <span class="comment">#'tfidf__norm': ('l1', 'l2'),</span></div><div class="line">    <span class="string">'clf__alpha'</span>: (<span class="number">0.00001</span>, <span class="number">0.000001</span>),</div><div class="line">    <span class="string">'clf__penalty'</span>: (<span class="string">'l2'</span>, <span class="string">'elasticnet'</span>),</div><div class="line">    <span class="comment">#'clf__n_iter': (10, 50, 80),</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line"></div><div class="line">    <span class="comment"># 通过GridSearchCV来寻求最佳参数空间</span></div><div class="line">    grid_search = GridSearchCV(pipeline, parameters, n_jobs=<span class="number">-1</span>, verbose=<span class="number">1</span>)</div><div class="line"></div><div class="line">    print(<span class="string">"Performing grid search..."</span>)</div><div class="line">    print(<span class="string">"pipeline:"</span>, [name <span class="keyword">for</span> name, _ <span class="keyword">in</span> pipeline.steps])</div><div class="line">    print(<span class="string">"parameters:"</span>)</div><div class="line">    pprint(parameters)</div><div class="line">    t0 = time()</div><div class="line"></div><div class="line">    <span class="comment"># 这里只需调用一次fit函数就可以了</span></div><div class="line">    grid_search.fit(data.data, data.target)</div><div class="line">    print(<span class="string">"done in %0.3fs"</span> % (time() - t0))</div><div class="line">    print()</div><div class="line"></div><div class="line">    <span class="comment"># 输出best score</span></div><div class="line">    print(<span class="string">"Best score: %0.3f"</span> % grid_search.best_score_)</div><div class="line">    print(<span class="string">"Best parameters set:"</span>)</div><div class="line">    <span class="comment"># 输出最佳的分类器到底使用了怎样的参数</span></div><div class="line">    best_parameters = grid_search.best_estimator_.get_params()</div><div class="line">    <span class="keyword">for</span> param_name <span class="keyword">in</span> sorted(parameters.keys()):</div><div class="line">        print(<span class="string">"\t%s: %r"</span> % (param_name, best_parameters[param_name]))</div></pre></td></tr></table></figure></p>
 <p>输出如下：</p>
-<pre><code>Loading 20 newsgroups dataset for categories:
-[&#39;alt.atheism&#39;, &#39;talk.religion.misc&#39;]
-1427 documents
-2 categories
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">Loading 20 newsgroups dataset for categories:</div><div class="line">[&apos;alt.atheism&apos;, &apos;talk.religion.misc&apos;]</div><div class="line">1427 documents</div><div class="line">2 categories</div><div class="line"></div><div class="line">Performing grid search...</div><div class="line">pipeline: [&apos;vect&apos;, &apos;tfidf&apos;, &apos;clf&apos;]</div><div class="line">parameters:</div><div class="line">&#123;&apos;clf__alpha&apos;: (1.0000000000000001e-05, 9.9999999999999995e-07),</div><div class="line"> &apos;clf__n_iter&apos;: (10, 50, 80),</div><div class="line"> &apos;clf__penalty&apos;: (&apos;l2&apos;, &apos;elasticnet&apos;),</div><div class="line"> &apos;tfidf__use_idf&apos;: (True, False),</div><div class="line"> &apos;vect__max_n&apos;: (1, 2),</div><div class="line"> &apos;vect__max_df&apos;: (0.5, 0.75, 1.0),</div><div class="line"> &apos;vect__max_features&apos;: (None, 5000, 10000, 50000)&#125;</div><div class="line">done in 1737.030s</div><div class="line"></div><div class="line">Best score: 0.940</div><div class="line">Best parameters set:</div><div class="line">    clf__alpha: 9.9999999999999995e-07</div><div class="line">    clf__n_iter: 50</div><div class="line">    clf__penalty: &apos;elasticnet&apos;</div><div class="line">    tfidf__use_idf: True</div><div class="line">    vect__max_n: 2</div><div class="line">    vect__max_df: 0.75</div><div class="line">    vect__max_features: 50000</div></pre></td></tr></table></figure>
 
-Performing grid search...
-pipeline: [&#39;vect&#39;, &#39;tfidf&#39;, &#39;clf&#39;]
-parameters:
-{&#39;clf__alpha&#39;: (1.0000000000000001e-05, 9.9999999999999995e-07),
- &#39;clf__n_iter&#39;: (10, 50, 80),
- &#39;clf__penalty&#39;: (&#39;l2&#39;, &#39;elasticnet&#39;),
- &#39;tfidf__use_idf&#39;: (True, False),
- &#39;vect__max_n&#39;: (1, 2),
- &#39;vect__max_df&#39;: (0.5, 0.75, 1.0),
- &#39;vect__max_features&#39;: (None, 5000, 10000, 50000)}
-done in 1737.030s
-
-Best score: 0.940
-Best parameters set:
-    clf__alpha: 9.9999999999999995e-07
-    clf__n_iter: 50
-    clf__penalty: &#39;elasticnet&#39;
-    tfidf__use_idf: True
-    vect__max_n: 2
-    vect__max_df: 0.75
-    vect__max_features: 50000
-</code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/24/algo/sklearn/GridSearchCV/" data-id="ciwrvim2a0060kks8f5ko0dbo" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/24/algo/sklearn/GridSearchCV/" data-id="ciy2rrdja005y6bs8opd19awj" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/24/algo/sklearn/GridSearchCV/#ds-thread" class="article-comment-link">评论</a>
       
@@ -343,6 +226,23 @@ Best parameters set:
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -377,23 +277,6 @@ Best parameters set:
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -411,7 +294,7 @@ Best parameters set:
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -419,9 +302,9 @@ Best parameters set:
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -434,7 +317,16 @@ Best parameters set:
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -448,15 +340,6 @@ Best parameters set:
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -465,7 +348,7 @@ Best parameters set:
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

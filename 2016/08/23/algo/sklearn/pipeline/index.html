@@ -11,7 +11,7 @@
 可以结合grid search对参数进行选择
 
 下面是一个官方文档的示例：
-&amp;gt;&amp;gt;&amp;gt; from sklearn.pipeline import Pip">
+1234567891011&amp;gt;&amp;gt;&amp;gt; from sklearn.pipeli">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sklearn pipeline简介">
 <meta property="og:url" content="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/index.html">
@@ -22,7 +22,7 @@
 可以结合grid search对参数进行选择
 
 下面是一个官方文档的示例：
-&amp;gt;&amp;gt;&amp;gt; from sklearn.pipeline import Pip">
+1234567891011&amp;gt;&amp;gt;&amp;gt; from sklearn.pipeli">
 <meta property="og:updated_time" content="2016-08-24T01:07:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sklearn pipeline简介">
@@ -32,7 +32,7 @@
 可以结合grid search对参数进行选择
 
 下面是一个官方文档的示例：
-&amp;gt;&amp;gt;&amp;gt; from sklearn.pipeline import Pip">
+1234567891011&amp;gt;&amp;gt;&amp;gt; from sklearn.pipeli">
   
   
     <link rel="icon" href="favicon.png">
@@ -112,7 +112,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -185,56 +185,17 @@
 <li>可以结合grid search对参数进行选择</li>
 </ol>
 <p>下面是一个官方文档的示例：</p>
-<pre><code class="python">&gt;&gt;&gt; from sklearn.pipeline import Pipeline
-&gt;&gt;&gt; from sklearn.svm import SVC
-&gt;&gt;&gt; from sklearn.decomposition import PCA
-&gt;&gt;&gt; estimators = [(&#39;reduce_dim&#39;, PCA()), (&#39;svm&#39;, SVC())]
-&gt;&gt;&gt; clf = Pipeline(estimators)
-&gt;&gt;&gt; clf
-Pipeline(steps=[(&#39;reduce_dim&#39;, PCA(copy=True, n_components=None,
-    whiten=False)), (&#39;svm&#39;, SVC(C=1.0, cache_size=200, class_weight=None,
-    coef0=0.0, decision_function_shape=None, degree=3, gamma=&#39;auto&#39;,
-    kernel=&#39;rbf&#39;, max_iter=-1, probability=False, random_state=None,
-    shrinking=True, tol=0.001, verbose=False))])
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>estimators = [(<span class="string">'reduce_dim'</span>, PCA()), (<span class="string">'svm'</span>, SVC())]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>clf = Pipeline(estimators)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>clf</div><div class="line">Pipeline(steps=[(<span class="string">'reduce_dim'</span>, PCA(copy=<span class="keyword">True</span>, n_components=<span class="keyword">None</span>,</div><div class="line">    whiten=<span class="keyword">False</span>)), (<span class="string">'svm'</span>, SVC(C=<span class="number">1.0</span>, cache_size=<span class="number">200</span>, class_weight=<span class="keyword">None</span>,</div><div class="line">    coef0=<span class="number">0.0</span>, decision_function_shape=<span class="keyword">None</span>, degree=<span class="number">3</span>, gamma=<span class="string">'auto'</span>,</div><div class="line">    kernel=<span class="string">'rbf'</span>, max_iter=<span class="number">-1</span>, probability=<span class="keyword">False</span>, random_state=<span class="keyword">None</span>,</div><div class="line">    shrinking=<span class="keyword">True</span>, tol=<span class="number">0.001</span>, verbose=<span class="keyword">False</span>))])</div></pre></td></tr></table></figure>
 <p>estimators中定义了两个模型，一个是PCA、另一个是SVC。</p>
-<pre><code class="python">&gt;&gt;&gt; clf.set_params(svm__C=10)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>clf.set_params(svm__C=<span class="number">10</span>)</div></pre></td></tr></table></figure>
 <p>可以通过set_params函数对pipeline中的某个模型设定参数，上面是将svm参数C设置为10</p>
 <p>另外一个例子：</p>
-<pre><code class="python">&gt;&gt;&gt; from sklearn import svm
-&gt;&gt;&gt; from sklearn.datasets import samples_generator
-&gt;&gt;&gt; from sklearn.feature_selection import SelectKBest
-&gt;&gt;&gt; from sklearn.feature_selection import f_regression
-&gt;&gt;&gt; from sklearn.pipeline import Pipeline
-&gt;&gt;&gt; # generate some data to play with
-&gt;&gt;&gt; X, y = samples_generator.make_classification(
-...     n_informative=5, n_redundant=0, random_state=42)
-&gt;&gt;&gt; # ANOVA SVM-C
-&gt;&gt;&gt; anova_filter = SelectKBest(f_regression, k=5)
-&gt;&gt;&gt; clf = svm.SVC(kernel=&#39;linear&#39;)
-&gt;&gt;&gt; anova_svm = Pipeline([(&#39;anova&#39;, anova_filter), (&#39;svc&#39;, clf)])
-&gt;&gt;&gt; # You can set the parameters using the names issued
-&gt;&gt;&gt; # For instance, fit using a k of 10 in the SelectKBest
-&gt;&gt;&gt; # and a parameter &#39;C&#39; of the svm
-&gt;&gt;&gt; anova_svm.set_params(anova__k=10, svc__C=.1).fit(X, y)
-...                                              
-Pipeline(steps=[...])
-&gt;&gt;&gt; prediction = anova_svm.predict(X)
-&gt;&gt;&gt; anova_svm.score(X, y)                        
-0.77...
-&gt;&gt;&gt; # getting the selected features chosen by anova_filter
-&gt;&gt;&gt; anova_svm.named_steps[&#39;anova&#39;].get_support()
-...
-array([ True,  True,  True, False, False,  True, False,  True,  True, True,
-       False, False,  True, False,  True, False, False, False, False,
-       True], dtype=bool)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn <span class="keyword">import</span> svm</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> samples_generator</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> f_regression</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># generate some data to play with</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>X, y = samples_generator.make_classification(</div><div class="line"><span class="meta">... </span>    n_informative=<span class="number">5</span>, n_redundant=<span class="number">0</span>, random_state=<span class="number">42</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># ANOVA SVM-C</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_filter = SelectKBest(f_regression, k=<span class="number">5</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>clf = svm.SVC(kernel=<span class="string">'linear'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_svm = Pipeline([(<span class="string">'anova'</span>, anova_filter), (<span class="string">'svc'</span>, clf)])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># You can set the parameters using the names issued</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># For instance, fit using a k of 10 in the SelectKBest</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># and a parameter 'C' of the svm</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_svm.set_params(anova__k=<span class="number">10</span>, svc__C=<span class="number">.1</span>).fit(X, y)</div><div class="line"><span class="meta">... </span>                                             </div><div class="line">Pipeline(steps=[...])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>prediction = anova_svm.predict(X)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_svm.score(X, y)                        </div><div class="line"><span class="number">0.77</span>...</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># getting the selected features chosen by anova_filter</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_svm.named_steps[<span class="string">'anova'</span>].get_support()</div><div class="line">...</div><div class="line">array([ <span class="keyword">True</span>,  <span class="keyword">True</span>,  <span class="keyword">True</span>, <span class="keyword">False</span>, <span class="keyword">False</span>,  <span class="keyword">True</span>, <span class="keyword">False</span>,  <span class="keyword">True</span>,  <span class="keyword">True</span>, <span class="keyword">True</span>,</div><div class="line">       <span class="keyword">False</span>, <span class="keyword">False</span>,  <span class="keyword">True</span>, <span class="keyword">False</span>,  <span class="keyword">True</span>, <span class="keyword">False</span>, <span class="keyword">False</span>, <span class="keyword">False</span>, <span class="keyword">False</span>,</div><div class="line">       <span class="keyword">True</span>], dtype=bool)</div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/" data-id="ciwrvim29005xkks87husvcuh" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/" data-id="ciy2rrdjb00616bs8eoypin4s" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/#ds-thread" class="article-comment-link">评论</a>
       
@@ -288,6 +249,23 @@ array([ True,  True,  True, False, False,  True, False,  True,  True, True,
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -322,23 +300,6 @@ array([ True,  True,  True, False, False,  True, False,  True,  True, True,
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -356,7 +317,7 @@ array([ True,  True,  True, False, False,  True, False,  True,  True, True,
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -364,9 +325,9 @@ array([ True,  True,  True, False, False,  True, False,  True,  True, True,
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -379,7 +340,16 @@ array([ True,  True,  True, False, False,  True, False,  True,  True, True,
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -393,15 +363,6 @@ array([ True,  True,  True, False, False,  True, False,  True,  True, True,
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -410,7 +371,7 @@ array([ True,  True,  True, False, False,  True, False,  True,  True, True,
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

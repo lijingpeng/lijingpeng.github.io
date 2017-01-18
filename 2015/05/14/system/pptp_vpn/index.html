@@ -5,49 +5,16 @@
   
   <title>PPTP VPN搭建 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="本文介绍在Linux下搭建VPN的过程
-#!/bin/sh
-if [ `id -u` -ne 0 ] 
-then
-  echo &amp;quot;please run it by root&amp;quot;
-  exit 0
-fi
-
-apt-get -y update
-
-apt-get -y install pptpd || {
-  echo &amp;quot;could not install pptpd&amp;quo">
+  <meta name="description" content="本文介绍在Linux下搭建VPN的过程123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566#!/bin/shif [ `id -u` -ne 0 ] then  echo &quot;please run it by">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PPTP VPN搭建">
 <meta property="og:url" content="http://www.notehub.cn/2015/05/14/system/pptp_vpn/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="本文介绍在Linux下搭建VPN的过程
-#!/bin/sh
-if [ `id -u` -ne 0 ] 
-then
-  echo &amp;quot;please run it by root&amp;quot;
-  exit 0
-fi
-
-apt-get -y update
-
-apt-get -y install pptpd || {
-  echo &amp;quot;could not install pptpd&amp;quo">
+<meta property="og:description" content="本文介绍在Linux下搭建VPN的过程123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566#!/bin/shif [ `id -u` -ne 0 ] then  echo &quot;please run it by">
 <meta property="og:updated_time" content="2015-09-23T03:53:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PPTP VPN搭建">
-<meta name="twitter:description" content="本文介绍在Linux下搭建VPN的过程
-#!/bin/sh
-if [ `id -u` -ne 0 ] 
-then
-  echo &amp;quot;please run it by root&amp;quot;
-  exit 0
-fi
-
-apt-get -y update
-
-apt-get -y install pptpd || {
-  echo &amp;quot;could not install pptpd&amp;quo">
+<meta name="twitter:description" content="本文介绍在Linux下搭建VPN的过程123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566#!/bin/shif [ `id -u` -ne 0 ] then  echo &quot;please run it by">
   
   
     <link rel="icon" href="favicon.png">
@@ -127,7 +94,7 @@ apt-get -y install pptpd || {
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -194,81 +161,14 @@ apt-get -y install pptpd || {
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>本文介绍在Linux下搭建VPN的过程</p>
-<pre><code class="bash">#!/bin/sh
-if [ `id -u` -ne 0 ] 
-then
-  echo &quot;please run it by root&quot;
-  exit 0
-fi
-
-apt-get -y update
-
-apt-get -y install pptpd || {
-  echo &quot;could not install pptpd&quot; 
-  exit 1
-}
-
-cat &gt;/etc/ppp/options.pptpd &lt;&lt;END
-name pptpd
-refuse-pap
-refuse-chap
-refuse-mschap
-require-mschap-v2
-require-mppe-128
-ms-dns 8.8.8.8
-ms-dns 8.8.4.4
-proxyarp
-lock
-nobsdcomp 
-novj
-novjccomp
-nologfd
-END
-
-cat &gt;/etc/pptpd.conf &lt;&lt;END
-option /etc/ppp/options.pptpd
-logwtmp
-localip 192.168.2.1
-remoteip 192.168.2.10-100
-END
-
-cat &gt;&gt; /etc/sysctl.conf &lt;&lt;END
-net.ipv4.ip_forward=1
-END
-
-sysctl -p
-
-iptables-save &gt; /etc/iptables.down.rules
-
-iptables -t nat -A POSTROUTING -s 192.168.2.0/24 -o eth0 -j MASQUERADE
-
-iptables -I FORWARD -s 192.168.2.0/24 -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1300
-
-iptables-save &gt; /etc/iptables.up.rules
-
-cat &gt;&gt;/etc/ppp/pptpd-options&lt;&lt;EOF
-pre-up iptables-restore &lt; /etc/iptables.up.rules
-post-down iptables-restore &lt; /etc/iptables.down.rules
-EOF
-
-cat &gt;/etc/ppp/chap-secrets &lt;&lt;END
-test pptpd test *
-END
-
-service pptpd restart
-
-netstat -lntp
-
-exit 0
-</code></pre>
+        <p>本文介绍在Linux下搭建VPN的过程<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"><span class="keyword">if</span> [ `id -u` <span class="_">-ne</span> 0 ] </div><div class="line"><span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"please run it by root"</span></div><div class="line">  <span class="built_in">exit</span> 0</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line">apt-get -y update</div><div class="line"></div><div class="line">apt-get -y install pptpd || &#123;</div><div class="line">  <span class="built_in">echo</span> <span class="string">"could not install pptpd"</span> </div><div class="line">  <span class="built_in">exit</span> 1</div><div class="line">&#125;</div><div class="line"></div><div class="line">cat &gt;/etc/ppp/options.pptpd &lt;&lt;END</div><div class="line">name pptpd</div><div class="line">refuse-pap</div><div class="line">refuse-chap</div><div class="line">refuse-mschap</div><div class="line">require-mschap-v2</div><div class="line">require-mppe-128</div><div class="line">ms-dns 8.8.8.8</div><div class="line">ms-dns 8.8.4.4</div><div class="line">proxyarp</div><div class="line">lock</div><div class="line">nobsdcomp </div><div class="line">novj</div><div class="line">novjccomp</div><div class="line">nologfd</div><div class="line">END</div><div class="line"></div><div class="line">cat &gt;/etc/pptpd.conf &lt;&lt;END</div><div class="line">option /etc/ppp/options.pptpd</div><div class="line">logwtmp</div><div class="line">localip 192.168.2.1</div><div class="line">remoteip 192.168.2.10-100</div><div class="line">END</div><div class="line"></div><div class="line">cat &gt;&gt; /etc/sysctl.conf &lt;&lt;END</div><div class="line">net.ipv4.ip_forward=1</div><div class="line">END</div><div class="line"></div><div class="line">sysctl -p</div><div class="line"></div><div class="line">iptables-save &gt; /etc/iptables.down.rules</div><div class="line"></div><div class="line">iptables -t nat -A POSTROUTING <span class="_">-s</span> 192.168.2.0/24 -o eth0 -j MASQUERADE</div><div class="line"></div><div class="line">iptables -I FORWARD <span class="_">-s</span> 192.168.2.0/24 -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1300</div><div class="line"></div><div class="line">iptables-save &gt; /etc/iptables.up.rules</div><div class="line"></div><div class="line">cat &gt;&gt;/etc/ppp/pptpd-options&lt;&lt;EOF</div><div class="line">pre-up iptables-restore &lt; /etc/iptables.up.rules</div><div class="line">post-down iptables-restore &lt; /etc/iptables.down.rules</div><div class="line">EOF</div><div class="line"></div><div class="line">cat &gt;/etc/ppp/chap-secrets &lt;&lt;END</div><div class="line"><span class="built_in">test</span> pptpd <span class="built_in">test</span> *</div><div class="line">END</div><div class="line"></div><div class="line">service pptpd restart</div><div class="line"></div><div class="line">netstat -lntp</div><div class="line"></div><div class="line"><span class="built_in">exit</span> 0</div></pre></td></tr></table></figure></p>
 <p>实际使用中需要按照需要修改本地IP地址即可，一般情况自动安装和配置是成功的，但是在我的实际使用中使用手机网络连接的时候是没问题的，但是使用电脑连接的时候还是出现无法连接的情况，查看日志如下：</p>
 <p>Starting negotiation on /dev/pts/1<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""> <endpoint [mac:00:16:3e:d8:d7:39]="">]<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""><br>…<br>LCP: timeout sending Config-Requests<br>Connection terminated.<br>这个可能是学校路由器没有采用PPTP穿透吧</mrru></accomp></pcomp></magic></auth></asyncmap></endpoint></mrru></accomp></pcomp></magic></auth></asyncmap></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="ciwrvilyk0012kks8mycmrtfw" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="ciy2rrdgt001k6bs8k5tnwibj" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/#ds-thread" class="article-comment-link">评论</a>
       
@@ -281,19 +181,19 @@ exit 0
     
 <nav id="article-nav">
   
-    <a href="/2015/06/06/algo/feature_d/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/05/14/system/shadowsocks/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          机器学习中的数据清洗与特征处理综述
+          Shadowsocks 安装配置使用
         
       </div>
     </a>
   
   
-    <a href="/2015/05/14/system/shadowsocks/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/05/03/dev/hash-map-sort-md/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">Shadowsocks 安装配置使用</div>
+      <div class="article-nav-title">HashMap的两种排序方式</div>
     </a>
   
 </nav>
@@ -318,6 +218,23 @@ exit 0
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -356,23 +273,6 @@ exit 0
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -390,7 +290,7 @@ exit 0
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -398,9 +298,9 @@ exit 0
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -413,7 +313,16 @@ exit 0
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -427,15 +336,6 @@ exit 0
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -444,7 +344,7 @@ exit 0
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

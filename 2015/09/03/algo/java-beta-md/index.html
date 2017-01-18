@@ -6,27 +6,18 @@
   <title>Java beta distribution | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="维基百科介绍：https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83https://en.wikipedia.org/wiki/Beta_distribution
-import org.apache.commons.math3.distribution.BetaDistribution;
-
-public class test {
-    /**">
+1234567891011121314151617import org.apache.commons.math3.distribution.BetaDistribution;publ">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java beta distribution">
 <meta property="og:url" content="http://www.notehub.cn/2015/09/03/algo/java-beta-md/index.html">
 <meta property="og:site_name" content="Frank">
 <meta property="og:description" content="维基百科介绍：https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83https://en.wikipedia.org/wiki/Beta_distribution
-import org.apache.commons.math3.distribution.BetaDistribution;
-
-public class test {
-    /**">
+1234567891011121314151617import org.apache.commons.math3.distribution.BetaDistribution;publ">
 <meta property="og:updated_time" content="2015-12-11T15:05:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java beta distribution">
 <meta name="twitter:description" content="维基百科介绍：https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83https://en.wikipedia.org/wiki/Beta_distribution
-import org.apache.commons.math3.distribution.BetaDistribution;
-
-public class test {
-    /**">
+1234567891011121314151617import org.apache.commons.math3.distribution.BetaDistribution;publ">
   
   
     <link rel="icon" href="favicon.png">
@@ -106,7 +97,7 @@ public class test {
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -174,50 +165,8 @@ public class test {
       
                 
         <p>维基百科介绍：<a href="https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83" target="_blank" rel="external">https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83</a><br><a href="https://en.wikipedia.org/wiki/Beta_distribution" target="_blank" rel="external">https://en.wikipedia.org/wiki/Beta_distribution</a></p>
-<pre><code class="java">import org.apache.commons.math3.distribution.BetaDistribution;
-
-public class test {
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        double x;
-        double b;
-        BetaDistribution beta = new BetaDistribution(40.0, 40.0);
-        for (int i = 0; i &lt; 100; i++) {
-            x = Math.random();
-            b = beta.inverseCumulativeProbability(x);
-            System.out.println(b);
-        }
-    }
-}
-</code></pre>
-<p>实现：</p>
-<pre><code class="java">public class BetaDistributionE {
-    public double getBetaDistribution(double alpha, double beta){
-    double a = alpha + beta;
-    double b;
-    if(Math.min(alpha, beta) &lt;= 1){
-        b = Math.max(1/alpha, 1/beta);
-    }
-    else{
-    b = Math.sqrt((a - 2) / (2*alpha*beta - a));
-    }
-    double c = alpha + 1/b;
-
-    double W = 0;
-    boolean reject = true;
-    for (reject = true; reject; ) {
-         double U1 = Math.random();
-         double U2 = Math.random();
-         double V = b * Math.log(U1/(1-U1));
-         W = alpha * Math.exp(V);
-         reject = (a*Math.log(a/(beta+W)) + c*V - Math.log(4)) &lt; Math.log(U1*U1*U2);
-     }
-     return (W / (beta + W));
-     }
-}
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.commons.math3.distribution.BetaDistribution;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> args</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">double</span> x;</div><div class="line">        <span class="keyword">double</span> b;</div><div class="line">        BetaDistribution beta = <span class="keyword">new</span> BetaDistribution(<span class="number">40.0</span>, <span class="number">40.0</span>);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line">            x = Math.random();</div><div class="line">            b = beta.inverseCumulativeProbability(x);</div><div class="line">            System.out.println(b);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BetaDistributionE</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getBetaDistribution</span><span class="params">(<span class="keyword">double</span> alpha, <span class="keyword">double</span> beta)</span></span>&#123;</div><div class="line">    <span class="keyword">double</span> a = alpha + beta;</div><div class="line">	<span class="keyword">double</span> b;</div><div class="line">	<span class="keyword">if</span>(Math.min(alpha, beta) &lt;= <span class="number">1</span>)&#123;</div><div class="line">		b = Math.max(<span class="number">1</span>/alpha, <span class="number">1</span>/beta);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">	b = Math.sqrt((a - <span class="number">2</span>) / (<span class="number">2</span>*alpha*beta - a));</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">double</span> c = alpha + <span class="number">1</span>/b;</div><div class="line"> </div><div class="line">	<span class="keyword">double</span> W = <span class="number">0</span>;</div><div class="line">	<span class="keyword">boolean</span> reject = <span class="keyword">true</span>;</div><div class="line">	<span class="keyword">for</span> (reject = <span class="keyword">true</span>; reject; ) &#123;</div><div class="line"> 		<span class="keyword">double</span> U1 = Math.random();</div><div class="line"> 		<span class="keyword">double</span> U2 = Math.random();</div><div class="line"> 		<span class="keyword">double</span> V = b * Math.log(U1/(<span class="number">1</span>-U1));</div><div class="line"> 		W = alpha * Math.exp(V);</div><div class="line"> 		reject = (a*Math.log(a/(beta+W)) + c*V - Math.log(<span class="number">4</span>)) &lt; Math.log(U1*U1*U2);</div><div class="line"> 	&#125;</div><div class="line"> 	<span class="keyword">return</span> (W / (beta + W));</div><div class="line"> 	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>相关资源：</p>
 <ol>
 <li><a href="http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html" target="_blank" rel="external">http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html</a></li>
@@ -229,7 +178,7 @@ public class test {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/java-beta-md/" data-id="ciwrvilxm000ikks8e5hdutue" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/java-beta-md/" data-id="ciy2rrdg3000i6bs8gx9g0ohb" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/java-beta-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -281,6 +230,23 @@ public class test {
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -315,23 +281,6 @@ public class test {
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -349,7 +298,7 @@ public class test {
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -357,9 +306,9 @@ public class test {
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -372,7 +321,16 @@ public class test {
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -386,15 +344,6 @@ public class test {
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -403,7 +352,7 @@ public class test {
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

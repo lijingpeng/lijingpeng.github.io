@@ -5,43 +5,19 @@
   
   <title>在Golang中使用json | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="包引用
-import (
-    &amp;quot;encoding/json&amp;quot;
-    &amp;quot;github.com/bitly/go-simplejson&amp;quot; // for json get
-)
-
-用于存放数据的结构体
-type MyData struct {
-    Name   string    `json:&amp;quot;item&amp;quot;`
-    Other  flo">
+  <meta name="description" content="包引用1234import (    &quot;encoding/json&quot;    &quot;github.com/bitly/go-simplejson&quot; // for json get)
+用于存放数据的结构体1234type MyData struct &amp;#123;    Name   string    `json:&quot;item&quot;`    Other  float32   `json:&quot;amount&quot;`&amp;#1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在Golang中使用json">
 <meta property="og:url" content="http://www.notehub.cn/2015/11/21/dev/go/go_json/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="包引用
-import (
-    &amp;quot;encoding/json&amp;quot;
-    &amp;quot;github.com/bitly/go-simplejson&amp;quot; // for json get
-)
-
-用于存放数据的结构体
-type MyData struct {
-    Name   string    `json:&amp;quot;item&amp;quot;`
-    Other  flo">
+<meta property="og:description" content="包引用1234import (    &quot;encoding/json&quot;    &quot;github.com/bitly/go-simplejson&quot; // for json get)
+用于存放数据的结构体1234type MyData struct &amp;#123;    Name   string    `json:&quot;item&quot;`    Other  float32   `json:&quot;amount&quot;`&amp;#1">
 <meta property="og:updated_time" content="2015-11-21T07:28:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在Golang中使用json">
-<meta name="twitter:description" content="包引用
-import (
-    &amp;quot;encoding/json&amp;quot;
-    &amp;quot;github.com/bitly/go-simplejson&amp;quot; // for json get
-)
-
-用于存放数据的结构体
-type MyData struct {
-    Name   string    `json:&amp;quot;item&amp;quot;`
-    Other  flo">
+<meta name="twitter:description" content="包引用1234import (    &quot;encoding/json&quot;    &quot;github.com/bitly/go-simplejson&quot; // for json get)
+用于存放数据的结构体1234type MyData struct &amp;#123;    Name   string    `json:&quot;item&quot;`    Other  float32   `json:&quot;amount&quot;`&amp;#1">
   
   
     <link rel="icon" href="favicon.png">
@@ -121,7 +97,7 @@ type MyData struct {
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -188,45 +164,18 @@ type MyData struct {
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>包引用</p>
-<pre><code class="go">import (
-    &quot;encoding/json&quot;
-    &quot;github.com/bitly/go-simplejson&quot; // for json get
-)
-</code></pre>
-<p>用于存放数据的结构体</p>
-<pre><code class="go">type MyData struct {
-    Name   string    `json:&quot;item&quot;`
-    Other  float32   `json:&quot;amount&quot;`
-}
-</code></pre>
+        <p>包引用<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> (</div><div class="line">    <span class="string">"encoding/json"</span></div><div class="line">    <span class="string">"github.com/bitly/go-simplejson"</span> <span class="comment">// for json get</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
+<p>用于存放数据的结构体<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">type</span> MyData <span class="keyword">struct</span> &#123;</div><div class="line">    Name   <span class="keyword">string</span>    <span class="string">`json:"item"`</span></div><div class="line">    Other  <span class="keyword">float32</span>   <span class="string">`json:"amount"`</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>这里需要注意的就是后面单引号中的内容。</p>
 <p><code>json:&quot;item&quot;</code><br>这个的作用，就是Name字段在从结构体实例编码到JSON数据格式的时候，使用item作为名字。算是一种重命名的方式吧。</p>
-<p>编码JSON</p>
-<pre><code class="go">var detail MyData
-
-detail.Name  = &quot;1&quot;
-detail.Other = &quot;2&quot;
-
-body, err := json.Marshal(detail)
-if err != nil {
-    panic(err.Error())
-}
-</code></pre>
+<p>编码JSON<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> detail MyData</div><div class="line"></div><div class="line">detail.Name  = <span class="string">"1"</span></div><div class="line">detail.Other = <span class="string">"2"</span></div><div class="line"></div><div class="line">body, err := json.Marshal(detail)</div><div class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">    <span class="built_in">panic</span>(err.Error())</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>我们使用Golang自带的encoding/json包对结构体进行编码到JSON数据。</p>
-<p>json.Marshal(…)<br>JSON解码<br>由于Golang自带的json包处理解码的过程较为复杂，所以这里使用一个第三方的包simplejson进行json数据的解码操作。</p>
-<pre><code class="go">js, err := simplejson.NewJson(body)
-if err != nil {
-    panic(err.Error())
-}
-
-fmt.Println(js)
-</code></pre>
+<p>json.Marshal(…)<br>JSON解码<br>由于Golang自带的json包处理解码的过程较为复杂，所以这里使用一个第三方的包simplejson进行json数据的解码操作。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">js, err := simplejson.NewJson(body)</div><div class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">    <span class="built_in">panic</span>(err.Error())</div><div class="line">&#125;</div><div class="line"></div><div class="line">fmt.Println(js)</div></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="ciwrvim2s006zkks8g25lmvfs" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/21/dev/go/go_json/" data-id="ciy2rrdjn00726bs8i2ecqw8f" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/21/dev/go/go_json/#ds-thread" class="article-comment-link">评论</a>
       
@@ -239,11 +188,11 @@ fmt.Println(js)
     
 <nav id="article-nav">
   
-    <a href="/2015/11/24/dev/go/go_map/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/11/24/dev/go/go_dynamic_args/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          golang语言中map的初始化及使用
+          Go可变长参数函数
         
       </div>
     </a>
@@ -276,6 +225,23 @@ fmt.Println(js)
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -314,23 +280,6 @@ fmt.Println(js)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -348,7 +297,7 @@ fmt.Println(js)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -356,9 +305,9 @@ fmt.Println(js)
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -371,7 +320,16 @@ fmt.Println(js)
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -385,15 +343,6 @@ fmt.Println(js)
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -402,7 +351,7 @@ fmt.Println(js)
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

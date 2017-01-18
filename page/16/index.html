@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,64 @@
 
       
       <section id="main">
+      <article id="post-dev/CPP/cpp_dev" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/21/dev/CPP/cpp_dev/">C++ 编程环境</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/10/21/dev/CPP/cpp_dev/">
+      <time datetime="2015-10-21T12:19:56.000Z" itemprop="datePublished">2015-10-21</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/c/">c++</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h3 id="C++_code_with_Google_style"><a href="#C++_code_with_Google_style" class="headerlink" title="C++ code with Google style"></a>C++ code with Google style</h3><p><a href="http://google.github.io/styleguide/cppguide.html" target="_blank" rel="external">http://google.github.io/styleguide/cppguide.html</a></p>
+<h3 id="Use_cpplint_to_check_your_style"><a href="#Use_cpplint_to_check_your_style" class="headerlink" title="Use cpplint to check your style"></a>Use cpplint to check your style</h3><h3 id="Protocol_Buffers"><a href="#Protocol_Buffers" class="headerlink" title="Protocol Buffers"></a>Protocol Buffers</h3><p><a href="https://developers.google.com/protocol-buffers/" target="_blank" rel="external">https://developers.google.com/protocol-buffers/</a><br>(proto2): <a href="https://developers.google.com/protocol-buffers/docs/proto" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/proto</a><br>C++ related: <a href="https://developers.google.com/protocol-buffers/docs/cpptutorial" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/cpptutorial</a>,<br>Style guide: <a href="https://developers.google.com/protocol-buffers/docs/style" target="_blank" rel="external">https://developers.google.com/protocol-buffers/docs/style</a></p>
+<h3 id="Compile_code_3A_Blade"><a href="#Compile_code_3A_Blade" class="headerlink" title="Compile code: Blade"></a>Compile code: Blade</h3><p><a href="https://github.com/chen3feng/typhoon-blade" target="_blank" rel="external">https://github.com/chen3feng/typhoon-blade</a></p>
+<h3 id="Unit_test_your_code_3A_gtest"><a href="#Unit_test_your_code_3A_gtest" class="headerlink" title="Unit test your code: gtest"></a>Unit test your code: gtest</h3><p><a href="https://github.com/google/googletest/blob/master/googletest/docs/Documentation.md" target="_blank" rel="external">https://github.com/google/googletest/blob/master/googletest/docs/Documentation.md</a><br>Run unit tests with BLADE<br>Every public method should be covered</p>
+<h3 id="Post_your_code_review_3A_ReviewBoard"><a href="#Post_your_code_review_3A_ReviewBoard" class="headerlink" title="Post your code review: ReviewBoard"></a>Post your code review: ReviewBoard</h3><h3 id="gflags"><a href="#gflags" class="headerlink" title="gflags"></a>gflags</h3><p>gflags支持方便的解析和获取命令行参数<br><a href="https://github.com/gflags/gflags" target="_blank" rel="external">https://github.com/gflags/gflags</a></p>
+<h3 id="glog"><a href="#glog" class="headerlink" title="glog"></a>glog</h3><p><a href="https://github.com/google/glog" target="_blank" rel="external">https://github.com/google/glog</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/" data-id="ciy2rrdjf006g6bs82e6xuw4i" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/10/21/dev/CPP/cpp_dev/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/maven_assembly" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -161,43 +219,12 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="xml">&lt;plugin&gt;
-    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-    &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
-    &lt;version&gt;2.4&lt;/version&gt;
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId&gt;com.travelsky.tdp.pkgstock&lt;/groupId&gt;
-            &lt;artifactId&gt;stock-assembly-descriptor&lt;/artifactId&gt;
-            &lt;version&gt;1.0.0&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-    &lt;executions&gt;
-        &lt;execution&gt;
-            &lt;!-- 绑定到maven的package命令 --&gt;
-            &lt;id&gt;make-assembly&lt;/id&gt;
-            &lt;phase&gt;package&lt;/phase&gt;
-            &lt;goals&gt;
-                &lt;goal&gt;single&lt;/goal&gt;
-            &lt;/goals&gt;
-        &lt;/execution&gt;
-    &lt;/executions&gt;
-    &lt;configuration&gt;
-        &lt;ignoreMissingDescriptor&gt;true&lt;/ignoreMissingDescriptor&gt;
-        &lt;descriptorRefs&gt;
-            &lt;descriptorRef&gt;zipAll&lt;/descriptorRef&gt;
-            &lt;descriptorRef&gt;zipFilterConf&lt;/descriptorRef&gt;
-            &lt;descriptorRef&gt;zipJsCssOnly&lt;/descriptorRef&gt;
-            &lt;descriptorRef&gt;zipPicOnly&lt;/descriptorRef&gt;
-        &lt;/descriptorRefs&gt;
-    &lt;/configuration&gt;
-&lt;/plugin&gt;
-</code></pre>
+        <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.travelsky.tdp.pkgstock<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>stock-assembly-descriptor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></div><div class="line">            <span class="comment">&lt;!-- 绑定到maven的package命令 --&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">ignoreMissingDescriptor</span>&gt;</span>true<span class="tag">&lt;/<span class="name">ignoreMissingDescriptor</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>zipAll<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>zipFilterConf<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>zipJsCssOnly<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>zipPicOnly<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/12/dev/maven_assembly/" data-id="ciwrvilyy001ikks8udo2uupi" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/maven_assembly/" data-id="ciy2rrdgd000z6bs8bhicfpc3" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/12/dev/maven_assembly/#ds-thread" class="article-comment-link">评论</a>
       
@@ -245,63 +272,12 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="java">import org.apache.commons.math.stat.StatUtils;
-import org.apache.commons.math.stat.descriptive.moment.GeometricMean;
-import org.apache.commons.math.stat.descriptive.moment.Kurtosis;
-import org.apache.commons.math.stat.descriptive.moment.Mean;
-import org.apache.commons.math.stat.descriptive.moment.Skewness;
-import org.apache.commons.math.stat.descriptive.moment.StandardDeviation;
-import org.apache.commons.math.stat.descriptive.moment.Variance;
-import org.apache.commons.math.stat.descriptive.rank.Max;
-import org.apache.commons.math.stat.descriptive.rank.Min;
-import org.apache.commons.math.stat.descriptive.rank.Percentile;
-import org.apache.commons.math.stat.descriptive.summary.Product;
-import org.apache.commons.math.stat.descriptive.summary.Sum;
-
-public class StatExample {
-    public static void main(String[] args) {
-        double[] values = new double[] { 2.3, 5.4, 6.2, 7.3, 23.3 };
-
-        System.out.println( &quot;min: &quot; + StatUtils.min( values ) );
-        System.out.println( &quot;max: &quot; + StatUtils.max( values ) );
-        System.out.println( &quot;mean: &quot; + StatUtils.mean( values ) );
-        System.out.println( &quot;product: &quot; + StatUtils.product( values ) );
-        System.out.println( &quot;sum: &quot; + StatUtils.sum( values ) );
-        System.out.println( &quot;variance: &quot; + StatUtils.variance( values ) );
-
-        // Measures from previous example
-        Min min = new Min();
-        System.out.println( &quot;min: &quot; + min.evaluate( values ) );
-        Max max = new Max();
-        System.out.println( &quot;max: &quot; + max.evaluate( values ) );
-        Mean mean = new Mean();
-        System.out.println( &quot;mean: &quot; + mean.evaluate( values ) );
-        Product product = new Product();
-        System.out.println( &quot;product: &quot; + product.evaluate( values ) );
-        Sum sum = new Sum();
-        System.out.println( &quot;sum: &quot; + sum.evaluate( values ) );
-        Variance variance = new Variance();
-        System.out.println( &quot;variance: &quot; + variance.evaluate( values ) );
-
-        // New measures
-        Percentile percentile = new Percentile();
-        System.out.println( &quot;80 percentile value: &quot; + percentile.evaluate( values, 80.0 ) );
-        GeometricMean geoMean = new GeometricMean();
-        System.out.println( &quot;geometric mean: &quot; + geoMean.evaluate( values ) );
-        StandardDeviation stdDev = new StandardDeviation();
-        System.out.println( &quot;standard dev: &quot; + stdDev.evaluate( values ) );
-        Skewness skewness = new Skewness();
-        System.out.println( &quot;skewness: &quot; + skewness.evaluate( values ) );
-        Kurtosis kurtosis = new Kurtosis();
-        System.out.println( &quot;kurtosis: &quot; + kurtosis.evaluate( values ) );
-
-    }
-</code></pre>
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.StatUtils;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.GeometricMean;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Kurtosis;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Mean;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Skewness;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.StandardDeviation;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.moment.Variance;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Max;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Min;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.rank.Percentile;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.summary.Product;</div><div class="line"><span class="keyword">import</span> org.apache.commons.math.stat.descriptive.summary.Sum;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StatExample</span> </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">double</span>[] values = <span class="keyword">new</span> <span class="keyword">double</span>[] &#123; <span class="number">2.3</span>, <span class="number">5.4</span>, <span class="number">6.2</span>, <span class="number">7.3</span>, <span class="number">23.3</span> &#125;;</div><div class="line"></div><div class="line">        System.out.println( <span class="string">"min: "</span> + StatUtils.min( values ) );</div><div class="line">        System.out.println( <span class="string">"max: "</span> + StatUtils.max( values ) );</div><div class="line">        System.out.println( <span class="string">"mean: "</span> + StatUtils.mean( values ) );</div><div class="line">        System.out.println( <span class="string">"product: "</span> + StatUtils.product( values ) );</div><div class="line">        System.out.println( <span class="string">"sum: "</span> + StatUtils.sum( values ) );</div><div class="line">        System.out.println( <span class="string">"variance: "</span> + StatUtils.variance( values ) );</div><div class="line"></div><div class="line">        <span class="comment">// Measures from previous example</span></div><div class="line">        Min min = <span class="keyword">new</span> Min();</div><div class="line">        System.out.println( <span class="string">"min: "</span> + min.evaluate( values ) );</div><div class="line">        Max max = <span class="keyword">new</span> Max();</div><div class="line">        System.out.println( <span class="string">"max: "</span> + max.evaluate( values ) );</div><div class="line">        Mean mean = <span class="keyword">new</span> Mean();</div><div class="line">        System.out.println( <span class="string">"mean: "</span> + mean.evaluate( values ) );</div><div class="line">        Product product = <span class="keyword">new</span> Product();</div><div class="line">        System.out.println( <span class="string">"product: "</span> + product.evaluate( values ) );</div><div class="line">        Sum sum = <span class="keyword">new</span> Sum();</div><div class="line">        System.out.println( <span class="string">"sum: "</span> + sum.evaluate( values ) );</div><div class="line">        Variance variance = <span class="keyword">new</span> Variance();</div><div class="line">        System.out.println( <span class="string">"variance: "</span> + variance.evaluate( values ) );</div><div class="line"></div><div class="line">        <span class="comment">// New measures</span></div><div class="line">        Percentile percentile = <span class="keyword">new</span> Percentile();</div><div class="line">        System.out.println( <span class="string">"80 percentile value: "</span> + percentile.evaluate( values, <span class="number">80.0</span> ) );</div><div class="line">        GeometricMean geoMean = <span class="keyword">new</span> GeometricMean();</div><div class="line">        System.out.println( <span class="string">"geometric mean: "</span> + geoMean.evaluate( values ) );</div><div class="line">        StandardDeviation stdDev = <span class="keyword">new</span> StandardDeviation();</div><div class="line">        System.out.println( <span class="string">"standard dev: "</span> + stdDev.evaluate( values ) );</div><div class="line">        Skewness skewness = <span class="keyword">new</span> Skewness();</div><div class="line">        System.out.println( <span class="string">"skewness: "</span> + skewness.evaluate( values ) );</div><div class="line">        Kurtosis kurtosis = <span class="keyword">new</span> Kurtosis();</div><div class="line">        System.out.println( <span class="string">"kurtosis: "</span> + kurtosis.evaluate( values ) );</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="ciwrvilyx001hkks8mdcvtryk" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/12/dev/java_math_stat/" data-id="ciy2rrdgc000x6bs8dqpj1emj" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/12/dev/java_math_stat/#ds-thread" class="article-comment-link">评论</a>
       
@@ -361,7 +337,7 @@ public class StatExample {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="ciwrvim2d0066kks8r2u7w5g0" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/cookie/" data-id="ciy2rrdjc00646bs8hvciifz4" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/10/internet/ad/cookie/#ds-thread" class="article-comment-link">评论</a>
       
@@ -427,7 +403,7 @@ public class StatExample {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="ciwrvim2c0063kks8ma4cfohz" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/" data-id="ciy2rrdjc00676bs86zej1wym" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/10/internet/ad/ad_cheating/#ds-thread" class="article-comment-link">评论</a>
       
@@ -442,103 +418,11 @@ public class StatExample {
 
 
     
-      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/25/algo/ml/feature_hashing/">
-      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
-<h3 id="Motivating_example"><a href="#Motivating_example" class="headerlink" title="Motivating example"></a>Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
-<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
-<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
-<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary</p>
-<pre><code>Term    Index
-John    1
-likes   2
-to      3
-watch   4
-movies  5
-Mary    6
-too     7
-also    8
-football9
-</code></pre><p>to the term-document matrix</p>
-<pre><code>1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 
-0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 
-1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1
-</code></pre><p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
-<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
-<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
-<h3 id="Feature_vectorization_using_the_hashing_trick"><a href="#Feature_vectorization_using_the_hashing_trick" class="headerlink" title="Feature vectorization using the hashing trick"></a>Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):</p>
-<pre><code>     x := new vector[N]
-     for f in features:
-         h := hash(f)
-         x[h mod N] += 1
-     return x
-</code></pre><p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
-<p> function hashing_vectorizer(features : array of string, N : integer):</p>
-<pre><code>     x := new vector[N]
-     for f in features:
-         h := hash(f)
-         idx := h mod N
-         if ξ(f) == 1:
-             x[idx] += 1
-         else:
-             x[idx] -= 1
-     return x
-</code></pre><p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="ciwrvim27005rkks8ed8s19q7" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/15/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/17/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/15/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/17/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -547,6 +431,23 @@ football9
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -585,23 +486,6 @@ football9
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -619,7 +503,7 @@ football9
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -627,9 +511,9 @@ football9
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -642,7 +526,16 @@ football9
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -656,15 +549,6 @@ football9
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -673,7 +557,7 @@ football9
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

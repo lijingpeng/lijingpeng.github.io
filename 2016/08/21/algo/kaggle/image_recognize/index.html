@@ -6,27 +6,18 @@
   <title>kaggle之识别谷歌街景图片中的字母 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="识别谷歌街景图片中的字母githubstreet-view-getting-started-with-julia 让我们从谷歌街景的图片中鉴定字母，这个题目是让我们学习和使用Julia，Julia有python和R的易用性，有C语言的速度，无奈对Julia不是很熟悉，所以还是想用python来试试。
-import cv2
-import numpy as np
-import sys
-import p">
+1234import cv2import numpy as npimport sysimport">
 <meta property="og:type" content="article">
 <meta property="og:title" content="kaggle之识别谷歌街景图片中的字母">
 <meta property="og:url" content="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/index.html">
 <meta property="og:site_name" content="Frank">
 <meta property="og:description" content="识别谷歌街景图片中的字母githubstreet-view-getting-started-with-julia 让我们从谷歌街景的图片中鉴定字母，这个题目是让我们学习和使用Julia，Julia有python和R的易用性，有C语言的速度，无奈对Julia不是很熟悉，所以还是想用python来试试。
-import cv2
-import numpy as np
-import sys
-import p">
+1234import cv2import numpy as npimport sysimport">
 <meta property="og:updated_time" content="2016-08-21T09:04:10.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kaggle之识别谷歌街景图片中的字母">
 <meta name="twitter:description" content="识别谷歌街景图片中的字母githubstreet-view-getting-started-with-julia 让我们从谷歌街景的图片中鉴定字母，这个题目是让我们学习和使用Julia，Julia有python和R的易用性，有C语言的速度，无奈对Julia不是很熟悉，所以还是想用python来试试。
-import cv2
-import numpy as np
-import sys
-import p">
+1234import cv2import numpy as npimport sysimport">
   
   
     <link rel="icon" href="favicon.png">
@@ -106,7 +97,7 @@ import p">
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -174,53 +165,20 @@ import p">
       
                 
         <h2 id="u8BC6_u522B_u8C37_u6B4C_u8857_u666F_u56FE_u7247_u4E2D_u7684_u5B57_u6BCD"><a href="#u8BC6_u522B_u8C37_u6B4C_u8857_u666F_u56FE_u7247_u4E2D_u7684_u5B57_u6BCD" class="headerlink" title="识别谷歌街景图片中的字母"></a>识别谷歌街景图片中的字母</h2><p><a href="https://github.com/lijingpeng/kaggle/tree/master/competitions/image_recognize" target="_blank" rel="external">github</a><br><a href="https://www.kaggle.com/c/street-view-getting-started-with-julia" target="_blank" rel="external">street-view-getting-started-with-julia</a> 让我们从谷歌街景的图片中鉴定字母，这个题目是让我们学习和使用Julia，Julia有python和R的易用性，有C语言的速度，无奈对Julia不是很熟悉，所以还是想用python来试试。</p>
-<pre><code class="python">import cv2
-import numpy as np
-import sys
-import pandas as pd
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> cv2</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div></pre></td></tr></table></figure>
 <p>我们希望所有的图片最后存储在一个numpy的矩阵当中，每一行为图片的像素值。为了得到统一的表达呢，我们将RGB三个通道的值做平均得到的灰度图像作为每个图片的表示:</p>
-<pre><code class="python"># typeData 为&quot;train&quot;或者&quot;test&quot;
-# labelsInfo 包含每一个图片的ID
-# 图片存储在trainResized和testResized文件夹内
-def read_data(typeData, labelsInfo, imageSize):
-    labelsIndex = labelsInfo[&quot;ID&quot;]
-    x = np.zeros((np.size(labelsIndex), imageSize))
-    for idx, idImage in enumerate(labelsIndex):
-        # 得到图片文件名并读取
-        nameFile = typeData + &quot;Resized/&quot; + str(idImage) + &quot;.Bmp&quot;
-        img = cv2.imread(nameFile)
-        # 转化为灰度图
-        temp = np.mean(img, 2)
-        # 将图片转化为行向量
-        x[idx, :] = np.reshape(temp, (1, imageSize))
-    return x
-</code></pre>
-<h3 id="u9884_u5904_u7406_u8BAD_u7EC3_u96C6_u548C_u6D4B_u8BD5_u96C6"><a href="#u9884_u5904_u7406_u8BAD_u7EC3_u96C6_u548C_u6D4B_u8BD5_u96C6" class="headerlink" title="预处理训练集和测试集"></a>预处理训练集和测试集</h3><pre><code class="python">imageSize = 400
-trainlabels = pd.read_csv(&quot;trainLabels.csv&quot;)
-testlabels = pd.read_csv(&quot;sampleSubmission.csv&quot;)
-# 得到训练集的特征
-xTrain = read_data(&#39;train&#39;, trainlabels, imageSize)
-# 得到测试集的特征
-xTest = read_data(&quot;test&quot;, testlabels, imageSize)
-</code></pre>
-<h4 id="u9884_u89C8_u6570_u636E_uFF1A"><a href="#u9884_u89C8_u6570_u636E_uFF1A" class="headerlink" title="预览数据："></a>预览数据：</h4><pre><code class="python">print trainlabels.head(2)
-print testlabels.head(2)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># typeData 为"train"或者"test"</span></div><div class="line"><span class="comment"># labelsInfo 包含每一个图片的ID</span></div><div class="line"><span class="comment"># 图片存储在trainResized和testResized文件夹内</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_data</span><span class="params">(typeData, labelsInfo, imageSize)</span>:</span></div><div class="line">    labelsIndex = labelsInfo[<span class="string">"ID"</span>]</div><div class="line">    x = np.zeros((np.size(labelsIndex), imageSize))</div><div class="line">    <span class="keyword">for</span> idx, idImage <span class="keyword">in</span> enumerate(labelsIndex):</div><div class="line">        <span class="comment"># 得到图片文件名并读取</span></div><div class="line">        nameFile = typeData + <span class="string">"Resized/"</span> + str(idImage) + <span class="string">".Bmp"</span></div><div class="line">        img = cv2.imread(nameFile)</div><div class="line">        <span class="comment"># 转化为灰度图</span></div><div class="line">        temp = np.mean(img, <span class="number">2</span>)</div><div class="line">        <span class="comment"># 将图片转化为行向量</span></div><div class="line">        x[idx, :] = np.reshape(temp, (<span class="number">1</span>, imageSize))</div><div class="line">    <span class="keyword">return</span> x</div></pre></td></tr></table></figure>
+<h3 id="u9884_u5904_u7406_u8BAD_u7EC3_u96C6_u548C_u6D4B_u8BD5_u96C6"><a href="#u9884_u5904_u7406_u8BAD_u7EC3_u96C6_u548C_u6D4B_u8BD5_u96C6" class="headerlink" title="预处理训练集和测试集"></a>预处理训练集和测试集</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">imageSize = <span class="number">400</span></div><div class="line">trainlabels = pd.read_csv(<span class="string">"trainLabels.csv"</span>)</div><div class="line">testlabels = pd.read_csv(<span class="string">"sampleSubmission.csv"</span>)</div><div class="line"><span class="comment"># 得到训练集的特征</span></div><div class="line">xTrain = read_data(<span class="string">'train'</span>, trainlabels, imageSize)</div><div class="line"><span class="comment"># 得到测试集的特征</span></div><div class="line">xTest = read_data(<span class="string">"test"</span>, testlabels, imageSize)</div></pre></td></tr></table></figure>
+<h4 id="u9884_u89C8_u6570_u636E_uFF1A"><a href="#u9884_u89C8_u6570_u636E_uFF1A" class="headerlink" title="预览数据："></a>预览数据：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> trainlabels.head(<span class="number">2</span>)</div><div class="line"><span class="keyword">print</span> testlabels.head(<span class="number">2</span>)</div></pre></td></tr></table></figure>
 <pre><code>   ID Class
 0   1     n
 1   2     8
      ID Class
 0  6284     A
 1  6285     A
-</code></pre><pre><code class="python">yTrain = trainlabels[&quot;Class&quot;]
-yTrain = [ord(x) for x in yTrain]
-</code></pre>
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yTrain = trainlabels[<span class="string">"Class"</span>]</div><div class="line">yTrain = [ord(x) <span class="keyword">for</span> x <span class="keyword">in</span> yTrain]</div></pre></td></tr></table></figure>
 <h2 id="u6A21_u578B_u8BAD_u7EC3"><a href="#u6A21_u578B_u8BAD_u7EC3" class="headerlink" title="模型训练"></a>模型训练</h2><h3 id="u968F_u673A_u68EE_u6797"><a href="#u968F_u673A_u68EE_u6797" class="headerlink" title="随机森林"></a>随机森林</h3><p>使用随机森林进行训练，树的个数和深度需要多次调解寻求最佳值</p>
-<pre><code class="python">from sklearn.ensemble import RandomForestClassifier
-%time rfc = RandomForestClassifier(n_estimators = 500, max_features = 50, max_depth=None)
-rfc.fit(xTrain, yTrain)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</div><div class="line">%time rfc = RandomForestClassifier(n_estimators = <span class="number">500</span>, max_features = <span class="number">50</span>, max_depth=<span class="keyword">None</span>)</div><div class="line">rfc.fit(xTrain, yTrain)</div></pre></td></tr></table></figure>
 <pre><code>CPU times: user 121 µs, sys: 367 µs, total: 488 µs
 Wall time: 494 µs
 
@@ -228,41 +186,18 @@ Wall time: 494 µs
 
 
 
-RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&#39;gini&#39;,
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&apos;gini&apos;,
             max_depth=None, max_features=50, max_leaf_nodes=None,
             min_samples_leaf=1, min_samples_split=2,
             min_weight_fraction_leaf=0.0, n_estimators=500, n_jobs=1,
             oob_score=False, random_state=None, verbose=0,
             warm_start=False)
 </code></pre><h4 id="u9884_u6D4B"><a href="#u9884_u6D4B" class="headerlink" title="预测"></a>预测</h4><p>将训练后的模型应用到测试集上，并保存结果：</p>
-<pre><code class="python">predTest = rfc.predict(xTest)
-predResult = [chr(x) for x in predTest]
-testlabels[&quot;Class&quot;] = predResult
-testlabels.to_csv(&quot;rf_500_50_result.csv&quot;,index = None)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">predTest = rfc.predict(xTest)</div><div class="line">predResult = [chr(x) <span class="keyword">for</span> x <span class="keyword">in</span> predTest]</div><div class="line">testlabels[<span class="string">"Class"</span>] = predResult</div><div class="line">testlabels.to_csv(<span class="string">"rf_500_50_result.csv"</span>,index = <span class="keyword">None</span>)</div></pre></td></tr></table></figure>
 <h4 id="u7ED3_u679C"><a href="#u7ED3_u679C" class="headerlink" title="结果"></a>结果</h4><p>使用50颗树进行训练，提交kaggle之后准确率约为0.40<br>改用300颗树进行训练，提交kaggle之后准确率为0.46695<br>改用500颗树进行训练，深度为10，提价kaggle后准确率为0.40，估计出现了过拟合<br>改用500颗树进行训练，不设置深度，提价kaggle后准确率为0.47480  </p>
-<h3 id="u8D1D_u53F6_u65AF"><a href="#u8D1D_u53F6_u65AF" class="headerlink" title="贝叶斯"></a>贝叶斯</h3><pre><code class="python">from sklearn.naive_bayes import GaussianNB as GNB
-model_GNB = GNB()
-model_GNB.fit(xTrain, yTrain)
-
-predTest = model_GNB.predict(xTest)
-predResult = [chr(x) for x in predTest]
-testlabels[&quot;Class&quot;] = predResult
-testlabels.to_csv(&quot;gnb_result.csv&quot;,index = None)
-</code></pre>
+<h3 id="u8D1D_u53F6_u65AF"><a href="#u8D1D_u53F6_u65AF" class="headerlink" title="贝叶斯"></a>贝叶斯</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> GaussianNB <span class="keyword">as</span> GNB</div><div class="line">model_GNB = GNB()</div><div class="line">model_GNB.fit(xTrain, yTrain)</div><div class="line"></div><div class="line">predTest = model_GNB.predict(xTest)</div><div class="line">predResult = [chr(x) <span class="keyword">for</span> x <span class="keyword">in</span> predTest]</div><div class="line">testlabels[<span class="string">"Class"</span>] = predResult</div><div class="line">testlabels.to_csv(<span class="string">"gnb_result.csv"</span>,index = <span class="keyword">None</span>)</div></pre></td></tr></table></figure>
 <p>贝叶斯的训练非常的快，把结果提交kaggle后，得到0.02389的准确率，明显低于随机森林</p>
-<h3 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h3><pre><code class="python">from sklearn.ensemble import GradientBoostingClassifier
-%time GBDT = GradientBoostingClassifier(loss=&#39;deviance&#39;, learning_rate=0.1, n_estimators=100, subsample=1.0, \
-                        min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_depth=3, init=None, \
-                        random_state=None, max_features=None, verbose=0, max_leaf_nodes=None, warm_start=False, presort=&#39;auto&#39;)
-
-%time GBDT.fit(xTrain, yTrain)
-
-%time predTest = GBDT.predict(xTest)
-predResult = [chr(x) for x in predTest]
-testlabels[&quot;Class&quot;] = predResult
-testlabels.to_csv(&quot;gbdt_result.csv&quot;,index = None)
-</code></pre>
+<h3 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> GradientBoostingClassifier</div><div class="line">%time GBDT = GradientBoostingClassifier(loss=<span class="string">'deviance'</span>, learning_rate=<span class="number">0.1</span>, n_estimators=<span class="number">100</span>, subsample=<span class="number">1.0</span>, \</div><div class="line">                        min_samples_split=<span class="number">2</span>, min_samples_leaf=<span class="number">1</span>, min_weight_fraction_leaf=<span class="number">0.0</span>, max_depth=<span class="number">3</span>, init=<span class="keyword">None</span>, \</div><div class="line">                        random_state=<span class="keyword">None</span>, max_features=<span class="keyword">None</span>, verbose=<span class="number">0</span>, max_leaf_nodes=<span class="keyword">None</span>, warm_start=<span class="keyword">False</span>, presort=<span class="string">'auto'</span>)</div><div class="line"></div><div class="line">%time GBDT.fit(xTrain, yTrain)</div><div class="line"></div><div class="line">%time predTest = GBDT.predict(xTest)</div><div class="line">predResult = [chr(x) <span class="keyword">for</span> x <span class="keyword">in</span> predTest]</div><div class="line">testlabels[<span class="string">"Class"</span>] = predResult</div><div class="line">testlabels.to_csv(<span class="string">"gbdt_result.csv"</span>,index = <span class="keyword">None</span>)</div></pre></td></tr></table></figure>
 <pre><code>CPU times: user 91 µs, sys: 738 µs, total: 829 µs
 Wall time: 2.93 ms
 CPU times: user 40min 16s, sys: 52.3 s, total: 41min 9s
@@ -270,101 +205,12 @@ Wall time: 2h 55min 22s
 CPU times: user 1.75 s, sys: 44.5 ms, total: 1.8 s
 Wall time: 1.79 s
 </code></pre><p>使用GBDT仅得到了0.31937的准确率，可能是我的默认参数没有调节好，关键是GBDT的训练时间太长，调试成本也比较高</p>
-<h3 id="u795E_u7ECF_u7F51_u7EDC"><a href="#u795E_u7ECF_u7F51_u7EDC" class="headerlink" title="神经网络"></a>神经网络</h3><pre><code class="python">import os
-from skimage.io import imread
-from lasagne import layers
-from lasagne.nonlinearities import softmax
-from nolearn.lasagne import NeuralNet, BatchIterator
-</code></pre>
-<pre><code class="python"># Define functions
-def read_datax(typeData, labelsInfo, imageSize, path):
-    x = np.zeros((labelsInfo.shape[0], imageSize))
-
-    for (index, idImage) in enumerate(labelsInfo[&#39;ID&#39;]):
-        # use specially created 32 x 32 images
-        nameFile = &#39;{0}/{1}Resized32/{2}.Bmp&#39;.format(path,
-                    typeData, idImage)
-        img = imread(nameFile, as_grey = True)
-
-        x[index, :] = np.reshape(img, (1, imageSize))
-
-    return x
-
-def fit_model(reshaped_train_x, y, image_width,
-                    image_height, reshaped_test_x):
-    net = NeuralNet(
-        layers = [
-            (&#39;input&#39;, layers.InputLayer),
-            (&#39;conv1&#39;, layers.Conv2DLayer),
-            (&#39;pool1&#39;, layers.MaxPool2DLayer),
-            (&#39;dropout1&#39;, layers.DropoutLayer),
-            (&#39;conv2&#39;, layers.Conv2DLayer),
-            (&#39;pool2&#39;, layers.MaxPool2DLayer),
-            (&#39;dropout2&#39;, layers.DropoutLayer),
-            (&#39;conv3&#39;, layers.Conv2DLayer),
-            (&#39;hidden4&#39;, layers.DenseLayer),
-            (&#39;output&#39;, layers.DenseLayer),
-        ],
-        input_shape = (None, 1, 32, 32),
-        conv1_num_filters=32, conv1_filter_size=(5, 5),
-        pool1_pool_size=(2, 2),
-        dropout1_p=0.2,
-        conv2_num_filters=64, conv2_filter_size=(5, 5),
-        pool2_pool_size=(2, 2),
-        dropout2_p=0.2,
-        conv3_num_filters = 128, conv3_filter_size = (5, 5),
-        hidden4_num_units=500,
-        output_num_units = 62, output_nonlinearity = softmax,
-
-        update_learning_rate = 0.01,
-        update_momentum = 0.9,
-
-        batch_iterator_train = BatchIterator(batch_size = 100),
-        batch_iterator_test = BatchIterator(batch_size = 100),
-
-        use_label_encoder = True,
-        regression = False,
-        max_epochs = 100,
-        verbose = 1,
-    )
-
-    net.fit(reshaped_train_x, y)
-    prediction = net.predict(reshaped_test_x)
-
-    return prediction
-</code></pre>
-<pre><code class="python"># 预处理数据，首先将图片保存为32*32的小图片
-imageSize = 1024 # 32 x 32
-image_width = image_height = int(imageSize ** 0.5)
-
-labelsInfoTrain = pd.read_csv\
-            (&#39;trainLabels.csv&#39;.format(path))
-labelsInfoTest = pd.read_csv\
-            (&#39;sampleSubmission.csv&#39;.format(path))
-
-# Load dataset
-nnxTrain = read_datax(&#39;train&#39;, labelsInfoTrain, imageSize, &#39;.&#39;)
-nnxTest = read_datax(&#39;test&#39;, labelsInfoTest, imageSize, &#39;.&#39;)
-
-nnyTrain = map(ord, labelsInfoTrain[&#39;Class&#39;])
-nnyTrain = np.array(yTrain)
-</code></pre>
-<pre><code class="python"># 归一化数据
-nnxTrain /= nnxTrain.std(axis = None)
-nnxTrain -= nnxTrain.mean()
-
-nnxTest /= nnxTest.std(axis = None)
-nnxTest -= nnxTest.mean()
-</code></pre>
-<pre><code class="python"># Reshape data
-train_x_reshaped = nnxTrain.reshape(nnxTrain.shape[0], 1,
-                  image_height, image_width).astype(&#39;float32&#39;)
-test_x_reshaped = nnxTest.reshape(nnxTest.shape[0], 1,
-                  image_height, image_width).astype(&#39;float32&#39;)
-</code></pre>
-<pre><code class="python"># 进行训练和测试
-predict = fit_model(train_x_reshaped, nnyTrain, image_width, image_height, test_x_reshaped)
-</code></pre>
+<h3 id="u795E_u7ECF_u7F51_u7EDC"><a href="#u795E_u7ECF_u7F51_u7EDC" class="headerlink" title="神经网络"></a>神经网络</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">from</span> skimage.io <span class="keyword">import</span> imread</div><div class="line"><span class="keyword">from</span> lasagne <span class="keyword">import</span> layers</div><div class="line"><span class="keyword">from</span> lasagne.nonlinearities <span class="keyword">import</span> softmax</div><div class="line"><span class="keyword">from</span> nolearn.lasagne <span class="keyword">import</span> NeuralNet, BatchIterator</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Define functions</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_datax</span><span class="params">(typeData, labelsInfo, imageSize, path)</span>:</span></div><div class="line">    x = np.zeros((labelsInfo.shape[<span class="number">0</span>], imageSize))</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (index, idImage) <span class="keyword">in</span> enumerate(labelsInfo[<span class="string">'ID'</span>]):</div><div class="line">        <span class="comment"># use specially created 32 x 32 images</span></div><div class="line">        nameFile = <span class="string">'&#123;0&#125;/&#123;1&#125;Resized32/&#123;2&#125;.Bmp'</span>.format(path,</div><div class="line">                    typeData, idImage)</div><div class="line">        img = imread(nameFile, as_grey = <span class="keyword">True</span>)</div><div class="line"></div><div class="line">        x[index, :] = np.reshape(img, (<span class="number">1</span>, imageSize))</div><div class="line"></div><div class="line">    <span class="keyword">return</span> x</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fit_model</span><span class="params">(reshaped_train_x, y, image_width,</span></span></div><div class="line">                    image_height, reshaped_test_x):</div><div class="line">    net = NeuralNet(</div><div class="line">        layers = [</div><div class="line">            (<span class="string">'input'</span>, layers.InputLayer),</div><div class="line">            (<span class="string">'conv1'</span>, layers.Conv2DLayer),</div><div class="line">            (<span class="string">'pool1'</span>, layers.MaxPool2DLayer),</div><div class="line">            (<span class="string">'dropout1'</span>, layers.DropoutLayer),</div><div class="line">            (<span class="string">'conv2'</span>, layers.Conv2DLayer),</div><div class="line">            (<span class="string">'pool2'</span>, layers.MaxPool2DLayer),</div><div class="line">            (<span class="string">'dropout2'</span>, layers.DropoutLayer),</div><div class="line">            (<span class="string">'conv3'</span>, layers.Conv2DLayer),</div><div class="line">            (<span class="string">'hidden4'</span>, layers.DenseLayer),</div><div class="line">            (<span class="string">'output'</span>, layers.DenseLayer),</div><div class="line">        ],</div><div class="line">        input_shape = (<span class="keyword">None</span>, <span class="number">1</span>, <span class="number">32</span>, <span class="number">32</span>),</div><div class="line">        conv1_num_filters=<span class="number">32</span>, conv1_filter_size=(<span class="number">5</span>, <span class="number">5</span>),</div><div class="line">        pool1_pool_size=(<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">        dropout1_p=<span class="number">0.2</span>,</div><div class="line">        conv2_num_filters=<span class="number">64</span>, conv2_filter_size=(<span class="number">5</span>, <span class="number">5</span>),</div><div class="line">        pool2_pool_size=(<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">        dropout2_p=<span class="number">0.2</span>,</div><div class="line">        conv3_num_filters = <span class="number">128</span>, conv3_filter_size = (<span class="number">5</span>, <span class="number">5</span>),</div><div class="line">        hidden4_num_units=<span class="number">500</span>,</div><div class="line">        output_num_units = <span class="number">62</span>, output_nonlinearity = softmax,</div><div class="line"></div><div class="line">        update_learning_rate = <span class="number">0.01</span>,</div><div class="line">        update_momentum = <span class="number">0.9</span>,</div><div class="line"></div><div class="line">        batch_iterator_train = BatchIterator(batch_size = <span class="number">100</span>),</div><div class="line">        batch_iterator_test = BatchIterator(batch_size = <span class="number">100</span>),</div><div class="line"></div><div class="line">        use_label_encoder = <span class="keyword">True</span>,</div><div class="line">        regression = <span class="keyword">False</span>,</div><div class="line">        max_epochs = <span class="number">100</span>,</div><div class="line">        verbose = <span class="number">1</span>,</div><div class="line">    )</div><div class="line"></div><div class="line">    net.fit(reshaped_train_x, y)</div><div class="line">    prediction = net.predict(reshaped_test_x)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> prediction</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 预处理数据，首先将图片保存为32*32的小图片</span></div><div class="line">imageSize = <span class="number">1024</span> <span class="comment"># 32 x 32</span></div><div class="line">image_width = image_height = int(imageSize ** <span class="number">0.5</span>)</div><div class="line"></div><div class="line">labelsInfoTrain = pd.read_csv\</div><div class="line">            (<span class="string">'trainLabels.csv'</span>.format(path))</div><div class="line">labelsInfoTest = pd.read_csv\</div><div class="line">            (<span class="string">'sampleSubmission.csv'</span>.format(path))</div><div class="line"></div><div class="line"><span class="comment"># Load dataset</span></div><div class="line">nnxTrain = read_datax(<span class="string">'train'</span>, labelsInfoTrain, imageSize, <span class="string">'.'</span>)</div><div class="line">nnxTest = read_datax(<span class="string">'test'</span>, labelsInfoTest, imageSize, <span class="string">'.'</span>)</div><div class="line"></div><div class="line">nnyTrain = map(ord, labelsInfoTrain[<span class="string">'Class'</span>])</div><div class="line">nnyTrain = np.array(yTrain)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 归一化数据</span></div><div class="line">nnxTrain /= nnxTrain.std(axis = <span class="keyword">None</span>)</div><div class="line">nnxTrain -= nnxTrain.mean()</div><div class="line"></div><div class="line">nnxTest /= nnxTest.std(axis = <span class="keyword">None</span>)</div><div class="line">nnxTest -= nnxTest.mean()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Reshape data</span></div><div class="line">train_x_reshaped = nnxTrain.reshape(nnxTrain.shape[<span class="number">0</span>], <span class="number">1</span>,</div><div class="line">                  image_height, image_width).astype(<span class="string">'float32'</span>)</div><div class="line">test_x_reshaped = nnxTest.reshape(nnxTest.shape[<span class="number">0</span>], <span class="number">1</span>,</div><div class="line">                  image_height, image_width).astype(<span class="string">'float32'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 进行训练和测试</span></div><div class="line">predict = fit_model(train_x_reshaped, nnyTrain, image_width, image_height, test_x_reshaped)</div></pre></td></tr></table></figure>
 <pre><code># Neural Network with 352586 learnable parameters
 
 ## Layer information
@@ -484,17 +330,13 @@ predict = fit_model(train_x_reshaped, nnyTrain, image_width, image_height, test_
      98     [36m0.27107[0m     2.15645    0.12570      0.63729  16.32s
      99     0.27947     2.22565    0.12557      0.62637  16.51s
     100     [36m0.26500[0m     2.22825    0.11893      0.64431  16.52s
-</code></pre><pre><code class="python"># 保存结果
-yTest = map(chr, predict)
-labelsInfoTest[&#39;Class&#39;] = yTest
-labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
-</code></pre>
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 保存结果</span></div><div class="line">yTest = map(chr, predict)</div><div class="line">labelsInfoTest[<span class="string">'Class'</span>] = yTest</div><div class="line">labelsInfoTest.to_csv(<span class="string">'nnresult.csv'</span>.format(path), index = <span class="keyword">False</span>)</div></pre></td></tr></table></figure>
 <p>提交kaggle之后的准确率：0.64562</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/" data-id="ciwrvim1n004fkks8xkezurmf" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/" data-id="ciy2rrdiu004d6bs8ddw4k9cm" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/#ds-thread" class="article-comment-link">评论</a>
       
@@ -548,6 +390,23 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -582,23 +441,6 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -616,7 +458,7 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -624,9 +466,9 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -639,7 +481,16 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -653,15 +504,6 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -670,7 +512,7 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

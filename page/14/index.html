@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -162,103 +162,88 @@
       
                 
         <ol>
-<li>HTTP GET<br>```python<br>from BaseHTTPServer import BaseHTTPRequestHandler<br>import urlparse</li>
+<li><p>HTTP GET</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> BaseHTTPRequestHandler</div><div class="line"><span class="keyword">import</span> urlparse</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GetHandler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">        parsed_path = urlparse.urlparse(self.path)</div><div class="line">        message_parts = [</div><div class="line">                <span class="string">'CLIENT VALUES:'</span>,</div><div class="line">                <span class="string">'client_address=%s (%s)'</span> % (self.client_address,</div><div class="line">                                            self.address_string()),</div><div class="line">                <span class="string">'command=%s'</span> % self.command,</div><div class="line">                <span class="string">'path=%s'</span> % self.path,</div><div class="line">                <span class="string">'real path=%s'</span> % parsed_path.path,</div><div class="line">                <span class="string">'query=%s'</span> % parsed_path.query,</div><div class="line">                <span class="string">'request_version=%s'</span> % self.request_version,</div><div class="line">                <span class="string">''</span>,</div><div class="line">                <span class="string">'SERVER VALUES:'</span>,</div><div class="line">                <span class="string">'server_version=%s'</span> % self.server_version,</div><div class="line">                <span class="string">'sys_version=%s'</span> % self.sys_version,</div><div class="line">                <span class="string">'protocol_version=%s'</span> % self.protocol_version,</div><div class="line">                <span class="string">''</span>,</div><div class="line">                <span class="string">'HEADERS RECEIVED:'</span>,</div><div class="line">                ]</div><div class="line">        <span class="keyword">for</span> name, value <span class="keyword">in</span> sorted(self.headers.items()):</div><div class="line">            message_parts.append(<span class="string">'%s=%s'</span> % (name, value.rstrip()))</div><div class="line">        message_parts.append(<span class="string">''</span>)</div><div class="line">        message = <span class="string">'\r\n'</span>.join(message_parts)</div><div class="line">        self.send_response(<span class="number">200</span>)</div><div class="line">        self.end_headers()</div><div class="line">        self.wfile.write(message)</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer</div><div class="line">    server = HTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), GetHandler)</div><div class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></div><div class="line">    server.serve_forever()</div></pre></td></tr></table></figure>
+</li>
+<li><p>HTTP POST</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> BaseHTTPRequestHandler</div><div class="line"><span class="keyword">import</span> cgi</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostHandler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_POST</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># Parse the form data posted</span></div><div class="line">        form = cgi.FieldStorage(</div><div class="line">            fp=self.rfile, </div><div class="line">            headers=self.headers,</div><div class="line">            environ=&#123;<span class="string">'REQUEST_METHOD'</span>:<span class="string">'POST'</span>,</div><div class="line">                     <span class="string">'CONTENT_TYPE'</span>:self.headers[<span class="string">'Content-Type'</span>],</div><div class="line">                     &#125;)</div><div class="line"></div><div class="line">        <span class="comment"># Begin the response</span></div><div class="line">        self.send_response(<span class="number">200</span>)</div><div class="line">        self.end_headers()</div><div class="line">        self.wfile.write(<span class="string">'Client: %s\n'</span> % str(self.client_address))</div><div class="line">        self.wfile.write(<span class="string">'User-agent: %s\n'</span> % str(self.headers[<span class="string">'user-agent'</span>]))</div><div class="line">        self.wfile.write(<span class="string">'Path: %s\n'</span> % self.path)</div><div class="line">        self.wfile.write(<span class="string">'Form data:\n'</span>)</div><div class="line"></div><div class="line">        <span class="comment"># Echo back information about what was posted in the form</span></div><div class="line">        <span class="keyword">for</span> field <span class="keyword">in</span> form.keys():</div><div class="line">            field_item = form[field]</div><div class="line">            <span class="keyword">if</span> field_item.filename:</div><div class="line">                <span class="comment"># The field contains an uploaded file</span></div><div class="line">                file_data = field_item.file.read()</div><div class="line">                file_len = len(file_data)</div><div class="line">                <span class="keyword">del</span> file_data</div><div class="line">                self.wfile.write(<span class="string">'\tUploaded %s as "%s" (%d bytes)\n'</span> % \</div><div class="line">                        (field, field_item.filename, file_len))</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                <span class="comment"># Regular form value</span></div><div class="line">                self.wfile.write(<span class="string">'\t%s=%s\n'</span> % (field, form[field].value))</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer</div><div class="line">    server = HTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), PostHandler)</div><div class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></div><div class="line">    server.serve_forever()</div></pre></td></tr></table></figure>
+</li>
+<li><p>Threading and Forking</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer, BaseHTTPRequestHandler</div><div class="line"><span class="keyword">from</span> SocketServer <span class="keyword">import</span> ThreadingMixIn</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">        self.send_response(<span class="number">200</span>)</div><div class="line">        self.end_headers()</div><div class="line">        message =  threading.currentThread().getName()</div><div class="line">        self.wfile.write(message)</div><div class="line">        self.wfile.write(<span class="string">'\n'</span>)</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadedHTTPServer</span><span class="params">(ThreadingMixIn, HTTPServer)</span>:</span></div><div class="line">    <span class="string">"""Handle requests in a separate thread."""</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    server = ThreadedHTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), Handler)</div><div class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></div><div class="line">    server.serve_forever()</div></pre></td></tr></table></figure>
+</li>
 </ol>
-<p>class GetHandler(BaseHTTPRequestHandler):</p>
-<pre><code>def do_GET(self):
-    parsed_path = urlparse.urlparse(self.path)
-    message_parts = [
-            &#39;CLIENT VALUES:&#39;,
-            &#39;client_address=%s (%s)&#39; % (self.client_address,
-                                        self.address_string()),
-            &#39;command=%s&#39; % self.command,
-            &#39;path=%s&#39; % self.path,
-            &#39;real path=%s&#39; % parsed_path.path,
-            &#39;query=%s&#39; % parsed_path.query,
-            &#39;request_version=%s&#39; % self.request_version,
-            &#39;&#39;,
-            &#39;SERVER VALUES:&#39;,
-            &#39;server_version=%s&#39; % self.server_version,
-            &#39;sys_version=%s&#39; % self.sys_version,
-            &#39;protocol_version=%s&#39; % self.protocol_version,
-            &#39;&#39;,
-            &#39;HEADERS RECEIVED:&#39;,
-            ]
-    for name, value in sorted(self.headers.items()):
-        message_parts.append(&#39;%s=%s&#39; % (name, value.rstrip()))
-    message_parts.append(&#39;&#39;)
-    message = &#39;\r\n&#39;.join(message_parts)
-    self.send_response(200)
-    self.end_headers()
-    self.wfile.write(message)
-    return
-</code></pre><p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    from BaseHTTPServer import HTTPServer<br>    server = HTTPServer((‘localhost’, 8080), GetHandler)<br>    print ‘Starting server, use <ctrl-c> to stop’<br>    server.serve_forever()</ctrl-c></p>
-<pre><code>
-2. HTTP POST
-```python
-from BaseHTTPServer import BaseHTTPRequestHandler
-import cgi
-
-class PostHandler(BaseHTTPRequestHandler):
-
-    def do_POST(self):
-        # Parse the form data posted
-        form = cgi.FieldStorage(
-            fp=self.rfile, 
-            headers=self.headers,
-            environ={&#39;REQUEST_METHOD&#39;:&#39;POST&#39;,
-                     &#39;CONTENT_TYPE&#39;:self.headers[&#39;Content-Type&#39;],
-                     })
-
-        # Begin the response
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(&#39;Client: %s\n&#39; % str(self.client_address))
-        self.wfile.write(&#39;User-agent: %s\n&#39; % str(self.headers[&#39;user-agent&#39;]))
-        self.wfile.write(&#39;Path: %s\n&#39; % self.path)
-        self.wfile.write(&#39;Form data:\n&#39;)
-
-        # Echo back information about what was posted in the form
-        for field in form.keys():
-            field_item = form[field]
-            if field_item.filename:
-                # The field contains an uploaded file
-                file_data = field_item.file.read()
-                file_len = len(file_data)
-                del file_data
-                self.wfile.write(&#39;\tUploaded %s as &quot;%s&quot; (%d bytes)\n&#39; % \
-                        (field, field_item.filename, file_len))
-            else:
-                # Regular form value
-                self.wfile.write(&#39;\t%s=%s\n&#39; % (field, form[field].value))
-        return
-
-if __name__ == &#39;__main__&#39;:
-    from BaseHTTPServer import HTTPServer
-    server = HTTPServer((&#39;localhost&#39;, 8080), PostHandler)
-    print &#39;Starting server, use &lt;Ctrl-C&gt; to stop&#39;
-    server.serve_forever()
-</code></pre><ol>
-<li>Threading and Forking<br>```python<br>from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler<br>from SocketServer import ThreadingMixIn<br>import threading</li>
-</ol>
-<p>class Handler(BaseHTTPRequestHandler):</p>
-<pre><code>def do_GET(self):
-    self.send_response(200)
-    self.end_headers()
-    message =  threading.currentThread().getName()
-    self.wfile.write(message)
-    self.wfile.write(&#39;\n&#39;)
-    return
-</code></pre><p>class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):<br>    “””Handle requests in a separate thread.”””</p>
-<p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    server = ThreadedHTTPServer((‘localhost’, 8080), Handler)<br>    print ‘Starting server, use <ctrl-c> to stop’<br>    server.serve_forever()<br>```</ctrl-c></p>
 <p>From: <a href="https://pymotw.com/2/BaseHTTPServer/" target="_blank" rel="external">https://pymotw.com/2/BaseHTTPServer/</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="ciwrvim3c007skks8ehuznesy" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="ciy2rrdjy007s6bs8gdczwu7b" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-dev/web/python_cgi_bin" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/18/dev/web/python_cgi_bin/">Python CGI-BIN</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/11/18/dev/web/python_cgi_bin/">
+      <time datetime="2015-11-18T05:19:56.000Z" itemprop="datePublished">2015-11-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/web/">web</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> BaseHTTPServer</div><div class="line"><span class="keyword">import</span> CGIHTTPServer</div><div class="line"><span class="keyword">import</span> cgitb; cgitb.enable()  <span class="comment">## This line enables CGI error reporting</span></div><div class="line"></div><div class="line">server = BaseHTTPServer.HTTPServer</div><div class="line">handler = CGIHTTPServer.CGIHTTPRequestHandler</div><div class="line">server_address = (<span class="string">"0.0.0.0"</span>, <span class="number">8082</span>)</div><div class="line">handler.cgi_directories = [<span class="string">"/cgi-bin"</span>]</div><div class="line"></div><div class="line">httpd = server(server_address, handler)</div><div class="line">httpd.serve_forever()</div></pre></td></tr></table></figure>
+<p>CGI-BIN下的py文件要有执行权限。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> cgi</div><div class="line"><span class="keyword">import</span> urllib</div><div class="line"><span class="keyword">import</span> json</div><div class="line"></div><div class="line">form = cgi.FieldStorage()</div><div class="line"></div><div class="line">query_str = form.getvalue(<span class="string">'query'</span>)</div><div class="line">query = <span class="string">"http://0.0.0.0:9999/query?query=%s"</span> % query_str</div><div class="line"></div><div class="line">exec_query = urllib.urlopen(query)</div><div class="line"><span class="keyword">print</span> <span class="string">"Status: 200 OK"</span></div><div class="line"><span class="keyword">print</span> <span class="string">"Content-Type: application/json"</span></div><div class="line"><span class="keyword">print</span> <span class="string">""</span></div><div class="line"><span class="keyword">print</span> exec_query.read()</div></pre></td></tr></table></figure>
+<p>HTML:<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"content-type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=utf-8"</span>&gt;</span></div><div class="line"></div><div class="line">        <span class="tag">&lt;<span class="name">title</span>&gt;</span>test<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line"></div><div class="line">            $(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span></div><div class="line">            &#123;</div><div class="line">                $(<span class="string">'#clickme'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">                    alert(<span class="string">'Im going to start processing'</span>);</div><div class="line"></div><div class="line">                    $.ajax(&#123;</div><div class="line">                        url: <span class="string">"/scripts/ajaxpost.py"</span>,</div><div class="line">                        type: <span class="string">"post"</span>,</div><div class="line">                        datatype:<span class="string">"json"</span>,</div><div class="line">                        data: &#123;<span class="string">'key'</span>:<span class="string">'value'</span>,<span class="string">'key2'</span>:<span class="string">'value2'</span>&#125;,</div><div class="line">                        success: <span class="function"><span class="keyword">function</span>(<span class="params">response</span>)</span>&#123;</div><div class="line">                            alert(response.message);</div><div class="line">                            alert(response.keys);</div><div class="line">                        &#125;</div><div class="line">                    &#125;);</div><div class="line">                &#125;);</div><div class="line">            &#125;);</div><div class="line"></div><div class="line">        <span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"clickme"</span>&gt;</span> click me <span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>参考： </p>
+<ul>
+<li><a href="https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/" target="_blank" rel="external">https://pointlessprogramming.wordpress.com/2011/02/13/python-cgi-tutorial-2/</a></li>
+<li><a href="http://www.runoob.com/python/python-cgi.html" target="_blank" rel="external">http://www.runoob.com/python/python-cgi.html</a></li>
+<li><a href="http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi" target="_blank" rel="external">http://stackoverflow.com/questions/10721244/ajax-posting-to-python-cgi</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/" data-id="ciy2rrdjx007r6bs8jphmecl8" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/11/18/dev/web/python_cgi_bin/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
@@ -306,200 +291,13 @@ if __name__ == &#39;__main__&#39;:
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="c++">#include&lt;stdio.h&gt;
-#include&lt;string&gt;
-#include&lt;string.h&gt;
-#include&lt;iostream&gt;
-using namespace std;
-
-//compare比较函数：相等返回0，大于返回1，小于返回-1
-int compare(string str1,string str2)
-{
-    if(str1.length()&gt;str2.length()) return 1;
-    else if(str1.length()&lt;str2.length())  return -1;
-    else return str1.compare(str2);
-}
-//高精度加法
-//只能是两个正数相加
-string add(string str1,string str2)//高精度加法
-{
-    string str;
-
-    int len1=str1.length();
-    int len2=str2.length();
-    //前面补0，弄成长度相同
-    if(len1&lt;len2)
-    {
-        for(int i=1;i&lt;=len2-len1;i++)
-           str1=&quot;0&quot;+str1;
-    }
-    else
-    {
-        for(int i=1;i&lt;=len1-len2;i++)
-           str2=&quot;0&quot;+str2;
-    }
-    len1=str1.length();
-    int cf=0;
-    int temp;
-    for(int i=len1-1;i&gt;=0;i--)
-    {
-        temp=str1[i]-&#39;0&#39;+str2[i]-&#39;0&#39;+cf;
-        cf=temp/10;
-        temp%=10;
-        str=char(temp+&#39;0&#39;)+str;
-    }
-    if(cf!=0)  str=char(cf+&#39;0&#39;)+str;
-    return str;
-}
-//高精度减法
-//只能是两个正数相减，而且要大减小
-string sub(string str1,string str2)//高精度减法
-{
-    string str;
-    int tmp=str1.length()-str2.length();
-    int cf=0;
-    for(int i=str2.length()-1;i&gt;=0;i--)
-    {
-        if(str1[tmp+i]&lt;str2[i]+cf)
-        {
-            str=char(str1[tmp+i]-str2[i]-cf+&#39;0&#39;+10)+str;
-            cf=1;
-        }
-        else
-        {
-            str=char(str1[tmp+i]-str2[i]-cf+&#39;0&#39;)+str;
-            cf=0;
-        }
-    }
-    for(int i=tmp-1;i&gt;=0;i--)
-    {
-        if(str1[i]-cf&gt;=&#39;0&#39;)
-        {
-            str=char(str1[i]-cf)+str;
-            cf=0;
-        }
-        else
-        {
-            str=char(str1[i]-cf+10)+str;
-            cf=1;
-        }
-    }
-    str.erase(0,str.find_first_not_of(&#39;0&#39;));//去除结果中多余的前导0
-    return str;
-}
-//高精度乘法
-//只能是两个正数相乘
-string mul(string str1,string str2)
-{
-    string str;
-    int len1=str1.length();
-    int len2=str2.length();
-    string tempstr;
-    for(int i=len2-1;i&gt;=0;i--)
-    {
-        tempstr=&quot;&quot;;
-        int temp=str2[i]-&#39;0&#39;;
-        int t=0;
-        int cf=0;
-        if(temp!=0)
-        {
-            for(int j=1;j&lt;=len2-1-i;j++)
-              tempstr+=&quot;0&quot;;
-            for(int j=len1-1;j&gt;=0;j--)
-            {
-                t=(temp*(str1[j]-&#39;0&#39;)+cf)%10;
-                cf=(temp*(str1[j]-&#39;0&#39;)+cf)/10;
-                tempstr=char(t+&#39;0&#39;)+tempstr;
-            }
-            if(cf!=0) tempstr=char(cf+&#39;0&#39;)+tempstr;
-        }
-        str=add(str,tempstr);
-    }
-    str.erase(0,str.find_first_not_of(&#39;0&#39;));
-    return str;
-}
-
-//高精度除法
-//两个正数相除，商为quotient,余数为residue
-//需要高精度减法和乘法
-void div(string str1,string str2,string &amp;quotient,string &amp;residue)
-{
-    quotient=residue=&quot;&quot;;//清空
-    if(str2==&quot;0&quot;)//判断除数是否为0
-    {
-        quotient=residue=&quot;ERROR&quot;;
-        return;
-    }
-    if(str1==&quot;0&quot;)//判断被除数是否为0
-    {
-        quotient=residue=&quot;0&quot;;
-        return;
-    }
-    int res=compare(str1,str2);
-    if(res&lt;0)
-    {
-        quotient=&quot;0&quot;;
-        residue=str1;
-        return;
-    }
-    else if(res==0)
-    {
-        quotient=&quot;1&quot;;
-        residue=&quot;0&quot;;
-        return;
-    }
-    else
-    {
-        int len1=str1.length();
-        int len2=str2.length();
-        string tempstr;
-        tempstr.append(str1,0,len2-1);
-        for(int i=len2-1;i&lt;len1;i++)
-        {
-            tempstr=tempstr+str1[i];
-            tempstr.erase(0,tempstr.find_first_not_of(&#39;0&#39;));
-            if(tempstr.empty())
-              tempstr=&quot;0&quot;;
-            for(char ch=&#39;9&#39;;ch&gt;=&#39;0&#39;;ch--)//试商
-            {
-                string str,tmp;
-                str=str+ch;
-                tmp=mul(str2,str);
-                if(compare(tmp,tempstr)&lt;=0)//试商成功
-                {
-                    quotient=quotient+ch;
-                    tempstr=sub(tempstr,tmp);
-                    break;
-                }
-            }
-        }
-        residue=tempstr;
-    }
-    quotient.erase(0,quotient.find_first_not_of(&#39;0&#39;));
-    if(quotient.empty()) quotient=&quot;0&quot;;
-}
-
-int main()
-{
-     string str1,str2;
-     string str3,str4;
-     while(cin&gt;&gt;str1&gt;&gt;str2)
-     {
-         cout&lt;&lt;add(str1,str2)&lt;&lt;endl;
-         cout&lt;&lt;sub(str1,str2)&lt;&lt;endl;
-         cout&lt;&lt;mul(str1,str2)&lt;&lt;endl;
-         div(str1,str2,str3,str4);
-         cout&lt;&lt;str3&lt;&lt;&quot;  &quot;&lt;&lt;str4&lt;&lt;endl;
-     }
-     return 0;
-}
-</code></pre>
+        <figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="comment">//compare比较函数：相等返回0，大于返回1，小于返回-1</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">compare</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span>(str1.length()&gt;str2.length()) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(str1.length()&lt;str2.length())  <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">return</span> str1.compare(str2);</div><div class="line">&#125;</div><div class="line"><span class="comment">//高精度加法</span></div><div class="line"><span class="comment">//只能是两个正数相加</span></div><div class="line"><span class="function"><span class="built_in">string</span> <span class="title">add</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2)</span><span class="comment">//高精度加法</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">string</span> str;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> len1=str1.length();</div><div class="line">    <span class="keyword">int</span> len2=str2.length();</div><div class="line">    <span class="comment">//前面补0，弄成长度相同</span></div><div class="line">    <span class="keyword">if</span>(len1&lt;len2)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=len2-len1;i++)</div><div class="line">           str1=<span class="string">"0"</span>+str1;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=len1-len2;i++)</div><div class="line">           str2=<span class="string">"0"</span>+str2;</div><div class="line">    &#125;</div><div class="line">    len1=str1.length();</div><div class="line">    <span class="keyword">int</span> cf=<span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> temp;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=len1<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)</div><div class="line">    &#123;</div><div class="line">        temp=str1[i]-<span class="string">'0'</span>+str2[i]-<span class="string">'0'</span>+cf;</div><div class="line">        cf=temp/<span class="number">10</span>;</div><div class="line">        temp%=<span class="number">10</span>;</div><div class="line">        str=<span class="keyword">char</span>(temp+<span class="string">'0'</span>)+str;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span>(cf!=<span class="number">0</span>)  str=<span class="keyword">char</span>(cf+<span class="string">'0'</span>)+str;</div><div class="line">    <span class="keyword">return</span> str;</div><div class="line">&#125;</div><div class="line"><span class="comment">//高精度减法</span></div><div class="line"><span class="comment">//只能是两个正数相减，而且要大减小</span></div><div class="line"><span class="function"><span class="built_in">string</span> <span class="title">sub</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2)</span><span class="comment">//高精度减法</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">string</span> str;</div><div class="line">    <span class="keyword">int</span> tmp=str1.length()-str2.length();</div><div class="line">    <span class="keyword">int</span> cf=<span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=str2.length()<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span>(str1[tmp+i]&lt;str2[i]+cf)</div><div class="line">        &#123;</div><div class="line">            str=<span class="keyword">char</span>(str1[tmp+i]-str2[i]-cf+<span class="string">'0'</span>+<span class="number">10</span>)+str;</div><div class="line">            cf=<span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            str=<span class="keyword">char</span>(str1[tmp+i]-str2[i]-cf+<span class="string">'0'</span>)+str;</div><div class="line">            cf=<span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=tmp<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)</div><div class="line">    &#123;</div><div class="line">        <span class="keyword">if</span>(str1[i]-cf&gt;=<span class="string">'0'</span>)</div><div class="line">        &#123;</div><div class="line">            str=<span class="keyword">char</span>(str1[i]-cf)+str;</div><div class="line">            cf=<span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span></div><div class="line">        &#123;</div><div class="line">            str=<span class="keyword">char</span>(str1[i]-cf+<span class="number">10</span>)+str;</div><div class="line">            cf=<span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    str.erase(<span class="number">0</span>,str.find_first_not_of(<span class="string">'0'</span>));<span class="comment">//去除结果中多余的前导0</span></div><div class="line">    <span class="keyword">return</span> str;</div><div class="line">&#125;</div><div class="line"><span class="comment">//高精度乘法</span></div><div class="line"><span class="comment">//只能是两个正数相乘</span></div><div class="line"><span class="function"><span class="built_in">string</span> <span class="title">mul</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">string</span> str;</div><div class="line">    <span class="keyword">int</span> len1=str1.length();</div><div class="line">    <span class="keyword">int</span> len2=str2.length();</div><div class="line">    <span class="built_in">string</span> tempstr;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=len2<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)</div><div class="line">    &#123;</div><div class="line">        tempstr=<span class="string">""</span>;</div><div class="line">        <span class="keyword">int</span> temp=str2[i]-<span class="string">'0'</span>;</div><div class="line">        <span class="keyword">int</span> t=<span class="number">0</span>;</div><div class="line">        <span class="keyword">int</span> cf=<span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span>(temp!=<span class="number">0</span>)</div><div class="line">        &#123;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=len2<span class="number">-1</span>-i;j++)</div><div class="line">              tempstr+=<span class="string">"0"</span>;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=len1<span class="number">-1</span>;j&gt;=<span class="number">0</span>;j--)</div><div class="line">            &#123;</div><div class="line">                t=(temp*(str1[j]-<span class="string">'0'</span>)+cf)%<span class="number">10</span>;</div><div class="line">                cf=(temp*(str1[j]-<span class="string">'0'</span>)+cf)/<span class="number">10</span>;</div><div class="line">                tempstr=<span class="keyword">char</span>(t+<span class="string">'0'</span>)+tempstr;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span>(cf!=<span class="number">0</span>) tempstr=<span class="keyword">char</span>(cf+<span class="string">'0'</span>)+tempstr;</div><div class="line">        &#125;</div><div class="line">        str=add(str,tempstr);</div><div class="line">    &#125;</div><div class="line">    str.erase(<span class="number">0</span>,str.find_first_not_of(<span class="string">'0'</span>));</div><div class="line">    <span class="keyword">return</span> str;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//高精度除法</span></div><div class="line"><span class="comment">//两个正数相除，商为quotient,余数为residue</span></div><div class="line"><span class="comment">//需要高精度减法和乘法</span></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">div</span><span class="params">(<span class="built_in">string</span> str1,<span class="built_in">string</span> str2,<span class="built_in">string</span> &amp;quotient,<span class="built_in">string</span> &amp;residue)</span></span></div><div class="line">&#123;</div><div class="line">    quotient=residue=<span class="string">""</span>;<span class="comment">//清空</span></div><div class="line">    <span class="keyword">if</span>(str2==<span class="string">"0"</span>)<span class="comment">//判断除数是否为0</span></div><div class="line">    &#123;</div><div class="line">        quotient=residue=<span class="string">"ERROR"</span>;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span>(str1==<span class="string">"0"</span>)<span class="comment">//判断被除数是否为0</span></div><div class="line">    &#123;</div><div class="line">        quotient=residue=<span class="string">"0"</span>;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">int</span> res=compare(str1,str2);</div><div class="line">    <span class="keyword">if</span>(res&lt;<span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        quotient=<span class="string">"0"</span>;</div><div class="line">        residue=str1;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(res==<span class="number">0</span>)</div><div class="line">    &#123;</div><div class="line">        quotient=<span class="string">"1"</span>;</div><div class="line">        residue=<span class="string">"0"</span>;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">else</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">int</span> len1=str1.length();</div><div class="line">        <span class="keyword">int</span> len2=str2.length();</div><div class="line">        <span class="built_in">string</span> tempstr;</div><div class="line">        tempstr.append(str1,<span class="number">0</span>,len2<span class="number">-1</span>);</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=len2<span class="number">-1</span>;i&lt;len1;i++)</div><div class="line">        &#123;</div><div class="line">            tempstr=tempstr+str1[i];</div><div class="line">            tempstr.erase(<span class="number">0</span>,tempstr.find_first_not_of(<span class="string">'0'</span>));</div><div class="line">            <span class="keyword">if</span>(tempstr.empty())</div><div class="line">              tempstr=<span class="string">"0"</span>;</div><div class="line">            <span class="keyword">for</span>(<span class="keyword">char</span> ch=<span class="string">'9'</span>;ch&gt;=<span class="string">'0'</span>;ch--)<span class="comment">//试商</span></div><div class="line">            &#123;</div><div class="line">                <span class="built_in">string</span> str,tmp;</div><div class="line">                str=str+ch;</div><div class="line">                tmp=mul(str2,str);</div><div class="line">                <span class="keyword">if</span>(compare(tmp,tempstr)&lt;=<span class="number">0</span>)<span class="comment">//试商成功</span></div><div class="line">                &#123;</div><div class="line">                    quotient=quotient+ch;</div><div class="line">                    tempstr=sub(tempstr,tmp);</div><div class="line">                    <span class="keyword">break</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        residue=tempstr;</div><div class="line">    &#125;</div><div class="line">    quotient.erase(<span class="number">0</span>,quotient.find_first_not_of(<span class="string">'0'</span>));</div><div class="line">    <span class="keyword">if</span>(quotient.empty()) quotient=<span class="string">"0"</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">     <span class="built_in">string</span> str1,str2;</div><div class="line">     <span class="built_in">string</span> str3,str4;</div><div class="line">     <span class="keyword">while</span>(<span class="built_in">cin</span>&gt;&gt;str1&gt;&gt;str2)</div><div class="line">     &#123;</div><div class="line">         <span class="built_in">cout</span>&lt;&lt;add(str1,str2)&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">         <span class="built_in">cout</span>&lt;&lt;sub(str1,str2)&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">         <span class="built_in">cout</span>&lt;&lt;mul(str1,str2)&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">         div(str1,str2,str3,str4);</div><div class="line">         <span class="built_in">cout</span>&lt;&lt;str3&lt;&lt;<span class="string">"  "</span>&lt;&lt;str4&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">     &#125;</div><div class="line">     <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>From: <a href="http://www.cnblogs.com/kuangbin/archive/2012/08/11/2634044.html" target="_blank" rel="external">http://www.cnblogs.com/kuangbin/archive/2012/08/11/2634044.html</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="ciwrvim2f006bkks8cm1btzpl" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/" data-id="ciy2rrdje006c6bs8pg3b7x74" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/15/dev/CPP/cpp_big_number/#ds-thread" class="article-comment-link">评论</a>
       
@@ -583,7 +381,7 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="ciwrvilxc000bkks8j3jxg44e" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/" data-id="ciy2rrdfw00086bs8q5769hjv" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/29/ads/skip_the_ad/#ds-thread" class="article-comment-link">评论</a>
       
@@ -634,211 +432,42 @@ int main()
       
                 
         <h3 id="1-__u4F20_u7EDF_u6307_u9488_u5B58_u5728_u7684_u95EE_u9898"><a href="#1-__u4F20_u7EDF_u6307_u9488_u5B58_u5728_u7684_u95EE_u9898" class="headerlink" title="1. 传统指针存在的问题"></a>1. 传统指针存在的问题</h3><hr>
-<p>传统指针存在诸多的问题，比如指针所指向的对象的生命周期问题，挂起引用(dangling references)，以及内存泄露(memory leaks). 如下是一个传统指针的使用过程</p>
-<pre><code class="c++">void Foo() {
-    int *iPtr = new int[5];
-    // manipulate the memory block
-    // ...
-    // ...
-    // ...
-    delete[] iPtr;
-}
-</code></pre>
+<p>传统指针存在诸多的问题，比如指针所指向的对象的生命周期问题，挂起引用(dangling references)，以及内存泄露(memory leaks). 如下是一个传统指针的使用过程<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Foo</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> *iPtr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>];</div><div class="line">    <span class="comment">// manipulate the memory block</span></div><div class="line">    <span class="comment">// ...</span></div><div class="line">    <span class="comment">// ...</span></div><div class="line">    <span class="comment">// ...</span></div><div class="line">    <span class="keyword">delete</span>[] iPtr;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>以上代码将正常运行且内存将被合理释放，但是使用指针常会发生一些意想不到的事情，比如访问一个非法的内存单元，除0操作，以及根据一些判断条件处理的返回return 语句。</p>
 <h3 id="2-__u4EC0_u4E48_u662F_u667A_u80FD_u6307_u9488_28Smart_Pointer_29"><a href="#2-__u4EC0_u4E48_u662F_u667A_u80FD_u6307_u9488_28Smart_Pointer_29" class="headerlink" title="2. 什么是智能指针(Smart Pointer)"></a>2. 什么是智能指针(Smart Pointer)</h3><hr>
 <p>智能指针是RAII（Resource Acquisition is initialization）用来动态的分配内存。它提供了普通指针的所有接口外加少数异常处理。在构造阶段，它将分配内存，而在非其作用域内将自动释放所占有的内存。 </p>
 <p>在C++98中，使用 auto_ptr来解决上述问题。</p>
-<h4 id="2-1_auto_ptr"><a href="#2-1_auto_ptr" class="headerlink" title="2.1 auto_ptr"></a>2.1 auto_ptr</h4><pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-using namespace std;
-
-class Test {
-public:
-    Test(int a = 0) : m_a(a) {}
-    ~Test() {
-        cout &lt;&lt; &quot;Calling destructor&quot; &lt;&lt; endl;
-    }
-
-public:
-    int m_a;
-};
-
-int main()
-{
-    auto_ptr&lt;Test&gt; p(new Test(5));
-    cout &lt;&lt; p-&gt;m_a &lt;&lt; endl;
-    return 0;
-}
-</code></pre>
+<h4 id="2-1_auto_ptr"><a href="#2-1_auto_ptr" class="headerlink" title="2.1 auto_ptr"></a>2.1 auto_ptr</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Test &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Test(<span class="keyword">int</span> a = <span class="number">0</span>) : m_a(a) &#123;&#125;</div><div class="line">    ~Test() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Calling destructor"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">int</span> m_a;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">auto_ptr</span>&lt;Test&gt; p(<span class="keyword">new</span> Test(<span class="number">5</span>));</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; p-&gt;m_a &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>输出结果： </p>
 <p><img src="/images/cpp/sp1.jpg" alt=""></p>
 <p>上述代码将智能的释放相关的内存。</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class Test {
-public:
-    Test(int a = 0) : m_a(a) {}
-    ~Test() {
-        cout &lt;&lt; &quot;Calling destructor&quot; &lt;&lt; endl;
-    }
-
-public:
-    int m_a;
-};
-
-void Fun()
-{
-    int a = 0, b = 5, c;
-    if(a == 0) {
-        throw &quot;Invalid divisor&quot;;
-    }
-    c = b / a;
-    return;
-}
-
-int main()
-{
-    try {
-        auto_ptr&lt;Test&gt; p(new Test(5));
-        Fun();
-        cout &lt;&lt; p-&gt;m_a &lt;&lt; endl;
-    }
-    catch(...) {
-        cout &lt;&lt; &quot;Something has gone wrong&quot; &lt;&lt; endl;
-    }
-
-    return 0;
-}
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Test &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Test(<span class="keyword">int</span> a = <span class="number">0</span>) : m_a(a) &#123;&#125;</div><div class="line">    ~Test() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Calling destructor"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">int</span> m_a;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Fun</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> a = <span class="number">0</span>, b = <span class="number">5</span>, c;</div><div class="line">    <span class="keyword">if</span>(a == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">throw</span> <span class="string">"Invalid divisor"</span>;</div><div class="line">    &#125;</div><div class="line">    c = b / a;</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">        <span class="built_in">auto_ptr</span>&lt;Test&gt; p(<span class="keyword">new</span> Test(<span class="number">5</span>));</div><div class="line">        Fun();</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; p-&gt;m_a &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">catch</span>(...) &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Something has gone wrong"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>在上述代码中，即使异常抛出，指针照样被正常释放。这是因为当异常抛出时，栈松绑(stack unwinding)。 当所有属于try block的本地对象被销毁时，指针p不在作用域中而被释放。</p>
 <h5 id="u95EE_u98981"><a href="#u95EE_u98981" class="headerlink" title="问题1."></a>问题1.</h5><p>至少从目前来说auto_ptr是智能的。但是它有一个非常本质的缺点：auto_ptr会传递它本身的ownership当其被赋值给另一个auto_ptr对象。正如下述程序所示，一个auto_ptr对象传递给函数Fun()中的auto_ptr对象时，其ownership,或者说是smartness将不再返回给原auto_ptr所指向的p。</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class Test {
-public:
-    Test(int a = 0) : m_a(a) {}
-    ~Test() {
-        cout &lt;&lt; &quot;Calling destructor&quot; &lt;&lt; endl;
-    }
-
-public:
-    int m_a;
-};
-
-void Fun(auto_ptr&lt;Test&gt; p1)
-{
-    cout &lt;&lt; p1-&gt;m_a &lt;&lt; endl;
-    cout &lt;&lt; &quot;Fun() end&quot; &lt;&lt; endl;
-}
-
-int main()
-{
-    auto_ptr&lt;Test&gt; p(new Test(5));
-    Fun(p);
-    cout &lt;&lt; p-&gt;m_a &lt;&lt; endl;
-
-    return 0;
-}
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Test &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Test(<span class="keyword">int</span> a = <span class="number">0</span>) : m_a(a) &#123;&#125;</div><div class="line">    ~Test() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Calling destructor"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">int</span> m_a;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">Fun</span><span class="params">(<span class="built_in">auto_ptr</span>&lt;Test&gt; p1)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; p1-&gt;m_a &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"Fun() end"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">auto_ptr</span>&lt;Test&gt; p(<span class="keyword">new</span> Test(<span class="number">5</span>));</div><div class="line">    Fun(p);</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; p-&gt;m_a &lt;&lt; <span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>运行结果： </p>
 <p><img src="/images/cpp/sp2.jpg" alt=""></p>
 <p>以上程序将crash因为存在野指针auto_ptr。上述代码奔溃的主要原因是，原先的p占有对其自身分配内存的管理权。然而通过Fun()函数将其管理权转给p1，此时因为p1的smartness，在其结束时将释放其所指向的内存块。而此时原先的p将再拥有任何内存，而导致在访问时出现了空指针，野指针的引用问题。</p>
-<h5 id="u95EE_u98982"><a href="#u95EE_u98982" class="headerlink" title="问题2."></a>问题2.</h5><p>auto_ptr不能使用于数组对象。 这里的意思是不能使用于操作符new[]。</p>
-<pre><code class="c++">int main()
-{
-    auto_ptr&lt;Test&gt; p(new Test[5]);
-    return 0;
-}
-</code></pre>
+<h5 id="u95EE_u98982"><a href="#u95EE_u98982" class="headerlink" title="问题2."></a>问题2.</h5><p>auto_ptr不能使用于数组对象。 这里的意思是不能使用于操作符new[]。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">auto_ptr</span>&lt;Test&gt; p(<span class="keyword">new</span> Test[<span class="number">5</span>]);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>上述代码将runtime error。因为对于auto_ptr而言，其调用的是delete而非delete []。</p>
 <h5 id="u95EE_u98983"><a href="#u95EE_u98983" class="headerlink" title="问题3."></a>问题3.</h5><p>auto_ptr不能使用于一些标准的容器库。比如vector，list，map等等。</p>
 <p>C++11提出了新型的智能指针，并且都赋予了其相应的意图。</p>
 <h4 id="2-2_shared_ptr"><a href="#2-2_shared_ptr" class="headerlink" title="2.2 shared_ptr"></a>2.2 shared_ptr</h4><p>creation :<br>shared_ptr设计的目的很简单：多个共享指针可以指向同一个对象，而当最后一个共享指针在作用域范围内结束时，内存才会被自动的释放。</p>
-<pre><code class="c++">int main()
-{
-    // share_ptr 常规的创建过程
-    shared_ptr&lt;int&gt; sptr1( new int );
-    // 使用make_shared 来加速创建过程
-    // shared_ptr 自动分配内存，并且保证引用计数
-    // 而make_shared则是按照这种方法来初始化
-    shared_ptr&lt;int&gt; sptr2 = make_shared&lt;int&gt;( 100 );
-    // 可以通过use_count() 来查看引用计数
-    cout &lt;&lt; &quot;sptr2 referenced count: &quot; &lt;&lt; sptr2.use_count() &lt;&lt; endl;
-    shared_ptr&lt;int&gt; sptr3 = sptr2;
-    cout &lt;&lt; &quot;sptr2 referenced count: &quot; &lt;&lt; sptr2.use_count() &lt;&lt; endl;
-    cout &lt;&lt; &quot;*sptr2 = &quot; &lt;&lt; *sptr2 &lt;&lt; endl;
-    return 0;
-}
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// share_ptr 常规的创建过程</span></div><div class="line">    <span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sptr1( <span class="keyword">new</span> <span class="keyword">int</span> );</div><div class="line">    <span class="comment">// 使用make_shared 来加速创建过程</span></div><div class="line">    <span class="comment">// shared_ptr 自动分配内存，并且保证引用计数</span></div><div class="line">    <span class="comment">// 而make_shared则是按照这种方法来初始化</span></div><div class="line">    <span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sptr2 = make_shared&lt;<span class="keyword">int</span>&gt;( <span class="number">100</span> );</div><div class="line">    <span class="comment">// 可以通过use_count() 来查看引用计数</span></div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sptr2 referenced count: "</span> &lt;&lt; sptr2.use_count() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sptr3 = sptr2;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"sptr2 referenced count: "</span> &lt;&lt; sptr2.use_count() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"*sptr2 = "</span> &lt;&lt; *sptr2 &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><img src="/images/cpp/sp3.jpg" alt=""></p>
 <p>上述代码创建了一个shared_ptr指针指向了一个装着整型值且值为100的内存块，并且引用计数为1,。当其他共享指针通过sptr1来创建时，引用计数将为2。这种引用称为强引用strong reference。除此之外，还有弱引用weak reference。可以通过</p>
-<p>destruction ：</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class Test {
-public:
-    Test(int a = 0) : m_a(a) {}
-    ~Test() {
-        cout &lt;&lt; &quot;Calling destructor&quot; &lt;&lt; endl;
-    }
-
-public:
-    int m_a;
-};
-
-
-int main()
-{
-    // 如果用以下形式，则只会调用delete，则不会调用
-    // delete[ ]; 此时只会调用一次析构函数
-    shared_ptr&lt;Test&gt; sptr1(new Test[5]);
-
-    // 采用以下形式，lambda表达式，显示调用
-    // delete[] 来删除所有的对象。
-    shared_ptr&lt;Test&gt; sptr2(new Test[5],
-                           [](Test* p) {delete[] p;});
-    return 0;
-}
-</code></pre>
+<p>destruction ：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Test &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Test(<span class="keyword">int</span> a = <span class="number">0</span>) : m_a(a) &#123;&#125;</div><div class="line">    ~Test() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Calling destructor"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">int</span> m_a;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// 如果用以下形式，则只会调用delete，则不会调用</span></div><div class="line">    <span class="comment">// delete[ ]; 此时只会调用一次析构函数</span></div><div class="line">    <span class="built_in">shared_ptr</span>&lt;Test&gt; sptr1(<span class="keyword">new</span> Test[<span class="number">5</span>]);</div><div class="line"></div><div class="line">    <span class="comment">// 采用以下形式，lambda表达式，显示调用</span></div><div class="line">    <span class="comment">// delete[] 来删除所有的对象。</span></div><div class="line">    <span class="built_in">shared_ptr</span>&lt;Test&gt; sptr2(<span class="keyword">new</span> Test[<span class="number">5</span>],</div><div class="line">                           [](Test* p) &#123;<span class="keyword">delete</span>[] p;&#125;);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>用户可以显式的调用函数，lambda表达式，函数对象来调用对于shared_ptr为数组对象的析构函数delete[]。</p>
 <h5 id="Interface_uFF08_u63A5_u53E3_uFF09"><a href="#Interface_uFF08_u63A5_u53E3_uFF09" class="headerlink" title="Interface（接口）"></a>Interface（接口）</h5><p>shared_ptr提供解引用*， 以及-&gt;来普通指针的相关操作。同时，还提供了以下的接口:</p>
-<pre><code class="C++">- get()： To get the resource associated with the shared_ptr.
-- reset()： To yield the ownership of the associated memory block. If this is the last shared_ptrowning the resource, then the resource is released automatically.
-- unique: To know whether the resource is managed by only this shared_ptr instance.
-- operator bool: To check whether the shared_ptr owns a memory block or not. Can be used with an if condition.
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- get()： To get the resource associated with the <span class="built_in">shared_ptr</span>.</div><div class="line">- reset()： To yield the ownership of the associated memory block. If <span class="keyword">this</span> is the last shared_ptrowning the resource, then the resource is released automatically.</div><div class="line">- unique: To know whether the resource is managed by only <span class="keyword">this</span> <span class="built_in">shared_ptr</span> instance.</div><div class="line">- <span class="keyword">operator</span> <span class="keyword">bool</span>: To check whether the <span class="built_in">shared_ptr</span> owns a memory block or not. Can be used with an <span class="keyword">if</span> condition.</div></pre></td></tr></table></figure>
 <h4 id="Issue_uFF08_u95EE_u9898_uFF09"><a href="#Issue_uFF08_u95EE_u9898_uFF09" class="headerlink" title="Issue（问题）"></a>Issue（问题）</h4><ul>
 <li>当一个内存块与shared_ptr绑定相关，并且属于不同组时，将会发生错误。所有的shared_ptr共享一个组的同一个共享引用。</li>
 </ul>
-<pre><code class="c++">int main()
-{
-    shared_ptr&lt;int&gt; sptr1(new int);
-    shared_ptr&lt;int&gt; sptr2 = sptr1;
-    shared_ptr&lt;int&gt; sptr3;
-    sptr3 = sptr2;
-    return 0;
-}
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sptr1(<span class="keyword">new</span> <span class="keyword">int</span>);</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sptr2 = sptr1;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sptr3;</div><div class="line">    sptr3 = sptr2;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>以下表格给出了相应的引用计数 </p>
 <p><img src="/images/cpp/sp4.jpg" alt=""></p>
 <p>以上代码运行正常。<br>然而当使用以下代码时：</p>
-<pre><code class="c++">int main() 
-{
-    int *p = new int;
-    shared_ptr&lt;int&gt; sptr1(p);
-    shared_ptr&lt;int&gt; sptr2(p);
-    return 0;
-}
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> *p = <span class="keyword">new</span> <span class="keyword">int</span>;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sptr1(p);</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; sptr2(p);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>引用计数表如下： </p>
 <p><img src="/images/cpp/sp5.jpg" alt=""></p>
 <p>为了避免这种情况的发生，最好不用从裸指针中建立共享指针。</p>
@@ -848,131 +477,27 @@ int main()
 <li><p>循环引用时，如果资源被非恰当释放，也会出现问题。</p>
 </li>
 </ul>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class B;
-class A
-{
-public:
-    A() : m_sptrB(nullptr) {} ;
-    ~A() {
-        cout &lt;&lt; &quot;A is destroyed&quot; &lt;&lt; endl;
-    }
-    shared_ptr&lt;B&gt; m_sptrB;
-};
-
-class B
-{
-public:
-    B() : m_sptrA(nullptr) {};
-    ~B() {
-        cout &lt;&lt; &quot;B is destroyed&quot; &lt;&lt; endl;
-    }
-    shared_ptr&lt;A&gt; m_sptrA;
-};
-
-int main()
-{
-    shared_ptr&lt;B&gt; sptrB(new B);
-    shared_ptr&lt;A&gt; sptrA(new A);
-    sptrB-&gt;m_sptrA = sptrA;
-    sptrA-&gt;m_sptrB = sptrB;
-    return 0;
-}
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> B;</div><div class="line"><span class="keyword">class</span> A</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    A() : m_sptrB(<span class="literal">nullptr</span>) &#123;&#125; ;</div><div class="line">    ~A() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"A is destroyed"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;B&gt; m_sptrB;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> B</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    B() : m_sptrA(<span class="literal">nullptr</span>) &#123;&#125;;</div><div class="line">    ~B() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B is destroyed"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;A&gt; m_sptrA;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;B&gt; sptrB(<span class="keyword">new</span> B);</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;A&gt; sptrA(<span class="keyword">new</span> A);</div><div class="line">    sptrB-&gt;m_sptrA = sptrA;</div><div class="line">    sptrA-&gt;m_sptrB = sptrB;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>当类A包含了指向B的共享指针，而类B包含了指向A的共享指针时，sptrA和sptrB相关的资源都将不会被释放。结果如下图： </p>
 <p><img src="/images/cpp/sp6.jpg" alt=""></p>
 <h4 id="2-3_weak_ptr"><a href="#2-3_weak_ptr" class="headerlink" title="2.3 weak_ptr"></a>2.3 weak_ptr</h4><p>一个弱指针，提供的是一种共享语义定义而不是拥有语义定义。这就意味着一个弱指针可以通过shared_ptr共享资源。所以要创建弱指针，必须是已经拥有资源但是是一个共享指针。</p>
 <p>一个弱指针并不允许诸如普通指针所提供的*和-&gt;。因为他并不是资源的拥有者。</p>
 <h5 id="u90A3_u4E48_u5982_u4F55_u5229_u7528_u5F31_u6307_u9488_u5462_uFF1F"><a href="#u90A3_u4E48_u5982_u4F55_u5229_u7528_u5F31_u6307_u9488_u5462_uFF1F" class="headerlink" title="那么如何利用弱指针呢？"></a>那么如何利用弱指针呢？</h5><p><strong>weak_ptr只能用于跟踪一个共享的资源，但并不实际拥有，也不会阻碍资源的释放。读取共享资源前需要先执行lock，得到shared_ptr后才能进行访问。<br>当两个对象需要互相引用时，我们总希望其中一个对象拥有另一个对象的强引用，而另一个对象拥有自己的弱引用，如果两个对象都是强引用，则容易引起循环引用，导致两个对象都无法正确释放。</strong></p>
 <h5 id="u7528weak_ptr_u4F5C_u4E3A_u4E00_u4E2A_u7C7B_u4F3Cshare_ptr_u4F46_u5374_u80FD_u60AC_u6D6E_u7684_u6307_u9488"><a href="#u7528weak_ptr_u4F5C_u4E3A_u4E00_u4E2A_u7C7B_u4F3Cshare_ptr_u4F46_u5374_u80FD_u60AC_u6D6E_u7684_u6307_u9488" class="headerlink" title="用weak_ptr作为一个类似share_ptr但却能悬浮的指针"></a>用weak_ptr作为一个类似share_ptr但却能悬浮的指针</h5><p>有一个矛盾，一个灵巧指针可以像shared_ptr 一样方便，但又不参与管理被指对象的所有权。换句话说，需要一个像shared_ptr但又不影响对象引用计数的指针。这类指针会有一个shared_ptr没有的问题：被指的对象有可能已经被销毁。一个良好的灵巧指针应该能处理这种情况，通过跟踪什么时候指针会悬浮，比如在被指对象不复存在的时候。这正是weak_ptr这类型灵巧指针所能做到的。</p>
-<p>weak_ptr一般是通过shared_ptr来构造的。当使用shared_ptr来初始化weak_ptr时，weak_ptr就指向了相同的地方，但是不改变所指对象的引用计数。</p>
-<pre><code class="c++">int main()
-{
-    shared_ptr&lt;A&gt; sptr&lt;new A&gt;
-    weak_ptr&lt;A&gt; wptr(sptr);
-    weak_ptr&lt;A&gt; wptr1 = wptr; 
-    return 0;
-}
-</code></pre>
+<p>weak_ptr一般是通过shared_ptr来构造的。当使用shared_ptr来初始化weak_ptr时，weak_ptr就指向了相同的地方，但是不改变所指对象的引用计数。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;A&gt; sptr&lt;<span class="keyword">new</span> A&gt;</div><div class="line">    weak_ptr&lt;A&gt; wptr(sptr);</div><div class="line">    weak_ptr&lt;A&gt; wptr1 = wptr; </div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>weak_ptr创建引用情况 </p>
 <p><img src="/images/cpp/sp7.jpg" alt=""></p>
 <p>从上图可以看书，通过将一个weak_ptr赋值给另一个时会增加其弱引用计数。</p>
 <p>如果弱引用指针所指向的资源，被其共享指针所释放时，这时候弱指针将会过期。如何检测一个弱指针是否指向一个合法的资源呢？有以下两种途径。</p>
-<p>调用use_count()来得到引用计数。注意这里返回的是强引用计数。<br>调用expired()函数，这比调用use_count要快的多。<br>同时，我们可以通过对一个weak_ptr调用函数lock()来得到一个shared_ptr。或者直接对一个weak_ptr进行强制转换。</p>
-<pre><code class="c++">int main()
-{
-
-    shared_ptr&lt;A&gt; sptr&lt;new A&gt;
-    weak_ptr&lt;A&gt; wptr(sptr);
-    shared_ptr&lt;A&gt; sptr2 = wptr.lock(); 
-
-
-    shared_ptr&lt;B&gt; sptrB(new B);
-    shared_ptr&lt;A&gt; sptrA(new A);
-    sptrB-&gt;m_sptrA = sptrA;
-    sptrA-&gt;m_sptrB = sptrB;
-    return 0;
-}
-</code></pre>
+<p>调用use_count()来得到引用计数。注意这里返回的是强引用计数。<br>调用expired()函数，这比调用use_count要快的多。<br>同时，我们可以通过对一个weak_ptr调用函数lock()来得到一个shared_ptr。或者直接对一个weak_ptr进行强制转换。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line"></div><div class="line">    <span class="built_in">shared_ptr</span>&lt;A&gt; sptr&lt;<span class="keyword">new</span> A&gt;</div><div class="line">    weak_ptr&lt;A&gt; wptr(sptr);</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;A&gt; sptr2 = wptr.lock(); </div><div class="line"></div><div class="line"></div><div class="line">    <span class="built_in">shared_ptr</span>&lt;B&gt; sptrB(<span class="keyword">new</span> B);</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;A&gt; sptrA(<span class="keyword">new</span> A);</div><div class="line">    sptrB-&gt;m_sptrA = sptrA;</div><div class="line">    sptrA-&gt;m_sptrB = sptrB;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>如上方法将增加强引用计数。</p>
-<p>以下例子将展示如何使用weak_ptr解决循环引用的问题。</p>
-<pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;memory&gt;
-
-using namespace std;
-
-class B;
-class A
-{
-public:
-    A() : m_a(5) {} ;
-    ~A() {
-        cout &lt;&lt; &quot;A is destroyed&quot; &lt;&lt; endl;
-    }
-    void PrintSpB() ;
-    weak_ptr&lt;B&gt; m_sptrB;
-    int m_a;
-};
-
-class B {
-public:
-    B() : m_b(10) {} ;
-    ~B() {
-        cout &lt;&lt; &quot;B is destroyed&quot; &lt;&lt; endl;
-    }
-    weak_ptr&lt;A&gt; m_sptrA;
-    int m_b;
-};
-
-void A::PrintSpB()
-{
-    if( !m_sptrB.expired() )
-        cout &lt;&lt; m_sptrB.lock()-&gt;m_b &lt;&lt; endl;
-}
-
-int main()
-{
-    shared_ptr&lt;B&gt; sptrB(new B);
-    shared_ptr&lt;A&gt; sptrA(new A);
-    sptrB-&gt;m_sptrA = sptrA;
-    sptrA-&gt;m_sptrB = sptrB;
-    sptrA-&gt;PrintSpB();
-
-    return 0;
-}
-</code></pre>
+<p>以下例子将展示如何使用weak_ptr解决循环引用的问题。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> B;</div><div class="line"><span class="keyword">class</span> A</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    A() : m_a(<span class="number">5</span>) &#123;&#125; ;</div><div class="line">    ~A() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"A is destroyed"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">PrintSpB</span><span class="params">()</span> </span>;</div><div class="line">    weak_ptr&lt;B&gt; m_sptrB;</div><div class="line">    <span class="keyword">int</span> m_a;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    B() : m_b(<span class="number">10</span>) &#123;&#125; ;</div><div class="line">    ~B() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B is destroyed"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    weak_ptr&lt;A&gt; m_sptrA;</div><div class="line">    <span class="keyword">int</span> m_b;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">void</span> A::PrintSpB()</div><div class="line">&#123;</div><div class="line">    <span class="keyword">if</span>( !m_sptrB.expired() )</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; m_sptrB.lock()-&gt;m_b &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;B&gt; sptrB(<span class="keyword">new</span> B);</div><div class="line">    <span class="built_in">shared_ptr</span>&lt;A&gt; sptrA(<span class="keyword">new</span> A);</div><div class="line">    sptrB-&gt;m_sptrA = sptrA;</div><div class="line">    sptrA-&gt;m_sptrB = sptrB;</div><div class="line">    sptrA-&gt;PrintSpB();</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h4 id="2-4_unique_ptr"><a href="#2-4_unique_ptr" class="headerlink" title="2.4 unique_ptr"></a>2.4 unique_ptr</h4><p>unique_ptr几乎是易出错的auto_ptr的另一种形式。unique_ptr遵循专用所有权语义。在任何时刻，资源只被唯一的一个unique_ptr所占有。当auto_ptr不在作用域范围内时，资源就会被释放。当一个资源被其他资源重写时，如果先前的资源已经被释放，这保证了相关的资源也会被释放。</p>
 <p>creation（创建）</p>
 <p>unique_ptr创建的过程和shared_ptr创建的过程大同小异，所不同的是创建的数组形式的对象。</p>
-<pre><code class="c++">unique_ptr&lt;int&gt; uptr(new int);
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>&gt; uptr(<span class="keyword">new</span> <span class="keyword">int</span>);</div></pre></td></tr></table></figure>
 <p>unique_ptr提供了专用创建数组对象的析构调用delete[]而不是delete当其不在作用域范围内。</p>
-<pre><code class="c++">unique_ptr&lt;int[]&gt; uptr1(new int[5]);
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">unique_ptr</span>&lt;<span class="keyword">int</span>[]&gt; uptr1(<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>]);</div></pre></td></tr></table></figure>
 <p>对于资源的拥有权(ownership)可以从一个unique_ptr通过另一个进行赋值来传递。</p>
 <p>需要记住的是：unique_ptr并不提供复制机制copy semantics（包括复制赋值copy assignment以及复制构造函数copy construction）而是一种移动机制。</p>
 <p>Interface（接口）</p>
@@ -983,7 +508,7 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="ciwrvim2i006hkks8qfunzfzz" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/" data-id="ciy2rrdjg006i6bs84azurnak" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/27/dev/CPP/cpp_smart_pointer/#ds-thread" class="article-comment-link">评论</a>
       
@@ -996,86 +521,11 @@ int main()
 
 
     
-      <article id="post-algo/granger_causality" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/10/27/algo/granger_causality/">Granger causality</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/10/27/algo/granger_causality/">
-      <time datetime="2015-10-27T03:04:16.000Z" itemprop="datePublished">2015-10-27</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h3 id="Granger_causality"><a href="#Granger_causality" class="headerlink" title="Granger causality"></a>Granger causality</h3><hr>
-<p>如果一个变量X无助于预测另一个变量Y，则说X不是Y的原因；相反，若X是Y的原因，则必须满足两个条件：第一，X应该有助于预测Y，即在Y关于Y的过去值的回归中，添加X的过去值作为独立变量应当显著地增加回归的解释能力；第二，Y不应当有助于预测X，其原因是，如果X有助于预测Y，Y也有助于预测X，则很可能存在一个或几个其他变量，它们既是引起X变化的原因，也是引起Y变化的原因。</p>
-<h3 id="Granger_u56E0_u679C_u5173_u7CFB_u68C0_u9A8C"><a href="#Granger_u56E0_u679C_u5173_u7CFB_u68C0_u9A8C" class="headerlink" title="Granger因果关系检验"></a>Granger因果关系检验</h3><hr>
-<p><img src="/images/gc1.png" alt=""><br><img src="/images/gc2.png" alt=""><br><img src="/images/gc3.png" alt=""></p>
-<h3 id="u5173_u4E8E_u9E21_u751F_u86CB_u8FD8_u662F_u86CB_u751F_u9E21"><a href="#u5173_u4E8E_u9E21_u751F_u86CB_u8FD8_u662F_u86CB_u751F_u9E21" class="headerlink" title="关于鸡生蛋还是蛋生鸡"></a>关于鸡生蛋还是蛋生鸡</h3><hr>
-<p>鸡生蛋还是蛋生鸡？对于原因与结果的区分，自古以来是个难题。1926年，挪威经济学家、第一届（1969年）诺贝尔经济学奖得主弗瑞希（R . Frisch）仿照“生物计量学”（Biometrics）一词提出了“计量经济学”或“经济计量学”（Econometrics）之名。有趣的是，两位经济学家Walter N. Thurman和Mark E. Fisher又将计量经济学的方法用于讨论生物学领域的问题（当然也可以算是经济问题，因为研究结果发表杂经济学杂志上），探讨了这个“鸡与蛋”的关系问题。见“Chicken，eggs，and causality，or which came first?”, American Journal of Agricultural Economics, pp237-238, May 1988”。</p>
-<p>他们用1930-1983期间美国鸡蛋产量和美国同期鸡产量的时间序列数据，建立滞后回归模型（1-4年），然后做格兰杰因果关系检验。结果能够拒绝鸡蛋不是鸡出现原因的原假设，同时不能拒绝鸡不是鸡蛋出现的原因的原假设（只有在检验出单向因果关系后，检验才是有效的）。也就是是说鸡生蛋的假设被拒绝，而蛋生鸡的假设成立，因此，蛋为因，鸡为果。因此，他们得出先有蛋的结论。他们建议作其他诸如“最后笑者笑得最好”（He who laughs last laughs best）、“骄傲是失败之母”（Pride goeth before destruction, and an haughty spirit before a fall）之类的格兰杰因果检验。</p>
-<pre><code class="R">library(lmtest) 
-
-data(ChickEgg)
-grangertest(egg ~ chicken, order = 4, data = ChickEgg)
-grangertest(chicken ~ egg, order = 4, data = ChickEgg)
-</code></pre>
-<p>结果:<br>Granger causality test<br>Model 1: egg ~ Lags(egg, 1:4) + Lags(chicken, 1:4)<br>Model 2: egg ~ Lags(egg, 1:4)<br>  Res.Df Df      F Pr(&gt;F)<br>1     41<br>2     45 -4 0.3929 0.8125<br>我们的假设是『鸡不是蛋的原因』， egg ~ Lags(egg, 1:4) + Lags(chicken, 1:4)， 拒绝该假设犯错的概率是0.8125， 因此我们不可以拒绝该假设， 也就是『鸡不是蛋的原因』成立</p>
-<p>Granger causality test<br>Model 1: chicken ~ Lags(chicken, 1:4) + Lags(egg, 1:4)<br>Model 2: chicken ~ Lags(chicken, 1:4)<br>  Res.Df Df      F   Pr(&gt;F)<br>1     41<br>2     45 -4 4.2568 0.005671 **</p>
-<p>我们的假设是『蛋不是鸡的原因』， chicken ~ Lags(chicken, 1:4) + Lags(egg, 1:4)， 拒绝该假设犯错的概率是0.005671， 因此我们可以拒绝该假设， 也就是蛋-&gt;鸡是成立的</p>
-<p>他们所使用的分析变量之间的因果的办法，即格兰杰因果关系检验。该检验方法为2003年诺贝尔经济学奖得主克莱夫·格兰杰（Clive W. J. Granger）所开创。从统计的角度，因果关系是通过概率或者分布函数的角度体现出来的：在宇宙中所有其它事件的发生情况固定不变的条件下，如果一个事件A的发生与不发生对于另一个事件B的发生的概率（如果通过事件定义了随机变量那么也可以说分布函数）有影响，并且这两个事件在时间上又先后顺序（A前B后），那么我们便可以说A是B的原因。Granger从预测的角度给出了因果性的一个定义：如果x有助于预测(解释)y，则x是y的Granger原因。将x的信息从信息集中去除不会改变对y的最优预测,则x不是y的granger原因。相反，会改变预测，则x是y的Granger原因，即将过去的x包含在信息集中可提高对y的预测。格兰杰因果检验只是数据上的因果关系不代表实际的因果关系。</p>
-<p>格兰杰因果关系检验的基本思路是，在两个变量x和y的系统中，若y的现在值用x和y的过去值预测要好于单独用y预测，那么，称x是y的原因；若用x的现在值和x、y的过去值去预测y比只用x和y去预测要好，那么，称x是y的瞬时原因。反之反是。换言之，如果x的变化引起y的变化，则x的变化应当发生在y的变化之前。特别地，说“x是引起y变化的原因”，则必须满足两个条件：一是x应该有助于预测y，即在y关于y的过去值的回归分析中，添加x的过去值作为独立变量应当显著地增加回归的解释能力；二是y不应当有助于预测x，其原因是如果x有助于预测y，y也有助于预测x，则很可能存在一个或几个其它的变量，它们既是引起x变化的原因，也是引起y变化的原因。</p>
-<p>进行格兰杰因果关系检验的一个前提条件是时间序列必须具有平稳性，否则可能会出现虚假回归问题。因此在进行格兰杰因果关系检验之前首先应对各指标时间序列的平稳性进行单位根检验(unit  root  test)。常用增广的迪基—富勒检验(ADF检验)来分别对各指标序列的平稳性进行单位根检验。格兰杰检验的特点决定了它只能适用于时间序列数据模型的因果性检验，无法检验只有横截面数据时变量间的因果性。因此，在使用这种方法时，务必检查前提条件，使其尽量能够满足。</p>
-<p>时间序列的稳定性是指时间序列的方差、协方差、均值不受时间t的影响。平稳性就是要求经由样本时间序列所得到的拟合曲线在未来的一段期间内仍能顺着现有的形态“惯性”地延续下去；如果数据非平稳，则说明样本拟合曲线的形态不具有“惯性”延续的特点，也就是基于未来将要获得的样本时间序列所拟合出来的曲线将迥异于当前的样本拟合曲线。</p>
-<p>由于格兰杰天才地利用了条件概率来定义因果关系，所以他的方法显得既实用又有效，这是个令许多人甚至哲学家都佩服的思维上的突破。但是格兰杰因果关系检验的结论只是统计意义上的因果性，而不一定是真正的因果关系。虽然可以作为真正的因果关系的一种支持，但不能作为肯定或否定因果关系的最终根据。也许，鸡和蛋之间没有必要讨论谁先谁后的问题，因为在足够长的时间里，不存在单向的因果关系，或者说只是存在互为因果关系。运用统计工具来解释经济变量之间的关系，仍有很多的漏洞，存在很多逻辑上的问题。“鸡生蛋还是蛋生鸡”的命题告诉我们，在许多情况下，探讨因果关系是没有意义的。</p>
-<p>真正的因果关系，还是要立足于理论模型的思考。统计方法并非万能的，评判一个对象，往往需要多种角度的观察。正所谓“兼听则明，偏听则暗”。诚然真相永远只有一个，但是也要靠科学的探索方法。当然，我们也不能因噎废食，全盘否定计量统计的意义。即使格兰杰因果关系不等于实际因果关系，也并不妨碍其参考价值。因为统计意义上的因果关系也是有意义的，对于经济预测等仍然能起很大的作用。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/27/algo/granger_causality/" data-id="ciwrvilxi000ekks8shtvxha8" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/10/27/algo/granger_causality/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Granger-causality/">Granger causality</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/13/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/15/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/13/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/15/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -1084,6 +534,23 @@ grangertest(chicken ~ egg, order = 4, data = ChickEgg)
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -1122,23 +589,6 @@ grangertest(chicken ~ egg, order = 4, data = ChickEgg)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -1156,7 +606,7 @@ grangertest(chicken ~ egg, order = 4, data = ChickEgg)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -1164,9 +614,9 @@ grangertest(chicken ~ egg, order = 4, data = ChickEgg)
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -1179,7 +629,16 @@ grangertest(chicken ~ egg, order = 4, data = ChickEgg)
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1193,15 +652,6 @@ grangertest(chicken ~ egg, order = 4, data = ChickEgg)
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -1210,7 +660,7 @@ grangertest(chicken ~ egg, order = 4, data = ChickEgg)
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

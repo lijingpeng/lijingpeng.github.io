@@ -100,7 +100,7 @@ Autotools 号称auto，但是还是需">
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -205,19 +205,7 @@ Autotools 号称auto，但是还是需">
 <p>一个源代码树的根目录看起来的样子如下：<br> BLADE_ROOT<br> common<br> thirdparty<br> xfs<br> xcube<br> torca<br> your_project<br> …</p>
 <h2 id="BUILD_u6587_u4EF6"><a href="#BUILD_u6587_u4EF6" class="headerlink" title="BUILD文件"></a>BUILD文件</h2><p>Blade 通过一系列的名字为 “BUILD” 的文件（文件名全大写），这些文件需要开发者去编写。每个 BUILD文件通过一组目标描述函数描述了一个目标的源文件，所依赖的其他目标，以及其他一些属性。</p>
 <h3 id="BUILD_u6587_u4EF6_u7684_u793A_u4F8B"><a href="#BUILD_u6587_u4EF6_u7684_u793A_u4F8B" class="headerlink" title="BUILD文件的示例"></a>BUILD文件的示例</h3><p>构建脚本很简单：</p>
-<p>范例：common/base/string/BUILD</p>
-<pre><code class="python">cc_library(
-    name = &#39;string&#39;,
-    srcs = [
-        &#39;algorithm.cpp&#39;,
-        &#39;string_number.cpp&#39;,
-        &#39;string_piece.cpp&#39;,
-        &#39;format.cpp&#39;,
-        &#39;concat.cpp&#39;
-    ],
-    deps = [&#39;//common/base:int&#39;]
-)
-</code></pre>
+<p>范例：common/base/string/BUILD<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">cc_library(</div><div class="line">    name = <span class="string">'string'</span>,</div><div class="line">    srcs = [</div><div class="line">        <span class="string">'algorithm.cpp'</span>,</div><div class="line">        <span class="string">'string_number.cpp'</span>,</div><div class="line">        <span class="string">'string_piece.cpp'</span>,</div><div class="line">        <span class="string">'format.cpp'</span>,</div><div class="line">        <span class="string">'concat.cpp'</span></div><div class="line">    ],</div><div class="line">    deps = [<span class="string">'//common/base:int'</span>]</div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>也是说明式的，只需要列出目标名，源文件名和依赖名（可以没有）即可。</p>
 <h2 id="u98CE_u683C_u5EFA_u8BAE"><a href="#u98CE_u683C_u5EFA_u8BAE" class="headerlink" title="风格建议"></a>风格建议</h2><ul>
 <li>四空格缩进，不要用tab字符</li>
@@ -254,14 +242,7 @@ Autotools 号称auto，但是还是需">
 </ul>
 <p>|| <em>字段</em> || <em>解释</em> || <em>举例</em> || <em>备注</em> ||<br>|| warning || 是否屏蔽warning  || warning=’no’ || 默认不屏蔽 warning=’yes’ , 默认不用写，已开启 ||<br>|| defs || 用户定义的宏加入编译中 || defs=[‘_MT’] || 如果用户定义C++关键字，报warning ||<br>|| incs || 用户定义的include || incs=[‘poppy/myinc’] || 用户通常不要使用 ||<br>|| optimize || 用户定义的optimize flags || optimize=[‘O3’] || 适用于 cc_library cc_binary cc_test proto_library swig_library  cc_plugin resource_library ||</p>
 <h4 id="cc_library"><a href="#cc_library" class="headerlink" title="cc_library"></a>cc_library</h4><p>用于描述C++库目标。<br>cc_library同时用于构建静态和动态库，默认只构建静态库，只有被dynamic_link=1的cc_binary依赖时或者命令行指定<br>–generate-dynamic 才生成动态链接库。</p>
-<p>举例：</p>
-<pre><code class="python">cc_library(
-    name=&#39;lowercase&#39;,
-    srcs=[&#39;./src/lower/plowercase.cpp&#39;],
-    deps=[&#39;#pthread&#39;],
-    link_all_symbols=False
-)
-</code></pre>
+<p>举例：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cc_library(</div><div class="line">    name=<span class="string">'lowercase'</span>,</div><div class="line">    srcs=[<span class="string">'./src/lower/plowercase.cpp'</span>],</div><div class="line">    deps=[<span class="string">'#pthread'</span>],</div><div class="line">    link_all_symbols=<span class="keyword">False</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>参数：</p>
 <ul>
 <li>link_all_symbols=True<br>库在被静态链接时，确保库里所有的符号都被链接，以保证依赖全局对象构造函数，比如自动注册器的代码能够正常工作。<br>需要全部链接的部分最好单独拆分出来做成全部链接的库，而不是整个库全都全部链接，否则会无端增大可执行文件的大小。 需要注意的是，link_all_symbols是库自身的属性，不是使用库时的属性。Blade是为大型项目设计的，基于以下因素，我们提倡任何模块都应该有自己的 cc_library，用户程序都应该在deps里写全直接依赖，不提倡创建像boost那样的全头文件的库。<ul>
@@ -277,13 +258,7 @@ Autotools 号称auto，但是还是需">
 <li><p>prebuilt=True<br>主要应用在thirdparty中从rpm包解来的库，使用这个参数表示不从源码构建。对应的二进制文件必须存在 lib{32,64}_{release,debug} 这样的子目录中。不区分debug/release时可以只有两个实际的目录。</p>
 </li>
 </ul>
-<p>####cc_binary<br>定义C++可执行文件目标</p>
-<pre><code class="python">cc_binary(
-    name=&#39;prstr&#39;,
-    srcs=[&#39;./src/mystr_main/mystring.cpp&#39;],
-    deps=[&#39;#pthread&#39;,&#39;:lowercase&#39;,&#39;:uppercase&#39;,&#39;#dl&#39;],
-)
-</code></pre>
+<p>####cc_binary<br>定义C++可执行文件目标<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cc_binary(</div><div class="line">    name=<span class="string">'prstr'</span>,</div><div class="line">    srcs=[<span class="string">'./src/mystr_main/mystring.cpp'</span>],</div><div class="line">    deps=[<span class="string">'#pthread'</span>,<span class="string">':lowercase'</span>,<span class="string">':uppercase'</span>,<span class="string">'#dl'</span>],</div><div class="line">)</div></pre></td></tr></table></figure></p>
 <ul>
 <li><p>dynamic_link=True<br>目前我们的binary默认为全静态编译以适应云计算平台使用。<br>如果有应用需要动态编译方式，可以使用此参数指定，此时被此target依赖的所有库都会自动生成对应的动态库供链接。<br>需要注意的是，dynamic_link只适用于可执行文件，不适用于库。</p>
 </li>
@@ -300,136 +275,40 @@ Autotools 号称auto，但是还是需">
 </ul>
 </li>
 </ul>
-<p>可以根据需要自行选择，这些路径都也可以是目录。</p>
-<pre><code class="python">cc_test(
-    name = &#39;textfile_test&#39;,
-    srcs = &#39;textfile_test.cpp&#39;,
-    deps = &#39;:io&#39;,
-    testdata = [
-        &#39;test_dos.txt&#39;,
-        &#39;//your_proj/path/file&#39;,
-        (&#39;//your_proj/path/file&#39;, &#39;new_name&#39;)
-    ]
-)
-</code></pre>
-<h4 id="proto_library"><a href="#proto_library" class="headerlink" title="proto_library"></a>proto_library</h4><p>用于定义protobuf目标<br>deps 为import所涉及的其他proto_library<br>自动依赖protobuf，使用者不需要再显式指定。<br>构建时自动调用protoc生成cc和h，并且编译成对应的cc_library</p>
-<pre><code class="python">proto_library(
-    name = &#39;rpc_meta_info_proto&#39;,
-    srcs = &#39;rpc_meta_info.proto&#39;,
-    deps = &#39;:rpc_option_proto&#39;,
-)
-</code></pre>
+<p>可以根据需要自行选择，这些路径都也可以是目录。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">cc_test(</div><div class="line">    name = <span class="string">'textfile_test'</span>,</div><div class="line">    srcs = <span class="string">'textfile_test.cpp'</span>,</div><div class="line">    deps = <span class="string">':io'</span>,</div><div class="line">    testdata = [</div><div class="line">        <span class="string">'test_dos.txt'</span>,</div><div class="line">        <span class="string">'//your_proj/path/file'</span>,</div><div class="line">        (<span class="string">'//your_proj/path/file'</span>, <span class="string">'new_name'</span>)</div><div class="line">    ]</div><div class="line">)</div></pre></td></tr></table></figure></p>
+<h4 id="proto_library"><a href="#proto_library" class="headerlink" title="proto_library"></a>proto_library</h4><p>用于定义protobuf目标<br>deps 为import所涉及的其他proto_library<br>自动依赖protobuf，使用者不需要再显式指定。<br>构建时自动调用protoc生成cc和h，并且编译成对应的cc_library<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">proto_library(</div><div class="line">    name = <span class="string">'rpc_meta_info_proto'</span>,</div><div class="line">    srcs = <span class="string">'rpc_meta_info.proto'</span>,</div><div class="line">    deps = <span class="string">':rpc_option_proto'</span>,</div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>Blade支持proto_library，使得在项目中使用protobuf十分方便。</p>
 <p>要引用某 proto 文件生成的头文件，需要从 BLADE_ROOT 的目录开始，只是把 proto 扩展名改为 pb.h 扩展名。<br>比如 //common/base/string_test.proto 生成的头文件，路径为 “common/base/string_test.pb.h”。</p>
 <h4 id="thrift_library"><a href="#thrift_library" class="headerlink" title="thrift_library"></a>thrift_library</h4><p>用于定义thrift库目标<br>deps 为import所涉及的其他thrift_library<br>自动依赖thrift，使用者不需要再显式指定。<br>构建时自动调用thrift命令生成cpp和h，并且编译成对应的cc_library</p>
-<pre><code class="python">thrift_library(
-    name = &#39;shared_thrift&#39;,
-    srcs = &#39;shared.thrift&#39;,
-)
-thrift_library(
-    name = &#39;tutorial_thrift&#39;,
-    srcs = &#39;tutorial.thrift&#39;,
-    deps = &#39;:shared_thrift&#39;
-)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">thrift_library(</div><div class="line">    name = <span class="string">'shared_thrift'</span>,</div><div class="line">    srcs = <span class="string">'shared.thrift'</span>,</div><div class="line">)</div><div class="line">thrift_library(</div><div class="line">    name = <span class="string">'tutorial_thrift'</span>,</div><div class="line">    srcs = <span class="string">'tutorial.thrift'</span>,</div><div class="line">    deps = <span class="string">':shared_thrift'</span></div><div class="line">)</div></pre></td></tr></table></figure>
 <p>C++中使用生成的头文件时，规则类似proto，需要带上相对BLADE_ROOT的目录前缀。</p>
 <ul>
 <li>thrift 0.9版（之前版本未测）有个[<a href="https://issues.apache.org/jira/browse/THRIFT-1859" target="_blank" rel="external">https://issues.apache.org/jira/browse/THRIFT-1859</a> bug]，需要修正才能使用，此bug已经在开发版本中[<a href="https://builds.apache.org/job/Thrift/633/changes#detail13" target="_blank" rel="external">https://builds.apache.org/job/Thrift/633/changes#detail13</a> 修正]</li>
 </ul>
 <h4 id="lex_yacc_library"><a href="#lex_yacc_library" class="headerlink" title="lex_yacc_library"></a>lex_yacc_library</h4><p>srcs 必须为二元列表，后缀分别为ll和yy<br>构建时自动调用flex和bison, 并且编译成对应的cc_library</p>
-<pre><code class="python">lex_yacc_library(
-     name = &#39;parser&#39;,
-     srcs = [
-         &#39;line_parser.ll&#39;,
-         &#39;line_parser.yy&#39;
-     ],
-     deps = [
-         &quot;:xcubetools&quot;,
-     ],
-     recursive = True
-)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">lex_yacc_library(</div><div class="line">     name = <span class="string">'parser'</span>,</div><div class="line">     srcs = [</div><div class="line">         <span class="string">'line_parser.ll'</span>,</div><div class="line">         <span class="string">'line_parser.yy'</span></div><div class="line">     ],</div><div class="line">     deps = [</div><div class="line">         <span class="string">":xcubetools"</span>,</div><div class="line">     ],</div><div class="line">     recursive = <span class="keyword">True</span></div><div class="line">)</div></pre></td></tr></table></figure>
 <ul>
 <li>recursive=True<br>生成可重入的C scanner.</li>
 </ul>
 <h4 id="gen_rule"><a href="#gen_rule" class="headerlink" title="gen_rule"></a>gen_rule</h4><p>用于定制自己的目标<br>outs = []，表示输出的文件列表，需要填写这个域gen_rule才会被执行<br>cmd, 字符串，表示被调用的命令行<br>cmd中可含有如下变量，运行时会被替换成srcs和outs中的对应值<br>$SRCS<br>$OUTS<br>$FIRST_SRC<br>$FIRST_OUT<br>$BUILD<em>DIR – 可被替换为 build[64,32]</em>[release,debug] 输出目录</p>
-<pre><code class="python">gen_rule(
-    name=&#39;test_gen_target&#39;,
-    cmd=&#39;echo what_a_nice_day;touch test2.c&#39;,
-    deps=[&#39;:test_gen&#39;],                         # 可以有deps , 也可以被别的target依赖
-    outs=[&#39;test2.c&#39;]
-)
-`
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">gen_rule(</div><div class="line">    name=<span class="string">'test_gen_target'</span>,</div><div class="line">    cmd=<span class="string">'echo what_a_nice_day;touch test2.c'</span>,</div><div class="line">    deps=[<span class="string">':test_gen'</span>],                         <span class="comment"># 可以有deps , 也可以被别的target依赖</span></div><div class="line">    outs=[<span class="string">'test2.c'</span>]</div><div class="line">)</div><div class="line">`</div></pre></td></tr></table></figure>
 <p>很多用户使用gen_rule动态生成代码文件然后和某个cc_library或者cc_binary一起编译，<br>需要注意应该尽量在输出目录生成代码文件,如build64_debug下，并且文件的路径名要写对，<br>如 outs = [‘websearch2/project_example/module_1/file_2.cc’], 这样使用<br>gen_rule生成的文件和库一起编译时就不会发生找不到动态生成的代码文件问题了。</p>
 <p>####swig_library</p>
 <p>根据.i文件生成相应的python, java 和php cxx模块代码，并且生成对应语言的代码。</p>
-<pre><code class="python">swig_library(
-    name = &#39;poppy_client&#39;,
-    srcs = [
-        &#39;poppy_client.i&#39;
-    ],
-    deps = [
-        &#39;:poppy_swig_wrap&#39;
-    ],
-    warning=&#39;yes&#39;,
-    java_package=&#39;com.soso.poppy.swig&#39;,   # 生成的java文件的所在package名称
-    java_lib_packed=1, # 表示把生成的libpoppy_client_java.so打包到依赖者的jar包里，如java_jar依赖这个swig_library
-    optimize=[&#39;O3&#39;]    # 编译优化选项
-)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">swig_library(</div><div class="line">    name = <span class="string">'poppy_client'</span>,</div><div class="line">    srcs = [</div><div class="line">        <span class="string">'poppy_client.i'</span></div><div class="line">    ],</div><div class="line">    deps = [</div><div class="line">        <span class="string">':poppy_swig_wrap'</span></div><div class="line">    ],</div><div class="line">    warning=<span class="string">'yes'</span>,</div><div class="line">    java_package=<span class="string">'com.soso.poppy.swig'</span>,   <span class="comment"># 生成的java文件的所在package名称</span></div><div class="line">    java_lib_packed=<span class="number">1</span>, <span class="comment"># 表示把生成的libpoppy_client_java.so打包到依赖者的jar包里，如java_jar依赖这个swig_library</span></div><div class="line">    optimize=[<span class="string">'O3'</span>]    <span class="comment"># 编译优化选项</span></div><div class="line">)</div></pre></td></tr></table></figure>
 <ul>
 <li>warning<br>这里的warning仅仅指swig编译参数cpperraswarn是否被指定了，swig_library默认使用非标准编译告警级别（没有那么严格）。</li>
 </ul>
-<h4 id="cc_plugin"><a href="#cc_plugin" class="headerlink" title="cc_plugin"></a>cc_plugin</h4><p>支持生成target所依赖的库都是静态库.a的so库，即plugin。</p>
-<pre><code class="python">cc_plugin(
-    name=&#39;mystring&#39;,
-    srcs=[&#39;./src/mystr/mystring.cpp&#39;],
-    deps=[&#39;#pthread&#39;,&#39;:lowercase&#39;,&#39;:uppercase&#39;,&#39;#dl&#39;],
-    warning=&#39;no&#39;,
-    defs=[&#39;_MT&#39;],
-    optimize=[&#39;O3&#39;]
-)
-</code></pre>
+<h4 id="cc_plugin"><a href="#cc_plugin" class="headerlink" title="cc_plugin"></a>cc_plugin</h4><p>支持生成target所依赖的库都是静态库.a的so库，即plugin。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">cc_plugin(</div><div class="line">    name=<span class="string">'mystring'</span>,</div><div class="line">    srcs=[<span class="string">'./src/mystr/mystring.cpp'</span>],</div><div class="line">    deps=[<span class="string">'#pthread'</span>,<span class="string">':lowercase'</span>,<span class="string">':uppercase'</span>,<span class="string">'#dl'</span>],</div><div class="line">    warning=<span class="string">'no'</span>,</div><div class="line">    defs=[<span class="string">'_MT'</span>],</div><div class="line">    optimize=[<span class="string">'O3'</span>]</div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>cc_plugin 是为 JNI，python 扩展等需要动态库的场合设计的，不应该用于其他目的。</p>
 <h4 id="resource_library"><a href="#resource_library" class="headerlink" title="resource_library"></a>resource_library</h4><p>编译静态资源。</p>
-<p>大家都遇到过部署一个可执行程序，还要附带一堆辅助文件才能运行起来的情况吧？<br>blade通过resource_library，支持把程序运行所需要的数据文件也打包到可执行文件里，<br>比如poppy下的BUILD文件里用的静态资源：</p>
-<pre><code class="python">resource_library(
-    name = &#39;static_resource&#39;,
-    srcs = [
-        &#39;static/favicon.ico&#39;,
-        &#39;static/forms.html&#39;,
-        &#39;static/forms.js&#39;,
-        &#39;static/jquery-1.4.2.min.js&#39;,
-        &#39;static/jquery.json-2.2.min.js&#39;,
-        &#39;static/methods.html&#39;,
-        &#39;static/poppy.html&#39;
-    ]
-)
-</code></pre>
+<p>大家都遇到过部署一个可执行程序，还要附带一堆辅助文件才能运行起来的情况吧？<br>blade通过resource_library，支持把程序运行所需要的数据文件也打包到可执行文件里，<br>比如poppy下的BUILD文件里用的静态资源：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">resource_library(</div><div class="line">    name = <span class="string">'static_resource'</span>,</div><div class="line">    srcs = [</div><div class="line">        <span class="string">'static/favicon.ico'</span>,</div><div class="line">        <span class="string">'static/forms.html'</span>,</div><div class="line">        <span class="string">'static/forms.js'</span>,</div><div class="line">        <span class="string">'static/jquery-1.4.2.min.js'</span>,</div><div class="line">        <span class="string">'static/jquery.json-2.2.min.js'</span>,</div><div class="line">        <span class="string">'static/methods.html'</span>,</div><div class="line">        <span class="string">'static/poppy.html'</span></div><div class="line">    ]</div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>生成  和 libstatic_resource.a 或者 libstatic_resource.so。<br>就像一样protobuf那样，编译后后生成一个库libstatic_resource.a，和一个相应的头文件static_resource.h，带路径包含进来即可使用。</p>
-<p>在程序中需要包含static_resource.h（带上相对于BLADE_ROOT的路径）和”common/base/static_resource.hpp”，<br>用 STATIC_RESOURCE 宏来引用数据：</p>
-<pre><code class="c">StringPiece data = STATIC_RESOURCE(poppy_static_favicon_ico);
-</code></pre>
+<p>在程序中需要包含static_resource.h（带上相对于BLADE_ROOT的路径）和”common/base/static_resource.hpp”，<br>用 STATIC_RESOURCE 宏来引用数据：<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">StringPiece data = STATIC_RESOURCE(poppy_static_favicon_ico);</div></pre></td></tr></table></figure></p>
 <p>STATIC_RESOURCE 的参数是从BLADE<em>ROOT目录开始的数据文件的文件名，把所有非字母数字和下划线的字符都替换为</em>。</p>
 <p>得到的 data 在程序运行期间一直存在，只可读取，不可写入。</p>
 <p>用 static resource 在某些情况下也有一点不方便：就是不能在运行期间更新，因此是否使用，需要根据具体场景自己权衡。</p>
-<h4 id="java_jar"><a href="#java_jar" class="headerlink" title="java_jar"></a>java_jar</h4><p>编译java源代码。</p>
-<pre><code class="python">java_jar(
-    name = &#39;poppy_java_client&#39;,
-    srcs = [
-        &#39;src/com/soso/poppy&#39;                 # 这里只需要指定java文件所在目录，不要写上具体java文件列表
-    ],
-    deps = [
-        &#39;//poppy:rpc_meta_info_proto&#39;,       # 可以依赖proto_library生成的java文件一起编译打包
-        &#39;//poppy:rpc_option_proto&#39;,
-        &#39;//poppy:rpc_message_proto&#39;,
-        &#39;//poppy:poppy_client&#39;,              # 可以依赖swig_library生成的java文件一起编译打包
-        &#39;./lib:protobuf-java&#39;,               # 可以依赖别的jar包
-        &#39;./lib:junit&#39;,
-    ]
-)
-</code></pre>
+<h4 id="java_jar"><a href="#java_jar" class="headerlink" title="java_jar"></a>java_jar</h4><p>编译java源代码。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">java_jar(</div><div class="line">    name = <span class="string">'poppy_java_client'</span>,</div><div class="line">    srcs = [</div><div class="line">        <span class="string">'src/com/soso/poppy'</span>                 <span class="comment"># 这里只需要指定java文件所在目录，不要写上具体java文件列表</span></div><div class="line">    ],</div><div class="line">    deps = [</div><div class="line">        <span class="string">'//poppy:rpc_meta_info_proto'</span>,       <span class="comment"># 可以依赖proto_library生成的java文件一起编译打包</span></div><div class="line">        <span class="string">'//poppy:rpc_option_proto'</span>,</div><div class="line">        <span class="string">'//poppy:rpc_message_proto'</span>,</div><div class="line">        <span class="string">'//poppy:poppy_client'</span>,              <span class="comment"># 可以依赖swig_library生成的java文件一起编译打包</span></div><div class="line">        <span class="string">'./lib:protobuf-java'</span>,               <span class="comment"># 可以依赖别的jar包</span></div><div class="line">        <span class="string">'./lib:junit'</span>,</div><div class="line">    ]</div><div class="line">)</div></pre></td></tr></table></figure></p>
 <ul>
 <li>prebuilt=True<br>主要应用在已经编译打包好的java jar 包。</li>
 </ul>
@@ -458,23 +337,10 @@ thrift_library(
 <li>test arguments 改变。</li>
 <li>Fail 的test cases ，每次都重跑。</li>
 </ul>
-<p>如果需要使用全量测试，使用–full-test option, 如 blade test common/… –full-test ， 全部测试都需要跑。<br>另外，cc_test 支持了 always_run 属性，用于在增量测试时，不管上次的执行结果，每次总是要跑。</p>
-<pre><code class="python">cc_test(
-    name = &#39;zookeeper_test&#39;,
-    srcs = &#39;zookeeper_test.cc&#39;,
-    always_run = True
-)
-</code></pre>
+<p>如果需要使用全量测试，使用–full-test option, 如 blade test common/… –full-test ， 全部测试都需要跑。<br>另外，cc_test 支持了 always_run 属性，用于在增量测试时，不管上次的执行结果，每次总是要跑。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cc_test(</div><div class="line">    name = <span class="string">'zookeeper_test'</span>,</div><div class="line">    srcs = <span class="string">'zookeeper_test.cc'</span>,</div><div class="line">    always_run = <span class="keyword">True</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>Blade test支持并行测试，并行测试把这一次构建后需要跑的test cases并发地run。<br>blade test [targets] –test-jobs N<br>-t, –test-jobs N 设置并发测试的并发数，Blade会让N个测试进程并行执行</p>
-<p>对于某些因为可能相互干扰而不能并行跑的测试，可以加上 exclusive 属性</p>
-<pre><code class="python">cc_test(
-    name = &#39;zookeeper_test&#39;,
-    srcs = &#39;zookeeper_test.cc&#39;,
-    exclusive = True
-)
-</code></pre>
-<h2 id="u547D_u4EE4_u884C_u53C2_u8003"><a href="#u547D_u4EE4_u884C_u53C2_u8003" class="headerlink" title="命令行参考"></a>命令行参考</h2><pre><code class="bash">blade `[`action`]` `[`options`]` `[`targets`]`
-</code></pre>
+<p>对于某些因为可能相互干扰而不能并行跑的测试，可以加上 exclusive 属性<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cc_test(</div><div class="line">    name = <span class="string">'zookeeper_test'</span>,</div><div class="line">    srcs = <span class="string">'zookeeper_test.cc'</span>,</div><div class="line">    exclusive = <span class="keyword">True</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
+<h2 id="u547D_u4EE4_u884C_u53C2_u8003"><a href="#u547D_u4EE4_u884C_u53C2_u8003" class="headerlink" title="命令行参考"></a>命令行参考</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">blade `[`action`]` `[`options`]` `[`targets`]`</div></pre></td></tr></table></figure>
 <p>action是一个动作，目前有</p>
 <ul>
 <li>build 表示构建项目</li>
@@ -515,55 +381,19 @@ thrift_library(
 <li>BLADE_ROOT 其实也是个配置文件，写在这里的是项目级配置。</li>
 </ul>
 <p>后面描述的所有多个参数的配置的每个配置参数都有默认值，并不需要全部写出，也没有顺序要求。</p>
-<h3 id="cc_config"><a href="#cc_config" class="headerlink" title="cc_config"></a>cc_config</h3><p>所有c/c++目标的公共配置</p>
-<pre><code class="python">cc_config(
-    extra_incs = [&#39;thirdparty&#39;],  # 额外的 -I，比如 thirdparty
-    warnings = [&#39;-Wall&#39;, &#39;-Wextra&#39;...], # C/C++公用警告
-    c_warnings = [&#39;-Wall&#39;, &#39;-Wextra&#39;...], # C专用警告
-    cxx_warnings = [&#39;-Wall&#39;, &#39;-Wextra&#39;...], # C++专用警告
-    optimize = &#39;-O2&#39;, # 优化级别
-)
-</code></pre>
+<h3 id="cc_config"><a href="#cc_config" class="headerlink" title="cc_config"></a>cc_config</h3><p>所有c/c++目标的公共配置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">cc_config(</div><div class="line">    extra_incs = [<span class="string">'thirdparty'</span>],  <span class="comment"># 额外的 -I，比如 thirdparty</span></div><div class="line">    warnings = [<span class="string">'-Wall'</span>, <span class="string">'-Wextra'</span>...], <span class="comment"># C/C++公用警告</span></div><div class="line">    c_warnings = [<span class="string">'-Wall'</span>, <span class="string">'-Wextra'</span>...], <span class="comment"># C专用警告</span></div><div class="line">    cxx_warnings = [<span class="string">'-Wall'</span>, <span class="string">'-Wextra'</span>...], <span class="comment"># C++专用警告</span></div><div class="line">    optimize = <span class="string">'-O2'</span>, <span class="comment"># 优化级别</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>所有选项均为可选，如果不存在，则保持先前值。发布带的blade.conf中的警告选项均经过精心挑选，建议保持。</p>
-<h3 id="cc_test_config"><a href="#cc_test_config" class="headerlink" title="cc_test_config"></a>cc_test_config</h3><p>构建和运行测试所需的配置</p>
-<pre><code class="python">cc_test_config(
-    dynamic_link=True,   # 测试程序是否默认动态链接，可以减少磁盘开销，默认为 False
-    heap_check=&#39;strict&#39;, # 开启 gperftools 的 HEAPCHECK，具体取值请参考 gperftools 的文档
-    gperftools_libs=&#39;//thirdparty/perftools:tcmalloc&#39;,  # tcmclloc 库，blade deps 格式
-    gperftools_debug_libs=&#39;//thirdparty/perftools:tcmalloc_debug&#39;, # tcmalloc_debug 库，blade deps 格式
-    gtest_libs=&#39;//thirdparty/gtest:gtest&#39;,  # gtest 的库，blade deps 格式
-    gtest_main_libs=&#39;//thirdparty/gtest:gtest_main&#39; # gtest_main 的库路径，blade deps 格式
-)
-</code></pre>
+<h3 id="cc_test_config"><a href="#cc_test_config" class="headerlink" title="cc_test_config"></a>cc_test_config</h3><p>构建和运行测试所需的配置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">cc_test_config(</div><div class="line">    dynamic_link=<span class="keyword">True</span>,   <span class="comment"># 测试程序是否默认动态链接，可以减少磁盘开销，默认为 False</span></div><div class="line">    heap_check=<span class="string">'strict'</span>, <span class="comment"># 开启 gperftools 的 HEAPCHECK，具体取值请参考 gperftools 的文档</span></div><div class="line">    gperftools_libs=<span class="string">'//thirdparty/perftools:tcmalloc'</span>,  <span class="comment"># tcmclloc 库，blade deps 格式</span></div><div class="line">    gperftools_debug_libs=<span class="string">'//thirdparty/perftools:tcmalloc_debug'</span>, <span class="comment"># tcmalloc_debug 库，blade deps 格式</span></div><div class="line">    gtest_libs=<span class="string">'//thirdparty/gtest:gtest'</span>,  <span class="comment"># gtest 的库，blade deps 格式</span></div><div class="line">    gtest_main_libs=<span class="string">'//thirdparty/gtest:gtest_main'</span> <span class="comment"># gtest_main 的库路径，blade deps 格式</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>所有的 config 的列表类型的选项均支持追加模式，用法如下：</p>
-<pre><code class="python">cc_config(
-    append = config_items(
-        warnings = [...]
-    )
-)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">cc_config(</div><div class="line">    append = config_items(</div><div class="line">        warnings = [...]</div><div class="line">    )</div><div class="line">)</div></pre></td></tr></table></figure>
 <p>注意:</p>
 <ul>
 <li>gtest 1.6开始，去掉了 make install，但是可以绕过[<a href="http://blog.csdn.net/chengwenyao18/article/details/7181514" target="_blank" rel="external">http://blog.csdn.net/chengwenyao18/article/details/7181514</a> gtest1.6.0安装方法]。</li>
 <li>gtest 库还依赖 pthread，因此gtest_libs需要写成 [‘#gtest’, ‘#pthread’]</li>
 <li>或者把源码纳入你的源码树，比如thirdparty下，就可以写成gtest_libs=’//thirdparty/gtest:gtest’。</li>
 </ul>
-<h3 id="proto_library_config"><a href="#proto_library_config" class="headerlink" title="proto_library_config"></a>proto_library_config</h3><p>编译protobuf需要的配置</p>
-<pre><code class="python">proto_library_config(
-    protoc=&#39;protoc&#39;,  # protoc编译器的路径
-    protobuf_libs=&#39;//thirdparty/protobuf:protobuf&#39;, # protobuf库的路径，Blade deps 格式
-    protobuf_path=&#39;thirdparty&#39;, # import 时的 proto 搜索路径，相对于 BLADE_ROOT
-    protobuf_include_path = &#39;thirdparty&#39;,  # 编译 pb.cc 时额外的 -I 路径
-)
-</code></pre>
-<h3 id="thrift_library_config"><a href="#thrift_library_config" class="headerlink" title="thrift_library_config"></a>thrift_library_config</h3><p>编译thrift需要的配置</p>
-<pre><code class="python">thrift_library_config(
-    thrift=&#39;thrift&#39;,  # protoc编译器的路径
-    thrift_libs=&#39;//thirdparty/thrift:thrift&#39;, # thrift库的路径，Blade deps 格式
-    thrift_path=&#39;thirdparty&#39;, # thrift中include时的thrift文件的搜索路径，相对于 BLADE_ROOT
-    thrift_incs = &#39;thirdparty&#39;,  # 编译 thrift生成的.cpp 时额外的 -I 路径
-)
-</code></pre>
+<h3 id="proto_library_config"><a href="#proto_library_config" class="headerlink" title="proto_library_config"></a>proto_library_config</h3><p>编译protobuf需要的配置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">proto_library_config(</div><div class="line">    protoc=<span class="string">'protoc'</span>,  <span class="comment"># protoc编译器的路径</span></div><div class="line">    protobuf_libs=<span class="string">'//thirdparty/protobuf:protobuf'</span>, <span class="comment"># protobuf库的路径，Blade deps 格式</span></div><div class="line">    protobuf_path=<span class="string">'thirdparty'</span>, <span class="comment"># import 时的 proto 搜索路径，相对于 BLADE_ROOT</span></div><div class="line">    protobuf_include_path = <span class="string">'thirdparty'</span>,  <span class="comment"># 编译 pb.cc 时额外的 -I 路径</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
+<h3 id="thrift_library_config"><a href="#thrift_library_config" class="headerlink" title="thrift_library_config"></a>thrift_library_config</h3><p>编译thrift需要的配置<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">thrift_library_config(</div><div class="line">    thrift=<span class="string">'thrift'</span>,  <span class="comment"># protoc编译器的路径</span></div><div class="line">    thrift_libs=<span class="string">'//thirdparty/thrift:thrift'</span>, <span class="comment"># thrift库的路径，Blade deps 格式</span></div><div class="line">    thrift_path=<span class="string">'thirdparty'</span>, <span class="comment"># thrift中include时的thrift文件的搜索路径，相对于 BLADE_ROOT</span></div><div class="line">    thrift_incs = <span class="string">'thirdparty'</span>,  <span class="comment"># 编译 thrift生成的.cpp 时额外的 -I 路径</span></div><div class="line">)</div></pre></td></tr></table></figure></p>
 <p>所有这些配置项都有默认值，如果不需要覆盖就无需列入相应的参数。默认值都是假设安装到系统目录下，如果你的项目中把这些库放进进了自己的代码中（比如我们内部），请修改相应的配置。</p>
 <h2 id="u73AF_u5883_u53D8_u91CF"><a href="#u73AF_u5883_u53D8_u91CF" class="headerlink" title="环境变量"></a>环境变量</h2><p>Blade还支持以下环境变量：</p>
 <ul>
@@ -574,12 +404,8 @@ thrift_library(
 <li>LD，默认为c++</li>
 </ul>
 <p>TOOLCHAIN_DIR和CPP等组合起来，构成调用工具的完整路径，例如：</p>
-<p>调用/usr/bin下的gcc（开发机上的原版gcc）</p>
-<pre><code class="bash">TOOLCHAIN_DIR=/usr/bin blade
-</code></pre>
-<p>使用clang</p>
-<pre><code class="bash">CPP=&#39;clang -E&#39; CC=clang CXX=clang++ ld=clang++ blade
-</code></pre>
+<p>调用/usr/bin下的gcc（开发机上的原版gcc）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TOOLCHAIN_DIR=/usr/bin blade</div></pre></td></tr></table></figure></p>
+<p>使用clang<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">CPP=<span class="string">'clang -E'</span> CC=clang CXX=clang++ ld=clang++ blade</div></pre></td></tr></table></figure></p>
 <p>如同所有的环境变量设置规则，放在命令行前的环境变量，只对这一次调用起作用，如果要后续起作用，用 export，要持久生效，放入 ~/.profile 中。</p>
 <p>环境变量的支持将来考虑淘汰，改为配置编译器版本的方式，因此建议暂时不要使用。</p>
 <h2 id="u8F85_u52A9_u547D_u4EE4"><a href="#u8F85_u52A9_u547D_u4EE4" class="headerlink" title="辅助命令"></a>辅助命令</h2><h3 id="install"><a href="#install" class="headerlink" title="install"></a>install</h3><p>blade命令的符号链接会被安装下面的命令到~/bin 下。</p>
@@ -588,25 +414,22 @@ thrift_library(
 <h3 id="vim_u96C6_u6210"><a href="#vim_u96C6_u6210" class="headerlink" title="vim集成"></a>vim集成</h3><p>我们编写了vim的blade语法文件，高亮显示blade关键字，install后就会自动生效。</p>
 <p>我们编写了 Blade 命令，使得可以在 vim 中直接执行 blade，并快速跳转到出错行（得益于 vim 的 <a href="ttp://easwy.com/blog/archives/advanced-vim-skills-quickfix-mode/" target="_blank" rel="external">hquickfix</a> 特性）。</p>
 <p>使用时直接在 vim 的 : 模式输入（可带参数）</p>
-<pre><code class="vim">:Blade
-</code></pre>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:Blade</div></pre></td></tr></table></figure>
 <p>即可构建。</p>
 <p>这个命令的源代码在 tools/.vimrc 中。</p>
 <h3 id="alt"><a href="#alt" class="headerlink" title="alt"></a>alt</h3><p>在源代码目录和构建目标目录之间跳转</p>
 <h2 id="u5B89_u88C5"><a href="#u5B89_u88C5" class="headerlink" title="安装"></a>安装</h2><p>执行install脚本即可安装到~/bin下，目前因还在开发阶段，变化还比较快，以软链方式安装，install后不能删除checkout出来的原始目录。<br>目前blade生成scons脚本，因此还需要安装scons 2.0以上版本。<br>Blade 需要支持 Python 2.4-2.7.x，不支持 python3。</p>
 <p>install使得可以在任何目录下直接执行</p>
-<pre><code class="bash">$ blade
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ blade</div></pre></td></tr></table></figure>
 <p>命令。<br>如果不行，确保~/bin在你的PATH环境变量里，否则修改 ~/.profile，加入</p>
-<pre><code class="bash">export PATH=~/bin:$PATH
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">export</span> PATH=~/bin:<span class="variable">$PATH</span></div></pre></td></tr></table></figure>
 <p>然后重新登录即可。</p>
 <p>From: <a href="https://github.com/chen3feng/typhoon-blade/blob/master/doc/user_manual_zh_CN.md" target="_blank" rel="external">https://github.com/chen3feng/typhoon-blade/blob/master/doc/user_manual_zh_CN.md</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/10/23/dev/blade/" data-id="ciwrvilyv001ekks8cbhiobey" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/10/23/dev/blade/" data-id="ciy2rrdg9000r6bs89e4ddxi2" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/10/23/dev/blade/#ds-thread" class="article-comment-link">评论</a>
       
@@ -660,6 +483,23 @@ thrift_library(
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -694,23 +534,6 @@ thrift_library(
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -728,7 +551,7 @@ thrift_library(
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -736,9 +559,9 @@ thrift_library(
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -751,7 +574,16 @@ thrift_library(
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -765,15 +597,6 @@ thrift_library(
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -782,7 +605,7 @@ thrift_library(
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

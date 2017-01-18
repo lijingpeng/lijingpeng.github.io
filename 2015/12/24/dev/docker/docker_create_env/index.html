@@ -6,36 +6,27 @@
   <title>使用Docker搭建一个隔离环境 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Docker轻量、隔离运行的特性非常适合运维部署，下面通过一个简单的例子介绍一下如何使用Docker搭建一个隔离的环境。
-1. 安装Ubuntu镜像docker pull ubuntu:14.04
-
+1. 安装Ubuntu镜像1docker pull ubuntu:14.04
 等待上面的命令执行完之后，运行:
-docker images
-
-可以看到安装的镜像，比如在我的机器上：
-REPOSITORY    TAG        IMAGE ID        CREATED">
+1docker images
+可以看到安装的镜像，比如在我的机器上：12REPOSITORY    TAG        IMAGE ID        CREATE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Docker搭建一个隔离环境">
 <meta property="og:url" content="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/index.html">
 <meta property="og:site_name" content="Frank">
 <meta property="og:description" content="Docker轻量、隔离运行的特性非常适合运维部署，下面通过一个简单的例子介绍一下如何使用Docker搭建一个隔离的环境。
-1. 安装Ubuntu镜像docker pull ubuntu:14.04
-
+1. 安装Ubuntu镜像1docker pull ubuntu:14.04
 等待上面的命令执行完之后，运行:
-docker images
-
-可以看到安装的镜像，比如在我的机器上：
-REPOSITORY    TAG        IMAGE ID        CREATED">
+1docker images
+可以看到安装的镜像，比如在我的机器上：12REPOSITORY    TAG        IMAGE ID        CREATE">
 <meta property="og:updated_time" content="2015-12-24T08:20:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Docker搭建一个隔离环境">
 <meta name="twitter:description" content="Docker轻量、隔离运行的特性非常适合运维部署，下面通过一个简单的例子介绍一下如何使用Docker搭建一个隔离的环境。
-1. 安装Ubuntu镜像docker pull ubuntu:14.04
-
+1. 安装Ubuntu镜像1docker pull ubuntu:14.04
 等待上面的命令执行完之后，运行:
-docker images
-
-可以看到安装的镜像，比如在我的机器上：
-REPOSITORY    TAG        IMAGE ID        CREATED">
+1docker images
+可以看到安装的镜像，比如在我的机器上：12REPOSITORY    TAG        IMAGE ID        CREATE">
   
   
     <link rel="icon" href="favicon.png">
@@ -115,7 +106,7 @@ REPOSITORY    TAG        IMAGE ID        CREATED">
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -183,34 +174,22 @@ REPOSITORY    TAG        IMAGE ID        CREATED">
       
                 
         <p>Docker轻量、隔离运行的特性非常适合运维部署，下面通过一个简单的例子介绍一下如何使用Docker搭建一个隔离的环境。</p>
-<h3 id="1-__u5B89_u88C5Ubuntu_u955C_u50CF"><a href="#1-__u5B89_u88C5Ubuntu_u955C_u50CF" class="headerlink" title="1. 安装Ubuntu镜像"></a>1. 安装Ubuntu镜像</h3><pre><code class="sh">docker pull ubuntu:14.04
-</code></pre>
+<h3 id="1-__u5B89_u88C5Ubuntu_u955C_u50CF"><a href="#1-__u5B89_u88C5Ubuntu_u955C_u50CF" class="headerlink" title="1. 安装Ubuntu镜像"></a>1. 安装Ubuntu镜像</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull ubuntu:14.04</div></pre></td></tr></table></figure>
 <p>等待上面的命令执行完之后，运行:</p>
-<pre><code class="sh">docker images
-</code></pre>
-<p>可以看到安装的镜像，比如在我的机器上：</p>
-<pre><code>REPOSITORY    TAG        IMAGE ID        CREATED        VIRTUAL SIZE
-ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB
-</code></pre><h3 id="2-__u542F_u52A8_u5E76_u8FDB_u5165_u5BB9_u5668"><a href="#2-__u542F_u52A8_u5E76_u8FDB_u5165_u5BB9_u5668" class="headerlink" title="2. 启动并进入容器"></a>2. 启动并进入容器</h3><p>执行:</p>
-<pre><code class="sh">docker run -i -t ubuntu:14.04
-</code></pre>
-<p>接下来就进入了Ubuntu的执行环境了，可以通过apt-get install来安装软件，默认情况下，如果不保存，退出容器时，安装的软件也会消失。例如我们通过apt-get安装了vim：</p>
-<pre><code class="sh">apt-get install vim
-</code></pre>
-<p>为了防止容器关闭时，安装的vim也消失，我们需要记住当前运行的容器id，执行:</p>
-<pre><code class="sh">docker ps
-</code></pre>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker images</div></pre></td></tr></table></figure>
+<p>可以看到安装的镜像，比如在我的机器上：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">REPOSITORY    TAG        IMAGE ID        CREATED        VIRTUAL SIZE</div><div class="line">ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB</div></pre></td></tr></table></figure></p>
+<h3 id="2-__u542F_u52A8_u5E76_u8FDB_u5165_u5BB9_u5668"><a href="#2-__u542F_u52A8_u5E76_u8FDB_u5165_u5BB9_u5668" class="headerlink" title="2. 启动并进入容器"></a>2. 启动并进入容器</h3><p>执行:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -i -t ubuntu:14.04</div></pre></td></tr></table></figure></p>
+<p>接下来就进入了Ubuntu的执行环境了，可以通过apt-get install来安装软件，默认情况下，如果不保存，退出容器时，安装的软件也会消失。例如我们通过apt-get安装了vim：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apt-get install vim</div></pre></td></tr></table></figure></p>
+<p>为了防止容器关闭时，安装的vim也消失，我们需要记住当前运行的容器id，执行:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker ps</div></pre></td></tr></table></figure></p>
 <p>查看并记住当前运行的容器的id，在我的机器上，ID为：b14aa8cc9696</p>
-<h3 id="3-_Docker_commit"><a href="#3-_Docker_commit" class="headerlink" title="3. Docker commit"></a>3. Docker commit</h3><p>通过commit命令来保存对容器的变更：</p>
-<pre><code class="sh">docker commit b14 ubuntu-with-vim
-</code></pre>
+<h3 id="3-_Docker_commit"><a href="#3-_Docker_commit" class="headerlink" title="3. Docker commit"></a>3. Docker commit</h3><p>通过commit命令来保存对容器的变更：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker commit b14 ubuntu-with-vim</div></pre></td></tr></table></figure></p>
 <p>注： 这里只需记住容器id的前几个字母就可以了</p>
 <p>再次执行 <code>docker images</code> 即可看到保存后的新容器 <code>ubuntu-with-vim</code>， 相比于最开始的 <code>ubuntu</code>, <code>ubuntu-with-vim</code>安装了vim</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/" data-id="ciwrvim2l006nkks89sx6mo4j" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/" data-id="ciy2rrdjk006u6bs8zyxx732t" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/#ds-thread" class="article-comment-link">评论</a>
       
@@ -264,6 +243,23 @@ ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -298,23 +294,6 @@ ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -332,7 +311,7 @@ ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -340,9 +319,9 @@ ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -355,7 +334,16 @@ ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -369,15 +357,6 @@ ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -386,7 +365,7 @@ ubuntu        14.04      d55e68e6cc9c    2 weeks ago    187.9 MB
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

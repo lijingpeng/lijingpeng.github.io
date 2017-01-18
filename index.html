@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,61 @@
 
       
       <section id="main">
+      <article id="post-dev/go/go_file" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/12/21/dev/go/go_file/">Go文件操作大全</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/12/21/dev/go/go_file/">
+      <time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p><a href="http://colobu.com/2016/10/12/go-file-operations/?hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io" target="_blank" rel="external">http://colobu.com/2016/10/12/go-file-operations/?hmsr=toutiao.io&amp;utm_medium=toutiao.io&amp;utm_source=toutiao.io</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/12/21/dev/go/go_file/" data-id="ciy2rrdjm00706bs85f2p5lbz" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/12/21/dev/go/go_file/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/">go</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/encode" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -162,14 +217,13 @@
       
                 
         <p>一般Windows用户在使用Excel处理数据文件时都不会关心文件的编码，因为Excel支持Windows上默认使用的简体中文编码GB2312，但使用MAC的用户就没有那么省心了，一不小心就会碰到中文乱码的问题。在Mac上的Excel中为什么会出现中文乱码的情况呢？这是就需要了解一些文件编码的背景知识。文件在计算内部采用的是二进制（0和1）的形式存放，那么给定一个0和1组成的串，计算机怎么知道这个串代表的是英文中的’a’还是中文里面的’好’呢？这时就需要用到文件的编码，不同的编码告诉了计算机怎么去识别文件的内容，例如GB2312编码告诉计算机’001’代表的是中文里面的’好’，而UTF8编码告诉计算机’001’代表的是英文里面的’a’（这个例子只是为了简述文件编码的作用，实际上的编码比这个复杂得多）。由于UTF-8编码同时支持中文、还是日文、韩文、阿拉伯文在类的各种语言，所以它在Mac中被广泛使用，而目前Mac上的Excel在导入CSV文件时虽然给出了UTF8的选项，但是导入以后的中文还是乱码，这是因为它实际上是不支持UTF8编码方式导致的，至少对于Excel 2011 for Mac是这样。那么怎么解决这个问题呢，方法很简单：将文件的编码方式由UTF8转为Excel支持的中文编码方式，Mac上的iconv工具专门就可以用来干这个事情。例如，在Excel给出的中文编码方式中有GB18030，那么我们可以通过Mac上的iconv工具将文件编码由UTF8转为GB18030。只需要在命令行中键入如下的命令：</p>
-<pre><code class="bash">iconv -f UTF8 -t GB18030 a.csv &gt; b.csv
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">iconv <span class="_">-f</span> UTF8 -t GB18030 a.csv &gt; b.csv</div></pre></td></tr></table></figure>
 <p>就可以将a.csv文件的编码方式由UTF8 变为GB18030并写入到b.csv文件中，在Excel中导入b.csv文件中的内容，我们会发现烦人的中文乱码消失的无影无踪了！</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/12/16/dev/encode/" data-id="ciwrvilyq001akks83mbp62af" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/12/16/dev/encode/" data-id="ciy2rrdga000s6bs8l5ruznyc" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/12/16/dev/encode/#ds-thread" class="article-comment-link">评论</a>
       
@@ -219,81 +273,95 @@
                 
         <h2 id="Python_extra"><a href="#Python_extra" class="headerlink" title="Python extra"></a>Python extra</h2><hr>
 <h3 id="python_u4E2D_u5305_u542BUTF-8_u7F16_u7801_u4E2D_u6587_u7684_u5217_u8868_u6216_u5B57_u5178_u7684_u8F93_u51FA"><a href="#python_u4E2D_u5305_u542BUTF-8_u7F16_u7801_u4E2D_u6587_u7684_u5217_u8868_u6216_u5B57_u5178_u7684_u8F93_u51FA" class="headerlink" title="python中包含UTF-8编码中文的列表或字典的输出"></a>python中包含UTF-8编码中文的列表或字典的输出</h3><p>在python 下面一个包含中文字符串的列表（list）或字典，直接使用print会出现以下的结果：</p>
-<pre><code class="python">&gt;&gt;&gt; dict = {&quot;asdf&quot;: &quot;我们的python学习&quot;}
-&gt;&gt;&gt; print dict
-{&#39;asdf&#39;: &#39;\xe6\x88\x91\xe4\xbb\xac\xe7\x9a\x84python\xe5\xad\xa6\xe4\xb9\xa0&#39;}
-</code></pre>
-<p>在输出处理好的数据结构的时候很不方便，需要使用以下方法进行输出：</p>
-<pre><code class="python">&gt;&gt;&gt; import json
-&gt;&gt;&gt; print json.dumps(dict, encoding=&quot;UTF-8&quot;, ensure_ascii=False)
-{&quot;asdf&quot;: &quot;我们的python学习&quot;}
-</code></pre>
-<p>注意上面的两个参数，如果是字符串，直接输出：</p>
-<pre><code class="python">print str.encode(&quot;UTF-8&quot;)
-</code></pre>
-<h3 id="Python__u5224_u65AD_u5B57_u7B26_u4E32_u662F_u5426_u4E3A_u6570_u5B57"><a href="#Python__u5224_u65AD_u5B57_u7B26_u4E32_u662F_u5426_u4E3A_u6570_u5B57" class="headerlink" title="Python 判断字符串是否为数字"></a>Python 判断字符串是否为数字</h3><pre><code class="python"># -*- coding: UTF-8 -*-
-
-# Filename : test.py
-# author by : www.runoob.com
-
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        pass
-
-    try:
-        import unicodedata
-        unicodedata.numeric(s)
-        return True
-    except (TypeError, ValueError):
-        pass
-
-    return False
-
-# 测试字符串和数字
-print(is_number(&#39;foo&#39;))   # False
-print(is_number(&#39;1&#39;))     # True
-print(is_number(&#39;1.3&#39;))   # True
-print(is_number(&#39;-1.37&#39;)) # True
-print(is_number(&#39;1e3&#39;))   # True
-
-# 测试 Unicode
-# 阿拉伯语 5
-print(is_number(&#39;٥&#39;))  # False
-# 泰语 2
-print(is_number(&#39;๒&#39;))  # False
-# 中文数字
-print(is_number(&#39;四&#39;)) # False
-# 版权号
-print(is_number(&#39;©&#39;))  # False
-</code></pre>
-<p>执行以上代码输出结果为：</p>
-<pre><code>False
-True
-True
-True
-True
-False
-False
-False
-False
-</code></pre><p>Python isdigit() 方法检测字符串是否只由数字组成。<br>Python isnumeric() 方法检测字符串是否只由数字组成。这种方法是只针对unicode对象。</p>
-<h3 id="Python_u4E2D_u5C06_uFF08_u5B57_u5178_uFF0C_u5217_u8868_u7B49_uFF09_u53D8_u91CF_u683C_u5F0F_u5316_u6210_uFF08_u6F02_u4EAE_u7684_uFF0C_u6811_u5F62_u7684_uFF0C_u5E26_u7F29_u8FDB_u7684_uFF0CJSON_u65B9_u5F0F_u7684_uFF09_u5B57_u7B26_u4E32_u8F93_u51FA"><a href="#Python_u4E2D_u5C06_uFF08_u5B57_u5178_uFF0C_u5217_u8868_u7B49_uFF09_u53D8_u91CF_u683C_u5F0F_u5316_u6210_uFF08_u6F02_u4EAE_u7684_uFF0C_u6811_u5F62_u7684_uFF0C_u5E26_u7F29_u8FDB_u7684_uFF0CJSON_u65B9_u5F0F_u7684_uFF09_u5B57_u7B26_u4E32_u8F93_u51FA" class="headerlink" title="Python中将（字典，列表等）变量格式化成（漂亮的，树形的，带缩进的，JSON方式的）字符串输出"></a>Python中将（字典，列表等）变量格式化成（漂亮的，树形的，带缩进的，JSON方式的）字符串输出</h3><p>想要JSON输出为带缩进的，树状的，很漂亮的效果，那么可以通过这样的方法：</p>
-<pre><code class="python">import json
-
-# demoDictList is the value we want format to output
-jsonDumpsIndentStr = json.dumps(demoDictList, indent=1)
-print &quot;jsonDumpsIndentStr=&quot;, jsonDumpsIndentStr
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>dict = &#123;<span class="string">"asdf"</span>: <span class="string">"我们的python学习"</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> dict</div><div class="line">&#123;<span class="string">'asdf'</span>: <span class="string">'\xe6\x88\x91\xe4\xbb\xac\xe7\x9a\x84python\xe5\xad\xa6\xe4\xb9\xa0'</span>&#125;</div></pre></td></tr></table></figure>
+<p>在输出处理好的数据结构的时候很不方便，需要使用以下方法进行输出：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> json</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> json.dumps(dict, encoding=<span class="string">"UTF-8"</span>, ensure_ascii=<span class="keyword">False</span>)</div><div class="line">&#123;<span class="string">"asdf"</span>: <span class="string">"我们的python学习"</span>&#125;</div></pre></td></tr></table></figure></p>
+<p>注意上面的两个参数，如果是字符串，直接输出：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> str.encode(<span class="string">"UTF-8"</span>)</div></pre></td></tr></table></figure></p>
+<h3 id="Python__u5224_u65AD_u5B57_u7B26_u4E32_u662F_u5426_u4E3A_u6570_u5B57"><a href="#Python__u5224_u65AD_u5B57_u7B26_u4E32_u662F_u5426_u4E3A_u6570_u5B57" class="headerlink" title="Python 判断字符串是否为数字"></a>Python 判断字符串是否为数字</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line"></div><div class="line"><span class="comment"># Filename : test.py</span></div><div class="line"><span class="comment"># author by : www.runoob.com</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_number</span><span class="params">(s)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        float(s)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">except</span> ValueError:</div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">import</span> unicodedata</div><div class="line">        unicodedata.numeric(s)</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">except</span> (TypeError, ValueError):</div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="comment"># 测试字符串和数字</span></div><div class="line">print(is_number(<span class="string">'foo'</span>))   <span class="comment"># False</span></div><div class="line">print(is_number(<span class="string">'1'</span>))     <span class="comment"># True</span></div><div class="line">print(is_number(<span class="string">'1.3'</span>))   <span class="comment"># True</span></div><div class="line">print(is_number(<span class="string">'-1.37'</span>)) <span class="comment"># True</span></div><div class="line">print(is_number(<span class="string">'1e3'</span>))   <span class="comment"># True</span></div><div class="line"></div><div class="line"><span class="comment"># 测试 Unicode</span></div><div class="line"><span class="comment"># 阿拉伯语 5</span></div><div class="line">print(is_number(<span class="string">'٥'</span>))  <span class="comment"># False</span></div><div class="line"><span class="comment"># 泰语 2</span></div><div class="line">print(is_number(<span class="string">'๒'</span>))  <span class="comment"># False</span></div><div class="line"><span class="comment"># 中文数字</span></div><div class="line">print(is_number(<span class="string">'四'</span>)) <span class="comment"># False</span></div><div class="line"><span class="comment"># 版权号</span></div><div class="line">print(is_number(<span class="string">'©'</span>))  <span class="comment"># False</span></div></pre></td></tr></table></figure>
+<p>执行以上代码输出结果为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">False</div><div class="line">True</div><div class="line">True</div><div class="line">True</div><div class="line">True</div><div class="line">False</div><div class="line">False</div><div class="line">False</div><div class="line">False</div></pre></td></tr></table></figure></p>
+<p>Python isdigit() 方法检测字符串是否只由数字组成。<br>Python isnumeric() 方法检测字符串是否只由数字组成。这种方法是只针对unicode对象。</p>
+<h3 id="Python_u4E2D_u5C06_uFF08_u5B57_u5178_uFF0C_u5217_u8868_u7B49_uFF09_u53D8_u91CF_u683C_u5F0F_u5316_u6210_uFF08_u6F02_u4EAE_u7684_uFF0C_u6811_u5F62_u7684_uFF0C_u5E26_u7F29_u8FDB_u7684_uFF0CJSON_u65B9_u5F0F_u7684_uFF09_u5B57_u7B26_u4E32_u8F93_u51FA"><a href="#Python_u4E2D_u5C06_uFF08_u5B57_u5178_uFF0C_u5217_u8868_u7B49_uFF09_u53D8_u91CF_u683C_u5F0F_u5316_u6210_uFF08_u6F02_u4EAE_u7684_uFF0C_u6811_u5F62_u7684_uFF0C_u5E26_u7F29_u8FDB_u7684_uFF0CJSON_u65B9_u5F0F_u7684_uFF09_u5B57_u7B26_u4E32_u8F93_u51FA" class="headerlink" title="Python中将（字典，列表等）变量格式化成（漂亮的，树形的，带缩进的，JSON方式的）字符串输出"></a>Python中将（字典，列表等）变量格式化成（漂亮的，树形的，带缩进的，JSON方式的）字符串输出</h3><p>想要JSON输出为带缩进的，树状的，很漂亮的效果，那么可以通过这样的方法：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"></div><div class="line"><span class="comment"># demoDictList is the value we want format to output</span></div><div class="line">jsonDumpsIndentStr = json.dumps(demoDictList, indent=<span class="number">1</span>)</div><div class="line"><span class="keyword">print</span> <span class="string">"jsonDumpsIndentStr="</span>, jsonDumpsIndentStr</div></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/12/16/dev/python/python_extra/" data-id="ciwrvim2x0077kks8dxaxfkia" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/12/16/dev/python/python_extra/" data-id="ciy2rrdjq007g6bs83v9modmk" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/12/16/dev/python/python_extra/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/ml/docker_torch_neural_style" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/04/algo/ml/docker_torch_neural_style/">在Docker中运行torch版的neural style</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/11/04/algo/ml/docker_torch_neural_style/">
+      <time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="u5728Docker_u4E2D_u8FD0_u884Ctorch_u7248_u7684neural_style"><a href="#u5728Docker_u4E2D_u8FD0_u884Ctorch_u7248_u7684neural_style" class="headerlink" title="在Docker中运行torch版的neural style"></a>在Docker中运行torch版的neural style</h2><p><a href="https://github.com/anishathalye/neural-style" target="_blank" rel="external">TensorFlow neural-style</a>, TensorFlow版本的实现比Torch版本的实现要慢很多，因此本文介绍如何运行torch版本的neural style。为了避免搭建环境时候解决各种烦人的依赖问题，这里依然使用Docker环境，Dockerfile来自<a href="https://github.com/lijingpeng/dl-docker" target="_blank" rel="external">这里</a>. 环境搭建可以参考<a href="https://github.com/lijingpeng/deep-learning-notes/blob/master/environment/all_in_one_docker.md" target="_blank" rel="external">这里</a></p>
+<p>torch版本的neural style来自于<a href="https://github.com/jcjohnson/neural-style" target="_blank" rel="external">jcjohnson-neural-style</a>，支持CPU和GPU，依赖torch7和loadcaffe，Docker环境中已经安装好了这些依赖。</p>
+<h2 id="u4E0B_u8F7D_u8BAD_u7EC3_u597D_u7684VGG_u7F51_u7EDC"><a href="#u4E0B_u8F7D_u8BAD_u7EC3_u597D_u7684VGG_u7F51_u7EDC" class="headerlink" title="下载训练好的VGG网络"></a>下载训练好的VGG网络</h2><p>首先clone代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://github.com/jcjohnson/neural-style</div></pre></td></tr></table></figure></p>
+<p>neural style需要训练好的VGG网络结果，这里需要提前下载好：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sh models/download_models.sh</div></pre></td></tr></table></figure></p>
+<p>需要加载以下两个文件：<br>VGG_ILSVRC_19_layers.caffemodel<br>VGG_ILSVRC_19_layers_deploy.prototxt<br>caffemodel文件比较大，建议使用下载工具下载到本地。</p>
+<h2 id="u5728Docker_u4E2D_u8FD0_u884C"><a href="#u5728Docker_u4E2D_u8FD0_u884C" class="headerlink" title="在Docker中运行"></a>在Docker中运行</h2><h4 id="u7B2C_u4E00_u6B65_uFF1A_u8FD0_u884CDocker"><a href="#u7B2C_u4E00_u6B65_uFF1A_u8FD0_u884CDocker" class="headerlink" title="第一步：运行Docker"></a>第一步：运行Docker</h4><p>由于VGG训练结果文件、图片文件等都存放到了本地电脑上，因此我们在启动docker时需要把这些文件映射到Docker中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -it -p 8888:8888 -p 6006:6006 -v /Users/frank:/root/sharedfolder floydhub/dl-docker-load:cpu</div></pre></td></tr></table></figure></p>
+<p>我这里直接把用户主文件夹映射进去了，实际可以根据自己文件的存放位置来调整。</p>
+<h4 id="u7B2C_u4E8C_u6B65_uFF1A_u8FDB_u5165neural_style_u4EE3_u7801_u7684_u76EE_u5F55"><a href="#u7B2C_u4E8C_u6B65_uFF1A_u8FDB_u5165neural_style_u4EE3_u7801_u7684_u76EE_u5F55" class="headerlink" title="第二步：进入neural style代码的目录"></a>第二步：进入neural style代码的目录</h4><p>假设clone下来的代码存放到了/Users/frank/Downloads/neural-style下，则：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd ~/sharedfolder/Downloads/neural-style</div></pre></td></tr></table></figure></p>
+<h4 id="u7B2C_u4E09_u6B65_uFF1A_u6267_u884C"><a href="#u7B2C_u4E09_u6B65_uFF1A_u6267_u884C" class="headerlink" title="第三步：执行"></a>第三步：执行</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">th neural_style.lua -style_image examples/inputs/starry_night.jpg -content_image ~/sharedfolder/Downloads/content.png -output_image ~/sharedfolder/Downloads/nn_out.png -model_file ~/sharedfolder/Downloads/VGG_ILSVRC_19_layers.caffemodel -proto_file ~/sharedfolder/Downloads/VGG_ILSVRC_19_layers_deploy.prototxt -gpu -1 -optimizer adam -num_iterations 800 -print_iter 1</div></pre></td></tr></table></figure>
+<ul>
+<li>-style_image 表示风格图片文件位置</li>
+<li>-content_image 表示内容图片的位置，也就是你想要改变风格的文件</li>
+<li>-output_image 表示输出文件位置</li>
+<li>-model_file 表示下载好的caffemodel文件</li>
+<li>-proto_file caffemodel模型的配置文件</li>
+<li>-gpu -1 -1表示不采用GPU，使用CPU版本</li>
+<li>-optimizer adam 优化方式选择adam，速度较快，但是结果一般没有L-BFGS好</li>
+<li>-num_iterations 迭代次数</li>
+<li>-print_iter 1 每一轮迭代都要在控制台上显示一次结果</li>
+</ul>
+<p>更多参数设置请参考：<a href="https://github.com/jcjohnson/neural-style" target="_blank" rel="external">neural-style</a></p>
+<p>接下来就是漫长的等待了，如果使用CPU的话这个等待时间将会非常长…</p>
+<p>最后在-output_image的指定位置查看模型的数据结果。需要注意的是请不要把模型的数据结果输出到Docker的内部文件夹中，因为一旦Docker执行过程中崩溃或者关闭，你的所有内容将会被丢弃。因此一定要把结果放到映射好的宿主机文件夹中。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/" data-id="ciy2rrdj8005m6bs854m66yo5" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -354,17 +422,14 @@ print &quot;jsonDumpsIndentStr=&quot;, jsonDumpsIndentStr
 <li>Numpy, SciPy, Pandas, Scikit Learn, Matplotlib</li>
 <li>A few common libraries used for deep learning</li>
 </ul>
-<h2 id="build"><a href="#build" class="headerlink" title="build"></a>build</h2><p>CPU version</p>
-<pre><code>docker pull floydhub/dl-docker:cpu
-</code></pre><h2 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h2><p>CPU Version</p>
-<pre><code>docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:cpu bash
-</code></pre><p>GPU Version</p>
-<pre><code>nvidia-docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:gpu bash
-</code></pre>
+<h2 id="build"><a href="#build" class="headerlink" title="build"></a>build</h2><p>CPU version<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker pull floydhub/dl-docker:cpu</div></pre></td></tr></table></figure></p>
+<h2 id="RUN"><a href="#RUN" class="headerlink" title="RUN"></a>RUN</h2><p>CPU Version<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:cpu bash</div></pre></td></tr></table></figure></p>
+<p>GPU Version<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nvidia-docker run -it -p 8888:8888 -p 6006:6006 -v /sharedfolder:/root/sharedfolder floydhub/dl-docker:gpu bash</div></pre></td></tr></table></figure></p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/" data-id="ciwrvim24005ikks8iypdhwt8" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/" data-id="ciy2rrdj6005g6bs8blnb6oi9" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/11/04/algo/ml/all_in_one_docker/#ds-thread" class="article-comment-link">评论</a>
       
@@ -377,199 +442,11 @@ print &quot;jsonDumpsIndentStr=&quot;, jsonDumpsIndentStr
 
 
     
-      <article id="post-algo/ml/docker_torch_neural_style" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/11/04/algo/ml/docker_torch_neural_style/">在Docker中运行torch版的neural style</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/11/04/algo/ml/docker_torch_neural_style/">
-      <time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="u5728Docker_u4E2D_u8FD0_u884Ctorch_u7248_u7684neural_style"><a href="#u5728Docker_u4E2D_u8FD0_u884Ctorch_u7248_u7684neural_style" class="headerlink" title="在Docker中运行torch版的neural style"></a>在Docker中运行torch版的neural style</h2><p><a href="https://github.com/anishathalye/neural-style" target="_blank" rel="external">TensorFlow neural-style</a>, TensorFlow版本的实现比Torch版本的实现要慢很多，因此本文介绍如何运行torch版本的neural style。为了避免搭建环境时候解决各种烦人的依赖问题，这里依然使用Docker环境，Dockerfile来自<a href="https://github.com/lijingpeng/dl-docker" target="_blank" rel="external">这里</a>. 环境搭建可以参考<a href="https://github.com/lijingpeng/deep-learning-notes/blob/master/environment/all_in_one_docker.md" target="_blank" rel="external">这里</a></p>
-<p>torch版本的neural style来自于<a href="https://github.com/jcjohnson/neural-style" target="_blank" rel="external">jcjohnson-neural-style</a>，支持CPU和GPU，依赖torch7和loadcaffe，Docker环境中已经安装好了这些依赖。</p>
-<h2 id="u4E0B_u8F7D_u8BAD_u7EC3_u597D_u7684VGG_u7F51_u7EDC"><a href="#u4E0B_u8F7D_u8BAD_u7EC3_u597D_u7684VGG_u7F51_u7EDC" class="headerlink" title="下载训练好的VGG网络"></a>下载训练好的VGG网络</h2><p>首先clone代码：</p>
-<pre><code>https://github.com/jcjohnson/neural-style
-</code></pre><p>neural style需要训练好的VGG网络结果，这里需要提前下载好：</p>
-<pre><code>sh models/download_models.sh
-</code></pre><p>需要加载以下两个文件：<br>VGG_ILSVRC_19_layers.caffemodel<br>VGG_ILSVRC_19_layers_deploy.prototxt<br>caffemodel文件比较大，建议使用下载工具下载到本地。</p>
-<h2 id="u5728Docker_u4E2D_u8FD0_u884C"><a href="#u5728Docker_u4E2D_u8FD0_u884C" class="headerlink" title="在Docker中运行"></a>在Docker中运行</h2><h4 id="u7B2C_u4E00_u6B65_uFF1A_u8FD0_u884CDocker"><a href="#u7B2C_u4E00_u6B65_uFF1A_u8FD0_u884CDocker" class="headerlink" title="第一步：运行Docker"></a>第一步：运行Docker</h4><p>由于VGG训练结果文件、图片文件等都存放到了本地电脑上，因此我们在启动docker时需要把这些文件映射到Docker中</p>
-<pre><code>docker run -it -p 8888:8888 -p 6006:6006 -v /Users/frank:/root/sharedfolder floydhub/dl-docker-load:cpu
-</code></pre><p>我这里直接把用户主文件夹映射进去了，实际可以根据自己文件的存放位置来调整。</p>
-<h4 id="u7B2C_u4E8C_u6B65_uFF1A_u8FDB_u5165neural_style_u4EE3_u7801_u7684_u76EE_u5F55"><a href="#u7B2C_u4E8C_u6B65_uFF1A_u8FDB_u5165neural_style_u4EE3_u7801_u7684_u76EE_u5F55" class="headerlink" title="第二步：进入neural style代码的目录"></a>第二步：进入neural style代码的目录</h4><p>假设clone下来的代码存放到了/Users/frank/Downloads/neural-style下，则：</p>
-<pre><code>cd ~/sharedfolder/Downloads/neural-style
-</code></pre><h4 id="u7B2C_u4E09_u6B65_uFF1A_u6267_u884C"><a href="#u7B2C_u4E09_u6B65_uFF1A_u6267_u884C" class="headerlink" title="第三步：执行"></a>第三步：执行</h4><pre><code class="bash">th neural_style.lua -style_image examples/inputs/starry_night.jpg -content_image ~/sharedfolder/Downloads/content.png -output_image ~/sharedfolder/Downloads/nn_out.png -model_file ~/sharedfolder/Downloads/VGG_ILSVRC_19_layers.caffemodel -proto_file ~/sharedfolder/Downloads/VGG_ILSVRC_19_layers_deploy.prototxt -gpu -1 -optimizer adam -num_iterations 800 -print_iter 1
-</code></pre>
-<ul>
-<li>-style_image 表示风格图片文件位置</li>
-<li>-content_image 表示内容图片的位置，也就是你想要改变风格的文件</li>
-<li>-output_image 表示输出文件位置</li>
-<li>-model_file 表示下载好的caffemodel文件</li>
-<li>-proto_file caffemodel模型的配置文件</li>
-<li>-gpu -1 -1表示不采用GPU，使用CPU版本</li>
-<li>-optimizer adam 优化方式选择adam，速度较快，但是结果一般没有L-BFGS好</li>
-<li>-num_iterations 迭代次数</li>
-<li>-print_iter 1 每一轮迭代都要在控制台上显示一次结果</li>
-</ul>
-<p>更多参数设置请参考：<a href="https://github.com/jcjohnson/neural-style" target="_blank" rel="external">neural-style</a></p>
-<p>接下来就是漫长的等待了，如果使用CPU的话这个等待时间将会非常长…</p>
-<p>最后在-output_image的指定位置查看模型的数据结果。需要注意的是请不要把模型的数据结果输出到Docker的内部文件夹中，因为一旦Docker执行过程中崩溃或者关闭，你的所有内容将会被丢弃。因此一定要把结果放到映射好的宿主机文件夹中。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/" data-id="ciwrvim25005lkks8e5f37cl9" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/docker/docker_neural_style" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/10/28/dev/docker/docker_neural_style/">Docker快速搭建neural style环境</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/10/28/dev/docker/docker_neural_style/">
-      <time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="u6982_u89C8"><a href="#u6982_u89C8" class="headerlink" title="概览"></a>概览</h2><hr>
-<p>相关的代码都在Github上，请参见我的Github，<a href="https://github.com/lijingpeng/neural-style" target="_blank" rel="external">https://github.com/lijingpeng/neural-style</a><br>敬请多多关注哈~~~</p>
-<h2 id="Docker_u955C_u50CF_u6784_u5EFA"><a href="#Docker_u955C_u50CF_u6784_u5EFA" class="headerlink" title="Docker镜像构建"></a>Docker镜像构建</h2><hr>
-<p>Dockerfile如下：</p>
-<pre><code class="bash">FROM tensorflow/tensorflow:latest
-
-RUN echo deb http://mirrors.aliyun.com/ubuntu trusty universe &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN apt-get update
-
-# clone code
-RUN apt-get install -y --no-install-recommends git
-RUN git clone https://github.com/anishathalye/neural-style.git
-
-# install pillow and its dependences
-RUN apt-get install -y libffi-dev libssl-dev libtiff5-dev libjpeg8-dev zlib1g-dev \
-    libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
-RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U pip
-RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U Pillow
-# RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U pyopenssl ndg-httpsclient pyasn1
-
-# Too slow, use docker volume instead
-# RUN apt-get install -y wget
-# RUN wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat
-# RUN mv imagenet-vgg-verydeep-19.mat neural-style
-
-CMD [&quot;/run_jupyter.sh&quot;]
-</code></pre>
-<p>复制这段代码，创建名为Dockerfile的文件，然后执行：</p>
-<pre><code class="bash">docker build -t docker_neural_style .
-</code></pre>
-<p>注意：</p>
-<ol>
-<li>本镜像的构建基于Tensorflow官方，请放心使用</li>
-<li>依赖已经训练好的网络：imagenet-vgg-verydeep-19.mat，这个文件有500M多，下载站点在国外，不建议在Docker构建过程中直接下载，可以使用下载工具比如迅雷下载到本地，然后把文件映射到容器中就可以了。</li>
-</ol>
-<h2 id="u4E0B_u8F7D_u5DF2_u7ECF_u8BAD_u7EC3_u597D_u7684_u6DF1_u5EA6_u7F51_u7EDC"><a href="#u4E0B_u8F7D_u5DF2_u7ECF_u8BAD_u7EC3_u597D_u7684_u6DF1_u5EA6_u7F51_u7EDC" class="headerlink" title="下载已经训练好的深度网络"></a>下载已经训练好的深度网络</h2><hr>
-<pre><code>wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat
-</code></pre><p>假设该文件保存在 /Users/you/ 目录下</p>
-<h2 id="u5728Docker_u4E2D_u6267_u884C"><a href="#u5728Docker_u4E2D_u6267_u884C" class="headerlink" title="在Docker中执行"></a>在Docker中执行</h2><hr>
-<pre><code class="bash">docker run -it -p 8888:8888 -v /Users/you:/notebooks/neural-style-mat docker_neural_style /bin/bash
-</code></pre>
-<p>注意：这条命令将/Users/you/映射到容器中的/notebooks/neural-style-mat并启动容器。</p>
-<pre><code class="bash">python neural_style.py --content examples/1-content.jpg --styles examples/1-style.jpg --output examples/myoutput.jpg --network ../neural-style-mat/imagenet-vgg-verydeep-19.mat
-</code></pre>
-<p>执行neural_style脚本。<br>需要注意的是Tensorflow不支持L-BFGS, 并且由Tensorflow的实现比Torch慢三倍左右。在笔者的MacBook Pro上，纯CPU跑梵高风格画作迭代1000轮要耗时6个小时左右。鉴于此，有条件的直接上GPU吧。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="ciwrvim2t0071kks8wddj2y36" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -578,6 +455,23 @@ CMD [&quot;/run_jupyter.sh&quot;]
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -616,23 +510,6 @@ CMD [&quot;/run_jupyter.sh&quot;]
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -650,7 +527,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -658,9 +535,9 @@ CMD [&quot;/run_jupyter.sh&quot;]
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -673,7 +550,16 @@ CMD [&quot;/run_jupyter.sh&quot;]
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -687,15 +573,6 @@ CMD [&quot;/run_jupyter.sh&quot;]
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -704,7 +581,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

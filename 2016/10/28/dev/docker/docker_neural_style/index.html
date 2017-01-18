@@ -8,10 +8,7 @@
   <meta name="description" content="概览
 相关的代码都在Github上，请参见我的Github，https://github.com/lijingpeng/neural-style敬请多多关注哈~~~
 Docker镜像构建
-Dockerfile如下：
-FROM tensorflow/tensorflow:latest
-
-RUN echo deb http://mirrors.aliyun.com/ubuntu trusty univ">
+Dockerfile如下：1234567891011121314151617181920212223242526272829303132FROM tensorflow/tensorflow:latestRUN e">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker快速搭建neural style环境">
 <meta property="og:url" content="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/index.html">
@@ -19,20 +16,14 @@ RUN echo deb http://mirrors.aliyun.com/ubuntu trusty univ">
 <meta property="og:description" content="概览
 相关的代码都在Github上，请参见我的Github，https://github.com/lijingpeng/neural-style敬请多多关注哈~~~
 Docker镜像构建
-Dockerfile如下：
-FROM tensorflow/tensorflow:latest
-
-RUN echo deb http://mirrors.aliyun.com/ubuntu trusty univ">
+Dockerfile如下：1234567891011121314151617181920212223242526272829303132FROM tensorflow/tensorflow:latestRUN e">
 <meta property="og:updated_time" content="2016-10-28T13:17:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker快速搭建neural style环境">
 <meta name="twitter:description" content="概览
 相关的代码都在Github上，请参见我的Github，https://github.com/lijingpeng/neural-style敬请多多关注哈~~~
 Docker镜像构建
-Dockerfile如下：
-FROM tensorflow/tensorflow:latest
-
-RUN echo deb http://mirrors.aliyun.com/ubuntu trusty univ">
+Dockerfile如下：1234567891011121314151617181920212223242526272829303132FROM tensorflow/tensorflow:latestRUN e">
   
   
     <link rel="icon" href="favicon.png">
@@ -112,7 +103,7 @@ RUN echo deb http://mirrors.aliyun.com/ubuntu trusty univ">
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -182,63 +173,26 @@ RUN echo deb http://mirrors.aliyun.com/ubuntu trusty univ">
         <h2 id="u6982_u89C8"><a href="#u6982_u89C8" class="headerlink" title="概览"></a>概览</h2><hr>
 <p>相关的代码都在Github上，请参见我的Github，<a href="https://github.com/lijingpeng/neural-style" target="_blank" rel="external">https://github.com/lijingpeng/neural-style</a><br>敬请多多关注哈~~~</p>
 <h2 id="Docker_u955C_u50CF_u6784_u5EFA"><a href="#Docker_u955C_u50CF_u6784_u5EFA" class="headerlink" title="Docker镜像构建"></a>Docker镜像构建</h2><hr>
-<p>Dockerfile如下：</p>
-<pre><code class="bash">FROM tensorflow/tensorflow:latest
-
-RUN echo deb http://mirrors.aliyun.com/ubuntu trusty universe &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN echo deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse &gt;&gt; /etc/apt/sources.list
-RUN apt-get update
-
-# clone code
-RUN apt-get install -y --no-install-recommends git
-RUN git clone https://github.com/anishathalye/neural-style.git
-
-# install pillow and its dependences
-RUN apt-get install -y libffi-dev libssl-dev libtiff5-dev libjpeg8-dev zlib1g-dev \
-    libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
-RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U pip
-RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U Pillow
-# RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U pyopenssl ndg-httpsclient pyasn1
-
-# Too slow, use docker volume instead
-# RUN apt-get install -y wget
-# RUN wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat
-# RUN mv imagenet-vgg-verydeep-19.mat neural-style
-
-CMD [&quot;/run_jupyter.sh&quot;]
-</code></pre>
-<p>复制这段代码，创建名为Dockerfile的文件，然后执行：</p>
-<pre><code class="bash">docker build -t docker_neural_style .
-</code></pre>
+<p>Dockerfile如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">FROM tensorflow/tensorflow:latest</div><div class="line"></div><div class="line">RUN <span class="built_in">echo</span> deb http://mirrors.aliyun.com/ubuntu trusty universe &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb-src http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb-src http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb-src http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb-src http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN <span class="built_in">echo</span> deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse &gt;&gt; /etc/apt/sources.list</div><div class="line">RUN apt-get update</div><div class="line"></div><div class="line"><span class="comment"># clone code</span></div><div class="line">RUN apt-get install -y --no-install-recommends git</div><div class="line">RUN git <span class="built_in">clone</span> https://github.com/anishathalye/neural-style.git</div><div class="line"></div><div class="line"><span class="comment"># install pillow and its dependences</span></div><div class="line">RUN apt-get install -y libffi-dev libssl-dev libtiff5-dev libjpeg8-dev zlib1g-dev \</div><div class="line">    libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk</div><div class="line">RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U pip</div><div class="line">RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U Pillow</div><div class="line"><span class="comment"># RUN pip install --trusted-host pypi.douban.com -i http://pypi.douban.com/simple/ -U pyopenssl ndg-httpsclient pyasn1</span></div><div class="line"></div><div class="line"><span class="comment"># Too slow, use docker volume instead</span></div><div class="line"><span class="comment"># RUN apt-get install -y wget</span></div><div class="line"><span class="comment"># RUN wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat</span></div><div class="line"><span class="comment"># RUN mv imagenet-vgg-verydeep-19.mat neural-style</span></div><div class="line"></div><div class="line">CMD [<span class="string">"/run_jupyter.sh"</span>]</div></pre></td></tr></table></figure></p>
+<p>复制这段代码，创建名为Dockerfile的文件，然后执行：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build -t docker_neural_style .</div></pre></td></tr></table></figure></p>
 <p>注意：</p>
 <ol>
 <li>本镜像的构建基于Tensorflow官方，请放心使用</li>
 <li>依赖已经训练好的网络：imagenet-vgg-verydeep-19.mat，这个文件有500M多，下载站点在国外，不建议在Docker构建过程中直接下载，可以使用下载工具比如迅雷下载到本地，然后把文件映射到容器中就可以了。</li>
 </ol>
 <h2 id="u4E0B_u8F7D_u5DF2_u7ECF_u8BAD_u7EC3_u597D_u7684_u6DF1_u5EA6_u7F51_u7EDC"><a href="#u4E0B_u8F7D_u5DF2_u7ECF_u8BAD_u7EC3_u597D_u7684_u6DF1_u5EA6_u7F51_u7EDC" class="headerlink" title="下载已经训练好的深度网络"></a>下载已经训练好的深度网络</h2><hr>
-<pre><code>wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat
-</code></pre><p>假设该文件保存在 /Users/you/ 目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://www.vlfeat.org/matconvnet/models/beta16/imagenet-vgg-verydeep-19.mat</div></pre></td></tr></table></figure>
+<p>假设该文件保存在 /Users/you/ 目录下</p>
 <h2 id="u5728Docker_u4E2D_u6267_u884C"><a href="#u5728Docker_u4E2D_u6267_u884C" class="headerlink" title="在Docker中执行"></a>在Docker中执行</h2><hr>
-<pre><code class="bash">docker run -it -p 8888:8888 -v /Users/you:/notebooks/neural-style-mat docker_neural_style /bin/bash
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -it -p 8888:8888 -v /Users/you:/notebooks/neural-style-mat docker_neural_style /bin/bash</div></pre></td></tr></table></figure>
 <p>注意：这条命令将/Users/you/映射到容器中的/notebooks/neural-style-mat并启动容器。</p>
-<pre><code class="bash">python neural_style.py --content examples/1-content.jpg --styles examples/1-style.jpg --output examples/myoutput.jpg --network ../neural-style-mat/imagenet-vgg-verydeep-19.mat
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python neural_style.py --content examples/1-content.jpg --styles examples/1-style.jpg --output examples/myoutput.jpg --network ../neural-style-mat/imagenet-vgg-verydeep-19.mat</div></pre></td></tr></table></figure>
 <p>执行neural_style脚本。<br>需要注意的是Tensorflow不支持L-BFGS, 并且由Tensorflow的实现比Torch慢三倍左右。在笔者的MacBook Pro上，纯CPU跑梵高风格画作迭代1000轮要耗时6个小时左右。鉴于此，有条件的直接上GPU吧。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="ciwrvim2t0071kks8wddj2y36" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/" data-id="ciy2rrdjk006w6bs8yelp4ts5" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/10/28/dev/docker/docker_neural_style/#ds-thread" class="article-comment-link">评论</a>
       
@@ -251,11 +205,11 @@ CMD [&quot;/run_jupyter.sh&quot;]
     
 <nav id="article-nav">
   
-    <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/11/04/algo/ml/all_in_one_docker/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          在Docker中运行torch版的neural style
+          搭建深度学习常用框架的Docker环境
         
       </div>
     </a>
@@ -288,6 +242,23 @@ CMD [&quot;/run_jupyter.sh&quot;]
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -326,23 +297,6 @@ CMD [&quot;/run_jupyter.sh&quot;]
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -360,7 +314,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -368,9 +322,9 @@ CMD [&quot;/run_jupyter.sh&quot;]
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -383,7 +337,16 @@ CMD [&quot;/run_jupyter.sh&quot;]
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -397,15 +360,6 @@ CMD [&quot;/run_jupyter.sh&quot;]
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -414,7 +368,7 @@ CMD [&quot;/run_jupyter.sh&quot;]
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

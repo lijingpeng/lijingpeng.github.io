@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,64 @@
 
       
       <section id="main">
+      <article id="post-algo/sklearn/GridSearchCV" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/24/algo/sklearn/GridSearchCV/">sklearn GridSearchCV简介</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/08/24/algo/sklearn/GridSearchCV/">
+      <time datetime="2016-08-24T05:48:13.000Z" itemprop="datePublished">2016-08-24</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/sklearn/">sklearn</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sklearn.grid_search.GridSearchCV(estimator,</div><div class="line">    param_grid, scoring=<span class="keyword">None</span>, fit_params=<span class="keyword">None</span>,</div><div class="line">    n_jobs=<span class="number">1</span>, iid=<span class="keyword">True</span>, refit=<span class="keyword">True</span>, cv=<span class="keyword">None</span>,</div><div class="line">    verbose=<span class="number">0</span>, pre_dispatch=<span class="string">'2*n_jobs'</span>, error_score=<span class="string">'raise'</span>)</div></pre></td></tr></table></figure>
+<p>GridSearchCV实现了fit，predict，predict_proba等方法，并通过交叉验证对参数空间进行求解，寻找最佳的参数。<br>下面是一个官方介绍：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</div><div class="line"><span class="keyword">from</span> pprint <span class="keyword">import</span> pprint</div><div class="line"><span class="keyword">from</span> time <span class="keyword">import</span> time</div><div class="line"><span class="keyword">import</span> logging</div><div class="line"></div><div class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> fetch_20newsgroups</div><div class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> CountVectorizer</div><div class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfTransformer</div><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> SGDClassifier</div><div class="line"><span class="keyword">from</span> sklearn.grid_search <span class="keyword">import</span> GridSearchCV</div><div class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</div><div class="line"></div><div class="line">print(__doc__)</div><div class="line"></div><div class="line"><span class="comment"># Display progress logs on stdout</span></div><div class="line">logging.basicConfig(level=logging.INFO,</div><div class="line">                    format=<span class="string">'%(asctime)s %(levelname)s %(message)s'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">###############################################################################</span></div><div class="line"><span class="comment"># Load some categories from the training set</span></div><div class="line">categories = [</div><div class="line">    <span class="string">'alt.atheism'</span>,</div><div class="line">    <span class="string">'talk.religion.misc'</span>,</div><div class="line">]</div><div class="line"><span class="comment"># Uncomment the following to do the analysis on all the categories</span></div><div class="line"><span class="comment">#categories = None</span></div><div class="line"></div><div class="line">print(<span class="string">"Loading 20 newsgroups dataset for categories:"</span>)</div><div class="line">print(categories)</div><div class="line"></div><div class="line">data = fetch_20newsgroups(subset=<span class="string">'train'</span>, categories=categories)</div><div class="line">print(<span class="string">"%d documents"</span> % len(data.filenames))</div><div class="line">print(<span class="string">"%d categories"</span> % len(data.target_names))</div><div class="line">print()</div><div class="line"></div><div class="line"><span class="comment">###############################################################################</span></div><div class="line"><span class="comment"># 使用pipeline定义文本分类问题常见的工作流，包含向量化和一个简单的分类器</span></div><div class="line">pipeline = Pipeline([</div><div class="line">    (<span class="string">'vect'</span>, CountVectorizer()),</div><div class="line">    (<span class="string">'tfidf'</span>, TfidfTransformer()),</div><div class="line">    (<span class="string">'clf'</span>, SGDClassifier()),</div><div class="line">])</div><div class="line"></div><div class="line"><span class="comment"># 参数空间：</span></div><div class="line"><span class="comment"># 定义了pipeline中各个模型的需要穷尽求解的参数空间，比如：clf__penalty': ('l2', 'elasticnet')</span></div><div class="line"><span class="comment"># 表示SGDClassifier分类器的正则化选项为L2和elasticnet，训练时模型会分别使用这两个正则化方法来寻求最佳的方式</span></div><div class="line">parameters = &#123;</div><div class="line">    <span class="string">'vect__max_df'</span>: (<span class="number">0.5</span>, <span class="number">0.75</span>, <span class="number">1.0</span>),</div><div class="line">    <span class="comment">#'vect__max_features': (None, 5000, 10000, 50000),</span></div><div class="line">    <span class="string">'vect__ngram_range'</span>: ((<span class="number">1</span>, <span class="number">1</span>), (<span class="number">1</span>, <span class="number">2</span>)),  <span class="comment"># unigrams or bigrams</span></div><div class="line">    <span class="comment">#'tfidf__use_idf': (True, False),</span></div><div class="line">    <span class="comment">#'tfidf__norm': ('l1', 'l2'),</span></div><div class="line">    <span class="string">'clf__alpha'</span>: (<span class="number">0.00001</span>, <span class="number">0.000001</span>),</div><div class="line">    <span class="string">'clf__penalty'</span>: (<span class="string">'l2'</span>, <span class="string">'elasticnet'</span>),</div><div class="line">    <span class="comment">#'clf__n_iter': (10, 50, 80),</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line"></div><div class="line">    <span class="comment"># 通过GridSearchCV来寻求最佳参数空间</span></div><div class="line">    grid_search = GridSearchCV(pipeline, parameters, n_jobs=<span class="number">-1</span>, verbose=<span class="number">1</span>)</div><div class="line"></div><div class="line">    print(<span class="string">"Performing grid search..."</span>)</div><div class="line">    print(<span class="string">"pipeline:"</span>, [name <span class="keyword">for</span> name, _ <span class="keyword">in</span> pipeline.steps])</div><div class="line">    print(<span class="string">"parameters:"</span>)</div><div class="line">    pprint(parameters)</div><div class="line">    t0 = time()</div><div class="line"></div><div class="line">    <span class="comment"># 这里只需调用一次fit函数就可以了</span></div><div class="line">    grid_search.fit(data.data, data.target)</div><div class="line">    print(<span class="string">"done in %0.3fs"</span> % (time() - t0))</div><div class="line">    print()</div><div class="line"></div><div class="line">    <span class="comment"># 输出best score</span></div><div class="line">    print(<span class="string">"Best score: %0.3f"</span> % grid_search.best_score_)</div><div class="line">    print(<span class="string">"Best parameters set:"</span>)</div><div class="line">    <span class="comment"># 输出最佳的分类器到底使用了怎样的参数</span></div><div class="line">    best_parameters = grid_search.best_estimator_.get_params()</div><div class="line">    <span class="keyword">for</span> param_name <span class="keyword">in</span> sorted(parameters.keys()):</div><div class="line">        print(<span class="string">"\t%s: %r"</span> % (param_name, best_parameters[param_name]))</div></pre></td></tr></table></figure></p>
+<p>输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">Loading 20 newsgroups dataset for categories:</div><div class="line">[&apos;alt.atheism&apos;, &apos;talk.religion.misc&apos;]</div><div class="line">1427 documents</div><div class="line">2 categories</div><div class="line"></div><div class="line">Performing grid search...</div><div class="line">pipeline: [&apos;vect&apos;, &apos;tfidf&apos;, &apos;clf&apos;]</div><div class="line">parameters:</div><div class="line">&#123;&apos;clf__alpha&apos;: (1.0000000000000001e-05, 9.9999999999999995e-07),</div><div class="line"> &apos;clf__n_iter&apos;: (10, 50, 80),</div><div class="line"> &apos;clf__penalty&apos;: (&apos;l2&apos;, &apos;elasticnet&apos;),</div><div class="line"> &apos;tfidf__use_idf&apos;: (True, False),</div><div class="line"> &apos;vect__max_n&apos;: (1, 2),</div><div class="line"> &apos;vect__max_df&apos;: (0.5, 0.75, 1.0),</div><div class="line"> &apos;vect__max_features&apos;: (None, 5000, 10000, 50000)&#125;</div><div class="line">done in 1737.030s</div><div class="line"></div><div class="line">Best score: 0.940</div><div class="line">Best parameters set:</div><div class="line">    clf__alpha: 9.9999999999999995e-07</div><div class="line">    clf__n_iter: 50</div><div class="line">    clf__penalty: &apos;elasticnet&apos;</div><div class="line">    tfidf__use_idf: True</div><div class="line">    vect__max_n: 2</div><div class="line">    vect__max_df: 0.75</div><div class="line">    vect__max_features: 50000</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/08/24/algo/sklearn/GridSearchCV/" data-id="ciy2rrdja005y6bs8opd19awj" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/08/24/algo/sklearn/GridSearchCV/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GridSearchCV/">GridSearchCV</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/sklearn/pipeline" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -167,56 +225,17 @@
 <li>可以结合grid search对参数进行选择</li>
 </ol>
 <p>下面是一个官方文档的示例：</p>
-<pre><code class="python">&gt;&gt;&gt; from sklearn.pipeline import Pipeline
-&gt;&gt;&gt; from sklearn.svm import SVC
-&gt;&gt;&gt; from sklearn.decomposition import PCA
-&gt;&gt;&gt; estimators = [(&#39;reduce_dim&#39;, PCA()), (&#39;svm&#39;, SVC())]
-&gt;&gt;&gt; clf = Pipeline(estimators)
-&gt;&gt;&gt; clf
-Pipeline(steps=[(&#39;reduce_dim&#39;, PCA(copy=True, n_components=None,
-    whiten=False)), (&#39;svm&#39;, SVC(C=1.0, cache_size=200, class_weight=None,
-    coef0=0.0, decision_function_shape=None, degree=3, gamma=&#39;auto&#39;,
-    kernel=&#39;rbf&#39;, max_iter=-1, probability=False, random_state=None,
-    shrinking=True, tol=0.001, verbose=False))])
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>estimators = [(<span class="string">'reduce_dim'</span>, PCA()), (<span class="string">'svm'</span>, SVC())]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>clf = Pipeline(estimators)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>clf</div><div class="line">Pipeline(steps=[(<span class="string">'reduce_dim'</span>, PCA(copy=<span class="keyword">True</span>, n_components=<span class="keyword">None</span>,</div><div class="line">    whiten=<span class="keyword">False</span>)), (<span class="string">'svm'</span>, SVC(C=<span class="number">1.0</span>, cache_size=<span class="number">200</span>, class_weight=<span class="keyword">None</span>,</div><div class="line">    coef0=<span class="number">0.0</span>, decision_function_shape=<span class="keyword">None</span>, degree=<span class="number">3</span>, gamma=<span class="string">'auto'</span>,</div><div class="line">    kernel=<span class="string">'rbf'</span>, max_iter=<span class="number">-1</span>, probability=<span class="keyword">False</span>, random_state=<span class="keyword">None</span>,</div><div class="line">    shrinking=<span class="keyword">True</span>, tol=<span class="number">0.001</span>, verbose=<span class="keyword">False</span>))])</div></pre></td></tr></table></figure>
 <p>estimators中定义了两个模型，一个是PCA、另一个是SVC。</p>
-<pre><code class="python">&gt;&gt;&gt; clf.set_params(svm__C=10)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>clf.set_params(svm__C=<span class="number">10</span>)</div></pre></td></tr></table></figure>
 <p>可以通过set_params函数对pipeline中的某个模型设定参数，上面是将svm参数C设置为10</p>
 <p>另外一个例子：</p>
-<pre><code class="python">&gt;&gt;&gt; from sklearn import svm
-&gt;&gt;&gt; from sklearn.datasets import samples_generator
-&gt;&gt;&gt; from sklearn.feature_selection import SelectKBest
-&gt;&gt;&gt; from sklearn.feature_selection import f_regression
-&gt;&gt;&gt; from sklearn.pipeline import Pipeline
-&gt;&gt;&gt; # generate some data to play with
-&gt;&gt;&gt; X, y = samples_generator.make_classification(
-...     n_informative=5, n_redundant=0, random_state=42)
-&gt;&gt;&gt; # ANOVA SVM-C
-&gt;&gt;&gt; anova_filter = SelectKBest(f_regression, k=5)
-&gt;&gt;&gt; clf = svm.SVC(kernel=&#39;linear&#39;)
-&gt;&gt;&gt; anova_svm = Pipeline([(&#39;anova&#39;, anova_filter), (&#39;svc&#39;, clf)])
-&gt;&gt;&gt; # You can set the parameters using the names issued
-&gt;&gt;&gt; # For instance, fit using a k of 10 in the SelectKBest
-&gt;&gt;&gt; # and a parameter &#39;C&#39; of the svm
-&gt;&gt;&gt; anova_svm.set_params(anova__k=10, svc__C=.1).fit(X, y)
-...                                              
-Pipeline(steps=[...])
-&gt;&gt;&gt; prediction = anova_svm.predict(X)
-&gt;&gt;&gt; anova_svm.score(X, y)                        
-0.77...
-&gt;&gt;&gt; # getting the selected features chosen by anova_filter
-&gt;&gt;&gt; anova_svm.named_steps[&#39;anova&#39;].get_support()
-...
-array([ True,  True,  True, False, False,  True, False,  True,  True, True,
-       False, False,  True, False,  True, False, False, False, False,
-       True], dtype=bool)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn <span class="keyword">import</span> svm</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> samples_generator</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> SelectKBest</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> f_regression</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># generate some data to play with</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>X, y = samples_generator.make_classification(</div><div class="line"><span class="meta">... </span>    n_informative=<span class="number">5</span>, n_redundant=<span class="number">0</span>, random_state=<span class="number">42</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># ANOVA SVM-C</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_filter = SelectKBest(f_regression, k=<span class="number">5</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>clf = svm.SVC(kernel=<span class="string">'linear'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_svm = Pipeline([(<span class="string">'anova'</span>, anova_filter), (<span class="string">'svc'</span>, clf)])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># You can set the parameters using the names issued</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># For instance, fit using a k of 10 in the SelectKBest</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># and a parameter 'C' of the svm</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_svm.set_params(anova__k=<span class="number">10</span>, svc__C=<span class="number">.1</span>).fit(X, y)</div><div class="line"><span class="meta">... </span>                                             </div><div class="line">Pipeline(steps=[...])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>prediction = anova_svm.predict(X)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_svm.score(X, y)                        </div><div class="line"><span class="number">0.77</span>...</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># getting the selected features chosen by anova_filter</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>anova_svm.named_steps[<span class="string">'anova'</span>].get_support()</div><div class="line">...</div><div class="line">array([ <span class="keyword">True</span>,  <span class="keyword">True</span>,  <span class="keyword">True</span>, <span class="keyword">False</span>, <span class="keyword">False</span>,  <span class="keyword">True</span>, <span class="keyword">False</span>,  <span class="keyword">True</span>,  <span class="keyword">True</span>, <span class="keyword">True</span>,</div><div class="line">       <span class="keyword">False</span>, <span class="keyword">False</span>,  <span class="keyword">True</span>, <span class="keyword">False</span>,  <span class="keyword">True</span>, <span class="keyword">False</span>, <span class="keyword">False</span>, <span class="keyword">False</span>, <span class="keyword">False</span>,</div><div class="line">       <span class="keyword">True</span>], dtype=bool)</div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/" data-id="ciwrvim29005xkks87husvcuh" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/" data-id="ciy2rrdjb00616bs8eoypin4s" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/23/algo/sklearn/pipeline/#ds-thread" class="article-comment-link">评论</a>
       
@@ -267,53 +286,20 @@ array([ True,  True,  True, False, False,  True, False,  True,  True, True,
       
                 
         <h2 id="u8BC6_u522B_u8C37_u6B4C_u8857_u666F_u56FE_u7247_u4E2D_u7684_u5B57_u6BCD"><a href="#u8BC6_u522B_u8C37_u6B4C_u8857_u666F_u56FE_u7247_u4E2D_u7684_u5B57_u6BCD" class="headerlink" title="识别谷歌街景图片中的字母"></a>识别谷歌街景图片中的字母</h2><p><a href="https://github.com/lijingpeng/kaggle/tree/master/competitions/image_recognize" target="_blank" rel="external">github</a><br><a href="https://www.kaggle.com/c/street-view-getting-started-with-julia" target="_blank" rel="external">street-view-getting-started-with-julia</a> 让我们从谷歌街景的图片中鉴定字母，这个题目是让我们学习和使用Julia，Julia有python和R的易用性，有C语言的速度，无奈对Julia不是很熟悉，所以还是想用python来试试。</p>
-<pre><code class="python">import cv2
-import numpy as np
-import sys
-import pandas as pd
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> cv2</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div></pre></td></tr></table></figure>
 <p>我们希望所有的图片最后存储在一个numpy的矩阵当中，每一行为图片的像素值。为了得到统一的表达呢，我们将RGB三个通道的值做平均得到的灰度图像作为每个图片的表示:</p>
-<pre><code class="python"># typeData 为&quot;train&quot;或者&quot;test&quot;
-# labelsInfo 包含每一个图片的ID
-# 图片存储在trainResized和testResized文件夹内
-def read_data(typeData, labelsInfo, imageSize):
-    labelsIndex = labelsInfo[&quot;ID&quot;]
-    x = np.zeros((np.size(labelsIndex), imageSize))
-    for idx, idImage in enumerate(labelsIndex):
-        # 得到图片文件名并读取
-        nameFile = typeData + &quot;Resized/&quot; + str(idImage) + &quot;.Bmp&quot;
-        img = cv2.imread(nameFile)
-        # 转化为灰度图
-        temp = np.mean(img, 2)
-        # 将图片转化为行向量
-        x[idx, :] = np.reshape(temp, (1, imageSize))
-    return x
-</code></pre>
-<h3 id="u9884_u5904_u7406_u8BAD_u7EC3_u96C6_u548C_u6D4B_u8BD5_u96C6"><a href="#u9884_u5904_u7406_u8BAD_u7EC3_u96C6_u548C_u6D4B_u8BD5_u96C6" class="headerlink" title="预处理训练集和测试集"></a>预处理训练集和测试集</h3><pre><code class="python">imageSize = 400
-trainlabels = pd.read_csv(&quot;trainLabels.csv&quot;)
-testlabels = pd.read_csv(&quot;sampleSubmission.csv&quot;)
-# 得到训练集的特征
-xTrain = read_data(&#39;train&#39;, trainlabels, imageSize)
-# 得到测试集的特征
-xTest = read_data(&quot;test&quot;, testlabels, imageSize)
-</code></pre>
-<h4 id="u9884_u89C8_u6570_u636E_uFF1A"><a href="#u9884_u89C8_u6570_u636E_uFF1A" class="headerlink" title="预览数据："></a>预览数据：</h4><pre><code class="python">print trainlabels.head(2)
-print testlabels.head(2)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># typeData 为"train"或者"test"</span></div><div class="line"><span class="comment"># labelsInfo 包含每一个图片的ID</span></div><div class="line"><span class="comment"># 图片存储在trainResized和testResized文件夹内</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_data</span><span class="params">(typeData, labelsInfo, imageSize)</span>:</span></div><div class="line">    labelsIndex = labelsInfo[<span class="string">"ID"</span>]</div><div class="line">    x = np.zeros((np.size(labelsIndex), imageSize))</div><div class="line">    <span class="keyword">for</span> idx, idImage <span class="keyword">in</span> enumerate(labelsIndex):</div><div class="line">        <span class="comment"># 得到图片文件名并读取</span></div><div class="line">        nameFile = typeData + <span class="string">"Resized/"</span> + str(idImage) + <span class="string">".Bmp"</span></div><div class="line">        img = cv2.imread(nameFile)</div><div class="line">        <span class="comment"># 转化为灰度图</span></div><div class="line">        temp = np.mean(img, <span class="number">2</span>)</div><div class="line">        <span class="comment"># 将图片转化为行向量</span></div><div class="line">        x[idx, :] = np.reshape(temp, (<span class="number">1</span>, imageSize))</div><div class="line">    <span class="keyword">return</span> x</div></pre></td></tr></table></figure>
+<h3 id="u9884_u5904_u7406_u8BAD_u7EC3_u96C6_u548C_u6D4B_u8BD5_u96C6"><a href="#u9884_u5904_u7406_u8BAD_u7EC3_u96C6_u548C_u6D4B_u8BD5_u96C6" class="headerlink" title="预处理训练集和测试集"></a>预处理训练集和测试集</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">imageSize = <span class="number">400</span></div><div class="line">trainlabels = pd.read_csv(<span class="string">"trainLabels.csv"</span>)</div><div class="line">testlabels = pd.read_csv(<span class="string">"sampleSubmission.csv"</span>)</div><div class="line"><span class="comment"># 得到训练集的特征</span></div><div class="line">xTrain = read_data(<span class="string">'train'</span>, trainlabels, imageSize)</div><div class="line"><span class="comment"># 得到测试集的特征</span></div><div class="line">xTest = read_data(<span class="string">"test"</span>, testlabels, imageSize)</div></pre></td></tr></table></figure>
+<h4 id="u9884_u89C8_u6570_u636E_uFF1A"><a href="#u9884_u89C8_u6570_u636E_uFF1A" class="headerlink" title="预览数据："></a>预览数据：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> trainlabels.head(<span class="number">2</span>)</div><div class="line"><span class="keyword">print</span> testlabels.head(<span class="number">2</span>)</div></pre></td></tr></table></figure>
 <pre><code>   ID Class
 0   1     n
 1   2     8
      ID Class
 0  6284     A
 1  6285     A
-</code></pre><pre><code class="python">yTrain = trainlabels[&quot;Class&quot;]
-yTrain = [ord(x) for x in yTrain]
-</code></pre>
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yTrain = trainlabels[<span class="string">"Class"</span>]</div><div class="line">yTrain = [ord(x) <span class="keyword">for</span> x <span class="keyword">in</span> yTrain]</div></pre></td></tr></table></figure>
 <h2 id="u6A21_u578B_u8BAD_u7EC3"><a href="#u6A21_u578B_u8BAD_u7EC3" class="headerlink" title="模型训练"></a>模型训练</h2><h3 id="u968F_u673A_u68EE_u6797"><a href="#u968F_u673A_u68EE_u6797" class="headerlink" title="随机森林"></a>随机森林</h3><p>使用随机森林进行训练，树的个数和深度需要多次调解寻求最佳值</p>
-<pre><code class="python">from sklearn.ensemble import RandomForestClassifier
-%time rfc = RandomForestClassifier(n_estimators = 500, max_features = 50, max_depth=None)
-rfc.fit(xTrain, yTrain)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</div><div class="line">%time rfc = RandomForestClassifier(n_estimators = <span class="number">500</span>, max_features = <span class="number">50</span>, max_depth=<span class="keyword">None</span>)</div><div class="line">rfc.fit(xTrain, yTrain)</div></pre></td></tr></table></figure>
 <pre><code>CPU times: user 121 µs, sys: 367 µs, total: 488 µs
 Wall time: 494 µs
 
@@ -321,41 +307,18 @@ Wall time: 494 µs
 
 
 
-RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&#39;gini&#39;,
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&apos;gini&apos;,
             max_depth=None, max_features=50, max_leaf_nodes=None,
             min_samples_leaf=1, min_samples_split=2,
             min_weight_fraction_leaf=0.0, n_estimators=500, n_jobs=1,
             oob_score=False, random_state=None, verbose=0,
             warm_start=False)
 </code></pre><h4 id="u9884_u6D4B"><a href="#u9884_u6D4B" class="headerlink" title="预测"></a>预测</h4><p>将训练后的模型应用到测试集上，并保存结果：</p>
-<pre><code class="python">predTest = rfc.predict(xTest)
-predResult = [chr(x) for x in predTest]
-testlabels[&quot;Class&quot;] = predResult
-testlabels.to_csv(&quot;rf_500_50_result.csv&quot;,index = None)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">predTest = rfc.predict(xTest)</div><div class="line">predResult = [chr(x) <span class="keyword">for</span> x <span class="keyword">in</span> predTest]</div><div class="line">testlabels[<span class="string">"Class"</span>] = predResult</div><div class="line">testlabels.to_csv(<span class="string">"rf_500_50_result.csv"</span>,index = <span class="keyword">None</span>)</div></pre></td></tr></table></figure>
 <h4 id="u7ED3_u679C"><a href="#u7ED3_u679C" class="headerlink" title="结果"></a>结果</h4><p>使用50颗树进行训练，提交kaggle之后准确率约为0.40<br>改用300颗树进行训练，提交kaggle之后准确率为0.46695<br>改用500颗树进行训练，深度为10，提价kaggle后准确率为0.40，估计出现了过拟合<br>改用500颗树进行训练，不设置深度，提价kaggle后准确率为0.47480  </p>
-<h3 id="u8D1D_u53F6_u65AF"><a href="#u8D1D_u53F6_u65AF" class="headerlink" title="贝叶斯"></a>贝叶斯</h3><pre><code class="python">from sklearn.naive_bayes import GaussianNB as GNB
-model_GNB = GNB()
-model_GNB.fit(xTrain, yTrain)
-
-predTest = model_GNB.predict(xTest)
-predResult = [chr(x) for x in predTest]
-testlabels[&quot;Class&quot;] = predResult
-testlabels.to_csv(&quot;gnb_result.csv&quot;,index = None)
-</code></pre>
+<h3 id="u8D1D_u53F6_u65AF"><a href="#u8D1D_u53F6_u65AF" class="headerlink" title="贝叶斯"></a>贝叶斯</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> GaussianNB <span class="keyword">as</span> GNB</div><div class="line">model_GNB = GNB()</div><div class="line">model_GNB.fit(xTrain, yTrain)</div><div class="line"></div><div class="line">predTest = model_GNB.predict(xTest)</div><div class="line">predResult = [chr(x) <span class="keyword">for</span> x <span class="keyword">in</span> predTest]</div><div class="line">testlabels[<span class="string">"Class"</span>] = predResult</div><div class="line">testlabels.to_csv(<span class="string">"gnb_result.csv"</span>,index = <span class="keyword">None</span>)</div></pre></td></tr></table></figure>
 <p>贝叶斯的训练非常的快，把结果提交kaggle后，得到0.02389的准确率，明显低于随机森林</p>
-<h3 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h3><pre><code class="python">from sklearn.ensemble import GradientBoostingClassifier
-%time GBDT = GradientBoostingClassifier(loss=&#39;deviance&#39;, learning_rate=0.1, n_estimators=100, subsample=1.0, \
-                        min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_depth=3, init=None, \
-                        random_state=None, max_features=None, verbose=0, max_leaf_nodes=None, warm_start=False, presort=&#39;auto&#39;)
-
-%time GBDT.fit(xTrain, yTrain)
-
-%time predTest = GBDT.predict(xTest)
-predResult = [chr(x) for x in predTest]
-testlabels[&quot;Class&quot;] = predResult
-testlabels.to_csv(&quot;gbdt_result.csv&quot;,index = None)
-</code></pre>
+<h3 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> GradientBoostingClassifier</div><div class="line">%time GBDT = GradientBoostingClassifier(loss=<span class="string">'deviance'</span>, learning_rate=<span class="number">0.1</span>, n_estimators=<span class="number">100</span>, subsample=<span class="number">1.0</span>, \</div><div class="line">                        min_samples_split=<span class="number">2</span>, min_samples_leaf=<span class="number">1</span>, min_weight_fraction_leaf=<span class="number">0.0</span>, max_depth=<span class="number">3</span>, init=<span class="keyword">None</span>, \</div><div class="line">                        random_state=<span class="keyword">None</span>, max_features=<span class="keyword">None</span>, verbose=<span class="number">0</span>, max_leaf_nodes=<span class="keyword">None</span>, warm_start=<span class="keyword">False</span>, presort=<span class="string">'auto'</span>)</div><div class="line"></div><div class="line">%time GBDT.fit(xTrain, yTrain)</div><div class="line"></div><div class="line">%time predTest = GBDT.predict(xTest)</div><div class="line">predResult = [chr(x) <span class="keyword">for</span> x <span class="keyword">in</span> predTest]</div><div class="line">testlabels[<span class="string">"Class"</span>] = predResult</div><div class="line">testlabels.to_csv(<span class="string">"gbdt_result.csv"</span>,index = <span class="keyword">None</span>)</div></pre></td></tr></table></figure>
 <pre><code>CPU times: user 91 µs, sys: 738 µs, total: 829 µs
 Wall time: 2.93 ms
 CPU times: user 40min 16s, sys: 52.3 s, total: 41min 9s
@@ -363,101 +326,12 @@ Wall time: 2h 55min 22s
 CPU times: user 1.75 s, sys: 44.5 ms, total: 1.8 s
 Wall time: 1.79 s
 </code></pre><p>使用GBDT仅得到了0.31937的准确率，可能是我的默认参数没有调节好，关键是GBDT的训练时间太长，调试成本也比较高</p>
-<h3 id="u795E_u7ECF_u7F51_u7EDC"><a href="#u795E_u7ECF_u7F51_u7EDC" class="headerlink" title="神经网络"></a>神经网络</h3><pre><code class="python">import os
-from skimage.io import imread
-from lasagne import layers
-from lasagne.nonlinearities import softmax
-from nolearn.lasagne import NeuralNet, BatchIterator
-</code></pre>
-<pre><code class="python"># Define functions
-def read_datax(typeData, labelsInfo, imageSize, path):
-    x = np.zeros((labelsInfo.shape[0], imageSize))
-
-    for (index, idImage) in enumerate(labelsInfo[&#39;ID&#39;]):
-        # use specially created 32 x 32 images
-        nameFile = &#39;{0}/{1}Resized32/{2}.Bmp&#39;.format(path,
-                    typeData, idImage)
-        img = imread(nameFile, as_grey = True)
-
-        x[index, :] = np.reshape(img, (1, imageSize))
-
-    return x
-
-def fit_model(reshaped_train_x, y, image_width,
-                    image_height, reshaped_test_x):
-    net = NeuralNet(
-        layers = [
-            (&#39;input&#39;, layers.InputLayer),
-            (&#39;conv1&#39;, layers.Conv2DLayer),
-            (&#39;pool1&#39;, layers.MaxPool2DLayer),
-            (&#39;dropout1&#39;, layers.DropoutLayer),
-            (&#39;conv2&#39;, layers.Conv2DLayer),
-            (&#39;pool2&#39;, layers.MaxPool2DLayer),
-            (&#39;dropout2&#39;, layers.DropoutLayer),
-            (&#39;conv3&#39;, layers.Conv2DLayer),
-            (&#39;hidden4&#39;, layers.DenseLayer),
-            (&#39;output&#39;, layers.DenseLayer),
-        ],
-        input_shape = (None, 1, 32, 32),
-        conv1_num_filters=32, conv1_filter_size=(5, 5),
-        pool1_pool_size=(2, 2),
-        dropout1_p=0.2,
-        conv2_num_filters=64, conv2_filter_size=(5, 5),
-        pool2_pool_size=(2, 2),
-        dropout2_p=0.2,
-        conv3_num_filters = 128, conv3_filter_size = (5, 5),
-        hidden4_num_units=500,
-        output_num_units = 62, output_nonlinearity = softmax,
-
-        update_learning_rate = 0.01,
-        update_momentum = 0.9,
-
-        batch_iterator_train = BatchIterator(batch_size = 100),
-        batch_iterator_test = BatchIterator(batch_size = 100),
-
-        use_label_encoder = True,
-        regression = False,
-        max_epochs = 100,
-        verbose = 1,
-    )
-
-    net.fit(reshaped_train_x, y)
-    prediction = net.predict(reshaped_test_x)
-
-    return prediction
-</code></pre>
-<pre><code class="python"># 预处理数据，首先将图片保存为32*32的小图片
-imageSize = 1024 # 32 x 32
-image_width = image_height = int(imageSize ** 0.5)
-
-labelsInfoTrain = pd.read_csv\
-            (&#39;trainLabels.csv&#39;.format(path))
-labelsInfoTest = pd.read_csv\
-            (&#39;sampleSubmission.csv&#39;.format(path))
-
-# Load dataset
-nnxTrain = read_datax(&#39;train&#39;, labelsInfoTrain, imageSize, &#39;.&#39;)
-nnxTest = read_datax(&#39;test&#39;, labelsInfoTest, imageSize, &#39;.&#39;)
-
-nnyTrain = map(ord, labelsInfoTrain[&#39;Class&#39;])
-nnyTrain = np.array(yTrain)
-</code></pre>
-<pre><code class="python"># 归一化数据
-nnxTrain /= nnxTrain.std(axis = None)
-nnxTrain -= nnxTrain.mean()
-
-nnxTest /= nnxTest.std(axis = None)
-nnxTest -= nnxTest.mean()
-</code></pre>
-<pre><code class="python"># Reshape data
-train_x_reshaped = nnxTrain.reshape(nnxTrain.shape[0], 1,
-                  image_height, image_width).astype(&#39;float32&#39;)
-test_x_reshaped = nnxTest.reshape(nnxTest.shape[0], 1,
-                  image_height, image_width).astype(&#39;float32&#39;)
-</code></pre>
-<pre><code class="python"># 进行训练和测试
-predict = fit_model(train_x_reshaped, nnyTrain, image_width, image_height, test_x_reshaped)
-</code></pre>
+<h3 id="u795E_u7ECF_u7F51_u7EDC"><a href="#u795E_u7ECF_u7F51_u7EDC" class="headerlink" title="神经网络"></a>神经网络</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">from</span> skimage.io <span class="keyword">import</span> imread</div><div class="line"><span class="keyword">from</span> lasagne <span class="keyword">import</span> layers</div><div class="line"><span class="keyword">from</span> lasagne.nonlinearities <span class="keyword">import</span> softmax</div><div class="line"><span class="keyword">from</span> nolearn.lasagne <span class="keyword">import</span> NeuralNet, BatchIterator</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Define functions</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_datax</span><span class="params">(typeData, labelsInfo, imageSize, path)</span>:</span></div><div class="line">    x = np.zeros((labelsInfo.shape[<span class="number">0</span>], imageSize))</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (index, idImage) <span class="keyword">in</span> enumerate(labelsInfo[<span class="string">'ID'</span>]):</div><div class="line">        <span class="comment"># use specially created 32 x 32 images</span></div><div class="line">        nameFile = <span class="string">'&#123;0&#125;/&#123;1&#125;Resized32/&#123;2&#125;.Bmp'</span>.format(path,</div><div class="line">                    typeData, idImage)</div><div class="line">        img = imread(nameFile, as_grey = <span class="keyword">True</span>)</div><div class="line"></div><div class="line">        x[index, :] = np.reshape(img, (<span class="number">1</span>, imageSize))</div><div class="line"></div><div class="line">    <span class="keyword">return</span> x</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fit_model</span><span class="params">(reshaped_train_x, y, image_width,</span></span></div><div class="line">                    image_height, reshaped_test_x):</div><div class="line">    net = NeuralNet(</div><div class="line">        layers = [</div><div class="line">            (<span class="string">'input'</span>, layers.InputLayer),</div><div class="line">            (<span class="string">'conv1'</span>, layers.Conv2DLayer),</div><div class="line">            (<span class="string">'pool1'</span>, layers.MaxPool2DLayer),</div><div class="line">            (<span class="string">'dropout1'</span>, layers.DropoutLayer),</div><div class="line">            (<span class="string">'conv2'</span>, layers.Conv2DLayer),</div><div class="line">            (<span class="string">'pool2'</span>, layers.MaxPool2DLayer),</div><div class="line">            (<span class="string">'dropout2'</span>, layers.DropoutLayer),</div><div class="line">            (<span class="string">'conv3'</span>, layers.Conv2DLayer),</div><div class="line">            (<span class="string">'hidden4'</span>, layers.DenseLayer),</div><div class="line">            (<span class="string">'output'</span>, layers.DenseLayer),</div><div class="line">        ],</div><div class="line">        input_shape = (<span class="keyword">None</span>, <span class="number">1</span>, <span class="number">32</span>, <span class="number">32</span>),</div><div class="line">        conv1_num_filters=<span class="number">32</span>, conv1_filter_size=(<span class="number">5</span>, <span class="number">5</span>),</div><div class="line">        pool1_pool_size=(<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">        dropout1_p=<span class="number">0.2</span>,</div><div class="line">        conv2_num_filters=<span class="number">64</span>, conv2_filter_size=(<span class="number">5</span>, <span class="number">5</span>),</div><div class="line">        pool2_pool_size=(<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">        dropout2_p=<span class="number">0.2</span>,</div><div class="line">        conv3_num_filters = <span class="number">128</span>, conv3_filter_size = (<span class="number">5</span>, <span class="number">5</span>),</div><div class="line">        hidden4_num_units=<span class="number">500</span>,</div><div class="line">        output_num_units = <span class="number">62</span>, output_nonlinearity = softmax,</div><div class="line"></div><div class="line">        update_learning_rate = <span class="number">0.01</span>,</div><div class="line">        update_momentum = <span class="number">0.9</span>,</div><div class="line"></div><div class="line">        batch_iterator_train = BatchIterator(batch_size = <span class="number">100</span>),</div><div class="line">        batch_iterator_test = BatchIterator(batch_size = <span class="number">100</span>),</div><div class="line"></div><div class="line">        use_label_encoder = <span class="keyword">True</span>,</div><div class="line">        regression = <span class="keyword">False</span>,</div><div class="line">        max_epochs = <span class="number">100</span>,</div><div class="line">        verbose = <span class="number">1</span>,</div><div class="line">    )</div><div class="line"></div><div class="line">    net.fit(reshaped_train_x, y)</div><div class="line">    prediction = net.predict(reshaped_test_x)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> prediction</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 预处理数据，首先将图片保存为32*32的小图片</span></div><div class="line">imageSize = <span class="number">1024</span> <span class="comment"># 32 x 32</span></div><div class="line">image_width = image_height = int(imageSize ** <span class="number">0.5</span>)</div><div class="line"></div><div class="line">labelsInfoTrain = pd.read_csv\</div><div class="line">            (<span class="string">'trainLabels.csv'</span>.format(path))</div><div class="line">labelsInfoTest = pd.read_csv\</div><div class="line">            (<span class="string">'sampleSubmission.csv'</span>.format(path))</div><div class="line"></div><div class="line"><span class="comment"># Load dataset</span></div><div class="line">nnxTrain = read_datax(<span class="string">'train'</span>, labelsInfoTrain, imageSize, <span class="string">'.'</span>)</div><div class="line">nnxTest = read_datax(<span class="string">'test'</span>, labelsInfoTest, imageSize, <span class="string">'.'</span>)</div><div class="line"></div><div class="line">nnyTrain = map(ord, labelsInfoTrain[<span class="string">'Class'</span>])</div><div class="line">nnyTrain = np.array(yTrain)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 归一化数据</span></div><div class="line">nnxTrain /= nnxTrain.std(axis = <span class="keyword">None</span>)</div><div class="line">nnxTrain -= nnxTrain.mean()</div><div class="line"></div><div class="line">nnxTest /= nnxTest.std(axis = <span class="keyword">None</span>)</div><div class="line">nnxTest -= nnxTest.mean()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Reshape data</span></div><div class="line">train_x_reshaped = nnxTrain.reshape(nnxTrain.shape[<span class="number">0</span>], <span class="number">1</span>,</div><div class="line">                  image_height, image_width).astype(<span class="string">'float32'</span>)</div><div class="line">test_x_reshaped = nnxTest.reshape(nnxTest.shape[<span class="number">0</span>], <span class="number">1</span>,</div><div class="line">                  image_height, image_width).astype(<span class="string">'float32'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 进行训练和测试</span></div><div class="line">predict = fit_model(train_x_reshaped, nnyTrain, image_width, image_height, test_x_reshaped)</div></pre></td></tr></table></figure>
 <pre><code># Neural Network with 352586 learnable parameters
 
 ## Layer information
@@ -577,17 +451,13 @@ predict = fit_model(train_x_reshaped, nnyTrain, image_width, image_height, test_
      98     [36m0.27107[0m     2.15645    0.12570      0.63729  16.32s
      99     0.27947     2.22565    0.12557      0.62637  16.51s
     100     [36m0.26500[0m     2.22825    0.11893      0.64431  16.52s
-</code></pre><pre><code class="python"># 保存结果
-yTest = map(chr, predict)
-labelsInfoTest[&#39;Class&#39;] = yTest
-labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
-</code></pre>
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 保存结果</span></div><div class="line">yTest = map(chr, predict)</div><div class="line">labelsInfoTest[<span class="string">'Class'</span>] = yTest</div><div class="line">labelsInfoTest.to_csv(<span class="string">'nnresult.csv'</span>.format(path), index = <span class="keyword">False</span>)</div></pre></td></tr></table></figure>
 <p>提交kaggle之后的准确率：0.64562</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/" data-id="ciwrvim1n004fkks8xkezurmf" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/" data-id="ciy2rrdiu004d6bs8ddw4k9cm" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/21/algo/kaggle/image_recognize/#ds-thread" class="article-comment-link">评论</a>
       
@@ -639,98 +509,28 @@ labelsInfoTest.to_csv(&#39;nnresult.csv&#39;.format(path), index = False)
                 
         <h2 id="Titanic__u6C89_u6CA1"><a href="#Titanic__u6C89_u6CA1" class="headerlink" title="Titanic 沉没"></a>Titanic 沉没</h2><p><a href="https://github.com/lijingpeng" target="_blank" rel="external">Github地址</a>     </p>
 <p>这是一个分类任务，特征包含离散特征和连续特征，数据如下：<a href="https://www.kaggle.com/c/titanic/data" target="_blank" rel="external">Kaggle地址</a>。目标是根据数据特征预测一个人是否能在泰坦尼克的沉没事故中存活下来。接下来解释下数据的格式：</p>
-<pre><code>survival        目标列，是否存活，1代表存活 (0 = No; 1 = Yes)  
-pclass          乘坐的舱位级别 (1 = 1st; 2 = 2nd; 3 = 3rd)  
-name            姓名
-sex             性别  
-age             年龄  
-sibsp           兄弟姐妹的数量（乘客中）  
-parch           父母的数量（乘客中）  
-ticket          票号  
-fare            票价  
-cabin           客舱  
-embarked        登船的港口  
-                (C = Cherbourg; Q = Queenstown; S = Southampton)
-</code></pre><h2 id="u8F7D_u5165_u6570_u636E_u5E76_u5206_u6790"><a href="#u8F7D_u5165_u6570_u636E_u5E76_u5206_u6790" class="headerlink" title="载入数据并分析"></a>载入数据并分析</h2><pre><code class="python"># -*- coding: UTF-8 -*-
-%matplotlib inline
-
-import pandas as pd
-import string
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn import preprocessing
-</code></pre>
-<pre><code class="python">train = pd.read_csv(&#39;train.csv&#39;)
-test = pd.read_csv(&#39;test.csv&#39;)
-
-def substrings_in_string(big_string, substrings):
-    for substring in substrings:
-        if string.find(big_string, substring) != -1:
-            return substring
-    return np.nan
-
-def replace_titles(x):
-    title=x[&#39;Title&#39;]
-    if title in [&#39;Mr&#39;,&#39;Don&#39;, &#39;Major&#39;, &#39;Capt&#39;, &#39;Jonkheer&#39;, &#39;Rev&#39;, &#39;Col&#39;]:
-        return &#39;Mr&#39;
-    elif title in [&#39;Master&#39;]:
-        return &#39;Master&#39;
-    elif title in [&#39;Countess&#39;, &#39;Mme&#39;,&#39;Mrs&#39;]:
-        return &#39;Mrs&#39;
-    elif title in [&#39;Mlle&#39;, &#39;Ms&#39;,&#39;Miss&#39;]:
-        return &#39;Miss&#39;
-    elif title ==&#39;Dr&#39;:
-        if x[&#39;Sex&#39;]==&#39;Male&#39;:
-            return &#39;Mr&#39;
-        else:
-            return &#39;Mrs&#39;
-    elif title ==&#39;&#39;:
-        if x[&#39;Sex&#39;]==&#39;Male&#39;:
-            return &#39;Master&#39;
-        else:
-            return &#39;Miss&#39;
-    else:
-        return title
-
-title_list = [&#39;Mrs&#39;, &#39;Mr&#39;, &#39;Master&#39;, &#39;Miss&#39;, &#39;Major&#39;, &#39;Rev&#39;,
-                &#39;Dr&#39;, &#39;Ms&#39;, &#39;Mlle&#39;,&#39;Col&#39;, &#39;Capt&#39;, &#39;Mme&#39;, &#39;Countess&#39;,
-                &#39;Don&#39;, &#39;Jonkheer&#39;]
-</code></pre>
-<pre><code class="python">label = train[&#39;Survived&#39;] # 目标列
-</code></pre>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">survival        目标列，是否存活，1代表存活 (0 = No; 1 = Yes)  </div><div class="line">pclass          乘坐的舱位级别 (1 = 1st; 2 = 2nd; 3 = 3rd)  </div><div class="line">name            姓名</div><div class="line">sex             性别  </div><div class="line">age             年龄  </div><div class="line">sibsp           兄弟姐妹的数量（乘客中）  </div><div class="line">parch           父母的数量（乘客中）  </div><div class="line">ticket          票号  </div><div class="line">fare            票价  </div><div class="line">cabin           客舱  </div><div class="line">embarked        登船的港口  </div><div class="line">                (C = Cherbourg; Q = Queenstown; S = Southampton)</div></pre></td></tr></table></figure>
+<h2 id="u8F7D_u5165_u6570_u636E_u5E76_u5206_u6790"><a href="#u8F7D_u5165_u6570_u636E_u5E76_u5206_u6790" class="headerlink" title="载入数据并分析"></a>载入数据并分析</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line">%matplotlib inline</div><div class="line"></div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> string</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">train = pd.read_csv(<span class="string">'train.csv'</span>)</div><div class="line">test = pd.read_csv(<span class="string">'test.csv'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">substrings_in_string</span><span class="params">(big_string, substrings)</span>:</span></div><div class="line">    <span class="keyword">for</span> substring <span class="keyword">in</span> substrings:</div><div class="line">        <span class="keyword">if</span> string.find(big_string, substring) != <span class="number">-1</span>:</div><div class="line">            <span class="keyword">return</span> substring</div><div class="line">    <span class="keyword">return</span> np.nan</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">replace_titles</span><span class="params">(x)</span>:</span></div><div class="line">    title=x[<span class="string">'Title'</span>]</div><div class="line">    <span class="keyword">if</span> title <span class="keyword">in</span> [<span class="string">'Mr'</span>,<span class="string">'Don'</span>, <span class="string">'Major'</span>, <span class="string">'Capt'</span>, <span class="string">'Jonkheer'</span>, <span class="string">'Rev'</span>, <span class="string">'Col'</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="string">'Mr'</span></div><div class="line">    <span class="keyword">elif</span> title <span class="keyword">in</span> [<span class="string">'Master'</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="string">'Master'</span></div><div class="line">    <span class="keyword">elif</span> title <span class="keyword">in</span> [<span class="string">'Countess'</span>, <span class="string">'Mme'</span>,<span class="string">'Mrs'</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="string">'Mrs'</span></div><div class="line">    <span class="keyword">elif</span> title <span class="keyword">in</span> [<span class="string">'Mlle'</span>, <span class="string">'Ms'</span>,<span class="string">'Miss'</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="string">'Miss'</span></div><div class="line">    <span class="keyword">elif</span> title ==<span class="string">'Dr'</span>:</div><div class="line">        <span class="keyword">if</span> x[<span class="string">'Sex'</span>]==<span class="string">'Male'</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Mr'</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Mrs'</span></div><div class="line">    <span class="keyword">elif</span> title ==<span class="string">''</span>:</div><div class="line">        <span class="keyword">if</span> x[<span class="string">'Sex'</span>]==<span class="string">'Male'</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Master'</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Miss'</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> title</div><div class="line"></div><div class="line">title_list = [<span class="string">'Mrs'</span>, <span class="string">'Mr'</span>, <span class="string">'Master'</span>, <span class="string">'Miss'</span>, <span class="string">'Major'</span>, <span class="string">'Rev'</span>,</div><div class="line">                <span class="string">'Dr'</span>, <span class="string">'Ms'</span>, <span class="string">'Mlle'</span>,<span class="string">'Col'</span>, <span class="string">'Capt'</span>, <span class="string">'Mme'</span>, <span class="string">'Countess'</span>,</div><div class="line">                <span class="string">'Don'</span>, <span class="string">'Jonkheer'</span>]</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">label = train[<span class="string">'Survived'</span>] <span class="comment"># 目标列</span></div></pre></td></tr></table></figure>
 <h3 id="Pclass_u3001Sex_u3001Embarked_u79BB_u6563_u7279_u5F81_u6570_u636E_u9884_u89C8"><a href="#Pclass_u3001Sex_u3001Embarked_u79BB_u6563_u7279_u5F81_u6570_u636E_u9884_u89C8" class="headerlink" title="Pclass、Sex、Embarked离散特征数据预览"></a>Pclass、Sex、Embarked离散特征数据预览</h3><p>除此之外Name、Ticket、Cabin也是离散特征，我们暂时不用这几个特征，直观上来讲，叫什么名字跟在事故中是否存活好像没有太大的联系。</p>
-<pre><code class="python"># 接下来我们对每个特征进行一下分析：
-train.groupby([&#39;Pclass&#39;])[&#39;PassengerId&#39;].count().plot(kind=&#39;bar&#39;)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 接下来我们对每个特征进行一下分析：</span></div><div class="line">train.groupby([<span class="string">'Pclass'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
 <pre><code>&lt;matplotlib.axes.AxesSubplot at 0x102bef590&gt;
 </code></pre><p><img src="output_6_1.png" alt="png"></p>
-<pre><code class="python">train.groupby([&#39;SibSp&#39;])[&#39;PassengerId&#39;].count().plot(kind=&#39;bar&#39;)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.groupby([<span class="string">'SibSp'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
 <pre><code>&lt;matplotlib.axes.AxesSubplot at 0x106c41a10&gt;
 </code></pre><p><img src="output_7_1.png" alt="png"></p>
-<pre><code class="python">train.groupby([&#39;Parch&#39;])[&#39;PassengerId&#39;].count().plot(kind=&#39;bar&#39;)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.groupby([<span class="string">'Parch'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
 <pre><code>&lt;matplotlib.axes.AxesSubplot at 0x106d7b090&gt;
 </code></pre><p><img src="output_8_1.png" alt="png"></p>
-<pre><code class="python">train.groupby([&#39;Embarked&#39;])[&#39;PassengerId&#39;].count().plot(kind=&#39;bar&#39;)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.groupby([<span class="string">'Embarked'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
 <pre><code>&lt;matplotlib.axes.AxesSubplot at 0x106eca590&gt;
 </code></pre><p><img src="output_9_1.png" alt="png"></p>
-<pre><code class="python">train.groupby([&#39;Sex&#39;])[&#39;PassengerId&#39;].count().plot(kind=&#39;bar&#39;)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.groupby([<span class="string">'Sex'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
 <pre><code>&lt;matplotlib.axes.AxesSubplot at 0x106ff83d0&gt;
 </code></pre><p><img src="output_10_1.png" alt="png"></p>
 <h3 id="u8FDE_u7EED_u7279_u5F81_u5904_u7406"><a href="#u8FDE_u7EED_u7279_u5F81_u5904_u7406" class="headerlink" title="连续特征处理"></a>连续特征处理</h3><p>Age、Fare是连续特征，观察数据分布查看是否有缺失值和异常值，我们看到Age中存在缺失值，我们考虑使用均值来填充缺失值。</p>
-<pre><code class="python">print &#39;检测是否有缺失值：&#39;
-print train[train[&#39;Age&#39;].isnull()][&#39;Age&#39;].head()
-print train[train[&#39;Fare&#39;].isnull()][&#39;Fare&#39;].head()
-print train[train[&#39;SibSp&#39;].isnull()][&#39;SibSp&#39;].head()
-print train[train[&#39;Parch&#39;].isnull()][&#39;Parch&#39;].head()
-train[&#39;Age&#39;] = train[&#39;Age&#39;].fillna(train[&#39;Age&#39;].mean())
-print &#39;填充之后再检测：&#39;
-print train[train[&#39;Age&#39;].isnull()][&#39;Age&#39;].head()
-print train[train[&#39;Fare&#39;].isnull()][&#39;Fare&#39;].head()
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> <span class="string">'检测是否有缺失值：'</span></div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Age'</span>].isnull()][<span class="string">'Age'</span>].head()</div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Fare'</span>].isnull()][<span class="string">'Fare'</span>].head()</div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'SibSp'</span>].isnull()][<span class="string">'SibSp'</span>].head()</div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Parch'</span>].isnull()][<span class="string">'Parch'</span>].head()</div><div class="line">train[<span class="string">'Age'</span>] = train[<span class="string">'Age'</span>].fillna(train[<span class="string">'Age'</span>].mean())</div><div class="line"><span class="keyword">print</span> <span class="string">'填充之后再检测：'</span></div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Age'</span>].isnull()][<span class="string">'Age'</span>].head()</div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Fare'</span>].isnull()][<span class="string">'Fare'</span>].head()</div></pre></td></tr></table></figure>
 <pre><code>检测是否有缺失值：
 5    NaN
 17   NaN
@@ -744,17 +544,7 @@ Series([], Name: Parch, dtype: int64)
 填充之后再检测：
 Series([], Name: Age, dtype: float64)
 Series([], Name: Fare, dtype: float64)
-</code></pre><pre><code class="python">print &#39;检测测试集是否有缺失值：&#39;
-print test[test[&#39;Age&#39;].isnull()][&#39;Age&#39;].head()
-print test[test[&#39;Fare&#39;].isnull()][&#39;Fare&#39;].head()
-print test[test[&#39;SibSp&#39;].isnull()][&#39;SibSp&#39;].head()
-print test[test[&#39;Parch&#39;].isnull()][&#39;Parch&#39;].head()
-test[&#39;Age&#39;] = test[&#39;Age&#39;].fillna(test[&#39;Age&#39;].mean())
-test[&#39;Fare&#39;] = test[&#39;Fare&#39;].fillna(test[&#39;Fare&#39;].mean())
-print &#39;填充之后再检测：&#39;
-print test[test[&#39;Age&#39;].isnull()][&#39;Age&#39;].head()
-print test[test[&#39;Fare&#39;].isnull()][&#39;Fare&#39;].head()
-</code></pre>
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> <span class="string">'检测测试集是否有缺失值：'</span></div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Age'</span>].isnull()][<span class="string">'Age'</span>].head()</div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Fare'</span>].isnull()][<span class="string">'Fare'</span>].head()</div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'SibSp'</span>].isnull()][<span class="string">'SibSp'</span>].head()</div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Parch'</span>].isnull()][<span class="string">'Parch'</span>].head()</div><div class="line">test[<span class="string">'Age'</span>] = test[<span class="string">'Age'</span>].fillna(test[<span class="string">'Age'</span>].mean())</div><div class="line">test[<span class="string">'Fare'</span>] = test[<span class="string">'Fare'</span>].fillna(test[<span class="string">'Fare'</span>].mean())</div><div class="line"><span class="keyword">print</span> <span class="string">'填充之后再检测：'</span></div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Age'</span>].isnull()][<span class="string">'Age'</span>].head()</div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Fare'</span>].isnull()][<span class="string">'Fare'</span>].head()</div></pre></td></tr></table></figure>
 <pre><code>检测测试集是否有缺失值：
 10   NaN
 22   NaN
@@ -769,85 +559,12 @@ Series([], Name: Parch, dtype: int64)
 填充之后再检测：
 Series([], Name: Age, dtype: float64)
 Series([], Name: Fare, dtype: float64)
-</code></pre><pre><code class="python"># 处理Title特征
-train[&#39;Title&#39;] = train[&#39;Name&#39;].map(lambda x: substrings_in_string(x, title_list))
-test[&#39;Title&#39;] = test[&#39;Name&#39;].map(lambda x: substrings_in_string(x, title_list))
-
-train[&#39;Title&#39;] = train.apply(replace_titles, axis=1)
-test[&#39;Title&#39;] = test.apply(replace_titles, axis=1)
-
-# family特征
-train[&#39;Family_Size&#39;] = train[&#39;SibSp&#39;] + train[&#39;Parch&#39;]
-train[&#39;Family&#39;] = train[&#39;SibSp&#39;] * train[&#39;Parch&#39;]
-test[&#39;Family_Size&#39;] = test[&#39;SibSp&#39;] + test[&#39;Parch&#39;]
-test[&#39;Family&#39;] = test[&#39;SibSp&#39;] * test[&#39;Parch&#39;]
-</code></pre>
-<pre><code class="python">train[&#39;AgeFill&#39;] = train[&#39;Age&#39;]
-mean_ages = np.zeros(4)
-mean_ages[0] = np.average(train[train[&#39;Title&#39;] == &#39;Miss&#39;][&#39;Age&#39;].dropna())
-mean_ages[1] = np.average(train[train[&#39;Title&#39;] == &#39;Mrs&#39;][&#39;Age&#39;].dropna())
-mean_ages[2] = np.average(train[train[&#39;Title&#39;] == &#39;Mr&#39;][&#39;Age&#39;].dropna())
-mean_ages[3] = np.average(train[train[&#39;Title&#39;] == &#39;Master&#39;][&#39;Age&#39;].dropna())
-train.loc[ (train.Age.isnull()) &amp; (train.Title == &#39;Miss&#39;) ,&#39;AgeFill&#39;] = mean_ages[0]
-train.loc[ (train.Age.isnull()) &amp; (train.Title == &#39;Mrs&#39;) ,&#39;AgeFill&#39;] = mean_ages[1]
-train.loc[ (train.Age.isnull()) &amp; (train.Title == &#39;Mr&#39;) ,&#39;AgeFill&#39;] = mean_ages[2]
-train.loc[ (train.Age.isnull()) &amp; (train.Title == &#39;Master&#39;) ,&#39;AgeFill&#39;] = mean_ages[3]
-
-train[&#39;AgeCat&#39;] = train[&#39;AgeFill&#39;]
-train.loc[ (train.AgeFill&lt;=10), &#39;AgeCat&#39;] = &#39;child&#39;
-train.loc[ (train.AgeFill&gt;60), &#39;AgeCat&#39;] = &#39;aged&#39;
-train.loc[ (train.AgeFill&gt;10) &amp; (train.AgeFill &lt;=30) ,&#39;AgeCat&#39;] = &#39;adult&#39;
-train.loc[ (train.AgeFill&gt;30) &amp; (train.AgeFill &lt;=60) ,&#39;AgeCat&#39;] = &#39;senior&#39;
-
-train[&#39;Fare_Per_Person&#39;] = train[&#39;Fare&#39;] / (train[&#39;Family_Size&#39;] + 1)
-</code></pre>
-<pre><code class="python">test[&#39;AgeFill&#39;] = test[&#39;Age&#39;]
-mean_ages = np.zeros(4)
-mean_ages[0] = np.average(test[test[&#39;Title&#39;] == &#39;Miss&#39;][&#39;Age&#39;].dropna())
-mean_ages[1] = np.average(test[test[&#39;Title&#39;] == &#39;Mrs&#39;][&#39;Age&#39;].dropna())
-mean_ages[2] = np.average(test[test[&#39;Title&#39;] == &#39;Mr&#39;][&#39;Age&#39;].dropna())
-mean_ages[3] = np.average(test[test[&#39;Title&#39;] == &#39;Master&#39;][&#39;Age&#39;].dropna())
-test.loc[ (test.Age.isnull()) &amp; (test.Title == &#39;Miss&#39;) ,&#39;AgeFill&#39;] = mean_ages[0]
-test.loc[ (test.Age.isnull()) &amp; (test.Title == &#39;Mrs&#39;) ,&#39;AgeFill&#39;] = mean_ages[1]
-test.loc[ (test.Age.isnull()) &amp; (test.Title == &#39;Mr&#39;) ,&#39;AgeFill&#39;] = mean_ages[2]
-test.loc[ (test.Age.isnull()) &amp; (test.Title == &#39;Master&#39;) ,&#39;AgeFill&#39;] = mean_ages[3]
-
-test[&#39;AgeCat&#39;] = test[&#39;AgeFill&#39;]
-test.loc[ (test.AgeFill&lt;=10), &#39;AgeCat&#39;] = &#39;child&#39;
-test.loc[ (test.AgeFill&gt;60), &#39;AgeCat&#39;] = &#39;aged&#39;
-test.loc[ (test.AgeFill&gt;10) &amp; (test.AgeFill &lt;=30) ,&#39;AgeCat&#39;] = &#39;adult&#39;
-test.loc[ (test.AgeFill&gt;30) &amp; (test.AgeFill &lt;=60) ,&#39;AgeCat&#39;] = &#39;senior&#39;
-
-test[&#39;Fare_Per_Person&#39;] = test[&#39;Fare&#39;] / (test[&#39;Family_Size&#39;] + 1)
-</code></pre>
-<pre><code class="python">train.Embarked = train.Embarked.fillna(&#39;S&#39;)
-test.Embarked = test.Embarked.fillna(&#39;S&#39;)
-
-train.loc[ train.Cabin.isnull() == True, &#39;Cabin&#39;] = 0.2
-train.loc[ train.Cabin.isnull() == False, &#39;Cabin&#39;] = 1
-
-test.loc[ test.Cabin.isnull() == True, &#39;Cabin&#39;] = 0.2
-test.loc[ test.Cabin.isnull() == False, &#39;Cabin&#39;] = 1
-</code></pre>
-<pre><code class="python">#Age times class
-train[&#39;AgeClass&#39;] = train[&#39;AgeFill&#39;] * train[&#39;Pclass&#39;]
-train[&#39;ClassFare&#39;] = train[&#39;Pclass&#39;] * train[&#39;Fare_Per_Person&#39;]
-
-train[&#39;HighLow&#39;] = train[&#39;Pclass&#39;]
-train.loc[ (train.Fare_Per_Person &lt; 8) ,&#39;HighLow&#39;] = &#39;Low&#39;
-train.loc[ (train.Fare_Per_Person &gt;= 8) ,&#39;HighLow&#39;] = &#39;High&#39;
-
-#Age times class
-test[&#39;AgeClass&#39;] = test[&#39;AgeFill&#39;] * test[&#39;Pclass&#39;]
-test[&#39;ClassFare&#39;] = test[&#39;Pclass&#39;] * test[&#39;Fare_Per_Person&#39;]
-
-test[&#39;HighLow&#39;] = test[&#39;Pclass&#39;]
-test.loc[ (test.Fare_Per_Person &lt; 8) ,&#39;HighLow&#39;] = &#39;Low&#39;
-test.loc[ (test.Fare_Per_Person &gt;= 8) ,&#39;HighLow&#39;] = &#39;High&#39;
-</code></pre>
-<pre><code class="python">print train.head(1)
-# print test.head()
-</code></pre>
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 处理Title特征</span></div><div class="line">train[<span class="string">'Title'</span>] = train[<span class="string">'Name'</span>].map(<span class="keyword">lambda</span> x: substrings_in_string(x, title_list))</div><div class="line">test[<span class="string">'Title'</span>] = test[<span class="string">'Name'</span>].map(<span class="keyword">lambda</span> x: substrings_in_string(x, title_list))</div><div class="line"></div><div class="line">train[<span class="string">'Title'</span>] = train.apply(replace_titles, axis=<span class="number">1</span>)</div><div class="line">test[<span class="string">'Title'</span>] = test.apply(replace_titles, axis=<span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="comment"># family特征</span></div><div class="line">train[<span class="string">'Family_Size'</span>] = train[<span class="string">'SibSp'</span>] + train[<span class="string">'Parch'</span>]</div><div class="line">train[<span class="string">'Family'</span>] = train[<span class="string">'SibSp'</span>] * train[<span class="string">'Parch'</span>]</div><div class="line">test[<span class="string">'Family_Size'</span>] = test[<span class="string">'SibSp'</span>] + test[<span class="string">'Parch'</span>]</div><div class="line">test[<span class="string">'Family'</span>] = test[<span class="string">'SibSp'</span>] * test[<span class="string">'Parch'</span>]</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">train[<span class="string">'AgeFill'</span>] = train[<span class="string">'Age'</span>]</div><div class="line">mean_ages = np.zeros(<span class="number">4</span>)</div><div class="line">mean_ages[<span class="number">0</span>] = np.average(train[train[<span class="string">'Title'</span>] == <span class="string">'Miss'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">1</span>] = np.average(train[train[<span class="string">'Title'</span>] == <span class="string">'Mrs'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">2</span>] = np.average(train[train[<span class="string">'Title'</span>] == <span class="string">'Mr'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">3</span>] = np.average(train[train[<span class="string">'Title'</span>] == <span class="string">'Master'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">train.loc[ (train.Age.isnull()) &amp; (train.Title == <span class="string">'Miss'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">0</span>]</div><div class="line">train.loc[ (train.Age.isnull()) &amp; (train.Title == <span class="string">'Mrs'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">1</span>]</div><div class="line">train.loc[ (train.Age.isnull()) &amp; (train.Title == <span class="string">'Mr'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">2</span>]</div><div class="line">train.loc[ (train.Age.isnull()) &amp; (train.Title == <span class="string">'Master'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">3</span>]</div><div class="line"></div><div class="line">train[<span class="string">'AgeCat'</span>] = train[<span class="string">'AgeFill'</span>]</div><div class="line">train.loc[ (train.AgeFill&lt;=<span class="number">10</span>), <span class="string">'AgeCat'</span>] = <span class="string">'child'</span></div><div class="line">train.loc[ (train.AgeFill&gt;<span class="number">60</span>), <span class="string">'AgeCat'</span>] = <span class="string">'aged'</span></div><div class="line">train.loc[ (train.AgeFill&gt;<span class="number">10</span>) &amp; (train.AgeFill &lt;=<span class="number">30</span>) ,<span class="string">'AgeCat'</span>] = <span class="string">'adult'</span></div><div class="line">train.loc[ (train.AgeFill&gt;<span class="number">30</span>) &amp; (train.AgeFill &lt;=<span class="number">60</span>) ,<span class="string">'AgeCat'</span>] = <span class="string">'senior'</span></div><div class="line"></div><div class="line">train[<span class="string">'Fare_Per_Person'</span>] = train[<span class="string">'Fare'</span>] / (train[<span class="string">'Family_Size'</span>] + <span class="number">1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">test[<span class="string">'AgeFill'</span>] = test[<span class="string">'Age'</span>]</div><div class="line">mean_ages = np.zeros(<span class="number">4</span>)</div><div class="line">mean_ages[<span class="number">0</span>] = np.average(test[test[<span class="string">'Title'</span>] == <span class="string">'Miss'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">1</span>] = np.average(test[test[<span class="string">'Title'</span>] == <span class="string">'Mrs'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">2</span>] = np.average(test[test[<span class="string">'Title'</span>] == <span class="string">'Mr'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">3</span>] = np.average(test[test[<span class="string">'Title'</span>] == <span class="string">'Master'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">test.loc[ (test.Age.isnull()) &amp; (test.Title == <span class="string">'Miss'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">0</span>]</div><div class="line">test.loc[ (test.Age.isnull()) &amp; (test.Title == <span class="string">'Mrs'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">1</span>]</div><div class="line">test.loc[ (test.Age.isnull()) &amp; (test.Title == <span class="string">'Mr'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">2</span>]</div><div class="line">test.loc[ (test.Age.isnull()) &amp; (test.Title == <span class="string">'Master'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">3</span>]</div><div class="line"></div><div class="line">test[<span class="string">'AgeCat'</span>] = test[<span class="string">'AgeFill'</span>]</div><div class="line">test.loc[ (test.AgeFill&lt;=<span class="number">10</span>), <span class="string">'AgeCat'</span>] = <span class="string">'child'</span></div><div class="line">test.loc[ (test.AgeFill&gt;<span class="number">60</span>), <span class="string">'AgeCat'</span>] = <span class="string">'aged'</span></div><div class="line">test.loc[ (test.AgeFill&gt;<span class="number">10</span>) &amp; (test.AgeFill &lt;=<span class="number">30</span>) ,<span class="string">'AgeCat'</span>] = <span class="string">'adult'</span></div><div class="line">test.loc[ (test.AgeFill&gt;<span class="number">30</span>) &amp; (test.AgeFill &lt;=<span class="number">60</span>) ,<span class="string">'AgeCat'</span>] = <span class="string">'senior'</span></div><div class="line"></div><div class="line">test[<span class="string">'Fare_Per_Person'</span>] = test[<span class="string">'Fare'</span>] / (test[<span class="string">'Family_Size'</span>] + <span class="number">1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">train.Embarked = train.Embarked.fillna(<span class="string">'S'</span>)</div><div class="line">test.Embarked = test.Embarked.fillna(<span class="string">'S'</span>)</div><div class="line"></div><div class="line">train.loc[ train.Cabin.isnull() == <span class="keyword">True</span>, <span class="string">'Cabin'</span>] = <span class="number">0.2</span></div><div class="line">train.loc[ train.Cabin.isnull() == <span class="keyword">False</span>, <span class="string">'Cabin'</span>] = <span class="number">1</span></div><div class="line"></div><div class="line">test.loc[ test.Cabin.isnull() == <span class="keyword">True</span>, <span class="string">'Cabin'</span>] = <span class="number">0.2</span></div><div class="line">test.loc[ test.Cabin.isnull() == <span class="keyword">False</span>, <span class="string">'Cabin'</span>] = <span class="number">1</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#Age times class</span></div><div class="line">train[<span class="string">'AgeClass'</span>] = train[<span class="string">'AgeFill'</span>] * train[<span class="string">'Pclass'</span>]</div><div class="line">train[<span class="string">'ClassFare'</span>] = train[<span class="string">'Pclass'</span>] * train[<span class="string">'Fare_Per_Person'</span>]</div><div class="line"></div><div class="line">train[<span class="string">'HighLow'</span>] = train[<span class="string">'Pclass'</span>]</div><div class="line">train.loc[ (train.Fare_Per_Person &lt; <span class="number">8</span>) ,<span class="string">'HighLow'</span>] = <span class="string">'Low'</span></div><div class="line">train.loc[ (train.Fare_Per_Person &gt;= <span class="number">8</span>) ,<span class="string">'HighLow'</span>] = <span class="string">'High'</span></div><div class="line"></div><div class="line"><span class="comment">#Age times class</span></div><div class="line">test[<span class="string">'AgeClass'</span>] = test[<span class="string">'AgeFill'</span>] * test[<span class="string">'Pclass'</span>]</div><div class="line">test[<span class="string">'ClassFare'</span>] = test[<span class="string">'Pclass'</span>] * test[<span class="string">'Fare_Per_Person'</span>]</div><div class="line"></div><div class="line">test[<span class="string">'HighLow'</span>] = test[<span class="string">'Pclass'</span>]</div><div class="line">test.loc[ (test.Fare_Per_Person &lt; <span class="number">8</span>) ,<span class="string">'HighLow'</span>] = <span class="string">'Low'</span></div><div class="line">test.loc[ (test.Fare_Per_Person &gt;= <span class="number">8</span>) ,<span class="string">'HighLow'</span>] = <span class="string">'High'</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> train.head(<span class="number">1</span>)</div><div class="line"><span class="comment"># print test.head()</span></div></pre></td></tr></table></figure>
 <pre><code>   PassengerId  Survived  Pclass                     Name   Sex   Age  SibSp  \
 0            1         0       3  Braund, Mr. Owen Harris  male  22.0      1   
 
@@ -858,53 +575,7 @@ test.loc[ (test.Fare_Per_Person &gt;= 8) ,&#39;HighLow&#39;] = &#39;High&#39;
 0     22.0   adult           3.625      66.0     10.875      Low  
 
 [1 rows x 21 columns]
-</code></pre><h2 id="u7279_u5F81_u5DE5_u7A0B"><a href="#u7279_u5F81_u5DE5_u7A0B" class="headerlink" title="特征工程"></a>特征工程</h2><pre><code class="python"># 处理训练集
-Pclass = pd.get_dummies(train.Pclass)
-Sex = pd.get_dummies(train.Sex)
-Embarked = pd.get_dummies(train.Embarked)
-Title = pd.get_dummies(train.Title)
-AgeCat = pd.get_dummies(train.AgeCat)
-HighLow = pd.get_dummies(train.HighLow)
-train_data = pd.concat([Pclass, Sex, Embarked, Title, AgeCat, HighLow], axis=1)
-train_data[&#39;Age&#39;] = train[&#39;Age&#39;]
-train_data[&#39;Fare&#39;] = train[&#39;Fare&#39;]
-train_data[&#39;SibSp&#39;] = train[&#39;SibSp&#39;]
-train_data[&#39;Parch&#39;] = train[&#39;Parch&#39;]
-train_data[&#39;Family_Size&#39;] = train[&#39;Family_Size&#39;]
-train_data[&#39;Family&#39;] = train[&#39;Family&#39;]
-train_data[&#39;AgeFill&#39;] = train[&#39;AgeFill&#39;]
-train_data[&#39;Fare_Per_Person&#39;] = train[&#39;Fare_Per_Person&#39;]
-train_data[&#39;Cabin&#39;] = train[&#39;Cabin&#39;]
-train_data[&#39;AgeClass&#39;] = train[&#39;AgeClass&#39;]
-train_data[&#39;ClassFare&#39;] = train[&#39;ClassFare&#39;]
-
-cols = [&#39;Age&#39;, &#39;Fare&#39;, &#39;SibSp&#39;, &#39;Parch&#39;, &#39;Family_Size&#39;, &#39;Family&#39;, &#39;AgeFill&#39;, &#39;Fare_Per_Person&#39;, &#39;AgeClass&#39;, &#39;ClassFare&#39;]
-train_data[cols] = train_data[cols].apply(lambda x: (x - np.mean(x)) / (np.max(x) - np.min(x)))
-print train_data.head()
-
-# 处理测试集
-Pclass = pd.get_dummies(test.Pclass)
-Sex = pd.get_dummies(test.Sex)
-Embarked = pd.get_dummies(test.Embarked)
-Title = pd.get_dummies(test.Title)
-AgeCat = pd.get_dummies(test.AgeCat)
-HighLow = pd.get_dummies(test.HighLow)
-test_data = pd.concat([Pclass, Sex, Embarked, Title, AgeCat, HighLow], axis=1)
-test_data[&#39;Age&#39;] = test[&#39;Age&#39;]
-test_data[&#39;Fare&#39;] = test[&#39;Fare&#39;]
-test_data[&#39;SibSp&#39;] = test[&#39;SibSp&#39;]
-test_data[&#39;Parch&#39;] = test[&#39;Parch&#39;]
-test_data[&#39;Family_Size&#39;] = test[&#39;Family_Size&#39;]
-test_data[&#39;Family&#39;] = test[&#39;Family&#39;]
-test_data[&#39;AgeFill&#39;] = test[&#39;AgeFill&#39;]
-test_data[&#39;Fare_Per_Person&#39;] = test[&#39;Fare_Per_Person&#39;]
-test_data[&#39;Cabin&#39;] = test[&#39;Cabin&#39;]
-test_data[&#39;AgeClass&#39;] = test[&#39;AgeClass&#39;]
-test_data[&#39;ClassFare&#39;] = test[&#39;ClassFare&#39;]
-
-test_data[cols] = test_data[cols].apply(lambda x: (x - np.mean(x)) / (np.max(x) - np.min(x)))
-print test_data.head()
-</code></pre>
+</code></pre><h2 id="u7279_u5F81_u5DE5_u7A0B"><a href="#u7279_u5F81_u5DE5_u7A0B" class="headerlink" title="特征工程"></a>特征工程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 处理训练集</span></div><div class="line">Pclass = pd.get_dummies(train.Pclass)</div><div class="line">Sex = pd.get_dummies(train.Sex)</div><div class="line">Embarked = pd.get_dummies(train.Embarked)</div><div class="line">Title = pd.get_dummies(train.Title)</div><div class="line">AgeCat = pd.get_dummies(train.AgeCat)</div><div class="line">HighLow = pd.get_dummies(train.HighLow)</div><div class="line">train_data = pd.concat([Pclass, Sex, Embarked, Title, AgeCat, HighLow], axis=<span class="number">1</span>)</div><div class="line">train_data[<span class="string">'Age'</span>] = train[<span class="string">'Age'</span>]</div><div class="line">train_data[<span class="string">'Fare'</span>] = train[<span class="string">'Fare'</span>]</div><div class="line">train_data[<span class="string">'SibSp'</span>] = train[<span class="string">'SibSp'</span>]</div><div class="line">train_data[<span class="string">'Parch'</span>] = train[<span class="string">'Parch'</span>]</div><div class="line">train_data[<span class="string">'Family_Size'</span>] = train[<span class="string">'Family_Size'</span>]</div><div class="line">train_data[<span class="string">'Family'</span>] = train[<span class="string">'Family'</span>]</div><div class="line">train_data[<span class="string">'AgeFill'</span>] = train[<span class="string">'AgeFill'</span>]</div><div class="line">train_data[<span class="string">'Fare_Per_Person'</span>] = train[<span class="string">'Fare_Per_Person'</span>]</div><div class="line">train_data[<span class="string">'Cabin'</span>] = train[<span class="string">'Cabin'</span>]</div><div class="line">train_data[<span class="string">'AgeClass'</span>] = train[<span class="string">'AgeClass'</span>]</div><div class="line">train_data[<span class="string">'ClassFare'</span>] = train[<span class="string">'ClassFare'</span>]</div><div class="line"></div><div class="line">cols = [<span class="string">'Age'</span>, <span class="string">'Fare'</span>, <span class="string">'SibSp'</span>, <span class="string">'Parch'</span>, <span class="string">'Family_Size'</span>, <span class="string">'Family'</span>, <span class="string">'AgeFill'</span>, <span class="string">'Fare_Per_Person'</span>, <span class="string">'AgeClass'</span>, <span class="string">'ClassFare'</span>]</div><div class="line">train_data[cols] = train_data[cols].apply(<span class="keyword">lambda</span> x: (x - np.mean(x)) / (np.max(x) - np.min(x)))</div><div class="line"><span class="keyword">print</span> train_data.head()</div><div class="line"></div><div class="line"><span class="comment"># 处理测试集</span></div><div class="line">Pclass = pd.get_dummies(test.Pclass)</div><div class="line">Sex = pd.get_dummies(test.Sex)</div><div class="line">Embarked = pd.get_dummies(test.Embarked)</div><div class="line">Title = pd.get_dummies(test.Title)</div><div class="line">AgeCat = pd.get_dummies(test.AgeCat)</div><div class="line">HighLow = pd.get_dummies(test.HighLow)</div><div class="line">test_data = pd.concat([Pclass, Sex, Embarked, Title, AgeCat, HighLow], axis=<span class="number">1</span>)</div><div class="line">test_data[<span class="string">'Age'</span>] = test[<span class="string">'Age'</span>]</div><div class="line">test_data[<span class="string">'Fare'</span>] = test[<span class="string">'Fare'</span>]</div><div class="line">test_data[<span class="string">'SibSp'</span>] = test[<span class="string">'SibSp'</span>]</div><div class="line">test_data[<span class="string">'Parch'</span>] = test[<span class="string">'Parch'</span>]</div><div class="line">test_data[<span class="string">'Family_Size'</span>] = test[<span class="string">'Family_Size'</span>]</div><div class="line">test_data[<span class="string">'Family'</span>] = test[<span class="string">'Family'</span>]</div><div class="line">test_data[<span class="string">'AgeFill'</span>] = test[<span class="string">'AgeFill'</span>]</div><div class="line">test_data[<span class="string">'Fare_Per_Person'</span>] = test[<span class="string">'Fare_Per_Person'</span>]</div><div class="line">test_data[<span class="string">'Cabin'</span>] = test[<span class="string">'Cabin'</span>]</div><div class="line">test_data[<span class="string">'AgeClass'</span>] = test[<span class="string">'AgeClass'</span>]</div><div class="line">test_data[<span class="string">'ClassFare'</span>] = test[<span class="string">'ClassFare'</span>]</div><div class="line"></div><div class="line">test_data[cols] = test_data[cols].apply(<span class="keyword">lambda</span> x: (x - np.mean(x)) / (np.max(x) - np.min(x)))</div><div class="line"><span class="keyword">print</span> test_data.head()</div></pre></td></tr></table></figure>
 <pre><code>     1    2    3  female  male    C    Q    S  Master  Miss    ...      \
 0  0.0  0.0  1.0     0.0   1.0  0.0  0.0  1.0     0.0   0.0    ...       
 1  1.0  0.0  0.0     1.0   0.0  1.0  0.0  0.0     0.0   0.0    ...       
@@ -949,57 +620,17 @@ print test_data.head()
 4        -0.067618      1  0.011564  -0.079855  
 
 [5 rows x 29 columns]
-</code></pre><h2 id="u6A21_u578B_u8BAD_u7EC3"><a href="#u6A21_u578B_u8BAD_u7EC3" class="headerlink" title="模型训练"></a>模型训练</h2><pre><code class="python">from sklearn.linear_model import LogisticRegression as LR
-from sklearn.cross_validation import cross_val_score
-from sklearn.naive_bayes import GaussianNB as GNB
-from sklearn.ensemble import RandomForestClassifier
-
-import numpy as np
-</code></pre>
-<h3 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h3><pre><code class="python">model_lr = LR(penalty = &#39;l2&#39;, dual = True, random_state = 0)
-model_lr.fit(train_data, label)
-print &quot;逻辑回归10折交叉验证得分: &quot;, np.mean(cross_val_score(model_lr, train_data, label, cv=10, scoring=&#39;roc_auc&#39;))
-
-result = model_lr.predict( test_data )
-output = pd.DataFrame( data={&quot;PassengerId&quot;:test[&quot;PassengerId&quot;], &quot;Survived&quot;:result} )
-output.to_csv( &quot;lr.csv&quot;, index=False, quoting=3 )
-</code></pre>
+</code></pre><h2 id="u6A21_u578B_u8BAD_u7EC3"><a href="#u6A21_u578B_u8BAD_u7EC3" class="headerlink" title="模型训练"></a>模型训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression <span class="keyword">as</span> LR</div><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> cross_val_score</div><div class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> GaussianNB <span class="keyword">as</span> GNB</div><div class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</div><div class="line"></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div></pre></td></tr></table></figure>
+<h3 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">model_lr = LR(penalty = <span class="string">'l2'</span>, dual = <span class="keyword">True</span>, random_state = <span class="number">0</span>)</div><div class="line">model_lr.fit(train_data, label)</div><div class="line"><span class="keyword">print</span> <span class="string">"逻辑回归10折交叉验证得分: "</span>, np.mean(cross_val_score(model_lr, train_data, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div><div class="line"></div><div class="line">result = model_lr.predict( test_data )</div><div class="line">output = pd.DataFrame( data=&#123;<span class="string">"PassengerId"</span>:test[<span class="string">"PassengerId"</span>], <span class="string">"Survived"</span>:result&#125; )</div><div class="line">output.to_csv( <span class="string">"lr.csv"</span>, index=<span class="keyword">False</span>, quoting=<span class="number">3</span> )</div></pre></td></tr></table></figure>
 <pre><code>逻辑回归10折交叉验证得分:  0.871878335172
-</code></pre><h4 id="u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-78469"><a href="#u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-78469" class="headerlink" title="提交kaggle后准确率：0.78469"></a>提交kaggle后准确率：0.78469</h4><h3 id="u9AD8_u65AF_u8D1D_u53F6_u65AF"><a href="#u9AD8_u65AF_u8D1D_u53F6_u65AF" class="headerlink" title="高斯贝叶斯"></a>高斯贝叶斯</h3><pre><code class="python">model_GNB = GNB()
-model_GNB.fit(train_data, label)
-print &quot;高斯贝叶斯分类器10折交叉验证得分: &quot;, np.mean(cross_val_score(model_GNB, train_data, label, cv=10, scoring=&#39;roc_auc&#39;))
-
-result = model_GNB.predict( test_data )
-output = pd.DataFrame( data={&quot;PassengerId&quot;:test[&quot;PassengerId&quot;], &quot;Survived&quot;:result} )
-output.to_csv( &quot;gnb.csv&quot;, index=False, quoting=3 )
-</code></pre>
+</code></pre><h4 id="u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-78469"><a href="#u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-78469" class="headerlink" title="提交kaggle后准确率：0.78469"></a>提交kaggle后准确率：0.78469</h4><h3 id="u9AD8_u65AF_u8D1D_u53F6_u65AF"><a href="#u9AD8_u65AF_u8D1D_u53F6_u65AF" class="headerlink" title="高斯贝叶斯"></a>高斯贝叶斯</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">model_GNB = GNB()</div><div class="line">model_GNB.fit(train_data, label)</div><div class="line"><span class="keyword">print</span> <span class="string">"高斯贝叶斯分类器10折交叉验证得分: "</span>, np.mean(cross_val_score(model_GNB, train_data, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div><div class="line"></div><div class="line">result = model_GNB.predict( test_data )</div><div class="line">output = pd.DataFrame( data=&#123;<span class="string">"PassengerId"</span>:test[<span class="string">"PassengerId"</span>], <span class="string">"Survived"</span>:result&#125; )</div><div class="line">output.to_csv( <span class="string">"gnb.csv"</span>, index=<span class="keyword">False</span>, quoting=<span class="number">3</span> )</div></pre></td></tr></table></figure>
 <pre><code>高斯贝叶斯分类器10折交叉验证得分:  0.857323798206
-</code></pre><h4 id="u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-74163"><a href="#u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-74163" class="headerlink" title="提交kaggle后准确率：0.74163"></a>提交kaggle后准确率：0.74163</h4><h3 id="u968F_u673A_u68EE_u6797"><a href="#u968F_u673A_u68EE_u6797" class="headerlink" title="随机森林"></a>随机森林</h3><pre><code class="python">forest = RandomForestClassifier( n_estimators=500, criterion=&#39;entropy&#39;, max_depth=5, min_samples_split=1,
-  min_samples_leaf=1, max_features=&#39;auto&#39;, bootstrap=False, oob_score=False, n_jobs=4,
-  verbose=0)
-
-%time forest = forest.fit( train_data, label )
-print &quot;随机森林分类器10折交叉验证得分: &quot;, np.mean(cross_val_score(forest, train_data, label, cv=10, scoring=&#39;roc_auc&#39;))
-
-result = forest.predict( test_data )
-output = pd.DataFrame( data={&quot;PassengerId&quot;:test[&quot;PassengerId&quot;], &quot;Survived&quot;:result} )
-output.to_csv( &quot;rf.csv&quot;, index=False, quoting=3 )
-</code></pre>
+</code></pre><h4 id="u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-74163"><a href="#u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-74163" class="headerlink" title="提交kaggle后准确率：0.74163"></a>提交kaggle后准确率：0.74163</h4><h3 id="u968F_u673A_u68EE_u6797"><a href="#u968F_u673A_u68EE_u6797" class="headerlink" title="随机森林"></a>随机森林</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">forest = RandomForestClassifier( n_estimators=<span class="number">500</span>, criterion=<span class="string">'entropy'</span>, max_depth=<span class="number">5</span>, min_samples_split=<span class="number">1</span>,</div><div class="line">  min_samples_leaf=<span class="number">1</span>, max_features=<span class="string">'auto'</span>, bootstrap=<span class="keyword">False</span>, oob_score=<span class="keyword">False</span>, n_jobs=<span class="number">4</span>,</div><div class="line">  verbose=<span class="number">0</span>)</div><div class="line"></div><div class="line">%time forest = forest.fit( train_data, label )</div><div class="line"><span class="keyword">print</span> <span class="string">"随机森林分类器10折交叉验证得分: "</span>, np.mean(cross_val_score(forest, train_data, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div><div class="line"></div><div class="line">result = forest.predict( test_data )</div><div class="line">output = pd.DataFrame( data=&#123;<span class="string">"PassengerId"</span>:test[<span class="string">"PassengerId"</span>], <span class="string">"Survived"</span>:result&#125; )</div><div class="line">output.to_csv( <span class="string">"rf.csv"</span>, index=<span class="keyword">False</span>, quoting=<span class="number">3</span> )</div></pre></td></tr></table></figure>
 <pre><code>CPU times: user 1.34 s, sys: 208 ms, total: 1.55 s
 Wall time: 1.17 s
 随机森林分类器10折交叉验证得分:  0.870820473644
 </code></pre><h4 id="u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-76555"><a href="#u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-76555" class="headerlink" title="提交kaggle后准确率：0.76555"></a>提交kaggle后准确率：0.76555</h4><hr>
-<h2 id="u5BFB_u627E_u6700_u4F73_u53C2_u6570"><a href="#u5BFB_u627E_u6700_u4F73_u53C2_u6570" class="headerlink" title="寻找最佳参数"></a>寻找最佳参数</h2><pre><code class="python">from sklearn.pipeline import Pipeline
-from sklearn.grid_search import GridSearchCV
-from sklearn.cross_validation import train_test_split,StratifiedShuffleSplit,StratifiedKFold
-param_grid = dict( )
-
-pipeline=Pipeline([ (&#39;clf&#39;, forest) ])
-grid_search = GridSearchCV(pipeline, param_grid=param_grid, verbose=3, scoring=&#39;accuracy&#39;,
-cv=StratifiedShuffleSplit(label, n_iter=10, test_size=0.2, train_size=None)).fit(train_data, label)
-
-print(&quot;Best score: %0.3f&quot; % grid_search.best_score_)
-</code></pre>
+<h2 id="u5BFB_u627E_u6700_u4F73_u53C2_u6570"><a href="#u5BFB_u627E_u6700_u4F73_u53C2_u6570" class="headerlink" title="寻找最佳参数"></a>寻找最佳参数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</div><div class="line"><span class="keyword">from</span> sklearn.grid_search <span class="keyword">import</span> GridSearchCV</div><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> train_test_split,StratifiedShuffleSplit,StratifiedKFold</div><div class="line">param_grid = dict( )</div><div class="line"></div><div class="line">pipeline=Pipeline([ (<span class="string">'clf'</span>, forest) ])</div><div class="line">grid_search = GridSearchCV(pipeline, param_grid=param_grid, verbose=<span class="number">3</span>, scoring=<span class="string">'accuracy'</span>,</div><div class="line">cv=StratifiedShuffleSplit(label, n_iter=<span class="number">10</span>, test_size=<span class="number">0.2</span>, train_size=<span class="keyword">None</span>)).fit(train_data, label)</div><div class="line"></div><div class="line">print(<span class="string">"Best score: %0.3f"</span> % grid_search.best_score_)</div></pre></td></tr></table></figure>
 <pre><code>Fitting 10 folds for each of 1 candidates, totalling 10 fits
 [CV]  ................................................................
 [CV] ....................................... , score=0.849162 -   1.7s
@@ -1031,7 +662,7 @@ Best score: 0.842
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/titanic/" data-id="ciwrvim1x0050kks8gyw0ezh5" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/titanic/" data-id="ciy2rrdiw004j6bs8v626mes4" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/19/algo/kaggle/titanic/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1082,29 +713,16 @@ Best score: 0.842
       
                 
         <h2 id="u6570_u5B57_u5E8F_u5217_u9884_u6D4B"><a href="#u6570_u5B57_u5E8F_u5217_u9884_u6D4B" class="headerlink" title="数字序列预测"></a>数字序列预测</h2><p><a href="https://github.com/lijingpeng/kaggle/tree/master/competitions/Sequence" target="_blank" rel="external">Github地址</a><br><a href="https://www.kaggle.com/c/integer-sequence-learning" target="_blank" rel="external">Kaggle地址</a></p>
-<pre><code class="python"># -*- coding: UTF-8 -*-
-%matplotlib inline
-
-import pandas as pd
-import string
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn import preprocessing
-</code></pre>
-<pre><code class="python">train = pd.read_csv(&#39;train.csv&#39;)
-test = pd.read_csv(&#39;test.csv&#39;)
-</code></pre>
-<pre><code class="python">last = test.Sequence.apply(lambda x: pd.Series(x.split(&#39;,&#39;))).mode(axis=1).fillna(0)
-</code></pre>
-<pre><code class="python">submission = pd.DataFrame({&#39;Id&#39;: test[&#39;Id&#39;], &#39;Last&#39;: last[0]})
-submission.to_csv(&#39;mode.csv&#39;, index=False)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line">%matplotlib inline</div><div class="line"></div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> string</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">train = pd.read_csv(<span class="string">'train.csv'</span>)</div><div class="line">test = pd.read_csv(<span class="string">'test.csv'</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">last = test.Sequence.apply(<span class="keyword">lambda</span> x: pd.Series(x.split(<span class="string">','</span>))).mode(axis=<span class="number">1</span>).fillna(<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">submission = pd.DataFrame(&#123;<span class="string">'Id'</span>: test[<span class="string">'Id'</span>], <span class="string">'Last'</span>: last[<span class="number">0</span>]&#125;)</div><div class="line">submission.to_csv(<span class="string">'mode.csv'</span>, index=<span class="keyword">False</span>)</div></pre></td></tr></table></figure>
 <p>提交Kaggle之后是0.05680</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/" data-id="ciwrvim1o004ikks8e3ep9w5j" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/" data-id="ciy2rrdiv004g6bs8el4m8x1m" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/#ds-thread" class="article-comment-link">评论</a>
       
@@ -1119,416 +737,11 @@ submission.to_csv(&#39;mode.csv&#39;, index=False)
 
 
     
-      <article id="post-algo/kaggle/movie_reviews" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/16/algo/kaggle/movie_reviews/">kaggle之电影文本情感分类</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/08/16/algo/kaggle/movie_reviews/">
-      <time datetime="2016-08-16T05:48:13.000Z" itemprop="datePublished">2016-08-16</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/kaggle/">kaggle</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="u7535_u5F71_u6587_u672C_u60C5_u611F_u5206_u7C7B"><a href="#u7535_u5F71_u6587_u672C_u60C5_u611F_u5206_u7C7B" class="headerlink" title="电影文本情感分类"></a>电影文本情感分类</h2><p><a href="https://github.com/lijingpeng/kaggle/tree/master/competitions/Bag_of_Words" target="_blank" rel="external">Github地址</a><br><a href="https://www.kaggle.com/c/word2vec-nlp-tutorial/" target="_blank" rel="external">Kaggle地址</a></p>
-<p>这个任务主要是对电影评论文本进行情感分类，主要分为正面评论和负面评论，所以是一个二分类问题，二分类模型我们可以选取一些常见的模型比如贝叶斯、逻辑回归等，这里挑战之一是文本内容的向量化，因此，我们首先尝试基于TF-IDF的向量化方法，然后尝试word2vec。</p>
-<pre><code class="python"># -*- coding: UTF-8 -*-
-import pandas as pd
-import numpy as np
-import re
-from bs4 import BeautifulSoup
-
-def review_to_wordlist(review):
-    &#39;&#39;&#39;
-    把IMDB的评论转成词序列
-    参考：http://blog.csdn.net/longxinchen_ml/article/details/50629613
-    &#39;&#39;&#39;
-    # 去掉HTML标签，拿到内容
-    review_text = BeautifulSoup(review, &quot;html.parser&quot;).get_text()
-    # 用正则表达式取出符合规范的部分
-    review_text = re.sub(&quot;[^a-zA-Z]&quot;,&quot; &quot;, review_text)
-    # 小写化所有的词，并转成词list
-    words = review_text.lower().split()
-    # 返回words
-    return words
-</code></pre>
-<h2 id="u8F7D_u5165_u6570_u636E_u96C6"><a href="#u8F7D_u5165_u6570_u636E_u96C6" class="headerlink" title="载入数据集"></a>载入数据集</h2><pre><code class="python"># 载入数据集
-train = pd.read_csv(&#39;/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/labeledTrainData.tsv&#39;, header=0, delimiter=&quot;\t&quot;, quoting=3)
-test = pd.read_csv(&#39;/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/testData.tsv&#39;, header=0, delimiter=&quot;\t&quot;, quoting=3)
-print train.head()
-print test.head()
-</code></pre>
-<pre><code>         id  sentiment                                             review
-0  &quot;5814_8&quot;          1  &quot;With all this stuff going down at the moment ...
-1  &quot;2381_9&quot;          1  &quot;\&quot;The Classic War of the Worlds\&quot; by Timothy ...
-2  &quot;7759_3&quot;          0  &quot;The film starts with a manager (Nicholas Bell...
-3  &quot;3630_4&quot;          0  &quot;It must be assumed that those who praised thi...
-4  &quot;9495_8&quot;          1  &quot;Superbly trashy and wondrously unpretentious ...
-           id                                             review
-0  &quot;12311_10&quot;  &quot;Naturally in a film who&#39;s main themes are of ...
-1    &quot;8348_2&quot;  &quot;This movie is a disaster within a disaster fi...
-2    &quot;5828_4&quot;  &quot;All in all, this is a movie for kids. We saw ...
-3    &quot;7186_2&quot;  &quot;Afraid of the Dark left me with the impressio...
-4   &quot;12128_7&quot;  &quot;A very accurate depiction of small time mob l...
-</code></pre><h2 id="u9884_u5904_u7406_u6570_u636E"><a href="#u9884_u5904_u7406_u6570_u636E" class="headerlink" title="预处理数据"></a>预处理数据</h2><pre><code class="python"># 预处理数据
-label = train[&#39;sentiment&#39;]
-train_data = []
-for i in range(len(train[&#39;review&#39;])):
-    train_data.append(&#39; &#39;.join(review_to_wordlist(train[&#39;review&#39;][i])))
-test_data = []
-for i in range(len(test[&#39;review&#39;])):
-    test_data.append(&#39; &#39;.join(review_to_wordlist(test[&#39;review&#39;][i])))
-
-# 预览数据
-print train_data[0], &#39;\n&#39;
-print test_data[0]
-</code></pre>
-<pre><code>with all this stuff going down at the moment with mj i ve started listening to his music watching the odd documentary here and there watched the wiz and watched moonwalker again maybe i just want to get a certain insight into this guy who i thought was really cool in the eighties just to maybe make up my mind whether he is guilty or innocent moonwalker is part biography part feature film which i remember going to see at the cinema when it was originally released some of it has subtle messages about mj s feeling towards the press and also the obvious message of drugs are bad m kay visually impressive but of course this is all about michael jackson so unless you remotely like mj in anyway then you are going to hate this and find it boring some may call mj an egotist for consenting to the making of this movie but mj and most of his fans would say that he made it for the fans which if true is really nice of him the actual feature film bit when it finally starts is only on for minutes or so excluding the smooth criminal sequence and joe pesci is convincing as a psychopathic all powerful drug lord why he wants mj dead so bad is beyond me because mj overheard his plans nah joe pesci s character ranted that he wanted people to know it is he who is supplying drugs etc so i dunno maybe he just hates mj s music lots of cool things in this like mj turning into a car and a robot and the whole speed demon sequence also the director must have had the patience of a saint when it came to filming the kiddy bad sequence as usually directors hate working with one kid let alone a whole bunch of them performing a complex dance scene bottom line this movie is for people who like mj on one level or another which i think is most people if not then stay away it does try and give off a wholesome message and ironically mj s bestest buddy in this movie is a girl michael jackson is truly one of the most talented people ever to grace this planet but is he guilty well with all the attention i ve gave this subject hmmm well i don t know because people can be different behind closed doors i know this for a fact he is either an extremely nice but stupid guy or one of the most sickest liars i hope he is not the latter
-
-naturally in a film who s main themes are of mortality nostalgia and loss of innocence it is perhaps not surprising that it is rated more highly by older viewers than younger ones however there is a craftsmanship and completeness to the film which anyone can enjoy the pace is steady and constant the characters full and engaging the relationships and interactions natural showing that you do not need floods of tears to show emotion screams to show fear shouting to show dispute or violence to show anger naturally joyce s short story lends the film a ready made structure as perfect as a polished diamond but the small changes huston makes such as the inclusion of the poem fit in neatly it is truly a masterpiece of tact subtlety and overwhelming beauty
-</code></pre><h2 id="u7279_u5F81_u5904_u7406"><a href="#u7279_u5F81_u5904_u7406" class="headerlink" title="特征处理"></a>特征处理</h2><p>直接丢给计算机这些词文本，计算机是无法计算的，因此我们需要把文本转换为向量，有几种常见的文本向量处理方法，比如：</p>
-<ol>
-<li>单词计数  </li>
-<li>TF-IDF向量  </li>
-<li>Word2vec向量<br>我们先使用TF-IDF来试一下。</li>
-</ol>
-<pre><code class="python">from sklearn.feature_extraction.text import TfidfVectorizer as TFIDF
-# 参考：http://blog.csdn.net/longxinchen_ml/article/details/50629613
-tfidf = TFIDF(min_df=2, # 最小支持度为2
-           max_features=None,
-           strip_accents=&#39;unicode&#39;,
-           analyzer=&#39;word&#39;,
-           token_pattern=r&#39;\w{1,}&#39;,
-           ngram_range=(1, 3),  # 二元文法模型
-           use_idf=1,
-           smooth_idf=1,
-           sublinear_tf=1,
-           stop_words = &#39;english&#39;) # 去掉英文停用词
-
-# 合并训练和测试集以便进行TFIDF向量化操作
-data_all = train_data + test_data
-len_train = len(train_data)
-
-tfidf.fit(data_all)
-data_all = tfidf.transform(data_all)
-# 恢复成训练集和测试集部分
-train_x = data_all[:len_train]
-test_x = data_all[len_train:]
-print &#39;TF-IDF处理结束.&#39;
-</code></pre>
-<pre><code>TF-IDF处理结束.
-</code></pre><h2 id="u6734_u7D20_u8D1D_u53F6_u65AF_u8BAD_u7EC3"><a href="#u6734_u7D20_u8D1D_u53F6_u65AF_u8BAD_u7EC3" class="headerlink" title="朴素贝叶斯训练"></a>朴素贝叶斯训练</h2><pre><code class="python">from sklearn.naive_bayes import MultinomialNB as MNB
-
-model_NB = MNB()
-model_NB.fit(train_x, label)
-MNB(alpha=1.0, class_prior=None, fit_prior=True)
-
-from sklearn.cross_validation import cross_val_score
-import numpy as np
-
-print &quot;多项式贝叶斯分类器10折交叉验证得分: &quot;, np.mean(cross_val_score(model_NB, train_x, label, cv=10, scoring=&#39;roc_auc&#39;))
-</code></pre>
-<pre><code>多项式贝叶斯分类器10折交叉验证得分:  0.94983968
-</code></pre><pre><code class="python">test_predicted = np.array(model_NB.predict(test_x))
-print &#39;保存结果...&#39;
-nb_output = pd.DataFrame(data=test_predicted, columns=[&#39;sentiment&#39;])
-nb_output[&#39;id&#39;] = test[&#39;id&#39;]
-nb_output = nb_output[[&#39;id&#39;, &#39;sentiment&#39;]]
-nb_output.to_csv(&#39;nb_output.csv&#39;, index=False)
-print &#39;结束.&#39;
-</code></pre>
-<pre><code>保存结果...
-结束.
-</code></pre><ol>
-<li>提交最终的结果到kaggle，AUC为：0.85728，排名300左右，50%的水平  </li>
-<li>ngram_range = 3, 三元文法，AUC为0.85924</li>
-</ol>
-<h2 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><pre><code class="python">from sklearn.linear_model import LogisticRegression as LR
-from sklearn.grid_search import GridSearchCV
-
-# 设定grid search的参数
-grid_values = {&#39;C&#39;:[30]}  
-# 设定打分为roc_auc
-model_LR = GridSearchCV(LR(penalty = &#39;L2&#39;, dual = True, random_state = 0), grid_values, scoring = &#39;roc_auc&#39;, cv = 20)
-model_LR.fit(train_x, label)
-# 20折交叉验证
-GridSearchCV(cv=20, estimator=LR(C=1.0, class_weight=None, dual=True,
-             fit_intercept=True, intercept_scaling=1, penalty=&#39;L2&#39;, random_state=0, tol=0.0001),
-        fit_params={}, iid=True, n_jobs=1,
-        param_grid={&#39;C&#39;: [30]}, pre_dispatch=&#39;2*n_jobs&#39;, refit=True,
-        scoring=&#39;roc_auc&#39;, verbose=0)
-#输出结果
-print model_LR.grid_scores_
-</code></pre>
-<pre><code>[mean: 0.96497, std: 0.00476, params: {&#39;C&#39;: 30}]
-</code></pre><pre><code class="python">test_predicted = np.array(model_LR.predict(test_x))
-print &#39;保存结果...&#39;
-lr_output = pd.DataFrame(data=test_predicted, columns=[&#39;sentiment&#39;])
-lr_output[&#39;id&#39;] = test[&#39;id&#39;]
-lr_output = lr_output[[&#39;id&#39;, &#39;sentiment&#39;]]
-lr_output.to_csv(&#39;lr_output.csv&#39;, index=False)
-print &#39;结束.&#39;
-</code></pre>
-<pre><code>保存结果...
-结束.
-</code></pre><ol>
-<li>提交最终的结果到kaggle，AUC为：0.88956，排名260左右，比之前贝叶斯模型有所提高   </li>
-<li>三元文法，AUC为0.89076</li>
-</ol>
-<h2 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h2><p>神经网络语言模型L = SUM[log(p(w|contect(w))]，即在w的上下文下计算当前词w的概率，由公式可以看到，我们的核心是计算p(w|contect(w)， Word2vec给出了构造这个概率的一个方法。</p>
-<pre><code class="python">import gensim
-import nltk
-from nltk.corpus import stopwords
-
-tokenizer = nltk.data.load(&#39;tokenizers/punkt/english.pickle&#39;)
-
-def review_to_wordlist( review, remove_stopwords=False ):
-    review_text = BeautifulSoup(review, &quot;html.parser&quot;).get_text()
-    review_text = re.sub(&quot;[^a-zA-Z]&quot;,&quot; &quot;, review_text)
-
-    words = review_text.lower().split()
-
-    if remove_stopwords:
-        stops = set(stopwords.words(&quot;english&quot;))
-        words = [w for w in words if not w in stops]
-
-    return(words)
-
-def review_to_sentences( review, tokenizer, remove_stopwords=False ):
-    &#39;&#39;&#39;
-    将评论段落转换为句子，返回句子列表，每个句子由一堆词组成
-    &#39;&#39;&#39;
-    raw_sentences = tokenizer.tokenize(review.strip().decode(&#39;utf8&#39;))
-
-    sentences = []
-    for raw_sentence in raw_sentences:
-        if len(raw_sentence) &gt; 0:
-            # 获取句子中的词列表
-            sentences.append( review_to_wordlist( raw_sentence, remove_stopwords ))
-    return sentences
-</code></pre>
-<pre><code class="python">sentences = []
-for i, review in enumerate(train[&quot;review&quot;]):
-    sentences += review_to_sentences(review, tokenizer)
-</code></pre>
-<pre><code class="python">unlabeled_train = pd.read_csv(&quot;/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/unlabeledTrainData.tsv&quot;, header=0, delimiter=&quot;\t&quot;, quoting=3 )
-for review in unlabeled_train[&quot;review&quot;]:
-    sentences += review_to_sentences(review, tokenizer)
-print &#39;预处理unlabeled_train data...&#39;
-print len(train_data)
-print len(sentences)
-</code></pre>
-<pre><code>    预处理unlabeled_train data...
-    25000
-    795538
-</code></pre><h3 id="u6784_u5EFAword2vec_u6A21_u578B"><a href="#u6784_u5EFAword2vec_u6A21_u578B" class="headerlink" title="构建word2vec模型"></a>构建word2vec模型</h3><pre><code class="python">import time
-from gensim.models import Word2Vec
-# 模型参数
-num_features = 300    # Word vector dimensionality                      
-min_word_count = 40   # Minimum word count                        
-num_workers = 4       # Number of threads to run in parallel
-context = 10          # Context window size                                                                                    
-downsampling = 1e-3   # Downsample setting for frequent words
-</code></pre>
-<pre><code class="python">%%time
-# 训练模型
-print(&quot;训练模型中...&quot;)
-model = Word2Vec(sentences, workers=num_workers, \
-            size=num_features, min_count = min_word_count, \
-            window = context, sample = downsampling)
-</code></pre>
-<pre><code>训练模型中...
-CPU times: user 6min 16s, sys: 8.34 s, total: 6min 24s
-Wall time: 2min 27s
-</code></pre><pre><code class="python">print &#39;保存模型...&#39;
-model.init_sims(replace=True)
-model_name = &quot;300features_40minwords_10context&quot;
-model.save(model_name)
-</code></pre>
-<pre><code>保存模型...
-</code></pre><h3 id="u9884_u89C8_u6A21_u578B"><a href="#u9884_u89C8_u6A21_u578B" class="headerlink" title="预览模型"></a>预览模型</h3><pre><code class="python">model.doesnt_match(&quot;man woman child kitchen&quot;.split())
-</code></pre>
-<pre><code>&#39;kitchen&#39;
-</code></pre><pre><code class="python">model.doesnt_match(&quot;france england germany berlin&quot;.split())
-</code></pre>
-<pre><code>&#39;berlin&#39;
-</code></pre><pre><code class="python">model.doesnt_match(&quot;paris berlin london austria&quot;.split())
-</code></pre>
-<pre><code>&#39;london&#39;
-</code></pre><pre><code class="python">model.most_similar(&quot;man&quot;)
-</code></pre>
-<pre><code>[(u&#39;woman&#39;, 0.6246455907821655),
- (u&#39;lady&#39;, 0.6008599400520325),
- (u&#39;lad&#39;, 0.5698915719985962),
- (u&#39;businessman&#39;, 0.5431989431381226),
- (u&#39;chap&#39;, 0.53116375207901),
- (u&#39;monk&#39;, 0.5250570774078369),
- (u&#39;men&#39;, 0.5177899599075317),
- (u&#39;guy&#39;, 0.517480731010437),
- (u&#39;farmer&#39;, 0.5114585757255554),
- (u&#39;person&#39;, 0.5109285116195679)]
-</code></pre><pre><code class="python">model.most_similar(&quot;queen&quot;)
-</code></pre>
-<pre><code>[(u&#39;princess&#39;, 0.6759523153305054),
- (u&#39;bride&#39;, 0.6207793951034546),
- (u&#39;belle&#39;, 0.6001157760620117),
- (u&#39;shearer&#39;, 0.5995810031890869),
- (u&#39;stepmother&#39;, 0.596365749835968),
- (u&#39;victoria&#39;, 0.5917614698410034),
- (u&#39;dame&#39;, 0.589063286781311),
- (u&#39;latifah&#39;, 0.5790275931358337),
- (u&#39;countess&#39;, 0.5776904821395874),
- (u&#39;widow&#39;, 0.5727116465568542)]
-</code></pre><pre><code class="python">model.most_similar(&quot;awful&quot;)
-</code></pre>
-<pre><code>[(u&#39;terrible&#39;, 0.7642339468002319),
- (u&#39;atrocious&#39;, 0.7405279874801636),
- (u&#39;horrible&#39;, 0.7376815676689148),
- (u&#39;abysmal&#39;, 0.7010303139686584),
- (u&#39;dreadful&#39;, 0.6942194104194641),
- (u&#39;appalling&#39;, 0.6887971758842468),
- (u&#39;lousy&#39;, 0.6646767854690552),
- (u&#39;horrid&#39;, 0.6554058194160461),
- (u&#39;horrendous&#39;, 0.6533403992652893),
- (u&#39;amateurish&#39;, 0.6079087853431702)]
-</code></pre><h3 id="u4F7F_u7528Word2vec_u7279_u5F81"><a href="#u4F7F_u7528Word2vec_u7279_u5F81" class="headerlink" title="使用Word2vec特征"></a>使用Word2vec特征</h3><pre><code class="python">def makeFeatureVec(words, model, num_features):
-    &#39;&#39;&#39;
-    对段落中的所有词向量进行取平均操作
-    &#39;&#39;&#39;
-    featureVec = np.zeros((num_features,), dtype=&quot;float32&quot;)
-    nwords = 0.
-
-    # Index2word包含了词表中的所有词，为了检索速度，保存到set中
-    index2word_set = set(model.index2word)
-    for word in words:
-        if word in index2word_set:
-            nwords = nwords + 1.
-            featureVec = np.add(featureVec, model[word])
-
-    # 取平均
-    featureVec = np.divide(featureVec, nwords)
-    return featureVec
-
-
-def getAvgFeatureVecs(reviews, model, num_features):
-    &#39;&#39;&#39;
-    给定一个文本列表，每个文本由一个词列表组成，返回每个文本的词向量平均值
-    &#39;&#39;&#39;
-    counter = 0.
-
-    reviewFeatureVecs = np.zeros((len(reviews), num_features), dtype=&quot;float32&quot;)
-
-    for review in reviews:
-       if counter % 5000. == 0.:
-           print(&quot;Review %d of %d&quot; % (counter, len(reviews)))
-
-       reviewFeatureVecs[counter] = makeFeatureVec(review, model, \
-           num_features)
-
-       counter = counter + 1.
-    return reviewFeatureVecs
-</code></pre>
-<pre><code class="python">%time trainDataVecs = getAvgFeatureVecs( train_data, model, num_features )
-</code></pre>
-<pre><code>Review 0 of 25000
-Review 5000 of 25000
-Review 10000 of 25000
-Review 15000 of 25000
-Review 20000 of 25000
-CPU times: user 1min 49s, sys: 1.9 s, total: 1min 51s
-Wall time: 1min 54s
-</code></pre><pre><code class="python">%time testDataVecs = getAvgFeatureVecs(test_data, model, num_features)
-</code></pre>
-<pre><code>Review 0 of 25000
-Review 5000 of 25000
-Review 10000 of 25000
-Review 15000 of 25000
-Review 20000 of 25000
-CPU times: user 1min 44s, sys: 1.56 s, total: 1min 46s
-Wall time: 1min 48s
-</code></pre><h3 id="u9AD8_u65AF_u8D1D_u53F6_u65AF+Word2vec_u8BAD_u7EC3"><a href="#u9AD8_u65AF_u8D1D_u53F6_u65AF+Word2vec_u8BAD_u7EC3" class="headerlink" title="高斯贝叶斯+Word2vec训练"></a>高斯贝叶斯+Word2vec训练</h3><pre><code class="python">from sklearn.naive_bayes import GaussianNB as GNB
-
-model_GNB = GNB()
-model_GNB.fit(trainDataVecs, label)
-
-from sklearn.cross_validation import cross_val_score
-import numpy as np
-
-print &quot;高斯贝叶斯分类器10折交叉验证得分: &quot;, np.mean(cross_val_score(model_GNB, trainDataVecs, label, cv=10, scoring=&#39;roc_auc&#39;))
-
-result = forest.predict( testDataVecs )
-
-output = pd.DataFrame( data={&quot;id&quot;:test[&quot;id&quot;], &quot;sentiment&quot;:result} )
-output.to_csv( &quot;gnb_word2vec.csv&quot;, index=False, quoting=3 )
-</code></pre>
-<pre><code>多项式贝叶斯分类器10折交叉验证得分:  0.625579296
-</code></pre><p>从验证结果来看，没有超过基于TF-IDF多项式贝叶斯模型</p>
-<h3 id="u968F_u673A_u68EE_u6797+Word2vec_u8BAD_u7EC3"><a href="#u968F_u673A_u68EE_u6797+Word2vec_u8BAD_u7EC3" class="headerlink" title="随机森林+Word2vec训练"></a>随机森林+Word2vec训练</h3><pre><code class="python">from sklearn.ensemble import RandomForestClassifier
-
-forest = RandomForestClassifier( n_estimators = 100, n_jobs=2)
-
-print(&quot;Fitting a random forest to labeled training data...&quot;)
-%time forest = forest.fit( trainDataVecs, label )
-print &quot;随机森林分类器10折交叉验证得分: &quot;, np.mean(cross_val_score(forest, trainDataVecs, label, cv=10, scoring=&#39;roc_auc&#39;))
-
-# 测试集
-result = forest.predict( testDataVecs )
-
-output = pd.DataFrame( data={&quot;id&quot;:test[&quot;id&quot;], &quot;sentiment&quot;:result} )
-output.to_csv( &quot;rf_word2vec.csv&quot;, index=False, quoting=3 )
-</code></pre>
-<pre><code>Fitting a random forest to labeled training data...
-CPU times: user 45 s, sys: 460 ms, total: 45.5 s
-Wall time: 24.2 s
-随机森林分类器10折交叉验证得分:  0.648426368
-</code></pre><p>改用随机森林之后，效果有提升，但是依然没有超过基于TF-IDF多项式贝叶斯模型</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/" data-id="ciwrvim1y0053kks86fxne4ul" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/4/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/6/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/4/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/6/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -1537,6 +750,23 @@ Wall time: 24.2 s
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -1575,23 +805,6 @@ Wall time: 24.2 s
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -1609,7 +822,7 @@ Wall time: 24.2 s
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -1617,9 +830,9 @@ Wall time: 24.2 s
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -1632,7 +845,16 @@ Wall time: 24.2 s
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1646,15 +868,6 @@ Wall time: 24.2 s
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -1663,7 +876,7 @@ Wall time: 24.2 s
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

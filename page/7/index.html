@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,61 @@
 
       
       <section id="main">
+      <article id="post-dev/python/python_encoding" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/23/dev/python/python_encoding/">Python编码问题</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/05/23/dev/python/python_encoding/">
+      <time datetime="2016-05-23T02:19:56.000Z" itemprop="datePublished">2016-05-23</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>解决Python2.7的UnicodeEncodeError: ‘ascii’ codec can’t encode异常错误</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">reload(sys)</div><div class="line"><span class="keyword">print</span> sys.getdefaultencoding()</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/" data-id="ciy2rrdjq007e6bs8icae8xb7" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/Java/java_volatile" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -167,160 +222,27 @@
 <p>volatile关键字虽然从字面上理解起来比较简单，但是要用好不是一件容易的事情。由于volatile关键字是与Java的内存模型有关的。所以让我们先来了解下Java的内存模型。</p>
 <h2 id="Java_u5185_u5B58_u6A21_u578B"><a href="#Java_u5185_u5B58_u6A21_u578B" class="headerlink" title="Java内存模型"></a>Java内存模型</h2><hr>
 <p>Java内存模型规定所有的变量都是存在主存当中（类似于前面说的物理内存），每个线程都有自己的工作内存（类似于前面的高速缓存）。线程对变量的所有操作都必须在工作内存中进行，而不能直接对主存进行操作。并且每个线程不能访问其他线程的工作内存。如下图：</p>
-<p>看个例子：</p>
-<pre><code class="java">public class VolatileExample extends Thread{
-    //设置类静态变量,各线程访问这同一共享变量
-    private  static boolean flag = false;
-    //无限循环,等待flag变为true时才跳出循环
-   public void run() {
-       while (!flag){
-       };
-       System.out.println(&quot;停止了&quot;);
-   }
-
-    public static void main(String[] args) throws Exception {
-        new VolatileExample().start();
-        //sleep的目的是等待线程启动完毕,也就是说进入run的无限循环体了
-        Thread.sleep(100);
-        flag = true;
-    }
-}
-</code></pre>
+<p>看个例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileExample</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</div><div class="line">    <span class="comment">//设置类静态变量,各线程访问这同一共享变量</span></div><div class="line">    <span class="keyword">private</span>  <span class="keyword">static</span> <span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</div><div class="line">    <span class="comment">//无限循环,等待flag变为true时才跳出循环</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">       <span class="keyword">while</span> (!flag)&#123;</div><div class="line">       &#125;;</div><div class="line">       System.out.println(<span class="string">"停止了"</span>);</div><div class="line">   &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="keyword">new</span> VolatileExample().start();</div><div class="line">        <span class="comment">//sleep的目的是等待线程启动完毕,也就是说进入run的无限循环体了</span></div><div class="line">        Thread.sleep(<span class="number">100</span>);</div><div class="line">        flag = <span class="keyword">true</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>这段代码是很典型的一段代码，很多人在中断线程时可能都会采用这种标记办法。但是事实上，这段代码会完全运行正确么？即一定会将线程中断么？不一定，也许在大多数时候，这个代码能够把线程中断，但是也有可能会导致无法中断线程（虽然这个可能性很小，但是只要一旦发生这种情况就会造成死循环了）。<br>我执行后发现上面的程序一直在while循环，不会打印“停止了”这条信息，为什么呢？不是有设置flag=true吗？<br>下面解释一下这段代码为何有可能导致无法中断线程。在前面已经解释过，每个线程在运行过程中都有自己的工作内存，那么线程VolatileExample在运行的时候，会将flag变量的值拷贝一份放在自己的工作内存当中。<br>那么当线程main更改了flag变量的值之后，但是还没来得及写入主存当中，线程main转去做其他事情了，那么线程VolatileExample由于不知道线程main对flag变量的更改，因此还会一直循环下去。</p>
 <h2 id="u7EBF_u7A0B_u4E2D_u7684_u4E09_u4E2A_u6982_u5FF5"><a href="#u7EBF_u7A0B_u4E2D_u7684_u4E09_u4E2A_u6982_u5FF5" class="headerlink" title="线程中的三个概念"></a>线程中的三个概念</h2><hr>
-<h3 id="1-_u539F_u5B50_u6027"><a href="#1-_u539F_u5B50_u6027" class="headerlink" title="1.原子性"></a>1.原子性</h3><p>在Java中，对基本数据类型的变量的读取和赋值操作是原子性操作，即这些操作是不可被中断的，要么执行，要么不执行。<br>上面一句话虽然看起来简单，但是理解起来并不是那么容易。看下面一个例子i：<br>请分析以下哪些操作是原子性操作：</p>
-<pre><code>x = 10;         //语句1
-y = x;         //语句2
-x++;           //语句3
-x = x + 1;     //语句4
-</code></pre><p>咋一看，有些朋友可能会说上面的4个语句中的操作都是原子性操作。其实只有语句1是原子性操作，其他三个语句都不是原子性操作。<br>语句1是直接将数值10赋值给x，也就是说线程执行这个语句的会直接将数值10写入到工作内存中。<br>语句2实际上包含2个操作，它先要去读取x的值，再将x的值写入工作内存，虽然读取x的值以及 将x的值写入工作内存 这2个操作都是原子性操作，但是合起来就不是原子性操作了。<br>同样的，x++和 x = x+1包括3个操作：读取x的值，进行加1操作，写入新的值。<br>所以上面4个语句只有语句1的操作具备原子性。<br>也就是说，只有简单的读取、赋值（而且必须是将数字赋值给某个变量，变量之间的相互赋值不是原子操作）才是原子操作。<br>不过这里有一点需要注意：在32位平台下，对64位数据的读取和赋值是需要通过两个操作来完成的，不能保证其原子性。但是好像在最新的JDK中，JVM已经保证对64位数据的读取和赋值也是原子性操作了。<br>从上面可以看出，Java内存模型只保证了基本读取和赋值是原子性操作，如果要实现更大范围操作的原子性，可以通过synchronized和Lock来实现。由于synchronized和Lock能够保证任一时刻只有一个线程执行该代码块，那么自然就不存在原子性问题了，从而保证了原子性。</p>
+<h3 id="1-_u539F_u5B50_u6027"><a href="#1-_u539F_u5B50_u6027" class="headerlink" title="1.原子性"></a>1.原子性</h3><p>在Java中，对基本数据类型的变量的读取和赋值操作是原子性操作，即这些操作是不可被中断的，要么执行，要么不执行。<br>上面一句话虽然看起来简单，但是理解起来并不是那么容易。看下面一个例子i：<br>请分析以下哪些操作是原子性操作：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x = 10;         //语句1</div><div class="line">y = x;         //语句2</div><div class="line">x++;           //语句3</div><div class="line">x = x + 1;     //语句4</div></pre></td></tr></table></figure></p>
+<p>咋一看，有些朋友可能会说上面的4个语句中的操作都是原子性操作。其实只有语句1是原子性操作，其他三个语句都不是原子性操作。<br>语句1是直接将数值10赋值给x，也就是说线程执行这个语句的会直接将数值10写入到工作内存中。<br>语句2实际上包含2个操作，它先要去读取x的值，再将x的值写入工作内存，虽然读取x的值以及 将x的值写入工作内存 这2个操作都是原子性操作，但是合起来就不是原子性操作了。<br>同样的，x++和 x = x+1包括3个操作：读取x的值，进行加1操作，写入新的值。<br>所以上面4个语句只有语句1的操作具备原子性。<br>也就是说，只有简单的读取、赋值（而且必须是将数字赋值给某个变量，变量之间的相互赋值不是原子操作）才是原子操作。<br>不过这里有一点需要注意：在32位平台下，对64位数据的读取和赋值是需要通过两个操作来完成的，不能保证其原子性。但是好像在最新的JDK中，JVM已经保证对64位数据的读取和赋值也是原子性操作了。<br>从上面可以看出，Java内存模型只保证了基本读取和赋值是原子性操作，如果要实现更大范围操作的原子性，可以通过synchronized和Lock来实现。由于synchronized和Lock能够保证任一时刻只有一个线程执行该代码块，那么自然就不存在原子性问题了，从而保证了原子性。</p>
 <h3 id="2-_u53EF_u89C1_u6027"><a href="#2-_u53EF_u89C1_u6027" class="headerlink" title="2.可见性"></a>2.可见性</h3><p>对于可见性，Java提供了volatile关键字来保证可见性。<br>当一个共享变量被volatile修饰时，它会保证修改的值会立即被更新到主存，当有其他线程需要读取时，它会去内存中读取新值。<br>而普通的共享变量不能保证可见性，因为普通共享变量被修改之后，什么时候被写入主存是不确定的，当其他线程去读取时，此时内存中可能还是原来的旧值，因此无法保证可见性。<br>另外，通过synchronized和Lock也能够保证可见性，synchronized和Lock能保证同一时刻只有一个线程获取锁然后执行同步代码，并且在释放锁之前会将对变量的修改刷新到主存当中。因此可以保证可见性。</p>
 <h3 id="3-_u6709_u5E8F_u6027"><a href="#3-_u6709_u5E8F_u6027" class="headerlink" title="3.有序性"></a>3.有序性</h3><p>在Java内存模型中，允许编译器和处理器对指令进行重排序，但是重排序过程不会影响到单线程程序的执行，却会影响到多线程并发执行的正确性。<br>在Java里面，可以通过volatile关键字来保证一定的“有序性”（具体原理在下一节讲述）。另外可以通过synchronized和Lock来保证有序性，很显然，synchronized和Lock保证每个时刻是有一个线程执行同步代码，相当于是让线程顺序执行同步代码，自然就保证了有序性。<br>另外，Java内存模型具备一些先天的“有序性”，即不需要通过任何手段就能够得到保证的有序性，这个通常也称为 happens-before 原则。如果两个操作的执行次序无法从happens-before原则推导出来，那么它们就不能保证它们的有序性，虚拟机可以随意地对它们进行重排序。<br>下面就来具体介绍下happens-before原则（先行发生原则）：<br>程序次序规则：一个线程内，按照代码顺序，书写在前面的操作先行发生于书写在后面的操作<br>锁定规则：一个unLock操作先行发生于后面对同一个锁额lock操作<br>volatile变量规则：对一个变量的写操作先行发生于后面对这个变量的读操作<br>传递规则：如果操作A先行发生于操作B，而操作B又先行发生于操作C，则可以得出操作A先行发生于操作C<br>线程启动规则：Thread对象的start()方法先行发生于此线程的每个一个动作<br>线程中断规则：对线程interrupt()方法的调用先行发生于被中断线程的代码检测到中断事件的发生<br>线程终结规则：线程中所有的操作都先行发生于线程的终止检测，我们可以通过Thread.join()方法结束、Thread.isAlive()的返回值手段检测到线程已经终止执行<br>对象终结规则：一个对象的初始化完成先行发生于他的finalize()方法的开始<br>这8条原则摘自《深入理解Java虚拟机》。<br>这8条规则中，前4条规则是比较重要的，后4条规则都是显而易见的。<br>下面我们来解释一下前4条规则：<br>对于程序次序规则来说，我的理解就是一段程序代码的执行在单个线程中看起来是有序的。注意，虽然这条规则中提到“书写在前面的操作先行发生于书写在后面的操作”，这个应该是程序看起来执行的顺序是按照代码顺序执行的，因为虚拟机可能会对程序代码进行指令重排序。虽然进行重排序，但是最终执行的结果是与程序顺序执行的结果一致的，它只会对不存在数据依赖性的指令进行重排序。因此，在单个线程中，程序执行看起来是有序执行的，这一点要注意理解。事实上，这个规则是用来保证程序在单线程中执行结果的正确性，但无法保证程序在多线程中执行的正确性。<br>第二条规则也比较容易理解，也就是说无论在单线程中还是多线程中，同一个锁如果出于被锁定的状态，那么必须先对锁进行了释放操作，后面才能继续进行lock操作。<br>第三条规则是一条比较重要的规则，也是后文将要重点讲述的内容。直观地解释就是，如果一个线程先去写一个变量，然后一个线程去进行读取，那么写入操作肯定会先行发生于读操作。<br>第四条规则实际上就是体现happens-before原则具备传递性。</p>
 <h2 id="volatile_u8BED_u4E49"><a href="#volatile_u8BED_u4E49" class="headerlink" title="volatile语义"></a>volatile语义</h2><hr>
-<p>一旦一个共享变量（类的成员变量、类的静态成员变量）被volatile修饰之后，那么就具备了两层语义：<br>保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。<br>禁止进行指令重排序。<br>所以当把上面代码中变量flag改成下面这样：</p>
-<pre><code>private  static valotile boolean flag = false;
-</code></pre><p>在执行的话，你就会发现打印了“停止了”信息，因为用volatile修饰之后就变得不一样了：<br>第一：使用volatile关键字会强制将修改的值立即写入主存；<br>第二：使用volatile关键字的话，当线程main进行修改时，会导致线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效（反映到硬件层的话，就是CPU的L1或者L2缓存中对应的缓存行无效）；<br>第三：由于线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效，所以线程那么线程VolatileExample再次读取变量flag的值时会去主存读取。<br>那么在线程main修改flag值时（当然这里包括2个操作，修改线程main工作内存中的值，然后将修改后的值写入内存），会使得线程VolatileExample的工作内存中缓存变量flag的缓存行无效，然后线程读取时，发现自己的缓存行无效，它会等待缓存行对应的主存地址被更新之后，然后去对应的主存读取最新的值。<br>那么线程VolatileExample读取到的就是最新的正确的值。</p>
+<p>一旦一个共享变量（类的成员变量、类的静态成员变量）被volatile修饰之后，那么就具备了两层语义：<br>保证了不同线程对这个变量进行操作时的可见性，即一个线程修改了某个变量的值，这新值对其他线程来说是立即可见的。<br>禁止进行指令重排序。<br>所以当把上面代码中变量flag改成下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">private  static valotile boolean flag = false;</div></pre></td></tr></table></figure></p>
+<p>在执行的话，你就会发现打印了“停止了”信息，因为用volatile修饰之后就变得不一样了：<br>第一：使用volatile关键字会强制将修改的值立即写入主存；<br>第二：使用volatile关键字的话，当线程main进行修改时，会导致线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效（反映到硬件层的话，就是CPU的L1或者L2缓存中对应的缓存行无效）；<br>第三：由于线程那么线程VolatileExample的工作内存中缓存变量flag的缓存行无效，所以线程那么线程VolatileExample再次读取变量flag的值时会去主存读取。<br>那么在线程main修改flag值时（当然这里包括2个操作，修改线程main工作内存中的值，然后将修改后的值写入内存），会使得线程VolatileExample的工作内存中缓存变量flag的缓存行无效，然后线程读取时，发现自己的缓存行无效，它会等待缓存行对应的主存地址被更新之后，然后去对应的主存读取最新的值。<br>那么线程VolatileExample读取到的就是最新的正确的值。</p>
 <p><img src="/images/java/thread4_2.jpg" alt=""></p>
 <p>使用volatile关键字增加了实例变量在多个线程之间的可见性。但是volatile关键字最致命的缺点是不支持原子性。<br>下面将关键字synchronized和volatile进行一下比较：<br>1）关键字volatile是线程同步的轻量级实现，所以volatile性能肯定比synchronized要好，并且volatile只能修饰于变量，而synchronized可以修饰方法，以及代码块。随着JDK新版本的发布，synchronized关键字在执行效率上得到很大提升，在开发中使用synchronized关键字的比率还是比较大的。<br>2）多线程访问volatile不会发生阻塞，而synchronized会出现阻塞。<br>3）volatile能保证数据的可见性，但不能保证原子性；而synchronized可以保证原子性，也可以间接保证可见性，因为它将私有内存和公共内存中的数据做同步。<br>4）再次重申一下，关键字volatile解决的是变量在多个线程之间的可见性；而synchronized关键字解决的是多个线程之间访问资源的同步性。</p>
 <h2 id="volatile_u975E_u539F_u5B50_u7684_u7279_u6027"><a href="#volatile_u975E_u539F_u5B50_u7684_u7279_u6027" class="headerlink" title="volatile非原子的特性"></a>volatile非原子的特性</h2><hr>
-<p>从上面知道volatile关键字保证了操作的可见性，但是volatile能保证对变量的操作是原子性吗？<br>下面看一个例子：</p>
-<pre><code class="java">public class Test {
-    public volatile int inc = 0;
-
-    public void increase() {
-        inc++;
-    }
-
-    public static void main(String[] args) {
-        final Test test = new Test();
-        for(int i=0;i&lt;10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j&lt;1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-
-        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
-            Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-</code></pre>
-<p>大家想一下这段程序的输出结果是多少？也许有些朋友认为是10000。但是事实上运行它会发现每次运行结果都不一致，都是一个小于10000的数字。<br>可能有的朋友就会有疑问，不对啊，上面是对变量inc进行自增操作，由于volatile保证了可见性，那么在每个线程中对inc自增完之后，在其他线程中都能看到修改后的值啊，所以有10个线程分别进行了1000次操作，那么最终inc的值应该是1000*10=10000。<br>这里面就有一个误区了，volatile关键字能保证可见性没有错，但是上面的程序错在没能保证原子性。可见性只能保证每次读取的是最新的值，但是volatile没办法保证对变量的操作的原子性。<br>在前面已经提到过，自增操作是不具备原子性的，它包括读取变量的原始值、进行加1操作、写入工作内存。那么就是说自增操作的三个子操作可能会分割开执行，就有可能导致下面这种情况出现：<br>假如某个时刻变量inc的值为10，<br>线程1对变量进行自增操作，线程1先读取了变量inc的原始值，然后线程1被阻塞了；<br>然后线程2对变量进行自增操作，线程2也去读取变量inc的原始值，由于线程1只是对变量inc进行读取操作，而没有对变量进行修改操作，所以不会导致线程2的工作内存中缓存变量inc的缓存行无效，所以线程2会直接去主存读取inc的值，发现inc的值时10，然后进行加1操作，并把11写入工作内存，最后写入主存。<br>然后线程1接着进行加1操作，由于已经读取了inc的值，注意此时在线程1的工作内存中inc的值仍然为10，所以线程1对inc进行加1操作后inc的值为11，然后将11写入工作内存，最后写入主存。<br>那么两个线程分别进行了一次自增操作后，inc只增加了1。<br>解释到这里，可能有朋友会有疑问，不对啊，前面不是保证一个变量在修改volatile变量时，会让缓存行无效吗？然后其他线程去读就会读到新的值，对，这个没错。这个就是上面的happens-before规则中的volatile变量规则，但是要注意，线程1对变量进行读取操作之后，被阻塞了的话，并没有对inc值进行修改。然后虽然volatile能保证线程2对变量inc的值读取是从内存中读取的，但是线程1没有进行修改，所以线程2根本就不会看到修改的值。<br>根源就在这里，自增操作不是原子性操作，而且volatile也无法保证对变量的任何操作都是原子性的。<br>把上面的代码改成以下任何一种都可以达到效果：<br>采用synchronized：</p>
-<pre><code class="java">public class Test {
-    public  int inc = 0;
-
-    public synchronized void increase() {
-        inc++;
-    }
-
-    public static void main(String[] args) {
-        final Test test = new Test();
-        for(int i=0;i&lt;10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j&lt;1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-
-        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
-            Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-</code></pre>
-<p>采用Lock：</p>
-<pre><code class="java">public class Test {
-    public  int inc = 0;
-    Lock lock = new ReentrantLock();
-
-    public  void increase() {
-        lock.lock();
-        try {
-            inc++;
-        } finally{
-            lock.unlock();
-        }
-    }
-
-    public static void main(String[] args) {
-        final Test test = new Test();
-        for(int i=0;i&lt;10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j&lt;1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-
-        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
-            Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-</code></pre>
-<p>采用AtomicInteger：</p>
-<pre><code class="java">public class Test {
-    public  AtomicInteger inc = new AtomicInteger();
-
-    public  void increase() {
-        inc.getAndIncrement();
-    }
-
-    public static void main(String[] args) {
-        final Test test = new Test();
-        for(int i=0;i&lt;10;i++){
-            new Thread(){
-                public void run() {
-                    for(int j=0;j&lt;1000;j++)
-                        test.increase();
-                };
-            }.start();
-        }
-
-        while(Thread.activeCount()&gt;1)  //保证前面的线程都执行完
-            Thread.yield();
-        System.out.println(test.inc);
-    }
-}
-</code></pre>
+<p>从上面知道volatile关键字保证了操作的可见性，但是volatile能保证对变量的操作是原子性吗？<br>下面看一个例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">volatile</span> <span class="keyword">int</span> inc = <span class="number">0</span>;</div><div class="line">     </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span> </span>&#123;</div><div class="line">        inc++;</div><div class="line">    &#125;</div><div class="line">     </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> Test test = <span class="keyword">new</span> Test();</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</div><div class="line">            <span class="keyword">new</span> Thread()&#123;</div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">1000</span>;j++)</div><div class="line">                        test.increase();</div><div class="line">                &#125;;</div><div class="line">            &#125;.start();</div><div class="line">        &#125;</div><div class="line">         </div><div class="line">        <span class="keyword">while</span>(Thread.activeCount()&gt;<span class="number">1</span>)  <span class="comment">//保证前面的线程都执行完</span></div><div class="line">            Thread.yield();</div><div class="line">        System.out.println(test.inc);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>大家想一下这段程序的输出结果是多少？也许有些朋友认为是10000。但是事实上运行它会发现每次运行结果都不一致，都是一个小于10000的数字。<br>可能有的朋友就会有疑问，不对啊，上面是对变量inc进行自增操作，由于volatile保证了可见性，那么在每个线程中对inc自增完之后，在其他线程中都能看到修改后的值啊，所以有10个线程分别进行了1000次操作，那么最终inc的值应该是1000*10=10000。<br>这里面就有一个误区了，volatile关键字能保证可见性没有错，但是上面的程序错在没能保证原子性。可见性只能保证每次读取的是最新的值，但是volatile没办法保证对变量的操作的原子性。<br>在前面已经提到过，自增操作是不具备原子性的，它包括读取变量的原始值、进行加1操作、写入工作内存。那么就是说自增操作的三个子操作可能会分割开执行，就有可能导致下面这种情况出现：<br>假如某个时刻变量inc的值为10，<br>线程1对变量进行自增操作，线程1先读取了变量inc的原始值，然后线程1被阻塞了；<br>然后线程2对变量进行自增操作，线程2也去读取变量inc的原始值，由于线程1只是对变量inc进行读取操作，而没有对变量进行修改操作，所以不会导致线程2的工作内存中缓存变量inc的缓存行无效，所以线程2会直接去主存读取inc的值，发现inc的值时10，然后进行加1操作，并把11写入工作内存，最后写入主存。<br>然后线程1接着进行加1操作，由于已经读取了inc的值，注意此时在线程1的工作内存中inc的值仍然为10，所以线程1对inc进行加1操作后inc的值为11，然后将11写入工作内存，最后写入主存。<br>那么两个线程分别进行了一次自增操作后，inc只增加了1。<br>解释到这里，可能有朋友会有疑问，不对啊，前面不是保证一个变量在修改volatile变量时，会让缓存行无效吗？然后其他线程去读就会读到新的值，对，这个没错。这个就是上面的happens-before规则中的volatile变量规则，但是要注意，线程1对变量进行读取操作之后，被阻塞了的话，并没有对inc值进行修改。然后虽然volatile能保证线程2对变量inc的值读取是从内存中读取的，但是线程1没有进行修改，所以线程2根本就不会看到修改的值。<br>根源就在这里，自增操作不是原子性操作，而且volatile也无法保证对变量的任何操作都是原子性的。<br>把上面的代码改成以下任何一种都可以达到效果：<br>采用synchronized：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span>  <span class="keyword">int</span> inc = <span class="number">0</span>;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span> </span>&#123;</div><div class="line">        inc++;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> Test test = <span class="keyword">new</span> Test();</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</div><div class="line">            <span class="keyword">new</span> Thread()&#123;</div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">1000</span>;j++)</div><div class="line">                        test.increase();</div><div class="line">                &#125;;</div><div class="line">            &#125;.start();</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">while</span>(Thread.activeCount()&gt;<span class="number">1</span>)  <span class="comment">//保证前面的线程都执行完</span></div><div class="line">            Thread.yield();</div><div class="line">        System.out.println(test.inc);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>采用Lock：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span>  <span class="keyword">int</span> inc = <span class="number">0</span>;</div><div class="line">    Lock lock = <span class="keyword">new</span> ReentrantLock();</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span> </span>&#123;</div><div class="line">        lock.lock();</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            inc++;</div><div class="line">        &#125; <span class="keyword">finally</span>&#123;</div><div class="line">            lock.unlock();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> Test test = <span class="keyword">new</span> Test();</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</div><div class="line">            <span class="keyword">new</span> Thread()&#123;</div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">1000</span>;j++)</div><div class="line">                        test.increase();</div><div class="line">                &#125;;</div><div class="line">            &#125;.start();</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">while</span>(Thread.activeCount()&gt;<span class="number">1</span>)  <span class="comment">//保证前面的线程都执行完</span></div><div class="line">            Thread.yield();</div><div class="line">        System.out.println(test.inc);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>采用AtomicInteger：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    <span class="keyword">public</span>  AtomicInteger inc = <span class="keyword">new</span> AtomicInteger();</div><div class="line">     </div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span> </span>&#123;</div><div class="line">        inc.getAndIncrement();</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> Test test = <span class="keyword">new</span> Test();</div><div class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</div><div class="line">            <span class="keyword">new</span> Thread()&#123;</div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;<span class="number">1000</span>;j++)</div><div class="line">                        test.increase();</div><div class="line">                &#125;;</div><div class="line">            &#125;.start();</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="keyword">while</span>(Thread.activeCount()&gt;<span class="number">1</span>)  <span class="comment">//保证前面的线程都执行完</span></div><div class="line">            Thread.yield();</div><div class="line">        System.out.println(test.inc);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>在java 1.5的java.util.concurrent.atomic包下提供了一些原子操作类，即对基本数据类型的 自增（加1操作），自减（减1操作）、以及加法操作（加一个数），减法操作（减一个数）进行了封装，保证这些操作是原子性操作。atomic是利用CAS来实现原子性操作的（Compare And Swap），CAS实际上是利用处理器提供的CMPXCHG指令实现的，而处理器执行CMPXCHG指令是一个原子性操作。</p>
 <h2 id="volatile_u80FD_u4FDD_u8BC1_u6709_u5E8F_u6027"><a href="#volatile_u80FD_u4FDD_u8BC1_u6709_u5E8F_u6027" class="headerlink" title="volatile能保证有序性"></a>volatile能保证有序性</h2><hr>
-<p>在前面提到volatile关键字能禁止指令重排序，所以volatile能在一定程度上保证有序性。<br>volatile关键字禁止指令重排序有两层意思：<br>1）当程序执行到volatile变量的读操作或者写操作时，在其前面的操作的更改肯定全部已经进行，且结果已经对后面的操作可见；在其后面的操作肯定还没有进行；<br>2）在进行指令优化时，不能将在对volatile变量访问的语句放在其后面执行，也不能把volatile变量后面的语句放到其前面执行。<br>可能上面说的比较绕，举个简单的例子：</p>
-<pre><code>//x、y为非volatile变量
-//flag为volatile变量
-
-x = 2;        //语句1
-y = 0;        //语句2
-flag = true;  //语句3
-x = 4;         //语句4
-y = -1;       //语句5
-</code></pre><p>由于flag变量为volatile变量，那么在进行指令重排序的过程的时候，不会将语句3放到语句1、语句2前面，也不会讲语句3放到语句4、语句5后面。但是要注意语句1和语句2的顺序、语句4和语句5的顺序是不作任何保证的。<br>并且volatile关键字能保证，执行到语句3时，语句1和语句2必定是执行完毕了的，且语句1和语句2的执行结果对语句3、语句4、语句5是可见的。</p>
+<p>在前面提到volatile关键字能禁止指令重排序，所以volatile能在一定程度上保证有序性。<br>volatile关键字禁止指令重排序有两层意思：<br>1）当程序执行到volatile变量的读操作或者写操作时，在其前面的操作的更改肯定全部已经进行，且结果已经对后面的操作可见；在其后面的操作肯定还没有进行；<br>2）在进行指令优化时，不能将在对volatile变量访问的语句放在其后面执行，也不能把volatile变量后面的语句放到其前面执行。<br>可能上面说的比较绕，举个简单的例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">//x、y为非volatile变量</div><div class="line">//flag为volatile变量</div><div class="line"> </div><div class="line">x = 2;        //语句1</div><div class="line">y = 0;        //语句2</div><div class="line">flag = true;  //语句3</div><div class="line">x = 4;         //语句4</div><div class="line">y = -1;       //语句5</div></pre></td></tr></table></figure></p>
+<p>由于flag变量为volatile变量，那么在进行指令重排序的过程的时候，不会将语句3放到语句1、语句2前面，也不会讲语句3放到语句4、语句5后面。但是要注意语句1和语句2的顺序、语句4和语句5的顺序是不作任何保证的。<br>并且volatile关键字能保证，执行到语句3时，语句1和语句2必定是执行完毕了的，且语句1和语句2的执行结果对语句3、语句4、语句5是可见的。</p>
 <h2 id="4-volatile_u7684_u539F_u7406_u548C_u5B9E_u73B0_u673A_u5236"><a href="#4-volatile_u7684_u539F_u7406_u548C_u5B9E_u73B0_u673A_u5236" class="headerlink" title="4.volatile的原理和实现机制"></a>4.volatile的原理和实现机制</h2><p>前面讲述了源于volatile关键字的一些使用，下面我们来探讨一下volatile到底如何保证可见性和禁止指令重排序的。<br>下面这段话摘自《深入理解Java虚拟机》：<br>“观察加入volatile关键字和没有加入volatile关键字时所生成的汇编代码发现，加入volatile关键字时，会多出一个lock前缀指令”<br>lock前缀指令实际上相当于一个内存屏障（也成内存栅栏），内存屏障会提供3个功能：<br>它确保指令重排序时不会把其后面的指令排到内存屏障之前的位置，也不会把前面的指令排到内存屏障的后面；即在执行到内存屏障这句指令时，在它前面的操作已经全部完成；<br>它会强制将对缓存的修改操作立即写入主存；<br>如果是写操作，它会导致其他CPU中对应的缓存行无效。</p>
 <h2 id="u603B_u7ED3"><a href="#u603B_u7ED3" class="headerlink" title="总结"></a>总结</h2><hr>
 <p>　synchronized关键字是防止多个线程同时执行一段代码，那么就会很影响程序执行效率，而volatile关键字在某些情况下性能要优于synchronized，但是要注意volatile关键字是无法替代synchronized关键字的，因为volatile关键字无法保证操作的原子性。通常来说，使用volatile必须具备以下2个条件：<br>对变量的写操作不依赖于当前值<br>该变量没有包含在具有其他变量的不变式中<br>实际上，这些条件表明，可以被写入 volatile 变量的这些有效值独立于任何程序的状态，包括变量的当前状态。<br>设计模式中的单例模式中的双检查锁就使用到了volatile关键字</p>
@@ -333,7 +255,7 @@ y = -1;       //语句5
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/" data-id="ciwrvim2p006tkks8l23jsbp7" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/" data-id="ciy2rrdji006o6bs8u5j9xxzw" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/#ds-thread" class="article-comment-link">评论</a>
       
@@ -529,7 +451,7 @@ possible_keys: NULL
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/20/dev/mysql_partition/" data-id="ciwrvilyz001jkks8uv5qk1lc" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/20/dev/mysql_partition/" data-id="ciy2rrdgg00106bs8e61vcgth" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/20/dev/mysql_partition/#ds-thread" class="article-comment-link">评论</a>
       
@@ -578,49 +500,17 @@ possible_keys: NULL
       
                 
         <h2 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h2><hr>
-<pre><code class="html">&lt;table id=&quot;test_table&quot; class=&quot;table table-striped table-bordered table-hover&quot; &gt;
-    &lt;thead&gt;
-        &lt;tr&gt;
-            &lt;th&gt;1&lt;/th&gt;
-            &lt;th&gt;2&lt;/th&gt;
-            &lt;th&gt;3&lt;/th&gt;
-            &lt;th&gt;4&lt;/th&gt;
-        &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-    &lt;/tbody&gt;
-    &lt;tfoot&gt;
-    &lt;/tfoot&gt;
-&lt;/table&gt;
-</code></pre>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">table</span> <span class="attr">id</span>=<span class="string">"test_table"</span> <span class="attr">class</span>=<span class="string">"table table-striped table-bordered table-hover"</span> &gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">thead</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>1<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>2<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>3<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>4<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tbody</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tfoot</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tfoot</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></div></pre></td></tr></table></figure>
 <h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><hr>
-<pre><code class="javascript">$(document).ready(function() {
-        dataTable1 = $(&#39;#test_table&#39;).dataTable({
-            &quot;bPaginate&quot;: true,
-            &quot;tableTools&quot;: {
-                &quot;sSwfPath&quot;: &quot;js/plugins/dataTables/swf/copy_csv_xls.swf&quot;
-            },
-            &quot;bProcessing&quot;: true,
-            &quot;bServerSide&quot;: true,
-            &quot;sAjaxSource&quot;: &quot;/cgi-bin/pypy.py&quot;,
-            &quot;sPaginationType&quot;: &#39;full_numbers&#39;,
-            &quot;iDisplayLength&quot; : 10,
-            &quot;bFilter&quot; : false
-});
-</code></pre>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        dataTable1 = $(<span class="string">'#test_table'</span>).dataTable(&#123;</div><div class="line">            <span class="string">"bPaginate"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"tableTools"</span>: &#123;</div><div class="line">                <span class="string">"sSwfPath"</span>: <span class="string">"js/plugins/dataTables/swf/copy_csv_xls.swf"</span></div><div class="line">            &#125;,</div><div class="line">            <span class="string">"bProcessing"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"bServerSide"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"sAjaxSource"</span>: <span class="string">"/cgi-bin/pypy.py"</span>,</div><div class="line">            <span class="string">"sPaginationType"</span>: <span class="string">'full_numbers'</span>,</div><div class="line">            <span class="string">"iDisplayLength"</span> : <span class="number">10</span>,</div><div class="line">            <span class="string">"bFilter"</span> : <span class="literal">false</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><hr>
-<pre><code class="python">json_data = {
-    &quot;aaData&quot;:dict_data,
-    &quot;iTotalRecords&quot;:iTotalRecords,
-    &quot;iTotalDisplayRecords&quot;:iTotalDisplayRecords
-}
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">json_data = &#123;</div><div class="line">    <span class="string">"aaData"</span>:dict_data,</div><div class="line">    <span class="string">"iTotalRecords"</span>:iTotalRecords,</div><div class="line">    <span class="string">"iTotalDisplayRecords"</span>:iTotalDisplayRecords</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="u5176_u4ED6_u53C2_u8003"><a href="#u5176_u4ED6_u53C2_u8003" class="headerlink" title="其他参考"></a>其他参考</h2><p><a href="http://sgyyz.blog.51cto.com/5069360/1408251" target="_blank" rel="external">http://sgyyz.blog.51cto.com/5069360/1408251</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/" data-id="ciwrvim3b007rkks8zp0pzqzb" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/" data-id="ciy2rrdjw007q6bs8x7poieje" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/#ds-thread" class="article-comment-link">评论</a>
       
@@ -670,18 +560,13 @@ possible_keys: NULL
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code>&#39;latin-1&#39; codec can&#39;t encode characters in position 0-1: ordinal not in range(256)
-</code></pre><p>解决方案：</p>
-<pre><code class="python">db.set_character_set(&#39;utf8&#39;)
-dbc.execute(&#39;SET NAMES utf8;&#39;)
-dbc.execute(&#39;SET CHARACTER SET utf8;&#39;)
-dbc.execute(&#39;SET character_set_connection=utf8;&#39;)
-</code></pre>
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&apos;latin-1&apos; codec can&apos;t encode characters in position 0-1: ordinal not in range(256)</div></pre></td></tr></table></figure>
+<p>解决方案：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">db.set_character_set(<span class="string">'utf8'</span>)</div><div class="line">dbc.execute(<span class="string">'SET NAMES utf8;'</span>)</div><div class="line">dbc.execute(<span class="string">'SET CHARACTER SET utf8;'</span>)</div><div class="line">dbc.execute(<span class="string">'SET character_set_connection=utf8;'</span>)</div></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/" data-id="ciwrvim39007pkks82p7p6ym7" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/" data-id="ciy2rrdjy007t6bs870j7pq3r" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/#ds-thread" class="article-comment-link">评论</a>
       
@@ -696,159 +581,11 @@ dbc.execute(&#39;SET character_set_connection=utf8;&#39;)
 
 
     
-      <article id="post-dev/python/python_mysql_page" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/18/dev/python/python_mysql_page/">python mysql 分页程序</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/03/18/dev/python/python_mysql_page/">
-      <time datetime="2016-03-18T04:10:56.000Z" itemprop="datePublished">2016-03-18</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <pre><code class="python">import MySQLdb
-import os
-
-import hashlib
-#DB parameter
-strHost = &#39;localhost&#39;
-strDB = &#39;bigo_db&#39;
-strUser = &#39;root&#39;
-strPasswd = &#39;&#39;
-def seEncode(ustr, encoding=&#39;utf-8&#39;):
-    &#39;&#39;&#39;负责把入数据库的字符串，转化成utf-8编码&#39;&#39;&#39;
-    if ustr is None:
-        return &#39;&#39;
-    if isinstance(ustr, unicode):
-        return ustr.encode(encoding, &#39;ignore&#39;)
-    else:
-        return str(ustr)
-#connect to DB
-def getConnect(db=strDB, host=strHost, user=strUser, passwd=strPasswd, charset=&quot;utf8&quot;):
-    return MySQLdb.connect(host=strHost, db=strDB, user=strUser, passwd=strPasswd, charset=&quot;utf8&quot;)
-def initClientEncode(conn):
-    &#39;&#39;&#39;mysql client encoding=utf8&#39;&#39;&#39;
-    curs = conn.cursor()
-    curs.execute(&quot;SET NAMES utf8&quot;)
-    conn.commit()
-    return curs
-class MySQLQueryPagination(object):
-
-    def __init__(self,conn,numPerPage = 20):
-        self.conn = conn
-        self.numPerPage = numPerPage
-
-    def queryForList(self,sql,param = None):
-        totalPageNum = self.__calTotalPages(sql,param)
-        for pageIndex in range(totalPageNum):
-            yield self.__queryEachPage(sql,pageIndex,param)
-
-    def __createPaginaionQuerySql(self,sql,currentPageIndex):
-        startIndex = self.__calStartIndex(currentPageIndex)
-        qSql  = r&#39;select * from (%s) total_table limit %s,%s&#39; % (sql,startIndex,self.numPerPage)
-        return qSql
-
-    def __queryEachPage(self,sql,currentPageIndex,param = None):
-        curs = initClientEncode(self.conn) 
-        qSql = self.__createPaginaionQuerySql(sql, currentPageIndex)      
-        if param is None:
-            curs.execute(qSql)
-        else:
-            curs.execute(qSql,param)
-
-        result = curs.fetchall()
-        curs.close()
-        return result
-
-    def __calStartIndex(self,currentPageIndex):
-        startIndex = currentPageIndex  * self.numPerPage;
-        return startIndex;
-
-    def __calTotalRowsNum(self,sql,param = None):
-        &#39;&#39;&#39; 计算总行数 &#39;&#39;&#39;
-        tSql = r&#39;select count(*) from (%s) total_table&#39; % sql
-        curs = initClientEncode(self.conn) 
-        if param is None:
-            curs.execute(tSql)
-        else:
-            curs.execute(tSql,param)
-        result = curs.fetchone()
-        curs.close()
-        totalRowsNum = 0
-        if result != None:
-            totalRowsNum = int(result[0])
-        return totalRowsNum
-
-    def __calTotalPages(self,sql,param):
-        &#39;&#39;&#39; 计算总页数 &#39;&#39;&#39;
-        totalRowsNum = self.__calTotalRowsNum(sql,param)
-        totalPages = 0;
-        if (totalRowsNum % self.numPerPage) == 0:
-            totalPages = totalRowsNum / self.numPerPage;
-        else:
-            totalPages = (totalRowsNum / self.numPerPage) + 1 
-        return totalPages
-
-    def __calLastIndex(self, totalRows, totalPages,currentPageIndex):
-        &#39;&#39;&#39;计算结束时候的索引&#39;&#39;&#39;
-        lastIndex = 0;
-        if totalRows &lt; self.numPerPage:
-            lastIndex = totalRows;
-        elif ((totalRows % self.numPerPage == 0)
-                or (totalRows % self.numPerPage != 0 and currentPageIndex &lt; totalPages)) :
-            lastIndex = currentPageIndex * self.numPerPage
-        elif (totalRows % self.numPerPage != 0 and currentPageIndex == totalPages): # 最后一页
-            lastIndex = totalRows         
-        return lastIndex
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql_page/" data-id="ciwrvim35007lkks84jcs75g9" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/03/18/dev/python/python_mysql_page/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/6/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/8/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/6/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/8/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -857,6 +594,23 @@ class MySQLQueryPagination(object):
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -895,23 +649,6 @@ class MySQLQueryPagination(object):
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -929,7 +666,7 @@ class MySQLQueryPagination(object):
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -937,9 +674,9 @@ class MySQLQueryPagination(object):
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -952,7 +689,16 @@ class MySQLQueryPagination(object):
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -966,15 +712,6 @@ class MySQLQueryPagination(object):
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -983,7 +720,7 @@ class MySQLQueryPagination(object):
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

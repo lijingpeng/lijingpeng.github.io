@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,183 @@
 
       
       <section id="main">
+      <article id="post-algo/kaggle/movie_reviews" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/16/algo/kaggle/movie_reviews/">kaggle之电影文本情感分类</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/08/16/algo/kaggle/movie_reviews/">
+      <time datetime="2016-08-16T05:48:13.000Z" itemprop="datePublished">2016-08-16</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/kaggle/">kaggle</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="u7535_u5F71_u6587_u672C_u60C5_u611F_u5206_u7C7B"><a href="#u7535_u5F71_u6587_u672C_u60C5_u611F_u5206_u7C7B" class="headerlink" title="电影文本情感分类"></a>电影文本情感分类</h2><p><a href="https://github.com/lijingpeng/kaggle/tree/master/competitions/Bag_of_Words" target="_blank" rel="external">Github地址</a><br><a href="https://www.kaggle.com/c/word2vec-nlp-tutorial/" target="_blank" rel="external">Kaggle地址</a></p>
+<p>这个任务主要是对电影评论文本进行情感分类，主要分为正面评论和负面评论，所以是一个二分类问题，二分类模型我们可以选取一些常见的模型比如贝叶斯、逻辑回归等，这里挑战之一是文本内容的向量化，因此，我们首先尝试基于TF-IDF的向量化方法，然后尝试word2vec。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">review_to_wordlist</span><span class="params">(review)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    把IMDB的评论转成词序列</div><div class="line">    参考：http://blog.csdn.net/longxinchen_ml/article/details/50629613</div><div class="line">    '''</div><div class="line">    <span class="comment"># 去掉HTML标签，拿到内容</span></div><div class="line">    review_text = BeautifulSoup(review, <span class="string">"html.parser"</span>).get_text()</div><div class="line">    <span class="comment"># 用正则表达式取出符合规范的部分</span></div><div class="line">    review_text = re.sub(<span class="string">"[^a-zA-Z]"</span>,<span class="string">" "</span>, review_text)</div><div class="line">    <span class="comment"># 小写化所有的词，并转成词list</span></div><div class="line">    words = review_text.lower().split()</div><div class="line">    <span class="comment"># 返回words</span></div><div class="line">    <span class="keyword">return</span> words</div></pre></td></tr></table></figure>
+<h2 id="u8F7D_u5165_u6570_u636E_u96C6"><a href="#u8F7D_u5165_u6570_u636E_u96C6" class="headerlink" title="载入数据集"></a>载入数据集</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 载入数据集</span></div><div class="line">train = pd.read_csv(<span class="string">'/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/labeledTrainData.tsv'</span>, header=<span class="number">0</span>, delimiter=<span class="string">"\t"</span>, quoting=<span class="number">3</span>)</div><div class="line">test = pd.read_csv(<span class="string">'/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/testData.tsv'</span>, header=<span class="number">0</span>, delimiter=<span class="string">"\t"</span>, quoting=<span class="number">3</span>)</div><div class="line"><span class="keyword">print</span> train.head()</div><div class="line"><span class="keyword">print</span> test.head()</div></pre></td></tr></table></figure>
+<pre><code>         id  sentiment                                             review
+0  &quot;5814_8&quot;          1  &quot;With all this stuff going down at the moment ...
+1  &quot;2381_9&quot;          1  &quot;\&quot;The Classic War of the Worlds\&quot; by Timothy ...
+2  &quot;7759_3&quot;          0  &quot;The film starts with a manager (Nicholas Bell...
+3  &quot;3630_4&quot;          0  &quot;It must be assumed that those who praised thi...
+4  &quot;9495_8&quot;          1  &quot;Superbly trashy and wondrously unpretentious ...
+           id                                             review
+0  &quot;12311_10&quot;  &quot;Naturally in a film who&apos;s main themes are of ...
+1    &quot;8348_2&quot;  &quot;This movie is a disaster within a disaster fi...
+2    &quot;5828_4&quot;  &quot;All in all, this is a movie for kids. We saw ...
+3    &quot;7186_2&quot;  &quot;Afraid of the Dark left me with the impressio...
+4   &quot;12128_7&quot;  &quot;A very accurate depiction of small time mob l...
+</code></pre><h2 id="u9884_u5904_u7406_u6570_u636E"><a href="#u9884_u5904_u7406_u6570_u636E" class="headerlink" title="预处理数据"></a>预处理数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 预处理数据</span></div><div class="line">label = train[<span class="string">'sentiment'</span>]</div><div class="line">train_data = []</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(train[<span class="string">'review'</span>])):</div><div class="line">    train_data.append(<span class="string">' '</span>.join(review_to_wordlist(train[<span class="string">'review'</span>][i])))</div><div class="line">test_data = []</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(test[<span class="string">'review'</span>])):</div><div class="line">    test_data.append(<span class="string">' '</span>.join(review_to_wordlist(test[<span class="string">'review'</span>][i])))</div><div class="line"></div><div class="line"><span class="comment"># 预览数据</span></div><div class="line"><span class="keyword">print</span> train_data[<span class="number">0</span>], <span class="string">'\n'</span></div><div class="line"><span class="keyword">print</span> test_data[<span class="number">0</span>]</div></pre></td></tr></table></figure>
+<pre><code>with all this stuff going down at the moment with mj i ve started listening to his music watching the odd documentary here and there watched the wiz and watched moonwalker again maybe i just want to get a certain insight into this guy who i thought was really cool in the eighties just to maybe make up my mind whether he is guilty or innocent moonwalker is part biography part feature film which i remember going to see at the cinema when it was originally released some of it has subtle messages about mj s feeling towards the press and also the obvious message of drugs are bad m kay visually impressive but of course this is all about michael jackson so unless you remotely like mj in anyway then you are going to hate this and find it boring some may call mj an egotist for consenting to the making of this movie but mj and most of his fans would say that he made it for the fans which if true is really nice of him the actual feature film bit when it finally starts is only on for minutes or so excluding the smooth criminal sequence and joe pesci is convincing as a psychopathic all powerful drug lord why he wants mj dead so bad is beyond me because mj overheard his plans nah joe pesci s character ranted that he wanted people to know it is he who is supplying drugs etc so i dunno maybe he just hates mj s music lots of cool things in this like mj turning into a car and a robot and the whole speed demon sequence also the director must have had the patience of a saint when it came to filming the kiddy bad sequence as usually directors hate working with one kid let alone a whole bunch of them performing a complex dance scene bottom line this movie is for people who like mj on one level or another which i think is most people if not then stay away it does try and give off a wholesome message and ironically mj s bestest buddy in this movie is a girl michael jackson is truly one of the most talented people ever to grace this planet but is he guilty well with all the attention i ve gave this subject hmmm well i don t know because people can be different behind closed doors i know this for a fact he is either an extremely nice but stupid guy or one of the most sickest liars i hope he is not the latter
+
+naturally in a film who s main themes are of mortality nostalgia and loss of innocence it is perhaps not surprising that it is rated more highly by older viewers than younger ones however there is a craftsmanship and completeness to the film which anyone can enjoy the pace is steady and constant the characters full and engaging the relationships and interactions natural showing that you do not need floods of tears to show emotion screams to show fear shouting to show dispute or violence to show anger naturally joyce s short story lends the film a ready made structure as perfect as a polished diamond but the small changes huston makes such as the inclusion of the poem fit in neatly it is truly a masterpiece of tact subtlety and overwhelming beauty
+</code></pre><h2 id="u7279_u5F81_u5904_u7406"><a href="#u7279_u5F81_u5904_u7406" class="headerlink" title="特征处理"></a>特征处理</h2><p>直接丢给计算机这些词文本，计算机是无法计算的，因此我们需要把文本转换为向量，有几种常见的文本向量处理方法，比如：</p>
+<ol>
+<li>单词计数  </li>
+<li>TF-IDF向量  </li>
+<li>Word2vec向量<br>我们先使用TF-IDF来试一下。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer <span class="keyword">as</span> TFIDF</div><div class="line"><span class="comment"># 参考：http://blog.csdn.net/longxinchen_ml/article/details/50629613</span></div><div class="line">tfidf = TFIDF(min_df=<span class="number">2</span>, <span class="comment"># 最小支持度为2</span></div><div class="line">           max_features=<span class="keyword">None</span>,</div><div class="line">           strip_accents=<span class="string">'unicode'</span>,</div><div class="line">           analyzer=<span class="string">'word'</span>,</div><div class="line">           token_pattern=<span class="string">r'\w&#123;1,&#125;'</span>,</div><div class="line">           ngram_range=(<span class="number">1</span>, <span class="number">3</span>),  <span class="comment"># 二元文法模型</span></div><div class="line">           use_idf=<span class="number">1</span>,</div><div class="line">           smooth_idf=<span class="number">1</span>,</div><div class="line">           sublinear_tf=<span class="number">1</span>,</div><div class="line">           stop_words = <span class="string">'english'</span>) <span class="comment"># 去掉英文停用词</span></div><div class="line"></div><div class="line"><span class="comment"># 合并训练和测试集以便进行TFIDF向量化操作</span></div><div class="line">data_all = train_data + test_data</div><div class="line">len_train = len(train_data)</div><div class="line"></div><div class="line">tfidf.fit(data_all)</div><div class="line">data_all = tfidf.transform(data_all)</div><div class="line"><span class="comment"># 恢复成训练集和测试集部分</span></div><div class="line">train_x = data_all[:len_train]</div><div class="line">test_x = data_all[len_train:]</div><div class="line"><span class="keyword">print</span> <span class="string">'TF-IDF处理结束.'</span></div></pre></td></tr></table></figure>
+<pre><code>TF-IDF处理结束.
+</code></pre><h2 id="u6734_u7D20_u8D1D_u53F6_u65AF_u8BAD_u7EC3"><a href="#u6734_u7D20_u8D1D_u53F6_u65AF_u8BAD_u7EC3" class="headerlink" title="朴素贝叶斯训练"></a>朴素贝叶斯训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB <span class="keyword">as</span> MNB</div><div class="line"></div><div class="line">model_NB = MNB()</div><div class="line">model_NB.fit(train_x, label)</div><div class="line">MNB(alpha=<span class="number">1.0</span>, class_prior=<span class="keyword">None</span>, fit_prior=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> cross_val_score</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">"多项式贝叶斯分类器10折交叉验证得分: "</span>, np.mean(cross_val_score(model_NB, train_x, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div></pre></td></tr></table></figure>
+<pre><code>多项式贝叶斯分类器10折交叉验证得分:  0.94983968
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">test_predicted = np.array(model_NB.predict(test_x))</div><div class="line"><span class="keyword">print</span> <span class="string">'保存结果...'</span></div><div class="line">nb_output = pd.DataFrame(data=test_predicted, columns=[<span class="string">'sentiment'</span>])</div><div class="line">nb_output[<span class="string">'id'</span>] = test[<span class="string">'id'</span>]</div><div class="line">nb_output = nb_output[[<span class="string">'id'</span>, <span class="string">'sentiment'</span>]]</div><div class="line">nb_output.to_csv(<span class="string">'nb_output.csv'</span>, index=<span class="keyword">False</span>)</div><div class="line"><span class="keyword">print</span> <span class="string">'结束.'</span></div></pre></td></tr></table></figure>
+<pre><code>保存结果...
+结束.
+</code></pre><ol>
+<li>提交最终的结果到kaggle，AUC为：0.85728，排名300左右，50%的水平  </li>
+<li>ngram_range = 3, 三元文法，AUC为0.85924</li>
+</ol>
+<h2 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression <span class="keyword">as</span> LR</div><div class="line"><span class="keyword">from</span> sklearn.grid_search <span class="keyword">import</span> GridSearchCV</div><div class="line"></div><div class="line"><span class="comment"># 设定grid search的参数</span></div><div class="line">grid_values = &#123;<span class="string">'C'</span>:[<span class="number">30</span>]&#125;  </div><div class="line"><span class="comment"># 设定打分为roc_auc</span></div><div class="line">model_LR = GridSearchCV(LR(penalty = <span class="string">'L2'</span>, dual = <span class="keyword">True</span>, random_state = <span class="number">0</span>), grid_values, scoring = <span class="string">'roc_auc'</span>, cv = <span class="number">20</span>)</div><div class="line">model_LR.fit(train_x, label)</div><div class="line"><span class="comment"># 20折交叉验证</span></div><div class="line">GridSearchCV(cv=<span class="number">20</span>, estimator=LR(C=<span class="number">1.0</span>, class_weight=<span class="keyword">None</span>, dual=<span class="keyword">True</span>,</div><div class="line">             fit_intercept=<span class="keyword">True</span>, intercept_scaling=<span class="number">1</span>, penalty=<span class="string">'L2'</span>, random_state=<span class="number">0</span>, tol=<span class="number">0.0001</span>),</div><div class="line">        fit_params=&#123;&#125;, iid=<span class="keyword">True</span>, n_jobs=<span class="number">1</span>,</div><div class="line">        param_grid=&#123;<span class="string">'C'</span>: [<span class="number">30</span>]&#125;, pre_dispatch=<span class="string">'2*n_jobs'</span>, refit=<span class="keyword">True</span>,</div><div class="line">        scoring=<span class="string">'roc_auc'</span>, verbose=<span class="number">0</span>)</div><div class="line"><span class="comment">#输出结果</span></div><div class="line"><span class="keyword">print</span> model_LR.grid_scores_</div></pre></td></tr></table></figure>
+<pre><code>[mean: 0.96497, std: 0.00476, params: {&apos;C&apos;: 30}]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">test_predicted = np.array(model_LR.predict(test_x))</div><div class="line"><span class="keyword">print</span> <span class="string">'保存结果...'</span></div><div class="line">lr_output = pd.DataFrame(data=test_predicted, columns=[<span class="string">'sentiment'</span>])</div><div class="line">lr_output[<span class="string">'id'</span>] = test[<span class="string">'id'</span>]</div><div class="line">lr_output = lr_output[[<span class="string">'id'</span>, <span class="string">'sentiment'</span>]]</div><div class="line">lr_output.to_csv(<span class="string">'lr_output.csv'</span>, index=<span class="keyword">False</span>)</div><div class="line"><span class="keyword">print</span> <span class="string">'结束.'</span></div></pre></td></tr></table></figure>
+<pre><code>保存结果...
+结束.
+</code></pre><ol>
+<li>提交最终的结果到kaggle，AUC为：0.88956，排名260左右，比之前贝叶斯模型有所提高   </li>
+<li>三元文法，AUC为0.89076</li>
+</ol>
+<h2 id="Word2vec"><a href="#Word2vec" class="headerlink" title="Word2vec"></a>Word2vec</h2><p>神经网络语言模型L = SUM[log(p(w|contect(w))]，即在w的上下文下计算当前词w的概率，由公式可以看到，我们的核心是计算p(w|contect(w)， Word2vec给出了构造这个概率的一个方法。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> gensim</div><div class="line"><span class="keyword">import</span> nltk</div><div class="line"><span class="keyword">from</span> nltk.corpus <span class="keyword">import</span> stopwords</div><div class="line"></div><div class="line">tokenizer = nltk.data.load(<span class="string">'tokenizers/punkt/english.pickle'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">review_to_wordlist</span><span class="params">( review, remove_stopwords=False )</span>:</span></div><div class="line">    review_text = BeautifulSoup(review, <span class="string">"html.parser"</span>).get_text()</div><div class="line">    review_text = re.sub(<span class="string">"[^a-zA-Z]"</span>,<span class="string">" "</span>, review_text)</div><div class="line"></div><div class="line">    words = review_text.lower().split()</div><div class="line"></div><div class="line">    <span class="keyword">if</span> remove_stopwords:</div><div class="line">        stops = set(stopwords.words(<span class="string">"english"</span>))</div><div class="line">        words = [w <span class="keyword">for</span> w <span class="keyword">in</span> words <span class="keyword">if</span> <span class="keyword">not</span> w <span class="keyword">in</span> stops]</div><div class="line"></div><div class="line">    <span class="keyword">return</span>(words)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">review_to_sentences</span><span class="params">( review, tokenizer, remove_stopwords=False )</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    将评论段落转换为句子，返回句子列表，每个句子由一堆词组成</div><div class="line">    '''</div><div class="line">    raw_sentences = tokenizer.tokenize(review.strip().decode(<span class="string">'utf8'</span>))</div><div class="line"></div><div class="line">    sentences = []</div><div class="line">    <span class="keyword">for</span> raw_sentence <span class="keyword">in</span> raw_sentences:</div><div class="line">        <span class="keyword">if</span> len(raw_sentence) &gt; <span class="number">0</span>:</div><div class="line">            <span class="comment"># 获取句子中的词列表</span></div><div class="line">            sentences.append( review_to_wordlist( raw_sentence, remove_stopwords ))</div><div class="line">    <span class="keyword">return</span> sentences</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sentences = []</div><div class="line"><span class="keyword">for</span> i, review <span class="keyword">in</span> enumerate(train[<span class="string">"review"</span>]):</div><div class="line">    sentences += review_to_sentences(review, tokenizer)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">unlabeled_train = pd.read_csv(<span class="string">"/Users/frank/Documents/workspace/kaggle/dataset/Bag_of_Words_Meets_Bags_of_Popcorn/unlabeledTrainData.tsv"</span>, header=<span class="number">0</span>, delimiter=<span class="string">"\t"</span>, quoting=<span class="number">3</span> )</div><div class="line"><span class="keyword">for</span> review <span class="keyword">in</span> unlabeled_train[<span class="string">"review"</span>]:</div><div class="line">    sentences += review_to_sentences(review, tokenizer)</div><div class="line"><span class="keyword">print</span> <span class="string">'预处理unlabeled_train data...'</span></div><div class="line"><span class="keyword">print</span> len(train_data)</div><div class="line"><span class="keyword">print</span> len(sentences)</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">预处理unlabeled_train data...</div><div class="line">25000</div><div class="line">795538</div></pre></td></tr></table></figure>
+<h3 id="u6784_u5EFAword2vec_u6A21_u578B"><a href="#u6784_u5EFAword2vec_u6A21_u578B" class="headerlink" title="构建word2vec模型"></a>构建word2vec模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> Word2Vec</div><div class="line"><span class="comment"># 模型参数</span></div><div class="line">num_features = <span class="number">300</span>    <span class="comment"># Word vector dimensionality                      </span></div><div class="line">min_word_count = <span class="number">40</span>   <span class="comment"># Minimum word count                        </span></div><div class="line">num_workers = <span class="number">4</span>       <span class="comment"># Number of threads to run in parallel</span></div><div class="line">context = <span class="number">10</span>          <span class="comment"># Context window size                                                                                    </span></div><div class="line">downsampling = <span class="number">1e-3</span>   <span class="comment"># Downsample setting for frequent words</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">%%time</div><div class="line"><span class="comment"># 训练模型</span></div><div class="line">print(<span class="string">"训练模型中..."</span>)</div><div class="line">model = Word2Vec(sentences, workers=num_workers, \</div><div class="line">            size=num_features, min_count = min_word_count, \</div><div class="line">            window = context, sample = downsampling)</div></pre></td></tr></table></figure>
+<pre><code>训练模型中...
+CPU times: user 6min 16s, sys: 8.34 s, total: 6min 24s
+Wall time: 2min 27s
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> <span class="string">'保存模型...'</span></div><div class="line">model.init_sims(replace=<span class="keyword">True</span>)</div><div class="line">model_name = <span class="string">"300features_40minwords_10context"</span></div><div class="line">model.save(model_name)</div></pre></td></tr></table></figure>
+<pre><code>保存模型...
+</code></pre><h3 id="u9884_u89C8_u6A21_u578B"><a href="#u9884_u89C8_u6A21_u578B" class="headerlink" title="预览模型"></a>预览模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">model.doesnt_match(<span class="string">"man woman child kitchen"</span>.split())</div></pre></td></tr></table></figure>
+<pre><code>&apos;kitchen&apos;
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">model.doesnt_match(<span class="string">"france england germany berlin"</span>.split())</div></pre></td></tr></table></figure>
+<pre><code>&apos;berlin&apos;
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">model.doesnt_match(<span class="string">"paris berlin london austria"</span>.split())</div></pre></td></tr></table></figure>
+<pre><code>&apos;london&apos;
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">model.most_similar(<span class="string">"man"</span>)</div></pre></td></tr></table></figure>
+<pre><code>[(u&apos;woman&apos;, 0.6246455907821655),
+ (u&apos;lady&apos;, 0.6008599400520325),
+ (u&apos;lad&apos;, 0.5698915719985962),
+ (u&apos;businessman&apos;, 0.5431989431381226),
+ (u&apos;chap&apos;, 0.53116375207901),
+ (u&apos;monk&apos;, 0.5250570774078369),
+ (u&apos;men&apos;, 0.5177899599075317),
+ (u&apos;guy&apos;, 0.517480731010437),
+ (u&apos;farmer&apos;, 0.5114585757255554),
+ (u&apos;person&apos;, 0.5109285116195679)]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">model.most_similar(<span class="string">"queen"</span>)</div></pre></td></tr></table></figure>
+<pre><code>[(u&apos;princess&apos;, 0.6759523153305054),
+ (u&apos;bride&apos;, 0.6207793951034546),
+ (u&apos;belle&apos;, 0.6001157760620117),
+ (u&apos;shearer&apos;, 0.5995810031890869),
+ (u&apos;stepmother&apos;, 0.596365749835968),
+ (u&apos;victoria&apos;, 0.5917614698410034),
+ (u&apos;dame&apos;, 0.589063286781311),
+ (u&apos;latifah&apos;, 0.5790275931358337),
+ (u&apos;countess&apos;, 0.5776904821395874),
+ (u&apos;widow&apos;, 0.5727116465568542)]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">model.most_similar(<span class="string">"awful"</span>)</div></pre></td></tr></table></figure>
+<pre><code>[(u&apos;terrible&apos;, 0.7642339468002319),
+ (u&apos;atrocious&apos;, 0.7405279874801636),
+ (u&apos;horrible&apos;, 0.7376815676689148),
+ (u&apos;abysmal&apos;, 0.7010303139686584),
+ (u&apos;dreadful&apos;, 0.6942194104194641),
+ (u&apos;appalling&apos;, 0.6887971758842468),
+ (u&apos;lousy&apos;, 0.6646767854690552),
+ (u&apos;horrid&apos;, 0.6554058194160461),
+ (u&apos;horrendous&apos;, 0.6533403992652893),
+ (u&apos;amateurish&apos;, 0.6079087853431702)]
+</code></pre><h3 id="u4F7F_u7528Word2vec_u7279_u5F81"><a href="#u4F7F_u7528Word2vec_u7279_u5F81" class="headerlink" title="使用Word2vec特征"></a>使用Word2vec特征</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">makeFeatureVec</span><span class="params">(words, model, num_features)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    对段落中的所有词向量进行取平均操作</div><div class="line">    '''</div><div class="line">    featureVec = np.zeros((num_features,), dtype=<span class="string">"float32"</span>)</div><div class="line">    nwords = <span class="number">0.</span></div><div class="line"></div><div class="line">    <span class="comment"># Index2word包含了词表中的所有词，为了检索速度，保存到set中</span></div><div class="line">    index2word_set = set(model.index2word)</div><div class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> words:</div><div class="line">        <span class="keyword">if</span> word <span class="keyword">in</span> index2word_set:</div><div class="line">            nwords = nwords + <span class="number">1.</span></div><div class="line">            featureVec = np.add(featureVec, model[word])</div><div class="line"></div><div class="line">    <span class="comment"># 取平均</span></div><div class="line">    featureVec = np.divide(featureVec, nwords)</div><div class="line">    <span class="keyword">return</span> featureVec</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getAvgFeatureVecs</span><span class="params">(reviews, model, num_features)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    给定一个文本列表，每个文本由一个词列表组成，返回每个文本的词向量平均值</div><div class="line">    '''</div><div class="line">    counter = <span class="number">0.</span></div><div class="line"></div><div class="line">    reviewFeatureVecs = np.zeros((len(reviews), num_features), dtype=<span class="string">"float32"</span>)</div><div class="line"></div><div class="line">    <span class="keyword">for</span> review <span class="keyword">in</span> reviews:</div><div class="line">       <span class="keyword">if</span> counter % <span class="number">5000.</span> == <span class="number">0.</span>:</div><div class="line">           print(<span class="string">"Review %d of %d"</span> % (counter, len(reviews)))</div><div class="line"></div><div class="line">       reviewFeatureVecs[counter] = makeFeatureVec(review, model, \</div><div class="line">           num_features)</div><div class="line"></div><div class="line">       counter = counter + <span class="number">1.</span></div><div class="line">    <span class="keyword">return</span> reviewFeatureVecs</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">%time trainDataVecs = getAvgFeatureVecs( train_data, model, num_features )</div></pre></td></tr></table></figure>
+<pre><code>Review 0 of 25000
+Review 5000 of 25000
+Review 10000 of 25000
+Review 15000 of 25000
+Review 20000 of 25000
+CPU times: user 1min 49s, sys: 1.9 s, total: 1min 51s
+Wall time: 1min 54s
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">%time testDataVecs = getAvgFeatureVecs(test_data, model, num_features)</div></pre></td></tr></table></figure>
+<pre><code>Review 0 of 25000
+Review 5000 of 25000
+Review 10000 of 25000
+Review 15000 of 25000
+Review 20000 of 25000
+CPU times: user 1min 44s, sys: 1.56 s, total: 1min 46s
+Wall time: 1min 48s
+</code></pre><h3 id="u9AD8_u65AF_u8D1D_u53F6_u65AF+Word2vec_u8BAD_u7EC3"><a href="#u9AD8_u65AF_u8D1D_u53F6_u65AF+Word2vec_u8BAD_u7EC3" class="headerlink" title="高斯贝叶斯+Word2vec训练"></a>高斯贝叶斯+Word2vec训练</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> GaussianNB <span class="keyword">as</span> GNB</div><div class="line"></div><div class="line">model_GNB = GNB()</div><div class="line">model_GNB.fit(trainDataVecs, label)</div><div class="line"></div><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> cross_val_score</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">"高斯贝叶斯分类器10折交叉验证得分: "</span>, np.mean(cross_val_score(model_GNB, trainDataVecs, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div><div class="line"></div><div class="line">result = forest.predict( testDataVecs )</div><div class="line"></div><div class="line">output = pd.DataFrame( data=&#123;<span class="string">"id"</span>:test[<span class="string">"id"</span>], <span class="string">"sentiment"</span>:result&#125; )</div><div class="line">output.to_csv( <span class="string">"gnb_word2vec.csv"</span>, index=<span class="keyword">False</span>, quoting=<span class="number">3</span> )</div></pre></td></tr></table></figure>
+<pre><code>多项式贝叶斯分类器10折交叉验证得分:  0.625579296
+</code></pre><p>从验证结果来看，没有超过基于TF-IDF多项式贝叶斯模型</p>
+<h3 id="u968F_u673A_u68EE_u6797+Word2vec_u8BAD_u7EC3"><a href="#u968F_u673A_u68EE_u6797+Word2vec_u8BAD_u7EC3" class="headerlink" title="随机森林+Word2vec训练"></a>随机森林+Word2vec训练</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</div><div class="line"></div><div class="line">forest = RandomForestClassifier( n_estimators = <span class="number">100</span>, n_jobs=<span class="number">2</span>)</div><div class="line"></div><div class="line">print(<span class="string">"Fitting a random forest to labeled training data..."</span>)</div><div class="line">%time forest = forest.fit( trainDataVecs, label )</div><div class="line"><span class="keyword">print</span> <span class="string">"随机森林分类器10折交叉验证得分: "</span>, np.mean(cross_val_score(forest, trainDataVecs, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div><div class="line"></div><div class="line"><span class="comment"># 测试集</span></div><div class="line">result = forest.predict( testDataVecs )</div><div class="line"></div><div class="line">output = pd.DataFrame( data=&#123;<span class="string">"id"</span>:test[<span class="string">"id"</span>], <span class="string">"sentiment"</span>:result&#125; )</div><div class="line">output.to_csv( <span class="string">"rf_word2vec.csv"</span>, index=<span class="keyword">False</span>, quoting=<span class="number">3</span> )</div></pre></td></tr></table></figure>
+<pre><code>Fitting a random forest to labeled training data...
+CPU times: user 45 s, sys: 460 ms, total: 45.5 s
+Wall time: 24.2 s
+随机森林分类器10折交叉验证得分:  0.648426368
+</code></pre><p>改用随机森林之后，效果有提升，但是依然没有超过基于TF-IDF多项式贝叶斯模型</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/" data-id="ciy2rrdiu004a6bs866imzmif" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/kaggle/digit" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -163,14 +340,7 @@
                 
         <p><a href="https://www.kaggle.com/c/digit-recognizer/" target="_blank" rel="external">kaggle地址</a>  </p>
 <h2 id="u6570_u636E_u9884_u89C8"><a href="#u6570_u636E_u9884_u89C8" class="headerlink" title="数据预览"></a>数据预览</h2><p>首先载入数据集</p>
-<pre><code class="python">import pandas as pd
-import numpy as np
-
-train = pd.read_csv(&#39;/Users/frank/Documents/workspace/kaggle/dataset/digit_recognizer/train.csv&#39;)
-test = pd.read_csv(&#39;/Users/frank/Documents/workspace/kaggle/dataset/digit_recognizer/test.csv&#39;)
-print train.head()
-print test.head()
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line">train = pd.read_csv(<span class="string">'/Users/frank/Documents/workspace/kaggle/dataset/digit_recognizer/train.csv'</span>)</div><div class="line">test = pd.read_csv(<span class="string">'/Users/frank/Documents/workspace/kaggle/dataset/digit_recognizer/test.csv'</span>)</div><div class="line"><span class="keyword">print</span> train.head()</div><div class="line"><span class="keyword">print</span> test.head()</div></pre></td></tr></table></figure>
 <pre><code>   label  pixel0  pixel1  pixel2  pixel3  pixel4  pixel5  pixel6  pixel7  \
 0      1       0       0       0       0       0       0       0       0   
 1      0       0       0       0       0       0       0       0       0   
@@ -216,45 +386,23 @@ print test.head()
 
 [5 rows x 784 columns]
 </code></pre><p>分离训练数据和标签：</p>
-<pre><code class="python">train_data = train.values[:,1:]
-label = train.ix[:,0]
-test_data = test.values
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">train_data = train.values[:,<span class="number">1</span>:]</div><div class="line">label = train.ix[:,<span class="number">0</span>]</div><div class="line">test_data = test.values</div></pre></td></tr></table></figure>
 <p>使用PCA来降维：<a href="http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html" target="_blank" rel="external">PCA文档</a><br>使用SVM来训练：<a href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html" target="_blank" rel="external">SVM文档</a></p>
-<h2 id="u964D_u7EF4"><a href="#u964D_u7EF4" class="headerlink" title="降维"></a>降维</h2><pre><code class="python">from sklearn.decomposition import PCA
-from sklearn.svm import SVC
-pca = PCA(n_components=0.8, whiten=True)
-# pca.fit(train_data)
-train_data = pca.fit_transform(train_data)
-# pca.fit(test_data)
-test_data = pca.transform(test_data)
-</code></pre>
-<h2 id="SVM_u8BAD_u7EC3"><a href="#SVM_u8BAD_u7EC3" class="headerlink" title="SVM训练"></a>SVM训练</h2><pre><code class="python">print(&#39;使用SVM进行训练...&#39;)
-svc = SVC(kernel=&#39;rbf&#39;,C=2)
-svc.fit(train_data, label)
-print(&#39;训练结束.&#39;)
-</code></pre>
+<h2 id="u964D_u7EF4"><a href="#u964D_u7EF4" class="headerlink" title="降维"></a>降维</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</div><div class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</div><div class="line">pca = PCA(n_components=<span class="number">0.8</span>, whiten=<span class="keyword">True</span>)</div><div class="line"><span class="comment"># pca.fit(train_data)</span></div><div class="line">train_data = pca.fit_transform(train_data)</div><div class="line"><span class="comment"># pca.fit(test_data)</span></div><div class="line">test_data = pca.transform(test_data)</div></pre></td></tr></table></figure>
+<h2 id="SVM_u8BAD_u7EC3"><a href="#SVM_u8BAD_u7EC3" class="headerlink" title="SVM训练"></a>SVM训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">'使用SVM进行训练...'</span>)</div><div class="line">svc = SVC(kernel=<span class="string">'rbf'</span>,C=<span class="number">2</span>)</div><div class="line">svc.fit(train_data, label)</div><div class="line">print(<span class="string">'训练结束.'</span>)</div></pre></td></tr></table></figure>
 <pre><code>使用SVM进行训练...
 训练结束.
-</code></pre><pre><code class="python">print(&#39;对测试集进行预测...&#39;)
-predict = svc.predict(test_data)
-print(&#39;预测结束.&#39;)
-</code></pre>
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">print(<span class="string">'对测试集进行预测...'</span>)</div><div class="line">predict = svc.predict(test_data)</div><div class="line">print(<span class="string">'预测结束.'</span>)</div></pre></td></tr></table></figure>
 <pre><code>对测试集进行预测...
 预测结束.
 </code></pre><p>保存结果：</p>
-<pre><code class="python">pd.DataFrame(
-    {&quot;ImageId&quot;: range(1, len(predict) + 1), &quot;Label&quot;: predict}
-).to_csv(&#39;output.csv&#39;, index=False, header=True)
-
-print &#39;done.&#39;
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">pd.DataFrame(</div><div class="line">    &#123;<span class="string">"ImageId"</span>: range(<span class="number">1</span>, len(predict) + <span class="number">1</span>), <span class="string">"Label"</span>: predict&#125;</div><div class="line">).to_csv(<span class="string">'output.csv'</span>, index=<span class="keyword">False</span>, header=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="keyword">print</span> <span class="string">'done.'</span></div></pre></td></tr></table></figure>
 <pre><code>done.
 </code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/" data-id="ciwrvim1r004okks8ddfuz00h" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/" data-id="ciy2rrdis00446bs87gam6nqj" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/#ds-thread" class="article-comment-link">评论</a>
       
@@ -305,16 +453,9 @@ print &#39;done.&#39;
       
                 
         <p><a href="https://www.kaggle.com/c/sf-crime" target="_blank" rel="external">kaggle地址</a><br><a href="https://github.com/lijingpeng/kaggle" target="_blank" rel="external">github地址</a></p>
-<h2 id="u6570_u636E_u6982_u89C8"><a href="#u6570_u636E_u6982_u89C8" class="headerlink" title="数据概览"></a>数据概览</h2><pre><code class="python">import pandas as pd
-import numpy as np
-
-# 载入数据
-train = pd.read_csv(&#39;~/kaggle/dataset/San_Francisco_Crime_Classification/train.csv&#39;, parse_dates = [&#39;Dates&#39;])
-test = pd.read_csv(&#39;~/kaggle/dataset/San_Francisco_Crime_Classification/test.csv&#39;, parse_dates = [&#39;Dates&#39;])
-</code></pre>
+<h2 id="u6570_u636E_u6982_u89C8"><a href="#u6570_u636E_u6982_u89C8" class="headerlink" title="数据概览"></a>数据概览</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="comment"># 载入数据</span></div><div class="line">train = pd.read_csv(<span class="string">'~/kaggle/dataset/San_Francisco_Crime_Classification/train.csv'</span>, parse_dates = [<span class="string">'Dates'</span>])</div><div class="line">test = pd.read_csv(<span class="string">'~/kaggle/dataset/San_Francisco_Crime_Classification/test.csv'</span>, parse_dates = [<span class="string">'Dates'</span>])</div></pre></td></tr></table></figure>
 <p>预览训练集</p>
-<pre><code class="python">print train.head(10)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> train.head(<span class="number">10</span>)</div></pre></td></tr></table></figure>
 <pre><code>                Dates        Category                        Descript  \
 0 2015-05-13 23:53:00        WARRANTS                  WARRANT ARREST   
 1 2015-05-13 23:53:00  OTHER OFFENSES        TRAFFIC VIOLATION ARREST   
@@ -351,8 +492,7 @@ test = pd.read_csv(&#39;~/kaggle/dataset/San_Francisco_Crime_Classification/test
 8 -122.508194  37.776601  
 9 -122.419088  37.807802  
 </code></pre><p>预览测试集合</p>
-<pre><code class="python">print test.head(10)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> test.head(<span class="number">10</span>)</div></pre></td></tr></table></figure>
 <pre><code>   Id               Dates DayOfWeek PdDistrict                   Address  \
 0   0 2015-05-10 23:59:00    Sunday    BAYVIEW   2000 Block of THOMAS AV   
 1   1 2015-05-10 23:51:00    Sunday    BAYVIEW        3RD ST / REVERE AV   
@@ -377,41 +517,24 @@ test = pd.read_csv(&#39;~/kaggle/dataset/San_Francisco_Crime_Classification/test
 8 -122.418700  37.765165  
 9 -122.413935  37.798886  
 </code></pre><p>我们看到训练集和测试集都有Dates、DayOfWeek、PdDistrict三个特征，我们先从这三个特征入手。训练集中的Category是我们的预测目标，我们先对其进行编码，这里用到sklearn的LabelEncoder()，示例如下：</p>
-<pre><code class="python">from sklearn import preprocessing
-label = preprocessing.LabelEncoder()
-label.fit([1, 2, 2, 6])
-print label.transform([1, 1, 2, 6])
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</div><div class="line">label = preprocessing.LabelEncoder()</div><div class="line">label.fit([<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">6</span>])</div><div class="line"><span class="keyword">print</span> label.transform([<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">6</span>])</div></pre></td></tr></table></figure>
 <pre><code>[0 0 1 2]
 </code></pre><p>接下来我们对类别进行编码：</p>
-<pre><code class="python">crime = label.fit_transform(train.Category)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">crime = label.fit_transform(train.Category)</div></pre></td></tr></table></figure>
 <p>对于离散化的特征，有一种常用的特征处理方式是二值化处理，pandas中有get_dummies()函数，函数示例如下：</p>
-<pre><code class="python">pd.get_dummies(pd.Series(list(&#39;abca&#39;)))
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pd.get_dummies(pd.Series(list(<span class="string">'abca'</span>)))</div></pre></td></tr></table></figure>
 <div><br><table border="1" class="dataframe"><br>  <thead><br>    <tr style="text-align: right;"><br>      <th></th><br>      <th>a</th><br>      <th>b</th><br>      <th>c</th><br>    </tr><br>  </thead><br>  <tbody><br>    <tr><br>      <th>0</th><br>      <td>1.0</td><br>      <td>0.0</td><br>      <td>0.0</td><br>    </tr><br>    <tr><br>      <th>1</th><br>      <td>0.0</td><br>      <td>1.0</td><br>      <td>0.0</td><br>    </tr><br>    <tr><br>      <th>2</th><br>      <td>0.0</td><br>      <td>0.0</td><br>      <td>1.0</td><br>    </tr><br>    <tr><br>      <th>3</th><br>      <td>1.0</td><br>      <td>0.0</td><br>      <td>0.0</td><br>    </tr><br>  </tbody><br></table><br></div>
 
 
 
 <p>接下来对Dates、DayOfWeek、PdDistrict三个特征进行二值化处理：</p>
-<pre><code class="python">days = pd.get_dummies(train.DayOfWeek)
-district = pd.get_dummies(train.PdDistrict)
-hour = pd.get_dummies(train.Dates.dt.hour)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">days = pd.get_dummies(train.DayOfWeek)</div><div class="line">district = pd.get_dummies(train.PdDistrict)</div><div class="line">hour = pd.get_dummies(train.Dates.dt.hour)</div></pre></td></tr></table></figure>
 <p>接下来重新组合训练集，并把类别附加上：</p>
-<pre><code class="python">train_data = pd.concat([days, district, hour], axis=1)
-train_data[&#39;crime&#39;] = crime
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">train_data = pd.concat([days, district, hour], axis=<span class="number">1</span>)</div><div class="line">train_data[<span class="string">'crime'</span>] = crime</div></pre></td></tr></table></figure>
 <p>针对测试集做同样的处理：</p>
-<pre><code class="python">days = pd.get_dummies(test.DayOfWeek)
-district = pd.get_dummies(test.PdDistrict)
-hour = pd.get_dummies(test.Dates.dt.hour)
-test_data = pd.concat([days, district, hour], axis=1)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">days = pd.get_dummies(test.DayOfWeek)</div><div class="line">district = pd.get_dummies(test.PdDistrict)</div><div class="line">hour = pd.get_dummies(test.Dates.dt.hour)</div><div class="line">test_data = pd.concat([days, district, hour], axis=<span class="number">1</span>)</div></pre></td></tr></table></figure>
 <p>预览新的训练集和测试集：</p>
-<pre><code class="python">print train_data.head(10)
-print test_data.head(10)
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> train_data.head(<span class="number">10</span>)</div><div class="line"><span class="keyword">print</span> test_data.head(<span class="number">10</span>)</div></pre></td></tr></table></figure>
 <pre><code>   Friday  Monday  Saturday  Sunday  Thursday  Tuesday  Wednesday  BAYVIEW  \
 0     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
 1     0.0     0.0       0.0     0.0       0.0      0.0        1.0      0.0   
@@ -475,55 +598,30 @@ print test_data.head(10)
 
 [10 rows x 41 columns]
 </code></pre><p>分割训练集和验证集(70%训练,30%验证)准备建模：</p>
-<pre><code class="python">from sklearn.cross_validation import train_test_split
-training, validation = train_test_split(train_data, train_size=0.6)
-</code></pre>
-<h2 id="u8D1D_u53F6_u65AF_u8BAD_u7EC3"><a href="#u8D1D_u53F6_u65AF_u8BAD_u7EC3" class="headerlink" title="贝叶斯训练"></a>贝叶斯训练</h2><pre><code class="python">from sklearn.metrics import log_loss
-from sklearn.naive_bayes import BernoulliNB
-
-model = BernoulliNB()
-feature_list = training.columns.tolist()
-feature_list = feature_list[:len(feature_list) - 1]
-print &#39;选取的特征列：&#39;, feature_list
-model.fit(training[feature_list], training[&#39;crime&#39;])
-
-predicted = np.array(model.predict_proba(validation[feature_list]))
-print &quot;朴素贝叶斯log损失为 %f&quot; % (log_loss(validation[&#39;crime&#39;], predicted))
-</code></pre>
-<pre><code>选取的特征列： [&#39;Friday&#39;, &#39;Monday&#39;, &#39;Saturday&#39;, &#39;Sunday&#39;, &#39;Thursday&#39;, &#39;Tuesday&#39;, &#39;Wednesday&#39;, &#39;BAYVIEW&#39;, &#39;CENTRAL&#39;, &#39;INGLESIDE&#39;, &#39;MISSION&#39;, &#39;NORTHERN&#39;, &#39;PARK&#39;, &#39;RICHMOND&#39;, &#39;SOUTHERN&#39;, &#39;TARAVAL&#39;, &#39;TENDERLOIN&#39;, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> train_test_split</div><div class="line">training, validation = train_test_split(train_data, train_size=<span class="number">0.6</span>)</div></pre></td></tr></table></figure>
+<h2 id="u8D1D_u53F6_u65AF_u8BAD_u7EC3"><a href="#u8D1D_u53F6_u65AF_u8BAD_u7EC3" class="headerlink" title="贝叶斯训练"></a>贝叶斯训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> log_loss</div><div class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> BernoulliNB</div><div class="line"></div><div class="line">model = BernoulliNB()</div><div class="line">feature_list = training.columns.tolist()</div><div class="line">feature_list = feature_list[:len(feature_list) - <span class="number">1</span>]</div><div class="line"><span class="keyword">print</span> <span class="string">'选取的特征列：'</span>, feature_list</div><div class="line">model.fit(training[feature_list], training[<span class="string">'crime'</span>])</div><div class="line"></div><div class="line">predicted = np.array(model.predict_proba(validation[feature_list]))</div><div class="line"><span class="keyword">print</span> <span class="string">"朴素贝叶斯log损失为 %f"</span> % (log_loss(validation[<span class="string">'crime'</span>], predicted))</div></pre></td></tr></table></figure>
+<pre><code>选取的特征列： [&apos;Friday&apos;, &apos;Monday&apos;, &apos;Saturday&apos;, &apos;Sunday&apos;, &apos;Thursday&apos;, &apos;Tuesday&apos;, &apos;Wednesday&apos;, &apos;BAYVIEW&apos;, &apos;CENTRAL&apos;, &apos;INGLESIDE&apos;, &apos;MISSION&apos;, &apos;NORTHERN&apos;, &apos;PARK&apos;, &apos;RICHMOND&apos;, &apos;SOUTHERN&apos;, &apos;TARAVAL&apos;, &apos;TENDERLOIN&apos;, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
 朴素贝叶斯log损失为 2.581561
-</code></pre><h2 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><pre><code class="python">from sklearn.linear_model import LogisticRegression
-model = LogisticRegression(C=0.1)
-model.fit(training[feature_list], training[&#39;crime&#39;])
-
-predicted = np.array(model.predict_proba(validation[feature_list]))
-print &quot;逻辑回归log损失为 %f&quot; %(log_loss(validation[&#39;crime&#39;], predicted))
-</code></pre>
+</code></pre><h2 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</div><div class="line">model = LogisticRegression(C=<span class="number">0.1</span>)</div><div class="line">model.fit(training[feature_list], training[<span class="string">'crime'</span>])</div><div class="line"></div><div class="line">predicted = np.array(model.predict_proba(validation[feature_list]))</div><div class="line"><span class="keyword">print</span> <span class="string">"逻辑回归log损失为 %f"</span> %(log_loss(validation[<span class="string">'crime'</span>], predicted))</div></pre></td></tr></table></figure>
 <pre><code>逻辑回归log损失为 2.580102
 </code></pre><p>在测试集上运行：</p>
-<pre><code class="python">test_predicted = np.array(model.predict_proba(test_data[feature_list]))
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">test_predicted = np.array(model.predict_proba(test_data[feature_list]))</div></pre></td></tr></table></figure>
 <p>保存结果：</p>
-<pre><code class="python">col_names = np.sort(train[&#39;Category&#39;].unique())
-print col_names
-result = pd.DataFrame(data=test_predicted, columns=col_names)
-result[&#39;Id&#39;] = test[&#39;Id&#39;].astype(int)
-result.to_csv(&#39;output.csv&#39;, index=False)
-</code></pre>
-<pre><code>[&#39;ARSON&#39; &#39;ASSAULT&#39; &#39;BAD CHECKS&#39; &#39;BRIBERY&#39; &#39;BURGLARY&#39; &#39;DISORDERLY CONDUCT&#39;
- &#39;DRIVING UNDER THE INFLUENCE&#39; &#39;DRUG/NARCOTIC&#39; &#39;DRUNKENNESS&#39; &#39;EMBEZZLEMENT&#39;
- &#39;EXTORTION&#39; &#39;FAMILY OFFENSES&#39; &#39;FORGERY/COUNTERFEITING&#39; &#39;FRAUD&#39; &#39;GAMBLING&#39;
- &#39;KIDNAPPING&#39; &#39;LARCENY/THEFT&#39; &#39;LIQUOR LAWS&#39; &#39;LOITERING&#39; &#39;MISSING PERSON&#39;
- &#39;NON-CRIMINAL&#39; &#39;OTHER OFFENSES&#39; &#39;PORNOGRAPHY/OBSCENE MAT&#39; &#39;PROSTITUTION&#39;
- &#39;RECOVERED VEHICLE&#39; &#39;ROBBERY&#39; &#39;RUNAWAY&#39; &#39;SECONDARY CODES&#39;
- &#39;SEX OFFENSES FORCIBLE&#39; &#39;SEX OFFENSES NON FORCIBLE&#39; &#39;STOLEN PROPERTY&#39;
- &#39;SUICIDE&#39; &#39;SUSPICIOUS OCC&#39; &#39;TREA&#39; &#39;TRESPASS&#39; &#39;VANDALISM&#39; &#39;VEHICLE THEFT&#39;
- &#39;WARRANTS&#39; &#39;WEAPON LAWS&#39;]
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">col_names = np.sort(train[<span class="string">'Category'</span>].unique())</div><div class="line"><span class="keyword">print</span> col_names</div><div class="line">result = pd.DataFrame(data=test_predicted, columns=col_names)</div><div class="line">result[<span class="string">'Id'</span>] = test[<span class="string">'Id'</span>].astype(int)</div><div class="line">result.to_csv(<span class="string">'output.csv'</span>, index=<span class="keyword">False</span>)</div></pre></td></tr></table></figure>
+<pre><code>[&apos;ARSON&apos; &apos;ASSAULT&apos; &apos;BAD CHECKS&apos; &apos;BRIBERY&apos; &apos;BURGLARY&apos; &apos;DISORDERLY CONDUCT&apos;
+ &apos;DRIVING UNDER THE INFLUENCE&apos; &apos;DRUG/NARCOTIC&apos; &apos;DRUNKENNESS&apos; &apos;EMBEZZLEMENT&apos;
+ &apos;EXTORTION&apos; &apos;FAMILY OFFENSES&apos; &apos;FORGERY/COUNTERFEITING&apos; &apos;FRAUD&apos; &apos;GAMBLING&apos;
+ &apos;KIDNAPPING&apos; &apos;LARCENY/THEFT&apos; &apos;LIQUOR LAWS&apos; &apos;LOITERING&apos; &apos;MISSING PERSON&apos;
+ &apos;NON-CRIMINAL&apos; &apos;OTHER OFFENSES&apos; &apos;PORNOGRAPHY/OBSCENE MAT&apos; &apos;PROSTITUTION&apos;
+ &apos;RECOVERED VEHICLE&apos; &apos;ROBBERY&apos; &apos;RUNAWAY&apos; &apos;SECONDARY CODES&apos;
+ &apos;SEX OFFENSES FORCIBLE&apos; &apos;SEX OFFENSES NON FORCIBLE&apos; &apos;STOLEN PROPERTY&apos;
+ &apos;SUICIDE&apos; &apos;SUSPICIOUS OCC&apos; &apos;TREA&apos; &apos;TRESPASS&apos; &apos;VANDALISM&apos; &apos;VEHICLE THEFT&apos;
+ &apos;WARRANTS&apos; &apos;WEAPON LAWS&apos;]
 </code></pre>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-id="ciwrvim1s004rkks8q9hlh8qm" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-id="ciy2rrdiq003y6bs80md6t78f" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/#ds-thread" class="article-comment-link">评论</a>
       
@@ -583,143 +681,36 @@ result.to_csv(&#39;output.csv&#39;, index=False)
 <p>搜索引擎——&gt;准备要进行检索的数据——&gt;web查询接口  </p>
 <p>下面分别介绍每一步</p>
 <h2 id="u7B2C_u4E00_u6B65_uFF1A_u642D_u5EFA_u641C_u7D22_u5F15_u64CE"><a href="#u7B2C_u4E00_u6B65_uFF1A_u642D_u5EFA_u641C_u7D22_u5F15_u64CE" class="headerlink" title="第一步：搭建搜索引擎"></a>第一步：搭建搜索引擎</h2><p>首先我们要搭建一个纯的搜索引擎，这时候引擎是空跑的、可以移植的、提供了访问接口，但暂时还没有索引数据，我们使用Elasticsearch来搭建，关于Elasticsearch的简介请见：<a href="https://www.gitbook.com/book/looly/elasticsearch-the-definitive-guide-cn" target="_blank" rel="external">中文文档</a>  </p>
-<p>有两种方式搭建Elasticsearch引擎，一种是本地搭建，具体步骤请见上面的文档，一般来说会有一些依赖的环境问题需要你逐步安装。另外一种是基于Docker的安装，直接下载一个Elasticsearch的镜像就可以了，不需要关心安装过程中的依赖问题。我们推荐使用这种方式来搭建，具体如下：</p>
-<pre><code class="bash"># 1. 下载镜像
-docker pull dockerfile/elasticsearch
-# 2. 测试镜像是否能正常运行
-docker run -d -p 9200:9200 -p 9300:9300 dockerfile/elasticsearch
-</code></pre>
-<p>通过访问<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 来查看容器是否访问成功，成功后会显示如下信息：</p>
-<pre><code class="json">{
-    &quot;name&quot;: &quot;Night Thrasher&quot;,
-    &quot;cluster_name&quot;: &quot;elasticsearch&quot;,
-    &quot;version&quot;: {
-        &quot;number&quot;: &quot;2.1.1&quot;,
-        &quot;build_hash&quot;: &quot;40e2c53a6b6c2972b3d13846e450e66f4375bd71&quot;,
-        &quot;build_timestamp&quot;: &quot;2015-12-15T13:05:55Z&quot;,
-        &quot;build_snapshot&quot;: false,
-        &quot;lucene_version&quot;: &quot;5.3.1&quot;
-    },
-    &quot;tagline&quot;: &quot;You Know, for Search&quot;
-}
-</code></pre>
+<p>有两种方式搭建Elasticsearch引擎，一种是本地搭建，具体步骤请见上面的文档，一般来说会有一些依赖的环境问题需要你逐步安装。另外一种是基于Docker的安装，直接下载一个Elasticsearch的镜像就可以了，不需要关心安装过程中的依赖问题。我们推荐使用这种方式来搭建，具体如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 1. 下载镜像</span></div><div class="line">docker pull dockerfile/elasticsearch</div><div class="line"><span class="comment"># 2. 测试镜像是否能正常运行</span></div><div class="line">docker run <span class="_">-d</span> -p 9200:9200 -p 9300:9300 dockerfile/elasticsearch</div></pre></td></tr></table></figure></p>
+<p>通过访问<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 来查看容器是否访问成功，成功后会显示如下信息：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"Night Thrasher"</span>,</div><div class="line">    <span class="attr">"cluster_name"</span>: <span class="string">"elasticsearch"</span>,</div><div class="line">    <span class="attr">"version"</span>: &#123;</div><div class="line">        <span class="attr">"number"</span>: <span class="string">"2.1.1"</span>,</div><div class="line">        <span class="attr">"build_hash"</span>: <span class="string">"40e2c53a6b6c2972b3d13846e450e66f4375bd71"</span>,</div><div class="line">        <span class="attr">"build_timestamp"</span>: <span class="string">"2015-12-15T13:05:55Z"</span>,</div><div class="line">        <span class="attr">"build_snapshot"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">"lucene_version"</span>: <span class="string">"5.3.1"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"tagline"</span>: <span class="string">"You Know, for Search"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>还记得我们的目标之一是可提供一个索引和查询的接口么，<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 这个URL就是Elasticsearch提供给我们的索引和查询接口，如果你部署到了其他的接口和服务器，只需要做相应的修改就可以了。最简单的情况你可以使用curl url来存储和检索数据，如果你想使用python，请参见<a href="https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/index.html" target="_blank" rel="external">python接口封装</a>。</p>
-<p>我们的另一个目标是存储和引擎分离，因为Docker容器适合运行无状态的应用，而我们的索引数据显然是需要持久化存储的，我们需要用Docker Volume来存储索引数据，具体来说在启动容器的时候：</p>
-<pre><code class="bash"># 映射本地主机目录data到容器中的/usr/share/elasticsearch目录中
-# 容器中的elasticsearch启动的时候会将索引数据存储到该目录下，这样我们就实现了索引和容器引擎分离存储的目标
-docker run -v ~/data:/usr/share/elasticsearch/data -p 9200:9200 -p 9300:9300 -d docker/elasticsearch
-</code></pre>
+<p>我们的另一个目标是存储和引擎分离，因为Docker容器适合运行无状态的应用，而我们的索引数据显然是需要持久化存储的，我们需要用Docker Volume来存储索引数据，具体来说在启动容器的时候：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 映射本地主机目录data到容器中的/usr/share/elasticsearch目录中</span></div><div class="line"><span class="comment"># 容器中的elasticsearch启动的时候会将索引数据存储到该目录下，这样我们就实现了索引和容器引擎分离存储的目标</span></div><div class="line">docker run -v ~/data:/usr/share/elasticsearch/data -p 9200:9200 -p 9300:9300 <span class="_">-d</span> docker/elasticsearch</div></pre></td></tr></table></figure></p>
 <p>截止到目前，我们的引擎已经搭建好了，该引擎将数据存储到我们指定的位置，实现了存储分离；提供了一个URL访问接口，不依赖具体的机器环境。下面一步就是准备待索引的数据，将数据索引起来以供检索。</p>
 <h2 id="u7B2C_u4E8C_u6B65__u7D22_u5F15_u6570_u636E"><a href="#u7B2C_u4E8C_u6B65__u7D22_u5F15_u6570_u636E" class="headerlink" title="第二步 索引数据"></a>第二步 索引数据</h2><h3 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h3><p>在索引数据前我们先通过一个小例子测试下python接口，例子来自于<a href="https://elasticsearch-py.readthedocs.io/en/master/" target="_blank" rel="external">这里</a></p>
-<pre><code class="python">from datetime import datetime
-from elasticsearch import Elasticsearch
-es = Elasticsearch() # 默认连接本地9200端口
-
-doc = {
-    &#39;author&#39;: &#39;kimchy&#39;,
-    &#39;text&#39;: &#39;Elasticsearch: cool. bonsai cool.&#39;,
-    &#39;timestamp&#39;: datetime.now(),
-}
-# 索引数据
-res = es.index(index=&quot;test-index&quot;, doc_type=&#39;tweet&#39;, id=1, body=doc)
-</code></pre>
-<pre><code class="python">res = es.get(index=&quot;test-index&quot;, doc_type=&#39;tweet&#39;, id=1)
-print(res[&#39;_source&#39;])
-</code></pre>
-<pre><code>{u&#39;text&#39;: u&#39;Elasticsearch: cool. bonsai cool.&#39;, u&#39;author&#39;: u&#39;kimchy&#39;, u&#39;timestamp&#39;: u&#39;2016-08-09T21:15:05.956257&#39;}
-</code></pre><pre><code class="python">es.indices.refresh(index=&quot;test-index&quot;)
-
-res = es.search(index=&quot;test-index&quot;, body={&quot;query&quot;: {&quot;match_all&quot;: {}}})
-print(&quot;Got %d Hits:&quot; % res[&#39;hits&#39;][&#39;total&#39;])
-for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
-    print(&quot;%(timestamp)s %(author)s: %(text)s&quot; % hit[&quot;_source&quot;])
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</div><div class="line">es = Elasticsearch() <span class="comment"># 默认连接本地9200端口</span></div><div class="line"></div><div class="line">doc = &#123;</div><div class="line">    <span class="string">'author'</span>: <span class="string">'kimchy'</span>,</div><div class="line">    <span class="string">'text'</span>: <span class="string">'Elasticsearch: cool. bonsai cool.'</span>,</div><div class="line">    <span class="string">'timestamp'</span>: datetime.now(),</div><div class="line">&#125;</div><div class="line"><span class="comment"># 索引数据</span></div><div class="line">res = es.index(index=<span class="string">"test-index"</span>, doc_type=<span class="string">'tweet'</span>, id=<span class="number">1</span>, body=doc)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">res = es.get(index=<span class="string">"test-index"</span>, doc_type=<span class="string">'tweet'</span>, id=<span class="number">1</span>)</div><div class="line">print(res[<span class="string">'_source'</span>])</div></pre></td></tr></table></figure>
+<pre><code>{u&apos;text&apos;: u&apos;Elasticsearch: cool. bonsai cool.&apos;, u&apos;author&apos;: u&apos;kimchy&apos;, u&apos;timestamp&apos;: u&apos;2016-08-09T21:15:05.956257&apos;}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">es.indices.refresh(index=<span class="string">"test-index"</span>)</div><div class="line"></div><div class="line">res = es.search(index=<span class="string">"test-index"</span>, body=&#123;<span class="string">"query"</span>: &#123;<span class="string">"match_all"</span>: &#123;&#125;&#125;&#125;)</div><div class="line">print(<span class="string">"Got %d Hits:"</span> % res[<span class="string">'hits'</span>][<span class="string">'total'</span>])</div><div class="line"><span class="keyword">for</span> hit <span class="keyword">in</span> res[<span class="string">'hits'</span>][<span class="string">'hits'</span>]:</div><div class="line">    print(<span class="string">"%(timestamp)s %(author)s: %(text)s"</span> % hit[<span class="string">"_source"</span>])</div></pre></td></tr></table></figure>
 <pre><code>Got 1 Hits:
 2016-08-09T21:15:05.956257 kimchy: Elasticsearch: cool. bonsai cool.
-</code></pre><h3 id="u7D22_u5F15_u6570_u636E"><a href="#u7D22_u5F15_u6570_u636E" class="headerlink" title="索引数据"></a>索引数据</h3><p>假设数据是用户的信息数据，包括user_id和user_name, 存储在csv文件中，以逗号分隔，如下所示：</p>
-<pre><code>123,小米
-234,李明
-345,李念
-</code></pre><p>接下来我们索引这些数据，指定index名字为user_info, doc_type为basic, 代表用户的基本信息。代码(src/index.py)如下：</p>
-<pre><code class="python">from datetime import datetime
-from elasticsearch import Elasticsearch
-es = Elasticsearch()
-
-doc = {
-    &#39;user_id&#39;: &#39;&#39;,
-    &#39;user_name&#39;: &#39;&#39;,
-    &#39;timestamp&#39;: datetime.now()
-}
-
-id = 0
-file = open(&#39;/dataset/data.csv&#39;)
-lines = file.readlines()
-for line in lines:
-    shard = line.strip(&#39;\n&#39;).split(&#39;,&#39;)
-    id += 1
-    doc[&#39;user_id&#39;] = shard[0]
-    doc[&#39;user_name&#39;] = shard[1]
-
-    res = es.index(index=&quot;user_info&quot;, doc_type=&#39;basic&#39;, id=id, body=doc)
-    print(res[&#39;created&#39;]), id, &#39; doc(s) indexed.&#39;
-</code></pre>
+</code></pre><h3 id="u7D22_u5F15_u6570_u636E"><a href="#u7D22_u5F15_u6570_u636E" class="headerlink" title="索引数据"></a>索引数据</h3><p>假设数据是用户的信息数据，包括user_id和user_name, 存储在csv文件中，以逗号分隔，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">123,小米</div><div class="line">234,李明</div><div class="line">345,李念</div></pre></td></tr></table></figure></p>
+<p>接下来我们索引这些数据，指定index名字为user_info, doc_type为basic, 代表用户的基本信息。代码(src/index.py)如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</div><div class="line">es = Elasticsearch()</div><div class="line"></div><div class="line">doc = &#123;</div><div class="line">    <span class="string">'user_id'</span>: <span class="string">''</span>,</div><div class="line">    <span class="string">'user_name'</span>: <span class="string">''</span>,</div><div class="line">    <span class="string">'timestamp'</span>: datetime.now()</div><div class="line">&#125;</div><div class="line"></div><div class="line">id = <span class="number">0</span></div><div class="line">file = open(<span class="string">'/dataset/data.csv'</span>)</div><div class="line">lines = file.readlines()</div><div class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</div><div class="line">    shard = line.strip(<span class="string">'\n'</span>).split(<span class="string">','</span>)</div><div class="line">    id += <span class="number">1</span></div><div class="line">    doc[<span class="string">'user_id'</span>] = shard[<span class="number">0</span>]</div><div class="line">    doc[<span class="string">'user_name'</span>] = shard[<span class="number">1</span>]</div><div class="line"></div><div class="line">    res = es.index(index=<span class="string">"user_info"</span>, doc_type=<span class="string">'basic'</span>, id=id, body=doc)</div><div class="line">    print(res[<span class="string">'created'</span>]), id, <span class="string">' doc(s) indexed.'</span></div></pre></td></tr></table></figure>
+<p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">True 1  doc(s) indexed.  </div><div class="line">True 2  doc(s) indexed.  </div><div class="line">True 3  doc(s) indexed.</div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">res = es.get(index=<span class="string">"user_info"</span>, doc_type=<span class="string">'basic'</span>, id=<span class="number">1</span>)</div><div class="line">print(res[<span class="string">'_source'</span>])</div></pre></td></tr></table></figure>
 <p>输出：  </p>
-<pre><code>    True 1  doc(s) indexed.  
-    True 2  doc(s) indexed.  
-    True 3  doc(s) indexed.
-</code></pre><pre><code class="python">res = es.get(index=&quot;user_info&quot;, doc_type=&#39;basic&#39;, id=1)
-print(res[&#39;_source&#39;])
-</code></pre>
-<p>输出：  </p>
-<pre><code>{u&#39;user_id&#39;: u&#39;123&#39;, u&#39;user_name&#39;: u&#39;\u5c0f\u7c73&#39;, u&#39;timestamp&#39;: u&#39;2016-08-09T21:30:17.860371&#39;}
-</code></pre><pre><code class="python"># 检索
-res = es.search(index=&quot;user_info&quot;, body={&quot;query&quot;: {&quot;match_all&quot;: {}}})
-print(&quot;Got %d Hits:&quot; % res[&#39;hits&#39;][&#39;total&#39;])
-for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
-    print(&quot;%(timestamp)s %(user_id)s: %(user_name)s&quot; % hit[&quot;_source&quot;])
-</code></pre>
-<p>输出：  </p>
-<pre><code>Got 3 Hits:
-2016-08-09T21:30:17.860371 234: 李明
-2016-08-09T21:30:17.860371 123: 小米
-2016-08-09T21:30:17.860371 345: 李念
-</code></pre><p>到目前为止，我们的数据检索系统完成了，真的是非常的简单，elasticsearch Schema Free的特性在这里得到了很好的体现，无论你的数据是在本地文件还是在DB， 你只需要重写数据解析和索引模块就可以了。</p>
-<h2 id="u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3"><a href="#u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3" class="headerlink" title="第三步 提供一个web接口"></a>第三步 提供一个web接口</h2><h3 id="u6D4F_u89C8_u5668_u6D4B_u8BD5"><a href="#u6D4F_u89C8_u5668_u6D4B_u8BD5" class="headerlink" title="浏览器测试"></a>浏览器测试</h3><p>试试把这个地址复制到浏览器地址栏中执行：</p>
-<pre><code>http://localhost:9200/user_info/basic/_search?q=user_id:345
-</code></pre><p>没错，这个就是检索user_id = 345的用户基本信息，在浏览器中返回：</p>
-<pre><code class="json">{
-    &quot;took&quot;: 6,
-    &quot;timed_out&quot;: false,
-    &quot;_shards&quot;: {
-        &quot;total&quot;: 5,
-        &quot;successful&quot;: 5,
-        &quot;failed&quot;: 0
-    },
-    &quot;hits&quot;: {
-        &quot;total&quot;: 1,
-        &quot;max_score&quot;: 0.30685282,
-        &quot;hits&quot;: [
-            {
-                &quot;_index&quot;: &quot;user_info&quot;,
-                &quot;_type&quot;: &quot;basic&quot;,
-                &quot;_id&quot;: &quot;3&quot;,
-                &quot;_score&quot;: 0.30685282,
-                &quot;_source&quot;: {
-                    &quot;user_name&quot;: &quot;李念&quot;,
-                    &quot;user_id&quot;: &quot;345&quot;,
-                    &quot;timestamp&quot;: &quot;2016-08-09T21:30:17.860371&quot;
-                }
-            }
-        ]
-    }
-}
-</code></pre>
+<pre><code>{u&apos;user_id&apos;: u&apos;123&apos;, u&apos;user_name&apos;: u&apos;\u5c0f\u7c73&apos;, u&apos;timestamp&apos;: u&apos;2016-08-09T21:30:17.860371&apos;}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 检索</span></div><div class="line">res = es.search(index=<span class="string">"user_info"</span>, body=&#123;<span class="string">"query"</span>: &#123;<span class="string">"match_all"</span>: &#123;&#125;&#125;&#125;)</div><div class="line">print(<span class="string">"Got %d Hits:"</span> % res[<span class="string">'hits'</span>][<span class="string">'total'</span>])</div><div class="line"><span class="keyword">for</span> hit <span class="keyword">in</span> res[<span class="string">'hits'</span>][<span class="string">'hits'</span>]:</div><div class="line">    print(<span class="string">"%(timestamp)s %(user_id)s: %(user_name)s"</span> % hit[<span class="string">"_source"</span>])</div></pre></td></tr></table></figure>
+<p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Got 3 Hits:</div><div class="line">2016-08-09T21:30:17.860371 234: 李明</div><div class="line">2016-08-09T21:30:17.860371 123: 小米</div><div class="line">2016-08-09T21:30:17.860371 345: 李念</div></pre></td></tr></table></figure></p>
+<p>到目前为止，我们的数据检索系统完成了，真的是非常的简单，elasticsearch Schema Free的特性在这里得到了很好的体现，无论你的数据是在本地文件还是在DB， 你只需要重写数据解析和索引模块就可以了。</p>
+<h2 id="u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3"><a href="#u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3" class="headerlink" title="第三步 提供一个web接口"></a>第三步 提供一个web接口</h2><h3 id="u6D4F_u89C8_u5668_u6D4B_u8BD5"><a href="#u6D4F_u89C8_u5668_u6D4B_u8BD5" class="headerlink" title="浏览器测试"></a>浏览器测试</h3><p>试试把这个地址复制到浏览器地址栏中执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:9200/user_info/basic/_search?q=user_id:345</div></pre></td></tr></table></figure></p>
+<p>没错，这个就是检索user_id = 345的用户基本信息，在浏览器中返回：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"took"</span>: <span class="number">6</span>,</div><div class="line">    <span class="attr">"timed_out"</span>: <span class="literal">false</span>,</div><div class="line">    <span class="attr">"_shards"</span>: &#123;</div><div class="line">        <span class="attr">"total"</span>: <span class="number">5</span>,</div><div class="line">        <span class="attr">"successful"</span>: <span class="number">5</span>,</div><div class="line">        <span class="attr">"failed"</span>: <span class="number">0</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"hits"</span>: &#123;</div><div class="line">        <span class="attr">"total"</span>: <span class="number">1</span>,</div><div class="line">        <span class="attr">"max_score"</span>: <span class="number">0.30685282</span>,</div><div class="line">        <span class="attr">"hits"</span>: [</div><div class="line">            &#123;</div><div class="line">                <span class="attr">"_index"</span>: <span class="string">"user_info"</span>,</div><div class="line">                <span class="attr">"_type"</span>: <span class="string">"basic"</span>,</div><div class="line">                <span class="attr">"_id"</span>: <span class="string">"3"</span>,</div><div class="line">                <span class="attr">"_score"</span>: <span class="number">0.30685282</span>,</div><div class="line">                <span class="attr">"_source"</span>: &#123;</div><div class="line">                    <span class="attr">"user_name"</span>: <span class="string">"李念"</span>,</div><div class="line">                    <span class="attr">"user_id"</span>: <span class="string">"345"</span>,</div><div class="line">                    <span class="attr">"timestamp"</span>: <span class="string">"2016-08-09T21:30:17.860371"</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        ]</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="web_u8BBF_u95EE_u754C_u9762"><a href="#web_u8BBF_u95EE_u754C_u9762" class="headerlink" title="web访问界面"></a>web访问界面</h3><p>接下来就可以编写web服务了，你可以使用任何你熟悉的web框架搭建一个友好的web访问界面，比如Spring MVC、或者是Flask。<br>// todo</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="ciwrvilym0013kks8rhkieioj" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="ciy2rrdgu001l6bs8i6aqehdj" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/11/system/search_system_sample/#ds-thread" class="article-comment-link">评论</a>
       
@@ -769,13 +760,7 @@ for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>配置log4j</p>
-<pre><code class="xml">&lt;dependency&gt;
-    &lt;groupId&gt;log4j&lt;/groupId&gt;
-    &lt;artifactId&gt;log4j&lt;/artifactId&gt;
-    &lt;version&gt;1.2.14&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
+        <p>配置log4j<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.14<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>错误如下：</p>
 <ul>
 <li>Missing artifact javax.jms:jms:jar:1.1:compile</li>
@@ -785,37 +770,12 @@ for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
 <li>Failure to transfer javax.jms:jms:jar:1.1 from <a href="https://maven-repository.dev.java.net/nonav/repository" target="_blank" rel="external">https://maven-repository.dev.java.net/nonav/repository</a> was cached in the local repository</li>
 <li>Failure to transfer com.sun.jdmk:jmxtools:jar:1.2.1 from <a href="https://maven-repository.dev.java.net/nonav/repository" target="_blank" rel="external">https://maven-repository.dev.java.net/nonav/repository</a> was cached in the local</li>
 </ul>
-<p>解决：</p>
-<pre><code class="xml">&lt;dependency&gt;
-    &lt;groupId&gt;log4j&lt;/groupId&gt;
-    &lt;artifactId&gt;log4j&lt;/artifactId&gt;
-    &lt;version&gt;1.2.15&lt;/version&gt;
-    &lt;exclusions&gt;
-        &lt;exclusion&gt;
-            &lt;groupId&gt;javax.mail&lt;/groupId&gt;
-            &lt;artifactId&gt;mail&lt;/artifactId&gt;
-        &lt;/exclusion&gt;
-        &lt;exclusion&gt;
-            &lt;groupId&gt;javax.jms&lt;/groupId&gt;
-            &lt;artifactId&gt;jms&lt;/artifactId&gt;
-        &lt;/exclusion&gt;
-        &lt;exclusion&gt;
-            &lt;groupId&gt;com.sun.jdmk&lt;/groupId&gt;
-            &lt;artifactId&gt;jmxtools&lt;/artifactId&gt;
-        &lt;/exclusion&gt;
-        &lt;exclusion&gt;
-            &lt;groupId&gt;com.sun.jmx&lt;/groupId&gt;
-            &lt;artifactId&gt;jmxri&lt;/artifactId&gt;
-        &lt;/exclusion&gt;
-    &lt;/exclusions&gt;
-    &lt;scope&gt;runtime&lt;/scope&gt;
-&lt;/dependency&gt;
-</code></pre>
+<p>解决：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>log4j<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.15<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">exclusions</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.mail<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mail<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.jms<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jms<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.sun.jdmk<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jmxtools<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">exclusion</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.sun.jmx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jmxri<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">exclusion</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">exclusions</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/" data-id="ciwrvim2j006jkks8i3e5ka1q" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/" data-id="ciy2rrdjh006m6bs8w9llcnd1" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/#ds-thread" class="article-comment-link">评论</a>
       
@@ -828,70 +788,11 @@ for hit in res[&#39;hits&#39;][&#39;hits&#39;]:
 
 
     
-      <article id="post-dev/python/python_encoding" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/05/23/dev/python/python_encoding/">Python编码问题</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/05/23/dev/python/python_encoding/">
-      <time datetime="2016-05-23T02:19:56.000Z" itemprop="datePublished">2016-05-23</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>解决Python2.7的UnicodeEncodeError: ‘ascii’ codec can’t encode异常错误</p>
-<pre><code class="python">import sys
-reload(sys)
-print sys.getdefaultencoding()
-sys.setdefaultencoding(&#39;utf-8&#39;)
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/" data-id="ciwrvim31007hkks8wa6o3lp7" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/5/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/7/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/5/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/7/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -900,6 +801,23 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -938,23 +856,6 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -972,7 +873,7 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -980,9 +881,9 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -995,7 +896,16 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1009,15 +919,6 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -1026,7 +927,7 @@ sys.setdefaultencoding(&#39;utf-8&#39;)
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

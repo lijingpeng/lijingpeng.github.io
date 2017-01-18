@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,76 @@
 
       
       <section id="main">
+      <article id="post-algo/kaggle/gbid" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/09/09/algo/kaggle/gbid/">kaggle之Grupo Bimbo Inventory Demand</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/09/09/algo/kaggle/gbid/">
+      <time datetime="2016-09-09T05:48:13.000Z" itemprop="datePublished">2016-09-09</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/kaggle/">kaggle</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="Grupo_Bimbo_Inventory_Demand"><a href="#Grupo_Bimbo_Inventory_Demand" class="headerlink" title="Grupo Bimbo Inventory Demand"></a>Grupo Bimbo Inventory Demand</h2><p><a href="https://github.com/lijingpeng/kaggle" target="_blank" rel="external">kaggle比赛解决方案集合</a></p>
+<p><a href="https://www.kaggle.com/c/grupo-bimbo-inventory-demand" target="_blank" rel="external">Grupo Bimbo Inventory Demand</a> 在这个比赛中，我们需要预测某个产品在某个销售点每周的需求量。数据包含墨西哥9周的销售数据。每周，货运车辆把产品发往销售点，每笔交易包含销售量和退货量，其中退货量主要由未销售出的和过期的产品组成。每个产品的需求量是指该商品这周的销售量减去下周的退货量。</p>
+<p>几点注意：</p>
+<ol>
+<li><p>测试数据中可能包含训练数据中不存在的商品。这在实际的生活中是十分常见的。所以模型必须很好的适应这一点。  </p>
+</li>
+<li><p>同一个客户id可能含有不同的客户名字，因为客户名并没有归一化  </p>
+</li>
+<li><p>需求量是一个大于等于零的值，Venta_uni_hoy - Dev_uni_proxima有时候为负是因为有时候退货量有时候累计了好几星期。  </p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Semana — Week number (From Thursday to Wednesday) - 星期几</div><div class="line">Agencia_ID — Sales Depot ID - 销售地id</div><div class="line">Canal_ID — Sales Channel ID - 销售渠道id</div><div class="line">Ruta_SAK — Route ID (Several routes = Sales Depot)</div><div class="line">Cliente_ID — Client ID - 客户id</div><div class="line">NombreCliente — Client name - 客户名</div><div class="line">Producto_ID — Product ID - 产品id</div><div class="line">NombreProducto — Product Name - 产品名</div><div class="line">Venta_uni_hoy — Sales unit this week (integer) - 本周销量</div><div class="line">Venta_hoy — Sales this week (unit: pesos) - 本周销售额</div><div class="line">Dev_uni_proxima — Returns unit next week (integer) - 退货量</div><div class="line">Dev_proxima — Returns next week (unit: pesos) - 退货销售额</div><div class="line">Demanda_uni_equil — Adjusted Demand (integer) (This is the target you will predict) - 需求量（目标值）</div></pre></td></tr></table></figure>
+<p>销量预测是一个非常有意义的问题，在实际应用中有多种应用价值，例如快递的发货量预测、运输规划等等。粗看起来，这个问题很像一个时间序列的预测问题，但是销售地、人、类目的组合太多，时间累积太短，因此不足以支撑时间序列预测。因此我们把他作为一个回归问题来进行分析。很遗憾的是数据量巨大，解压缩后训练集有7000万+数据，对于我的小破本来说已经无法支撑跑这么大数据集的机器学习任务了。在Kaggle中我找到了一个使用XGBoost的解决方案，下面来简单介绍一下思路和代码。一些关键代码的注释我翻译为中文了。</p>
+<p>特征工程的基本思路：</p>
+<p>计算第三周的统计特征用来预测第四周的需求、计算第四周的统计特征用来预测第五周的需求…</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># A Python implementation of the awesome script by Bohdan Pavlyshenko: http://tinyurl.com/jd6k2kr</span></div><div class="line"><span class="comment"># and with inspiration from Rodolfo Lomascolo's  http://tinyurl.com/z6qmxfk</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># Author: willgraf</span></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb</div><div class="line"><span class="keyword">import</span> pdb</div><div class="line"></div><div class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</div><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> train_test_split</div><div class="line"></div><div class="line"><span class="keyword">from</span> subprocess <span class="keyword">import</span> check_output</div><div class="line"></div><div class="line"><span class="comment">## --------------------------全局变量-----------------------------------------</span></div><div class="line"><span class="comment">#</span></div><div class="line">LAG_WEEK_VAL = <span class="number">3</span> <span class="comment"># set to 3 to use lagged features.</span></div><div class="line">BIG_LAG = <span class="keyword">True</span> <span class="comment"># set to True if to use more than 1 lagged_featc</span></div><div class="line"><span class="comment">## --------------------------函数-----------------------------------------</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_dataframe</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    载入训练集和测试集，对于训练集我们设置目标为『Demanda_uni_equil』列，测试集目标列暂设定为0.</div><div class="line">    这里有一个全局变量LAG_WEEK_VAL，表示week大于LAG_WEEK_VAL的数据作为训练集（训练集中只有第三周到第9周的数据，目标是预测第10和11周的数据）</div><div class="line">    '''</div><div class="line">    print(<span class="string">'Loading training data'</span>)</div><div class="line">    train = pd.read_csv(<span class="string">'train.csv'</span>,</div><div class="line">                        usecols=[<span class="string">'Semana'</span>,<span class="string">'Agencia_ID'</span>,<span class="string">'Ruta_SAK'</span>,<span class="string">'Cliente_ID'</span>,<span class="string">'Producto_ID'</span>,<span class="string">'Demanda_uni_equil'</span>])</div><div class="line"></div><div class="line">    print(<span class="string">'Loading test data'</span>)</div><div class="line">    test = pd.read_csv(<span class="string">'test.csv'</span>,</div><div class="line">                       usecols=[<span class="string">'Semana'</span>,<span class="string">'Agencia_ID'</span>,<span class="string">'Ruta_SAK'</span>,<span class="string">'Cliente_ID'</span>,<span class="string">'Producto_ID'</span>,<span class="string">'id'</span>])</div><div class="line"></div><div class="line">    print(<span class="string">'Merging train &amp; test data'</span>)</div><div class="line">    <span class="comment"># lagged week features</span></div><div class="line">    train = train.loc[train[<span class="string">'Semana'</span>] &gt; LAG_WEEK_VAL,]</div><div class="line">    train[<span class="string">'id'</span>] = <span class="number">0</span></div><div class="line">    test[<span class="string">'Demanda_uni_equil'</span>] = <span class="keyword">None</span></div><div class="line">    train[<span class="string">'target'</span>] = train[<span class="string">'Demanda_uni_equil'</span>]</div><div class="line">    test[<span class="string">'target'</span>] = <span class="number">0</span></div><div class="line">    <span class="comment"># 将训练集和测试集结合到一起</span></div><div class="line">    <span class="keyword">return</span> pd.concat([train, test])</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_lagged_feats</span><span class="params">(data, num_lag)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    构建滞后的销量特征。即使用3~8周的销售数据构造特征，为接下来9、10、11周的预测做准备。</div><div class="line">    举例来说，第三周的销售数据统计特征作为第四周销量影响因子</div><div class="line">    特征列名命名为: target_lNUMBER</div><div class="line">    '''</div><div class="line">    <span class="comment"># 根据这三列生成特征</span></div><div class="line">    keys = [<span class="string">'Semana'</span>, <span class="string">'Cliente_ID'</span>, <span class="string">'Producto_ID'</span>]</div><div class="line">    lag_feat = <span class="string">'target_l'</span> + str(num_lag)</div><div class="line">    print(<span class="string">'Creating lagged feature: %s'</span> % lag_feat)</div><div class="line">    data1 = df.loc[: , [<span class="string">'Cliente_ID'</span>, <span class="string">'Producto_ID'</span>]]</div><div class="line">    <span class="comment"># 对week数加1，为接下来的join做准备</span></div><div class="line">    data1[<span class="string">'Semana'</span>] = df.loc[: , <span class="string">'Semana'</span>].apply(<span class="keyword">lambda</span> x: x + <span class="number">1</span>)</div><div class="line">    <span class="comment"># 拷贝训练集中的目标列，并命名为target_lNUMBER，为了接下来求平均值做准备</span></div><div class="line">    data1[lag_feat] = df.loc[: , <span class="string">'target'</span>]</div><div class="line">    <span class="comment"># groupby 'Semana', 'Cliente_ID', 'Producto_ID'并求target列的平均值</span></div><div class="line">    data1 = pd.groupby(data1, keys).mean().reset_index()</div><div class="line">    <span class="comment"># JOIN：把平均值的统计特征join到data中</span></div><div class="line">    <span class="keyword">return</span> pd.merge(data, data1, how=<span class="string">'left'</span>, on=keys, left_index=<span class="keyword">False</span>, right_index=<span class="keyword">False</span>,</div><div class="line">                    suffixes=(<span class="string">''</span>, <span class="string">'_lag'</span> + str(num_lag)), copy=<span class="keyword">False</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_freq_feats</span><span class="params">(data, column_name)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    求列的频率特征，也就是求对应列每周的平均值</div><div class="line">    '''</div><div class="line">    freq_feat = column_name + <span class="string">'_freq'</span></div><div class="line">    print(<span class="string">'Creating frequency feature: %s'</span> % freq_feat)</div><div class="line">    <span class="comment"># 列+周的target计数</span></div><div class="line">    freq_frame = pd.groupby(data, [column_name, <span class="string">'Semana'</span>])[<span class="string">'target'</span>].count().reset_index()</div><div class="line">    freq_frame.rename(columns=&#123;<span class="string">'target'</span>: freq_feat&#125;, inplace=<span class="keyword">True</span>)</div><div class="line">    <span class="comment"># 计算平均值</span></div><div class="line">    freq_frame = pd.groupby(freq_frame, [column_name])[freq_feat].mean().reset_index()</div><div class="line"></div><div class="line">    <span class="comment"># 将平均值join回原来的data中</span></div><div class="line">    <span class="keyword">return</span> pd.merge(data, freq_frame, how=<span class="string">'left'</span>, on=[column_name], left_index=<span class="keyword">False</span>,</div><div class="line">                    right_index=<span class="keyword">False</span>, suffixes=(<span class="string">''</span>, <span class="string">'_freq'</span>), copy=<span class="keyword">False</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_model</span><span class="params">(df, features, model_params)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    构建模型训练和测试</div><div class="line">      df: dataframe to be modled - 用来训练和测试的数据</div><div class="line">      features: column names of df that should be used in model - 特征列</div><div class="line">      params: &#123;xgb_param_key: 'xgb_param_value'&#125; - 参数</div><div class="line">    '''</div><div class="line">    mask = df[<span class="string">'Demanda_uni_equil'</span>].isnull()</div><div class="line">    test = df[mask]</div><div class="line">    train = df[~mask]</div><div class="line">    train.loc[: , <span class="string">'target'</span>] = train.loc[: , <span class="string">'target'</span>].apply(<span class="keyword">lambda</span> x: np.log(x + <span class="number">1</span>))</div><div class="line"></div><div class="line">    xlf = xgb.XGBRegressor(**model_params)</div><div class="line"></div><div class="line">    x_train, x_test, y_train, y_test = train_test_split(train[features], train[<span class="string">'target'</span>], test_size=<span class="number">0.01</span>, random_state=<span class="number">1</span>)</div><div class="line"></div><div class="line">    xlf.fit(x_train, y_train, eval_metric=<span class="string">'rmse'</span>, verbose=<span class="number">1</span>, eval_set=[(x_test, y_test)], early_stopping_rounds=<span class="number">100</span>)</div><div class="line">    preds = xlf.predict(x_test)</div><div class="line">    print(<span class="string">'RMSE of log(Demanda_uni_equil[x_test]) : %s" '</span> % str(mean_squared_error(y_test,preds) ** <span class="number">0.5</span>))</div><div class="line"></div><div class="line">    <span class="comment"># 预测第10周的销量</span></div><div class="line">    print(<span class="string">'Predicting Demanda_uni_equil for Semana 10'</span>)</div><div class="line">    data_test_10 = test.loc[test[<span class="string">'Semana'</span>] == <span class="number">10</span>, features]</div><div class="line">    preds = xlf.predict(data_test_10)</div><div class="line">    data_test_10[<span class="string">'Demanda_uni_equil'</span>] = np.exp(preds) - <span class="number">1</span></div><div class="line">    data_test_10[<span class="string">'id'</span>] = test.loc[test[<span class="string">'Semana'</span>] == <span class="number">10</span>, <span class="string">'id'</span>].astype(int).tolist()</div><div class="line"></div><div class="line">    <span class="comment"># 把预测的第10周的销量结果作为特征来预测11周的数据</span></div><div class="line">    print(<span class="string">'Creating lagged demand feature for Semana 11'</span>)</div><div class="line">    data_test_lag = data_test_10[[<span class="string">'Cliente_ID'</span>, <span class="string">'Producto_ID'</span>]]</div><div class="line">    data_test_lag[<span class="string">'target_l1'</span>] = data_test_10[<span class="string">'Demanda_uni_equil'</span>]</div><div class="line">    data_test_lag = pd.groupby(data_test_lag,[<span class="string">'Cliente_ID'</span>,<span class="string">'Producto_ID'</span>]).mean().reset_index()</div><div class="line"></div><div class="line">    <span class="comment"># 预测第11周的销量</span></div><div class="line">    print(<span class="string">'Predicting Demanda_uni_equil for Semana 11'</span>)</div><div class="line">    data_test_11 = test.loc[test[<span class="string">'Semana'</span>] == <span class="number">11</span>, features.difference([<span class="string">'target_l1'</span>])]</div><div class="line">    data_test_11 = pd.merge(data_test_11, data_test_lag, how=<span class="string">'left'</span>, on=[<span class="string">'Cliente_ID'</span>, <span class="string">'Producto_ID'</span>],</div><div class="line">                            left_index=<span class="keyword">False</span>, right_index=<span class="keyword">False</span>, sort=<span class="keyword">True</span>, copy=<span class="keyword">False</span>)</div><div class="line"></div><div class="line">    data_test_11 = data_test_11.loc[: , features]<span class="comment">#.replace(np.nan, 0, inplace=True)</span></div><div class="line">    preds = xlf.predict(data_test_11)</div><div class="line">    data_test_11[<span class="string">'Demanda_uni_equil'</span>] = np.exp(preds) - <span class="number">1</span></div><div class="line">    data_test_11[<span class="string">'id'</span>] = test.loc[test[<span class="string">'Semana'</span>] == <span class="number">11</span>, <span class="string">'id'</span>].astype(int).tolist()</div><div class="line"></div><div class="line">    <span class="keyword">return</span> pd.concat([data_test_10.loc[: , [<span class="string">'id'</span>, <span class="string">'Demanda_uni_equil'</span>]],</div><div class="line">                      data_test_11.loc[: , [<span class="string">'id'</span>, <span class="string">'Demanda_uni_equil'</span>]]],</div><div class="line">                      axis=<span class="number">0</span>, copy=<span class="keyword">True</span>)</div><div class="line"></div><div class="line"><span class="comment">## --------------------------执行-----------------------------------------</span></div><div class="line"></div><div class="line"><span class="comment">## 首先载入训练集和测试集，并进行基本的数据预处理</span></div><div class="line">df = get_dataframe()</div><div class="line"></div><div class="line"><span class="comment">## 构建特征</span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">1</span> + <span class="number">5</span>):</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> BIG_LAG <span class="keyword">and</span> i &gt; <span class="number">1</span>:</div><div class="line">        <span class="keyword">break</span></div><div class="line">    df = create_lagged_feats(df, num_lag=i)</div><div class="line"></div><div class="line">df = df[df[<span class="string">'Semana'</span>] &gt; <span class="number">8</span>]</div><div class="line"></div><div class="line"><span class="comment">## 计算列频率特征</span></div><div class="line"><span class="keyword">for</span> col_name <span class="keyword">in</span> [<span class="string">'Agencia_ID'</span>, <span class="string">'Ruta_SAK'</span>, <span class="string">'Cliente_ID'</span>, <span class="string">'Producto_ID'</span>]:</div><div class="line">    df = create_freq_feats(df, col_name)</div><div class="line"></div><div class="line"><span class="comment">## 选择部分特征来构建模型</span></div><div class="line">feature_names = df.columns.difference([<span class="string">'id'</span>, <span class="string">'target'</span>, <span class="string">'Demanda_uni_equil'</span>])</div><div class="line">print(<span class="string">'Data Cleaned.  Using features: %s'</span> % feature_names)</div><div class="line"></div><div class="line"><span class="comment">## 模型参数</span></div><div class="line">xgb_params = &#123;</div><div class="line">    <span class="string">'max_depth'</span>: <span class="number">10</span>,</div><div class="line">    <span class="string">'learning_rate'</span>: <span class="number">0.01</span>,</div><div class="line">    <span class="string">'n_estimators'</span>: <span class="number">75</span>,</div><div class="line">    <span class="string">'subsample'</span>: <span class="number">.85</span>,</div><div class="line">    <span class="string">'colsample_bytree'</span>: <span class="number">0.7</span>,</div><div class="line">    <span class="string">'objective'</span>: <span class="string">'reg:linear'</span>,</div><div class="line">    <span class="string">'silent'</span>: <span class="keyword">True</span>,</div><div class="line">    <span class="string">'nthread'</span>: <span class="number">-1</span>,</div><div class="line">    <span class="string">'gamma'</span>: <span class="number">0</span>,</div><div class="line">    <span class="string">'min_child_weight'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'max_delta_step'</span>: <span class="number">0</span>,</div><div class="line">    <span class="string">'subsample'</span>: <span class="number">0.85</span>,</div><div class="line">    <span class="string">'colsample_bytree'</span>: <span class="number">0.7</span>,</div><div class="line">    <span class="string">'colsample_bylevel'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'reg_alpha'</span>: <span class="number">0</span>,</div><div class="line">    <span class="string">'reg_lambda'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'scale_pos_weight'</span>: <span class="number">1</span>,</div><div class="line">    <span class="string">'missing'</span>: <span class="keyword">None</span>,</div><div class="line">    <span class="string">'seed'</span>: <span class="number">1</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">## 训练模型并写入结果</span></div><div class="line">submission = build_model(df, feature_names, xgb_params)</div><div class="line">submission.to_csv(<span class="string">'submission.csv'</span>, index=<span class="keyword">False</span>)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/09/09/algo/kaggle/gbid/" data-id="ciy2rrdit00476bs8f5dw27ug" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/09/09/algo/kaggle/gbid/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/python/pandas_reset_index" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -161,31 +231,16 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="python">df1 = pandas.DataFrame( {
-    &quot;Name&quot; : [&quot;Alice&quot;, &quot;Bob&quot;, &quot;Mallory&quot;, &quot;Mallory&quot;, &quot;Bob&quot; , &quot;Mallory&quot;] ,
-    &quot;City&quot; : [&quot;Seattle&quot;, &quot;Seattle&quot;, &quot;Portland&quot;, &quot;Seattle&quot;, &quot;Seattle&quot;, &quot;Portland&quot;] } )
-</code></pre>
-<pre><code class="python">g1.add_suffix(&#39;_Count&#39;).reset_index()
-</code></pre>
-<pre><code class="python">Out[21]:
-      Name      City  City_Count  Name_Count
-0    Alice   Seattle           1           1
-1      Bob   Seattle           2           2
-2  Mallory  Portland           2           2
-3  Mallory   Seattle           1           1
-</code></pre>
-<pre><code class="python">DataFrame({&#39;count&#39; : df1.groupby( [ &quot;Name&quot;, &quot;City&quot;] ).size()}).reset_index()
-</code></pre>
-<pre><code>      Name      City  count
-0    Alice   Seattle      1
-1      Bob   Seattle      2
-2  Mallory  Portland      2
-3  Mallory   Seattle      1
-</code></pre>
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">df1 = pandas.DataFrame( &#123;</div><div class="line">    <span class="string">"Name"</span> : [<span class="string">"Alice"</span>, <span class="string">"Bob"</span>, <span class="string">"Mallory"</span>, <span class="string">"Mallory"</span>, <span class="string">"Bob"</span> , <span class="string">"Mallory"</span>] ,</div><div class="line">    <span class="string">"City"</span> : [<span class="string">"Seattle"</span>, <span class="string">"Seattle"</span>, <span class="string">"Portland"</span>, <span class="string">"Seattle"</span>, <span class="string">"Seattle"</span>, <span class="string">"Portland"</span>] &#125; )</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">g1.add_suffix(<span class="string">'_Count'</span>).reset_index()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Out[<span class="number">21</span>]:</div><div class="line">      Name      City  City_Count  Name_Count</div><div class="line"><span class="number">0</span>    Alice   Seattle           <span class="number">1</span>           <span class="number">1</span></div><div class="line"><span class="number">1</span>      Bob   Seattle           <span class="number">2</span>           <span class="number">2</span></div><div class="line"><span class="number">2</span>  Mallory  Portland           <span class="number">2</span>           <span class="number">2</span></div><div class="line"><span class="number">3</span>  Mallory   Seattle           <span class="number">1</span>           <span class="number">1</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DataFrame(&#123;<span class="string">'count'</span> : df1.groupby( [ <span class="string">"Name"</span>, <span class="string">"City"</span>] ).size()&#125;).reset_index()</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">      Name      City  count</div><div class="line">0    Alice   Seattle      1</div><div class="line">1      Bob   Seattle      2</div><div class="line">2  Mallory  Portland      2</div><div class="line">3  Mallory   Seattle      1</div></pre></td></tr></table></figure>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/09/08/dev/python/pandas_reset_index/" data-id="ciwrvim2y0079kks8cav6v1i3" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/09/08/dev/python/pandas_reset_index/" data-id="ciy2rrdjp007c6bs8ovtlnyj2" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/09/08/dev/python/pandas_reset_index/#ds-thread" class="article-comment-link">评论</a>
       
@@ -235,22 +290,12 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="python">#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-import sys
-reload(sys)
-sys.setdefaultencoding(&#39;utf-8&#39;)
-
-file = open(&#39;~/file.csv&#39;)
-lines = file.readlines()
-for line in lines:
-    print line.decode(&#39;gbk&#39;)
-</code></pre>
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line"><span class="keyword">import</span> sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line">file = open(<span class="string">'~/file.csv'</span>)</div><div class="line">lines = file.readlines()</div><div class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</div><div class="line">    <span class="keyword">print</span> line.decode(<span class="string">'gbk'</span>)</div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/31/dev/python/python_print_chs/" data-id="ciwrvim33007jkks85wc9brvw" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/31/dev/python/python_print_chs/" data-id="ciy2rrdjt007l6bs8lyasi87r" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/31/dev/python/python_print_chs/#ds-thread" class="article-comment-link">评论</a>
       
@@ -301,314 +346,28 @@ for line in lines:
       
                 
         <p><a href="https://github.com/lijingpeng/kaggle/tree/master/competitions/Facial_Keypoints_Detection" target="_blank" rel="external">Facial_Keypoints_Detection github code</a></p>
-<p><a href="https://www.kaggle.com/c/facial-keypoints-detection" target="_blank" rel="external">facial-keypoints-detection</a>, 这是一个人脸识别任务，任务是识别人脸图片中的眼睛、鼻子、嘴的位置。训练集包含以下15个位置的坐标，行末是图片的像素值，共96*96个像素值。测试集只包含图片的像素值。</p>
-<pre><code>left_eye_center, right_eye_center, left_eye_inner_corner, left_eye_outer_corner, right_eye_inner_corner, right_eye_outer_corner, left_eyebrow_inner_end, left_eyebrow_outer_end, right_eyebrow_inner_end, right_eyebrow_outer_end, nose_tip, mouth_left_corner, mouth_right_corner, mouth_center_top_lip, mouth_center_bottom_lip
-</code></pre><pre><code class="python">import cPickle as pickle
-from datetime import datetime
-import os
-import sys
-
-import numpy as np
-import pandas as pd
-from lasagne import layers
-from nolearn.lasagne import BatchIterator
-from nolearn.lasagne import NeuralNet
-from pandas.io.parsers import read_csv
-from sklearn.utils import shuffle
-import theano
-</code></pre>
+<p><a href="https://www.kaggle.com/c/facial-keypoints-detection" target="_blank" rel="external">facial-keypoints-detection</a>, 这是一个人脸识别任务，任务是识别人脸图片中的眼睛、鼻子、嘴的位置。训练集包含以下15个位置的坐标，行末是图片的像素值，共96*96个像素值。测试集只包含图片的像素值。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">left_eye_center, right_eye_center, left_eye_inner_corner, left_eye_outer_corner, right_eye_inner_corner, right_eye_outer_corner, left_eyebrow_inner_end, left_eyebrow_outer_end, right_eyebrow_inner_end, right_eyebrow_outer_end, nose_tip, mouth_left_corner, mouth_right_corner, mouth_center_top_lip, mouth_center_bottom_lip</div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> cPickle <span class="keyword">as</span> pickle</div><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">from</span> lasagne <span class="keyword">import</span> layers</div><div class="line"><span class="keyword">from</span> nolearn.lasagne <span class="keyword">import</span> BatchIterator</div><div class="line"><span class="keyword">from</span> nolearn.lasagne <span class="keyword">import</span> NeuralNet</div><div class="line"><span class="keyword">from</span> pandas.io.parsers <span class="keyword">import</span> read_csv</div><div class="line"><span class="keyword">from</span> sklearn.utils <span class="keyword">import</span> shuffle</div><div class="line"><span class="keyword">import</span> theano</div></pre></td></tr></table></figure>
 <pre><code>/Library/Python/2.7/site-packages/theano/tensor/signal/downsample.py:6: UserWarning: downsample module has been moved to the theano.tensor.signal.pool module.
   &quot;downsample module has been moved to the theano.tensor.signal.pool module.&quot;)
-</code></pre><h2 id="u6570_u636E_u8F7D_u5165_u4E0E_u9884_u89C8"><a href="#u6570_u636E_u8F7D_u5165_u4E0E_u9884_u89C8" class="headerlink" title="数据载入与预览"></a>数据载入与预览</h2><pre><code class="python">train_file = &#39;training.csv&#39;
-test_file = &#39;test.csv&#39;
-
-def load(test=False, cols=None):
-    &quot;&quot;&quot;
-    载入数据，通过参数控制载入训练集还是测试集，并筛选特征列
-    &quot;&quot;&quot;
-    fname = test_file if test else train_file
-    df = pd.read_csv(os.path.expanduser(fname))
-
-    # 将图像数据转换为数组
-    df[&#39;Image&#39;] = df[&#39;Image&#39;].apply(lambda x: np.fromstring(x, sep=&#39; &#39;))
-
-    # 筛选指定的数据列
-    if cols:  
-        df = df[list(cols) + [&#39;Image&#39;]]
-
-    print(df.count())  # 每列的简单统计
-    df = df.dropna()  # 删除空数据
-
-    # 归一化到0到1
-    X = np.vstack(df[&#39;Image&#39;].values) / 255.  
-    X = X.astype(np.float32)
-
-    # 针对训练集目标标签进行归一化
-    if not test:
-        y = df[df.columns[:-1]].values
-        y = (y - 48) / 48  
-        X, y = shuffle(X, y, random_state=42)
-        y = y.astype(np.float32)
-    else:
-        y = None
-
-    return X, y
-</code></pre>
-<pre><code class="python"># 将单行像素数据转换为三维矩阵
-def load2d(test=False, cols=None):
-    X, y = load(test=test, cols=cols)
-    X = X.reshape(-1, 1, 96, 96)
-    return X, y
-</code></pre>
+</code></pre><h2 id="u6570_u636E_u8F7D_u5165_u4E0E_u9884_u89C8"><a href="#u6570_u636E_u8F7D_u5165_u4E0E_u9884_u89C8" class="headerlink" title="数据载入与预览"></a>数据载入与预览</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">train_file = <span class="string">'training.csv'</span></div><div class="line">test_file = <span class="string">'test.csv'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">load</span><span class="params">(test=False, cols=None)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    载入数据，通过参数控制载入训练集还是测试集，并筛选特征列</div><div class="line">    """</div><div class="line">    fname = test_file <span class="keyword">if</span> test <span class="keyword">else</span> train_file</div><div class="line">    df = pd.read_csv(os.path.expanduser(fname))</div><div class="line"></div><div class="line">    <span class="comment"># 将图像数据转换为数组</span></div><div class="line">    df[<span class="string">'Image'</span>] = df[<span class="string">'Image'</span>].apply(<span class="keyword">lambda</span> x: np.fromstring(x, sep=<span class="string">' '</span>))</div><div class="line"></div><div class="line">    <span class="comment"># 筛选指定的数据列</span></div><div class="line">    <span class="keyword">if</span> cols:  </div><div class="line">        df = df[list(cols) + [<span class="string">'Image'</span>]]</div><div class="line"></div><div class="line">    print(df.count())  <span class="comment"># 每列的简单统计</span></div><div class="line">    df = df.dropna()  <span class="comment"># 删除空数据</span></div><div class="line"></div><div class="line">    <span class="comment"># 归一化到0到1</span></div><div class="line">    X = np.vstack(df[<span class="string">'Image'</span>].values) / <span class="number">255.</span>  </div><div class="line">    X = X.astype(np.float32)</div><div class="line"></div><div class="line">    <span class="comment"># 针对训练集目标标签进行归一化</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> test:</div><div class="line">        y = df[df.columns[:<span class="number">-1</span>]].values</div><div class="line">        y = (y - <span class="number">48</span>) / <span class="number">48</span>  </div><div class="line">        X, y = shuffle(X, y, random_state=<span class="number">42</span>)</div><div class="line">        y = y.astype(np.float32)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        y = <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> X, y</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 将单行像素数据转换为三维矩阵</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">load2d</span><span class="params">(test=False, cols=None)</span>:</span></div><div class="line">    X, y = load(test=test, cols=cols)</div><div class="line">    X = X.reshape(<span class="number">-1</span>, <span class="number">1</span>, <span class="number">96</span>, <span class="number">96</span>)</div><div class="line">    <span class="keyword">return</span> X, y</div></pre></td></tr></table></figure>
 <h2 id="u6570_u636E_u5904_u7406"><a href="#u6570_u636E_u5904_u7406" class="headerlink" title="数据处理"></a>数据处理</h2><p>一种方式是我们训练一个分类器，用来分类所有的目标特征。另一种是针对眼镜、鼻子、嘴分别设置不同的分类器，每个分类器只预测单个目标。通过观察数据我们发现，训练集中有许多缺失数据，如果训练一个分类器，删掉缺失数据会让我们的样本集变小，不能很好地利用起数据，因此，我们选择第二种方式，每个目标训练一个分类器，这样更好的利用样本数据。</p>
-<pre><code class="python">from collections import OrderedDict
-from sklearn.base import clone
-
-SPECIALIST_SETTINGS = [
-    dict(
-        columns=(
-            &#39;left_eye_center_x&#39;, &#39;left_eye_center_y&#39;,
-            &#39;right_eye_center_x&#39;, &#39;right_eye_center_y&#39;,
-            ),
-        flip_indices=((0, 2), (1, 3)),
-        ),
-
-    dict(
-        columns=(
-            &#39;nose_tip_x&#39;, &#39;nose_tip_y&#39;,
-            ),
-        flip_indices=(),
-        ),
-
-    dict(
-        columns=(
-            &#39;mouth_left_corner_x&#39;, &#39;mouth_left_corner_y&#39;,
-            &#39;mouth_right_corner_x&#39;, &#39;mouth_right_corner_y&#39;,
-            &#39;mouth_center_top_lip_x&#39;, &#39;mouth_center_top_lip_y&#39;,
-            ),
-        flip_indices=((0, 2), (1, 3)),
-        ),
-
-    dict(
-        columns=(
-            &#39;mouth_center_bottom_lip_x&#39;,
-            &#39;mouth_center_bottom_lip_y&#39;,
-            ),
-        flip_indices=(),
-        ),
-
-    dict(
-        columns=(
-            &#39;left_eye_inner_corner_x&#39;, &#39;left_eye_inner_corner_y&#39;,
-            &#39;right_eye_inner_corner_x&#39;, &#39;right_eye_inner_corner_y&#39;,
-            &#39;left_eye_outer_corner_x&#39;, &#39;left_eye_outer_corner_y&#39;,
-            &#39;right_eye_outer_corner_x&#39;, &#39;right_eye_outer_corner_y&#39;,
-            ),
-        flip_indices=((0, 2), (1, 3), (4, 6), (5, 7)),
-        ),
-
-    dict(
-        columns=(
-            &#39;left_eyebrow_inner_end_x&#39;, &#39;left_eyebrow_inner_end_y&#39;,
-            &#39;right_eyebrow_inner_end_x&#39;, &#39;right_eyebrow_inner_end_y&#39;,
-            &#39;left_eyebrow_outer_end_x&#39;, &#39;left_eyebrow_outer_end_y&#39;,
-            &#39;right_eyebrow_outer_end_x&#39;, &#39;right_eyebrow_outer_end_y&#39;,
-            ),
-        flip_indices=((0, 2), (1, 3), (4, 6), (5, 7)),
-        ),
-    ]
-</code></pre>
-<pre><code class="python">class FlipBatchIterator(BatchIterator):
-    flip_indices = [
-        (0, 2), (1, 3),
-        (4, 8), (5, 9), (6, 10), (7, 11),
-        (12, 16), (13, 17), (14, 18), (15, 19),
-        (22, 24), (23, 25),
-        ]
-
-    def transform(self, Xb, yb):
-        Xb, yb = super(FlipBatchIterator, self).transform(Xb, yb)
-
-        # Flip half of the images in this batch at random:
-        bs = Xb.shape[0]
-        indices = np.random.choice(bs, bs / 2, replace=False)
-        Xb[indices] = Xb[indices, :, :, ::-1]
-
-        if yb is not None:
-            # Horizontal flip of all x coordinates:
-            yb[indices, ::2] = yb[indices, ::2] * -1
-
-            # Swap places, e.g. left_eye_center_x -&gt; right_eye_center_x
-            for a, b in self.flip_indices:
-                yb[indices, a], yb[indices, b] = (
-                    yb[indices, b], yb[indices, a])
-
-        return Xb, yb
-</code></pre>
-<pre><code class="python">class EarlyStopping(object):
-    def __init__(self, patience=100):
-        self.patience = patience
-        self.best_valid = np.inf
-        self.best_valid_epoch = 0
-        self.best_weights = None
-
-    def __call__(self, nn, train_history):
-        current_valid = train_history[-1][&#39;valid_loss&#39;]
-        current_epoch = train_history[-1][&#39;epoch&#39;]
-        if current_valid &lt; self.best_valid:
-            self.best_valid = current_valid
-            self.best_valid_epoch = current_epoch
-            self.best_weights = nn.get_all_params_values()
-        elif self.best_valid_epoch + self.patience &lt; current_epoch:
-            print(&quot;Early stopping.&quot;)
-            print(&quot;Best valid loss was {:.6f} at epoch {}.&quot;.format(
-                self.best_valid, self.best_valid_epoch))
-            nn.load_params_from(self.best_weights)
-            raise StopIteration()
-</code></pre>
-<pre><code class="python">class AdjustVariable(object):
-    def __init__(self, name, start=0.03, stop=0.001):
-        self.name = name
-        self.start, self.stop = start, stop
-        self.ls = None
-
-    def __call__(self, nn, train_history):
-        if self.ls is None:
-            self.ls = np.linspace(self.start, self.stop, nn.max_epochs)
-
-        epoch = train_history[-1][&#39;epoch&#39;]
-        new_value = np.cast[&#39;float32&#39;](self.ls[epoch - 1])
-        getattr(nn, self.name).set_value(new_value)
-</code></pre>
-<pre><code class="python">def float32(k):
-    return np.cast[&#39;float32&#39;](k)
-
-net = NeuralNet(
-    layers=[
-        (&#39;input&#39;, layers.InputLayer),
-        (&#39;conv1&#39;, layers.Conv2DLayer),
-        (&#39;pool1&#39;, layers.MaxPool2DLayer),
-        (&#39;dropout1&#39;, layers.DropoutLayer),
-        (&#39;conv2&#39;, layers.Conv2DLayer),
-        (&#39;pool2&#39;, layers.MaxPool2DLayer),
-        (&#39;dropout2&#39;, layers.DropoutLayer),
-        (&#39;conv3&#39;, layers.Conv2DLayer),
-        (&#39;pool3&#39;, layers.MaxPool2DLayer),
-        (&#39;dropout3&#39;, layers.DropoutLayer),
-        (&#39;hidden4&#39;, layers.DenseLayer),
-        (&#39;dropout4&#39;, layers.DropoutLayer),
-        (&#39;hidden5&#39;, layers.DenseLayer),
-        (&#39;output&#39;, layers.DenseLayer),
-        ],
-    input_shape=(None, 1, 96, 96),
-    conv1_num_filters=32, conv1_filter_size=(3, 3), pool1_pool_size=(2, 2),
-    dropout1_p=0.1,
-    conv2_num_filters=64, conv2_filter_size=(2, 2), pool2_pool_size=(2, 2),
-    dropout2_p=0.2,
-    conv3_num_filters=128, conv3_filter_size=(2, 2), pool3_pool_size=(2, 2),
-    dropout3_p=0.3,
-    hidden4_num_units=300,
-    dropout4_p=0.5,
-    hidden5_num_units=300,
-    output_num_units=30, output_nonlinearity=None,
-
-    update_learning_rate=theano.shared(float32(0.03)),
-    update_momentum=theano.shared(float32(0.9)),
-
-    regression=True,
-    batch_iterator_train = BatchIterator(batch_size = 100),
-    batch_iterator_test = BatchIterator(batch_size = 100),
-#     batch_iterator_train=FlipBatchIterator(batch_size=128),
-#     on_epoch_finished=[
-#         AdjustVariable(&#39;update_learning_rate&#39;, start=0.03, stop=0.0001),
-#         AdjustVariable(&#39;update_momentum&#39;, start=0.9, stop=0.999),
-#         EarlyStopping(patience=200),
-#         ],
-    max_epochs=10,
-    verbose=1,
-)
-</code></pre>
-<pre><code class="python">def fit_specialists(fname_pretrain=None):
-    if fname_pretrain:
-        with open(fname_pretrain, &#39;rb&#39;) as f:
-            net_pretrain = pickle.load(f)
-    else:
-        net_pretrain = None
-
-    specialists = OrderedDict()
-
-    for setting in SPECIALIST_SETTINGS:
-        cols = setting[&#39;columns&#39;]
-        X, y = load2d(cols=cols)
-
-        model = clone(net)
-        model.output_num_units = y.shape[1]
-        model.batch_iterator_train.flip_indices = setting[&#39;flip_indices&#39;]
-        model.max_epochs = int(4e6 / y.shape[0])
-        if &#39;kwargs&#39; in setting:
-            # an option &#39;kwargs&#39; in the settings list may be used to
-            # set any other parameter of the net:
-            vars(model).update(setting[&#39;kwargs&#39;])
-
-        if net_pretrain is not None:
-            # if a pretrain model was given, use it to initialize the
-            # weights of our new specialist model:
-            model.load_params_from(net_pretrain)
-
-        print(&quot;Training model for columns {} for {} epochs&quot;.format(
-            cols, model.max_epochs))
-        model.fit(X, y)
-        specialists[cols] = model
-
-    with open(&#39;net-specialists.pickle&#39;, &#39;wb&#39;) as f:
-        # this time we&#39;re persisting a dictionary with all models:
-        pickle.dump(specialists, f, -1)
-</code></pre>
-<pre><code class="python">def predict(fname_specialists=&#39;net-specialists.pickle&#39;):
-    with open(fname_specialists, &#39;rb&#39;) as f:
-        specialists = pickle.load(f)
-
-    X = load2d(test=True)[0]
-    y_pred = np.empty((X.shape[0], 0))
-
-    for model in specialists.values():
-        y_pred1 = model.predict(X)
-        y_pred = np.hstack([y_pred, y_pred1])
-
-    columns = ()
-    for cols in specialists.keys():
-        columns += cols
-
-    y_pred2 = y_pred * 48 + 48
-    y_pred2 = y_pred2.clip(0, 96)
-    df = DataFrame(y_pred2, columns=columns)
-
-    lookup_table = read_csv(os.path.expanduser(FLOOKUP))
-    values = []
-
-    for index, row in lookup_table.iterrows():
-        values.append((
-            row[&#39;RowId&#39;],
-            df.ix[row.ImageId - 1][row.FeatureName],
-            ))
-
-    now_str = datetime.now().isoformat().replace(&#39;:&#39;, &#39;-&#39;)
-    submission = DataFrame(values, columns=(&#39;RowId&#39;, &#39;Location&#39;))
-    filename = &#39;submission-{}.csv&#39;.format(now_str)
-    submission.to_csv(filename, index=False)
-    print(&quot;Wrote {}&quot;.format(filename))
-</code></pre>
-<pre><code class="python">if __name__ == &#39;__main__&#39;:
-    fit_specialists()
-    predict()
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> OrderedDict</div><div class="line"><span class="keyword">from</span> sklearn.base <span class="keyword">import</span> clone</div><div class="line"></div><div class="line">SPECIALIST_SETTINGS = [</div><div class="line">    dict(</div><div class="line">        columns=(</div><div class="line">            <span class="string">'left_eye_center_x'</span>, <span class="string">'left_eye_center_y'</span>,</div><div class="line">            <span class="string">'right_eye_center_x'</span>, <span class="string">'right_eye_center_y'</span>,</div><div class="line">            ),</div><div class="line">        flip_indices=((<span class="number">0</span>, <span class="number">2</span>), (<span class="number">1</span>, <span class="number">3</span>)),</div><div class="line">        ),</div><div class="line"></div><div class="line">    dict(</div><div class="line">        columns=(</div><div class="line">            <span class="string">'nose_tip_x'</span>, <span class="string">'nose_tip_y'</span>,</div><div class="line">            ),</div><div class="line">        flip_indices=(),</div><div class="line">        ),</div><div class="line"></div><div class="line">    dict(</div><div class="line">        columns=(</div><div class="line">            <span class="string">'mouth_left_corner_x'</span>, <span class="string">'mouth_left_corner_y'</span>,</div><div class="line">            <span class="string">'mouth_right_corner_x'</span>, <span class="string">'mouth_right_corner_y'</span>,</div><div class="line">            <span class="string">'mouth_center_top_lip_x'</span>, <span class="string">'mouth_center_top_lip_y'</span>,</div><div class="line">            ),</div><div class="line">        flip_indices=((<span class="number">0</span>, <span class="number">2</span>), (<span class="number">1</span>, <span class="number">3</span>)),</div><div class="line">        ),</div><div class="line"></div><div class="line">    dict(</div><div class="line">        columns=(</div><div class="line">            <span class="string">'mouth_center_bottom_lip_x'</span>,</div><div class="line">            <span class="string">'mouth_center_bottom_lip_y'</span>,</div><div class="line">            ),</div><div class="line">        flip_indices=(),</div><div class="line">        ),</div><div class="line"></div><div class="line">    dict(</div><div class="line">        columns=(</div><div class="line">            <span class="string">'left_eye_inner_corner_x'</span>, <span class="string">'left_eye_inner_corner_y'</span>,</div><div class="line">            <span class="string">'right_eye_inner_corner_x'</span>, <span class="string">'right_eye_inner_corner_y'</span>,</div><div class="line">            <span class="string">'left_eye_outer_corner_x'</span>, <span class="string">'left_eye_outer_corner_y'</span>,</div><div class="line">            <span class="string">'right_eye_outer_corner_x'</span>, <span class="string">'right_eye_outer_corner_y'</span>,</div><div class="line">            ),</div><div class="line">        flip_indices=((<span class="number">0</span>, <span class="number">2</span>), (<span class="number">1</span>, <span class="number">3</span>), (<span class="number">4</span>, <span class="number">6</span>), (<span class="number">5</span>, <span class="number">7</span>)),</div><div class="line">        ),</div><div class="line"></div><div class="line">    dict(</div><div class="line">        columns=(</div><div class="line">            <span class="string">'left_eyebrow_inner_end_x'</span>, <span class="string">'left_eyebrow_inner_end_y'</span>,</div><div class="line">            <span class="string">'right_eyebrow_inner_end_x'</span>, <span class="string">'right_eyebrow_inner_end_y'</span>,</div><div class="line">            <span class="string">'left_eyebrow_outer_end_x'</span>, <span class="string">'left_eyebrow_outer_end_y'</span>,</div><div class="line">            <span class="string">'right_eyebrow_outer_end_x'</span>, <span class="string">'right_eyebrow_outer_end_y'</span>,</div><div class="line">            ),</div><div class="line">        flip_indices=((<span class="number">0</span>, <span class="number">2</span>), (<span class="number">1</span>, <span class="number">3</span>), (<span class="number">4</span>, <span class="number">6</span>), (<span class="number">5</span>, <span class="number">7</span>)),</div><div class="line">        ),</div><div class="line">    ]</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">FlipBatchIterator</span><span class="params">(BatchIterator)</span>:</span></div><div class="line">    flip_indices = [</div><div class="line">        (<span class="number">0</span>, <span class="number">2</span>), (<span class="number">1</span>, <span class="number">3</span>),</div><div class="line">        (<span class="number">4</span>, <span class="number">8</span>), (<span class="number">5</span>, <span class="number">9</span>), (<span class="number">6</span>, <span class="number">10</span>), (<span class="number">7</span>, <span class="number">11</span>),</div><div class="line">        (<span class="number">12</span>, <span class="number">16</span>), (<span class="number">13</span>, <span class="number">17</span>), (<span class="number">14</span>, <span class="number">18</span>), (<span class="number">15</span>, <span class="number">19</span>),</div><div class="line">        (<span class="number">22</span>, <span class="number">24</span>), (<span class="number">23</span>, <span class="number">25</span>),</div><div class="line">        ]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">transform</span><span class="params">(self, Xb, yb)</span>:</span></div><div class="line">        Xb, yb = super(FlipBatchIterator, self).transform(Xb, yb)</div><div class="line"></div><div class="line">        <span class="comment"># Flip half of the images in this batch at random:</span></div><div class="line">        bs = Xb.shape[<span class="number">0</span>]</div><div class="line">        indices = np.random.choice(bs, bs / <span class="number">2</span>, replace=<span class="keyword">False</span>)</div><div class="line">        Xb[indices] = Xb[indices, :, :, ::<span class="number">-1</span>]</div><div class="line"></div><div class="line">        <span class="keyword">if</span> yb <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            <span class="comment"># Horizontal flip of all x coordinates:</span></div><div class="line">            yb[indices, ::<span class="number">2</span>] = yb[indices, ::<span class="number">2</span>] * <span class="number">-1</span></div><div class="line"></div><div class="line">            <span class="comment"># Swap places, e.g. left_eye_center_x -&gt; right_eye_center_x</span></div><div class="line">            <span class="keyword">for</span> a, b <span class="keyword">in</span> self.flip_indices:</div><div class="line">                yb[indices, a], yb[indices, b] = (</div><div class="line">                    yb[indices, b], yb[indices, a])</div><div class="line"></div><div class="line">        <span class="keyword">return</span> Xb, yb</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EarlyStopping</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, patience=<span class="number">100</span>)</span>:</span></div><div class="line">        self.patience = patience</div><div class="line">        self.best_valid = np.inf</div><div class="line">        self.best_valid_epoch = <span class="number">0</span></div><div class="line">        self.best_weights = <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, nn, train_history)</span>:</span></div><div class="line">        current_valid = train_history[<span class="number">-1</span>][<span class="string">'valid_loss'</span>]</div><div class="line">        current_epoch = train_history[<span class="number">-1</span>][<span class="string">'epoch'</span>]</div><div class="line">        <span class="keyword">if</span> current_valid &lt; self.best_valid:</div><div class="line">            self.best_valid = current_valid</div><div class="line">            self.best_valid_epoch = current_epoch</div><div class="line">            self.best_weights = nn.get_all_params_values()</div><div class="line">        <span class="keyword">elif</span> self.best_valid_epoch + self.patience &lt; current_epoch:</div><div class="line">            print(<span class="string">"Early stopping."</span>)</div><div class="line">            print(<span class="string">"Best valid loss was &#123;:.6f&#125; at epoch &#123;&#125;."</span>.format(</div><div class="line">                self.best_valid, self.best_valid_epoch))</div><div class="line">            nn.load_params_from(self.best_weights)</div><div class="line">            <span class="keyword">raise</span> StopIteration()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">AdjustVariable</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, start=<span class="number">0.03</span>, stop=<span class="number">0.001</span>)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.start, self.stop = start, stop</div><div class="line">        self.ls = <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self, nn, train_history)</span>:</span></div><div class="line">        <span class="keyword">if</span> self.ls <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">            self.ls = np.linspace(self.start, self.stop, nn.max_epochs)</div><div class="line"></div><div class="line">        epoch = train_history[<span class="number">-1</span>][<span class="string">'epoch'</span>]</div><div class="line">        new_value = np.cast[<span class="string">'float32'</span>](self.ls[epoch - <span class="number">1</span>])</div><div class="line">        getattr(nn, self.name).set_value(new_value)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">float32</span><span class="params">(k)</span>:</span></div><div class="line">    <span class="keyword">return</span> np.cast[<span class="string">'float32'</span>](k)</div><div class="line"></div><div class="line">net = NeuralNet(</div><div class="line">    layers=[</div><div class="line">        (<span class="string">'input'</span>, layers.InputLayer),</div><div class="line">        (<span class="string">'conv1'</span>, layers.Conv2DLayer),</div><div class="line">        (<span class="string">'pool1'</span>, layers.MaxPool2DLayer),</div><div class="line">        (<span class="string">'dropout1'</span>, layers.DropoutLayer),</div><div class="line">        (<span class="string">'conv2'</span>, layers.Conv2DLayer),</div><div class="line">        (<span class="string">'pool2'</span>, layers.MaxPool2DLayer),</div><div class="line">        (<span class="string">'dropout2'</span>, layers.DropoutLayer),</div><div class="line">        (<span class="string">'conv3'</span>, layers.Conv2DLayer),</div><div class="line">        (<span class="string">'pool3'</span>, layers.MaxPool2DLayer),</div><div class="line">        (<span class="string">'dropout3'</span>, layers.DropoutLayer),</div><div class="line">        (<span class="string">'hidden4'</span>, layers.DenseLayer),</div><div class="line">        (<span class="string">'dropout4'</span>, layers.DropoutLayer),</div><div class="line">        (<span class="string">'hidden5'</span>, layers.DenseLayer),</div><div class="line">        (<span class="string">'output'</span>, layers.DenseLayer),</div><div class="line">        ],</div><div class="line">    input_shape=(<span class="keyword">None</span>, <span class="number">1</span>, <span class="number">96</span>, <span class="number">96</span>),</div><div class="line">    conv1_num_filters=<span class="number">32</span>, conv1_filter_size=(<span class="number">3</span>, <span class="number">3</span>), pool1_pool_size=(<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">    dropout1_p=<span class="number">0.1</span>,</div><div class="line">    conv2_num_filters=<span class="number">64</span>, conv2_filter_size=(<span class="number">2</span>, <span class="number">2</span>), pool2_pool_size=(<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">    dropout2_p=<span class="number">0.2</span>,</div><div class="line">    conv3_num_filters=<span class="number">128</span>, conv3_filter_size=(<span class="number">2</span>, <span class="number">2</span>), pool3_pool_size=(<span class="number">2</span>, <span class="number">2</span>),</div><div class="line">    dropout3_p=<span class="number">0.3</span>,</div><div class="line">    hidden4_num_units=<span class="number">300</span>,</div><div class="line">    dropout4_p=<span class="number">0.5</span>,</div><div class="line">    hidden5_num_units=<span class="number">300</span>,</div><div class="line">    output_num_units=<span class="number">30</span>, output_nonlinearity=<span class="keyword">None</span>,</div><div class="line"></div><div class="line">    update_learning_rate=theano.shared(float32(<span class="number">0.03</span>)),</div><div class="line">    update_momentum=theano.shared(float32(<span class="number">0.9</span>)),</div><div class="line"></div><div class="line">    regression=<span class="keyword">True</span>,</div><div class="line">    batch_iterator_train = BatchIterator(batch_size = <span class="number">100</span>),</div><div class="line">    batch_iterator_test = BatchIterator(batch_size = <span class="number">100</span>),</div><div class="line"><span class="comment">#     batch_iterator_train=FlipBatchIterator(batch_size=128),</span></div><div class="line"><span class="comment">#     on_epoch_finished=[</span></div><div class="line"><span class="comment">#         AdjustVariable('update_learning_rate', start=0.03, stop=0.0001),</span></div><div class="line"><span class="comment">#         AdjustVariable('update_momentum', start=0.9, stop=0.999),</span></div><div class="line"><span class="comment">#         EarlyStopping(patience=200),</span></div><div class="line"><span class="comment">#         ],</span></div><div class="line">    max_epochs=<span class="number">10</span>,</div><div class="line">    verbose=<span class="number">1</span>,</div><div class="line">)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fit_specialists</span><span class="params">(fname_pretrain=None)</span>:</span></div><div class="line">    <span class="keyword">if</span> fname_pretrain:</div><div class="line">        <span class="keyword">with</span> open(fname_pretrain, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</div><div class="line">            net_pretrain = pickle.load(f)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        net_pretrain = <span class="keyword">None</span></div><div class="line"></div><div class="line">    specialists = OrderedDict()</div><div class="line"></div><div class="line">    <span class="keyword">for</span> setting <span class="keyword">in</span> SPECIALIST_SETTINGS:</div><div class="line">        cols = setting[<span class="string">'columns'</span>]</div><div class="line">        X, y = load2d(cols=cols)</div><div class="line"></div><div class="line">        model = clone(net)</div><div class="line">        model.output_num_units = y.shape[<span class="number">1</span>]</div><div class="line">        model.batch_iterator_train.flip_indices = setting[<span class="string">'flip_indices'</span>]</div><div class="line">        model.max_epochs = int(<span class="number">4e6</span> / y.shape[<span class="number">0</span>])</div><div class="line">        <span class="keyword">if</span> <span class="string">'kwargs'</span> <span class="keyword">in</span> setting:</div><div class="line">            <span class="comment"># an option 'kwargs' in the settings list may be used to</span></div><div class="line">            <span class="comment"># set any other parameter of the net:</span></div><div class="line">            vars(model).update(setting[<span class="string">'kwargs'</span>])</div><div class="line"></div><div class="line">        <span class="keyword">if</span> net_pretrain <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</div><div class="line">            <span class="comment"># if a pretrain model was given, use it to initialize the</span></div><div class="line">            <span class="comment"># weights of our new specialist model:</span></div><div class="line">            model.load_params_from(net_pretrain)</div><div class="line"></div><div class="line">        print(<span class="string">"Training model for columns &#123;&#125; for &#123;&#125; epochs"</span>.format(</div><div class="line">            cols, model.max_epochs))</div><div class="line">        model.fit(X, y)</div><div class="line">        specialists[cols] = model</div><div class="line"></div><div class="line">    <span class="keyword">with</span> open(<span class="string">'net-specialists.pickle'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</div><div class="line">        <span class="comment"># this time we're persisting a dictionary with all models:</span></div><div class="line">        pickle.dump(specialists, f, <span class="number">-1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(fname_specialists=<span class="string">'net-specialists.pickle'</span>)</span>:</span></div><div class="line">    <span class="keyword">with</span> open(fname_specialists, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</div><div class="line">        specialists = pickle.load(f)</div><div class="line"></div><div class="line">    X = load2d(test=<span class="keyword">True</span>)[<span class="number">0</span>]</div><div class="line">    y_pred = np.empty((X.shape[<span class="number">0</span>], <span class="number">0</span>))</div><div class="line"></div><div class="line">    <span class="keyword">for</span> model <span class="keyword">in</span> specialists.values():</div><div class="line">        y_pred1 = model.predict(X)</div><div class="line">        y_pred = np.hstack([y_pred, y_pred1])</div><div class="line"></div><div class="line">    columns = ()</div><div class="line">    <span class="keyword">for</span> cols <span class="keyword">in</span> specialists.keys():</div><div class="line">        columns += cols</div><div class="line"></div><div class="line">    y_pred2 = y_pred * <span class="number">48</span> + <span class="number">48</span></div><div class="line">    y_pred2 = y_pred2.clip(<span class="number">0</span>, <span class="number">96</span>)</div><div class="line">    df = DataFrame(y_pred2, columns=columns)</div><div class="line"></div><div class="line">    lookup_table = read_csv(os.path.expanduser(FLOOKUP))</div><div class="line">    values = []</div><div class="line"></div><div class="line">    <span class="keyword">for</span> index, row <span class="keyword">in</span> lookup_table.iterrows():</div><div class="line">        values.append((</div><div class="line">            row[<span class="string">'RowId'</span>],</div><div class="line">            df.ix[row.ImageId - <span class="number">1</span>][row.FeatureName],</div><div class="line">            ))</div><div class="line"></div><div class="line">    now_str = datetime.now().isoformat().replace(<span class="string">':'</span>, <span class="string">'-'</span>)</div><div class="line">    submission = DataFrame(values, columns=(<span class="string">'RowId'</span>, <span class="string">'Location'</span>))</div><div class="line">    filename = <span class="string">'submission-&#123;&#125;.csv'</span>.format(now_str)</div><div class="line">    submission.to_csv(filename, index=<span class="keyword">False</span>)</div><div class="line">    print(<span class="string">"Wrote &#123;&#125;"</span>.format(filename))</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    fit_specialists()</div><div class="line">    predict()</div></pre></td></tr></table></figure>
 <pre><code>left_eye_center_x     7039
 left_eye_center_y     7039
 right_eye_center_x    7036
 right_eye_center_y    7036
 Image                 7049
 dtype: int64
-Training model for columns (&#39;left_eye_center_x&#39;, &#39;left_eye_center_y&#39;, &#39;right_eye_center_x&#39;, &#39;right_eye_center_y&#39;) for 568 epochs
+Training model for columns (&apos;left_eye_center_x&apos;, &apos;left_eye_center_y&apos;, &apos;right_eye_center_x&apos;, &apos;right_eye_center_y&apos;) for 568 epochs
 
 
 /Library/Python/2.7/site-packages/lasagne/layers/conv.py:489: UserWarning: The `image_shape` keyword argument to `tensor.nnet.conv2d` is deprecated, it has been renamed to `input_shape`.
@@ -675,7 +434,7 @@ Training model for columns (&#39;left_eye_center_x&#39;, &#39;left_eye_center_y&
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/26/algo/kaggle/facial_keypoints/" data-id="ciwrvim1p004lkks88nrw2a0b" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/26/algo/kaggle/facial_keypoints/" data-id="ciy2rrdir00416bs8rr9gtc6x" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/26/algo/kaggle/facial_keypoints/#ds-thread" class="article-comment-link">评论</a>
       
@@ -731,7 +490,7 @@ Training model for columns (&#39;left_eye_center_x&#39;, &#39;left_eye_center_y&
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/25/algo/ml/hmm_crf/" data-id="ciwrvim26005okks8749vs51m" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/25/algo/ml/hmm_crf/" data-id="ciy2rrdj9005s6bs8fulwlrhe" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/25/algo/ml/hmm_crf/#ds-thread" class="article-comment-link">评论</a>
       
@@ -744,179 +503,11 @@ Training model for columns (&#39;left_eye_center_x&#39;, &#39;left_eye_center_y&
 
 
     
-      <article id="post-algo/sklearn/GridSearchCV" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/24/algo/sklearn/GridSearchCV/">sklearn GridSearchCV简介</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/08/24/algo/sklearn/GridSearchCV/">
-      <time datetime="2016-08-24T05:48:13.000Z" itemprop="datePublished">2016-08-24</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/sklearn/">sklearn</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <pre><code class="python">sklearn.grid_search.GridSearchCV(estimator,
-    param_grid, scoring=None, fit_params=None,
-    n_jobs=1, iid=True, refit=True, cv=None,
-    verbose=0, pre_dispatch=&#39;2*n_jobs&#39;, error_score=&#39;raise&#39;)
-</code></pre>
-<p>GridSearchCV实现了fit，predict，predict_proba等方法，并通过交叉验证对参数空间进行求解，寻找最佳的参数。<br>下面是一个官方介绍：</p>
-<pre><code class="python">from __future__ import print_function
-from pprint import pprint
-from time import time
-import logging
-
-from sklearn.datasets import fetch_20newsgroups
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.linear_model import SGDClassifier
-from sklearn.grid_search import GridSearchCV
-from sklearn.pipeline import Pipeline
-
-print(__doc__)
-
-# Display progress logs on stdout
-logging.basicConfig(level=logging.INFO,
-                    format=&#39;%(asctime)s %(levelname)s %(message)s&#39;)
-
-
-###############################################################################
-# Load some categories from the training set
-categories = [
-    &#39;alt.atheism&#39;,
-    &#39;talk.religion.misc&#39;,
-]
-# Uncomment the following to do the analysis on all the categories
-#categories = None
-
-print(&quot;Loading 20 newsgroups dataset for categories:&quot;)
-print(categories)
-
-data = fetch_20newsgroups(subset=&#39;train&#39;, categories=categories)
-print(&quot;%d documents&quot; % len(data.filenames))
-print(&quot;%d categories&quot; % len(data.target_names))
-print()
-
-###############################################################################
-# 使用pipeline定义文本分类问题常见的工作流，包含向量化和一个简单的分类器
-pipeline = Pipeline([
-    (&#39;vect&#39;, CountVectorizer()),
-    (&#39;tfidf&#39;, TfidfTransformer()),
-    (&#39;clf&#39;, SGDClassifier()),
-])
-
-# 参数空间：
-# 定义了pipeline中各个模型的需要穷尽求解的参数空间，比如：clf__penalty&#39;: (&#39;l2&#39;, &#39;elasticnet&#39;)
-# 表示SGDClassifier分类器的正则化选项为L2和elasticnet，训练时模型会分别使用这两个正则化方法来寻求最佳的方式
-parameters = {
-    &#39;vect__max_df&#39;: (0.5, 0.75, 1.0),
-    #&#39;vect__max_features&#39;: (None, 5000, 10000, 50000),
-    &#39;vect__ngram_range&#39;: ((1, 1), (1, 2)),  # unigrams or bigrams
-    #&#39;tfidf__use_idf&#39;: (True, False),
-    #&#39;tfidf__norm&#39;: (&#39;l1&#39;, &#39;l2&#39;),
-    &#39;clf__alpha&#39;: (0.00001, 0.000001),
-    &#39;clf__penalty&#39;: (&#39;l2&#39;, &#39;elasticnet&#39;),
-    #&#39;clf__n_iter&#39;: (10, 50, 80),
-}
-
-if __name__ == &quot;__main__&quot;:
-
-    # 通过GridSearchCV来寻求最佳参数空间
-    grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=1)
-
-    print(&quot;Performing grid search...&quot;)
-    print(&quot;pipeline:&quot;, [name for name, _ in pipeline.steps])
-    print(&quot;parameters:&quot;)
-    pprint(parameters)
-    t0 = time()
-
-    # 这里只需调用一次fit函数就可以了
-    grid_search.fit(data.data, data.target)
-    print(&quot;done in %0.3fs&quot; % (time() - t0))
-    print()
-
-    # 输出best score
-    print(&quot;Best score: %0.3f&quot; % grid_search.best_score_)
-    print(&quot;Best parameters set:&quot;)
-    # 输出最佳的分类器到底使用了怎样的参数
-    best_parameters = grid_search.best_estimator_.get_params()
-    for param_name in sorted(parameters.keys()):
-        print(&quot;\t%s: %r&quot; % (param_name, best_parameters[param_name]))
-</code></pre>
-<p>输出如下：</p>
-<pre><code>Loading 20 newsgroups dataset for categories:
-[&#39;alt.atheism&#39;, &#39;talk.religion.misc&#39;]
-1427 documents
-2 categories
-
-Performing grid search...
-pipeline: [&#39;vect&#39;, &#39;tfidf&#39;, &#39;clf&#39;]
-parameters:
-{&#39;clf__alpha&#39;: (1.0000000000000001e-05, 9.9999999999999995e-07),
- &#39;clf__n_iter&#39;: (10, 50, 80),
- &#39;clf__penalty&#39;: (&#39;l2&#39;, &#39;elasticnet&#39;),
- &#39;tfidf__use_idf&#39;: (True, False),
- &#39;vect__max_n&#39;: (1, 2),
- &#39;vect__max_df&#39;: (0.5, 0.75, 1.0),
- &#39;vect__max_features&#39;: (None, 5000, 10000, 50000)}
-done in 1737.030s
-
-Best score: 0.940
-Best parameters set:
-    clf__alpha: 9.9999999999999995e-07
-    clf__n_iter: 50
-    clf__penalty: &#39;elasticnet&#39;
-    tfidf__use_idf: True
-    vect__max_n: 2
-    vect__max_df: 0.75
-    vect__max_features: 50000
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/24/algo/sklearn/GridSearchCV/" data-id="ciwrvim2a0060kks8f5ko0dbo" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/08/24/algo/sklearn/GridSearchCV/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GridSearchCV/">GridSearchCV</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/3/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/5/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/3/">&laquo; 上一页</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/5/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -925,6 +516,23 @@ Best parameters set:
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -963,23 +571,6 @@ Best parameters set:
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -997,7 +588,7 @@ Best parameters set:
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -1005,9 +596,9 @@ Best parameters set:
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -1020,7 +611,16 @@ Best parameters set:
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1034,15 +634,6 @@ Best parameters set:
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -1051,7 +642,7 @@ Best parameters set:
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

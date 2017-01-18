@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -170,42 +170,24 @@
 <p>本文中我主要介绍针对单个特征的处理方法，虽然也会附带介绍基础的特征组合方法。同时处理多个特征，以及更复杂的特征处理方法介绍，以后我再另外细说。下面我由浅入深地逐渐说明针对这三类特征的常用处理方法。</p>
 <h2 id="u521D_u7EA7_u7BC7"><a href="#u521D_u7EA7_u7BC7" class="headerlink" title="初级篇"></a>初级篇</h2><hr>
 <h3 id="u8FDE_u7EED_u7279_u5F81"><a href="#u8FDE_u7EED_u7279_u5F81" class="headerlink" title="连续特征"></a>连续特征</h3><p>除了归一化（去中心，方差归一），不用做太多特殊处理，可以直接把连续特征扔到模型里使用。</p>
-<h3 id="u65E0_u5E8F_u7279_u5F81"><a href="#u65E0_u5E8F_u7279_u5F81" class="headerlink" title="无序特征"></a>无序特征</h3><p>可以使用One-hot（也叫One-of-k）的方法把每个无序特征转化为一个数值向量。比如一个无序特征color有三种取值：red，green，blue。那么可以用一个长度为3的向量来表示它，向量中的各个值分别对应于red，green，blue。如：</p>
-<pre><code>color取值 向量表示
-red     (1, 0, 0)
-green   (0, 1, 0)
-blue    (0, 0, 1)
-</code></pre><p>这种方法在NLP里用的很多，就是所谓的词向量模型。变换后的向量长度对于词典长度，每个词对应于向量中的一个元素。</p>
-<p>机器学习书籍里在讲这个的时候介绍的处理方法可能跟我上面说的有点差别。上面说的表达方式里有一个维度是可以省略的。既然我们知道color一定是取3个值中的一个，那么我们知道向量的前两个元素值，就能推断第3个值是多少。所以，其实用下面的方式就可以表达到底是哪种颜色：</p>
-<pre><code>color取值 向量表示
-red     (1, 0)
-green   (0, 1)
-blue    (0, 0)
-</code></pre><p>这样表达的好处是少用了一个维度，降低了转化后特征之间的相关性。但在实际问题中特征基本都或多或少会有些缺失。使用第一种表达方式就可以用全0的向量来表示值缺失，而第二种表达方式是没法表达缺失的。</p>
+<h3 id="u65E0_u5E8F_u7279_u5F81"><a href="#u65E0_u5E8F_u7279_u5F81" class="headerlink" title="无序特征"></a>无序特征</h3><p>可以使用One-hot（也叫One-of-k）的方法把每个无序特征转化为一个数值向量。比如一个无序特征color有三种取值：red，green，blue。那么可以用一个长度为3的向量来表示它，向量中的各个值分别对应于red，green，blue。如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">color取值 向量表示</div><div class="line">red     (1, 0, 0)</div><div class="line">green   (0, 1, 0)</div><div class="line">blue    (0, 0, 1)</div></pre></td></tr></table></figure></p>
+<p>这种方法在NLP里用的很多，就是所谓的词向量模型。变换后的向量长度对于词典长度，每个词对应于向量中的一个元素。</p>
+<p>机器学习书籍里在讲这个的时候介绍的处理方法可能跟我上面说的有点差别。上面说的表达方式里有一个维度是可以省略的。既然我们知道color一定是取3个值中的一个，那么我们知道向量的前两个元素值，就能推断第3个值是多少。所以，其实用下面的方式就可以表达到底是哪种颜色：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">color取值 向量表示</div><div class="line">red     (1, 0)</div><div class="line">green   (0, 1)</div><div class="line">blue    (0, 0)</div></pre></td></tr></table></figure></p>
+<p>这样表达的好处是少用了一个维度，降低了转化后特征之间的相关性。但在实际问题中特征基本都或多或少会有些缺失。使用第一种表达方式就可以用全0的向量来表示值缺失，而第二种表达方式是没法表达缺失的。</p>
 <h3 id="u6709_u5E8F_u7279_u5F81"><a href="#u6709_u5E8F_u7279_u5F81" class="headerlink" title="有序特征"></a>有序特征</h3><p>有些特征虽然也像无序特征那样只取限定的几个值，但是这些值之间有顺序的含义。例如一个人的状态status有三种取值：bad, normal, good，显然bad &lt; normal &lt; good。</p>
 <p>当然，对有序特征最简单的处理方式是忽略其中的顺序关系，把它看成无序的，这样我们就可以使用处理无序特征的方式来处理它。在实际问题中，这种处理方式其实用的很多。</p>
-<p>当然有些问题里有序可能会很重要，这时候就不应该把其中的顺序关系丢掉。一般的表达方式如下：</p>
-<pre><code>status取值    向量表示
-bad     (1, 0, 0)
-normal  (1, 1, 0)
-good    (1, 1, 1)
-</code></pre><p>上面这种表达方式很巧妙地利用递进表达了值之间的顺序关系。</p>
+<p>当然有些问题里有序可能会很重要，这时候就不应该把其中的顺序关系丢掉。一般的表达方式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">status取值    向量表示</div><div class="line">bad     (1, 0, 0)</div><div class="line">normal  (1, 1, 0)</div><div class="line">good    (1, 1, 1)</div></pre></td></tr></table></figure></p>
+<p>上面这种表达方式很巧妙地利用递进表达了值之间的顺序关系。</p>
 <h2 id="u4E2D_u7EA7_u7BC7"><a href="#u4E2D_u7EA7_u7BC7" class="headerlink" title="中级篇"></a>中级篇</h2><hr>
 <p>最容易让人掉以轻心的，往往就是大家觉得最简单的事。在特征处理中，最容易让刚入门同学忽略的，是对连续特征的处理方式。</p>
-<p>以线性分类器Linear Regression (LinearReg)为例，它是通过特征的线性加权来预测因变量y：</p>
-<pre><code>y=wTx
-</code></pre><p>但大部分实际情况下，y与x都不会是这么简单的线性关系，甚至连单调关系都不会有。举个只有一个特征的例子，如果y与x的实际关系如下图：</p>
+<p>以线性分类器Linear Regression (LinearReg)为例，它是通过特征的线性加权来预测因变量y：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">y=wTx</div></pre></td></tr></table></figure></p>
+<p>但大部分实际情况下，y与x都不会是这么简单的线性关系，甚至连单调关系都不会有。举个只有一个特征的例子，如果y与x的实际关系如下图：</p>
 <p><img src="/images/algo/nonlinear_function1.png" alt=""></p>
 <p>那么直接把x扔进LinearReg模型是怎么也得不到好结果的。很多人会想着既然线性分类器搞不定，那就直接找个非线性的好了，比如高斯核的SVM。我们确实可以通过这种简单换算法的方式解决这个简单的问题。但对于很多实际问题（如广告点击率预测），往往特征非常多，这时候时间约束通常不允许我们使用很复杂的非线性分类器。这也是为什么算法发展这么多年，广告点击率预测最常用的方法还是Logistic Regression (LogisticReg)。</p>
 <p>对于上面这个问题，有没有什么办法使得LinearReg也能处理得不错？当然是有，就是对原始特征x做转化，把原来的非线性关系转化为线性关系。</p>
 <h3 id="u65B9_u6CD5_u4E00_uFF1A_u79BB_u6563_u5316"><a href="#u65B9_u6CD5_u4E00_uFF1A_u79BB_u6563_u5316" class="headerlink" title="方法一：离散化"></a>方法一：离散化</h3><p>最常用的转化方式是对x做离散化(discretization)，也就是把原来的值分段，转化成一个取值为0或1的向量。原始值落在某个段里，向量中此段对应的元素就为1，否则为0。</p>
-<p>离散化的目标是y与转化后向量里的每个元素都保持比较好的线性关系。<br>比如取离散点{0.5,1.5,2.5}，通过判断x属于(−∞,0.5)，[0.5,1.5)，[1.5,2.5)，[2.5,+∞)中哪段来把它离散化为4维的向量。下面是一些例子的离散结果：</p>
-<pre><code>原始值x    离散化后的值
-0.1     (1, 0, 0, 0)
-1.3     (0, 1, 0, 0)
-3.2     (0, 0, 0, 1)
-5.8     (0, 0, 0, 1)
-</code></pre><p>离散化方法的关键是怎么确定分段中的离散点。下面是常用的选取离散点的方法：</p>
+<p>离散化的目标是y与转化后向量里的每个元素都保持比较好的线性关系。<br>比如取离散点{0.5,1.5,2.5}，通过判断x属于(−∞,0.5)，[0.5,1.5)，[1.5,2.5)，[2.5,+∞)中哪段来把它离散化为4维的向量。下面是一些例子的离散结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">原始值x    离散化后的值</div><div class="line">0.1     (1, 0, 0, 0)</div><div class="line">1.3     (0, 1, 0, 0)</div><div class="line">3.2     (0, 0, 0, 1)</div><div class="line">5.8     (0, 0, 0, 1)</div></pre></td></tr></table></figure></p>
+<p>离散化方法的关键是怎么确定分段中的离散点。下面是常用的选取离散点的方法：</p>
 <p>a. 等距离离散：顾名思义，就是离散点选取等距点。我们上面对x取离散点{0.5,1.5,2.5}就是一种等距离散，见下图。图中垂直的灰线代表离散点。</p>
 <p><img src="/images/algo/nonlinear_function2.png" alt=""></p>
 <p>b. 等样本点离散：选取的离散点保证落在每段里的样本点数量大致相同，见下图。</p>
@@ -214,37 +196,94 @@ good    (1, 1, 1)
 <p><img src="/images/algo/nonlinear_function4.png" alt=""></p>
 <p>上面介绍的这种离散化为0/1向量的方法有个问题，它在离散时不会考虑到具体的x到离散边界的距离。比如等距离散中取离散点为{0.5,1.5,2.5}，那么1.499，1.501和2.49分别会离散为(0, 1, 0, 0)，(0, 0, 1, 0)和(0, 0, 1, 0)。1.499和1.501很接近，可是就因为这种强制分段的离散导致它们离散的结果差距很大。</p>
 <p>针对上面这种硬离散的一种改进就是使用软离散，也就是在离散时考虑到x与附近离散点的距离，离散出来的向量元素值可以是0/1之外的其他值。有兴趣的同学可以去ESL1这本书中找点感觉。</p>
-<h3 id="u65B9_u6CD5_u4E8C_uFF1A_u51FD_u6570_u53D8_u6362"><a href="#u65B9_u6CD5_u4E8C_uFF1A_u51FD_u6570_u53D8_u6362" class="headerlink" title="方法二：函数变换"></a>方法二：函数变换</h3><p>函数变换直接把原来的特征通过非线性函数做变换，然后把原来的特征，以及变换后的特征一起加入模型进行训练。常用的变换函数见下表，不过其实你可以尝试任何函数。</p>
-<pre><code>常用非线性函数f(x) x的取值范围
-xα; α∈(−∞,+∞)   (−∞,+∞)
-log(x)          (0,+∞)
-log(x1−x)       (0,1)
-</code></pre><p>这个方法操作起来很简单，但记得对新加入的特征做归一化。</p>
+<h3 id="u65B9_u6CD5_u4E8C_uFF1A_u51FD_u6570_u53D8_u6362"><a href="#u65B9_u6CD5_u4E8C_uFF1A_u51FD_u6570_u53D8_u6362" class="headerlink" title="方法二：函数变换"></a>方法二：函数变换</h3><p>函数变换直接把原来的特征通过非线性函数做变换，然后把原来的特征，以及变换后的特征一起加入模型进行训练。常用的变换函数见下表，不过其实你可以尝试任何函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">常用非线性函数f(x) x的取值范围</div><div class="line">xα; α∈(−∞,+∞)   (−∞,+∞)</div><div class="line">log(x)          (0,+∞)</div><div class="line">log(x1−x)       (0,1)</div></pre></td></tr></table></figure></p>
+<p>这个方法操作起来很简单，但记得对新加入的特征做归一化。</p>
 <p>对于我们前面的问题，只要把x2，x3也作为特征加入即可，因为实际上y就是x的一个三次多项式。</p>
 <h2 id="u9AD8_u7EA7_u7BC7"><a href="#u9AD8_u7EA7_u7BC7" class="headerlink" title="高级篇"></a>高级篇</h2><hr>
-<h3 id="u7B1B_u5361_u5C14_u4E58_u79EF"><a href="#u7B1B_u5361_u5C14_u4E58_u79EF" class="headerlink" title="笛卡尔乘积"></a>笛卡尔乘积</h3><p>我们可以使用笛卡尔乘积的方式来组合2个或更多个特征。比如有两个类别特征color和light，它们分别可以取值为red，green，blue和on, off。这两个特征各自可以离散化为3维和2维的向量。对它们做笛卡尔乘积转化，就可以组合出长度为6的特征，它们分别对应着原始值对(red, on)，(red, off)，(green, on)，(green, off)，(blue, on)，(blue, off)。下面的矩阵表达方式更清楚地说明了这种组合。</p>
-<pre><code>X       on  off
-red      
-green        
-blue
-</code></pre><p>对于3个特征的笛卡尔乘积组合，可以表达为立方的形式。更多特征的组合依次类推。 这个方法也可以直接用于连续特征与类别特征之间的组合，只要把连续特征看成是1维的类别特征就好了，这时候组合后特征对应的值就不是0/1了，而是连续特征的取值。</p>
+<h3 id="u7B1B_u5361_u5C14_u4E58_u79EF"><a href="#u7B1B_u5361_u5C14_u4E58_u79EF" class="headerlink" title="笛卡尔乘积"></a>笛卡尔乘积</h3><p>我们可以使用笛卡尔乘积的方式来组合2个或更多个特征。比如有两个类别特征color和light，它们分别可以取值为red，green，blue和on, off。这两个特征各自可以离散化为3维和2维的向量。对它们做笛卡尔乘积转化，就可以组合出长度为6的特征，它们分别对应着原始值对(red, on)，(red, off)，(green, on)，(green, off)，(blue, on)，(blue, off)。下面的矩阵表达方式更清楚地说明了这种组合。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">X       on  off</div><div class="line">red      </div><div class="line">green        </div><div class="line">blue</div></pre></td></tr></table></figure></p>
+<p>对于3个特征的笛卡尔乘积组合，可以表达为立方的形式。更多特征的组合依次类推。 这个方法也可以直接用于连续特征与类别特征之间的组合，只要把连续特征看成是1维的类别特征就好了，这时候组合后特征对应的值就不是0/1了，而是连续特征的取值。</p>
 <h3 id="u79BB_u6563_u5316_u7EED_u7BC7"><a href="#u79BB_u6563_u5316_u7EED_u7BC7" class="headerlink" title="离散化续篇"></a>离散化续篇</h3><p>在上节中我已经介绍了一些常用的离散化单个连续特征的方法，其中一个是画图观察趋势。画图观察趋势的好处是直观、可解释性强，坏处是很麻烦。当要离散化的特征很多时，这种方法可操作性较差。</p>
 <p>机器学习中有个很好解释，速度也不错的模型——决策树模型。大白话说决策树模型就是一大堆的if else。它天生就可以对连续特征分段，所以把它用于离散化连续特征合情合理。我称这种方法为决策树离散化方法。例如Gmail在对信件做重要性排序时就使用了决策树离散化方法2。</p>
 <p>决策树离散化方法通常也是每次离散化一个连续特征，做法如下：</p>
 <p>单独用此特征和目标值y训练一个决策树模型，然后把训练获得的模型内的特征分割点作为离散化的离散点。<br>这种方法当然也可以同时离散化多个连续特征，但是操作起来就更复杂了，实际用的不多。</p>
-<h3 id="u6838_u65B9_u6CD5"><a href="#u6838_u65B9_u6CD5" class="headerlink" title="核方法"></a>核方法</h3><p>核方法经常作为线性模型的一种推广出现。以线性回归模型为例，它对应的核方法如下：</p>
-<pre><code>fθ(x)=∑θiK(x,xi)
-</code></pre><p>其中{xi}=1为训练样本点，K(xi,xj)为核函数，比如常用的高斯核函数为：</p>
-<pre><code>K(xi,xj)=exp(−exp(∥xi−xj∥, 2)/2*exp(h,2))
-</code></pre><p>如果我们把上面模型里的{K(x,xi)}=1看成特征，而θ看成模型参数的话，上面的模型仍旧是个线性模型。所以可以认为核方法只是特征函数变换的一种方式。</p>
+<h3 id="u6838_u65B9_u6CD5"><a href="#u6838_u65B9_u6CD5" class="headerlink" title="核方法"></a>核方法</h3><p>核方法经常作为线性模型的一种推广出现。以线性回归模型为例，它对应的核方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fθ(x)=∑θiK(x,xi)</div></pre></td></tr></table></figure></p>
+<p>其中{xi}=1为训练样本点，K(xi,xj)为核函数，比如常用的高斯核函数为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">K(xi,xj)=exp(−exp(∥xi−xj∥, 2)/2*exp(h,2))</div></pre></td></tr></table></figure></p>
+<p>如果我们把上面模型里的{K(x,xi)}=1看成特征，而θ看成模型参数的话，上面的模型仍旧是个线性模型。所以可以认为核方法只是特征函数变换的一种方式。</p>
 <p>当然，如果把核函数K(xi,xj)看成一种相似度的话，那上面的模型就是kNN模型了，或者叫做加权平均模型也可以。因为核方法在预测时也要用到训练样本点，耗内存且计算量大，所以在数据量较大的实际问题中用的并不多。到此，我已经介绍了不少针对单个特征的处理方法。这些处理方法很难说哪个好哪个不好。有些问题这个好，有些问题那个好，也没什么绝招能直接判断出哪种方法能适合哪些问题。唯一的招就是：</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="ciwrvim1z0056kks8fmy9z7p7" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/" data-id="ciy2rrdj4005a6bs8fep396ru" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/25/algo/ml/Feature Processing/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
+      <article id="post-algo/ml/feature_hashing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/25/algo/ml/feature_hashing/">Feature hashing</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/25/algo/ml/feature_hashing/">
+      <time datetime="2015-09-24T16:00:00.000Z" itemprop="datePublished">2015-09-25</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>In machine learning, feature hashing, also known as the hashing trick(by analogy to the kernel trick), is a fast and space-efficient way of vectorizing features, i.e. turning arbitrary features into indices in a vector or matrix. It works by applying a hash function to the features and using their hash values as indices directly, rather than looking the indices up in an associative array.</p>
+<h3 id="Motivating_example"><a href="#Motivating_example" class="headerlink" title="Motivating example"></a>Motivating example</h3><p>In a typical document classification task, the input to the machine learning algorithm (both during learning and classification) is free text. From this, a bag of words (BOW) representation is constructed: the individual tokens are extracted and counted, and each distinct token in the training set defines a feature (independent variable) of each of the documents in both the training and test sets.</p>
+<p>Machine learning algorithms, however, are typically defined in terms of numerical vectors. Therefore, the bags of words for a set of documents is regarded as a term-document matrix where each row is a single document, and each column is a single feature/word; the entry i, j in such a matrix captures the frequency (or weight) of the j’th term of the vocabulary in document i. (An alternative convention swaps the rows and columns of the matrix, but this difference is immaterial.) Typically, these vectors are extremely sparse.</p>
+<p>The common approach is to construct, at learning time or prior to that, a dictionary representation of the vocabulary of the training set, and use that to map words to indices. Hash tables and tries are common candidates for dictionary implementation. E.g., the three documents</p>
+<p>John likes to watch movies.<br>Mary likes movies too.<br>John also likes football.<br>can be converted, using the dictionary<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Term    Index</div><div class="line">John    1</div><div class="line">likes   2</div><div class="line">to      3</div><div class="line">watch   4</div><div class="line">movies  5</div><div class="line">Mary    6</div><div class="line">too     7</div><div class="line">also    8</div><div class="line">football9</div></pre></td></tr></table></figure></p>
+<p>to the term-document matrix</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1 &amp; 1 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 </div><div class="line">0 &amp; 1 &amp; 0 &amp; 0 &amp; 1 &amp; 1 &amp; 1 &amp; 0 &amp; 0 </div><div class="line">1 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1 &amp; 1</div></pre></td></tr></table></figure>
+<p>(Punctuation was removed, as is usual in document classification and clustering.)</p>
+<p>The problem with this process is that such dictionaries take up a large amount of storage space and grow in size as the training set grows. On the contrary, if the vocabulary is kept fixed and not increased with a growing training set, an adversary may try to invent new words or misspellings that are not in the stored vocabulary so as to circumvent a machine learned filter. This difficulty is why feature hashing has been tried for spam filtering at Yahoo! Research.</p>
+<p>Note that the hashing trick isn’t limited to text classification and similar tasks at the document level, but can be applied to any problem that involves large (perhaps unbounded) numbers of features.</p>
+<h3 id="Feature_vectorization_using_the_hashing_trick"><a href="#Feature_vectorization_using_the_hashing_trick" class="headerlink" title="Feature vectorization using the hashing trick"></a>Feature vectorization using the hashing trick</h3><p>Instead of maintaining a dictionary, a feature vectorizer that uses the hashing trick can build a vector of a pre-defined length by applying a hash function h to the features (e.g., words) in the items under consideration, then using the hash values directly as feature indices and updating the resulting vector at those indices:</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x := new vector[N]</div><div class="line">for f in features:</div><div class="line">    h := hash(f)</div><div class="line">    x[h mod N] += 1</div><div class="line">return x</div></pre></td></tr></table></figure></p>
+<p>It has been suggested that a second, single-bit output hash function ξ be used to determine the sign of the update value, to counter the effect of hash collisions. If such a hash function is used, the algorithm becomes</p>
+<p> function hashing_vectorizer(features : array of string, N : integer):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">x := new vector[N]</div><div class="line">for f in features:</div><div class="line">    h := hash(f)</div><div class="line">    idx := h mod N</div><div class="line">    if ξ(f) == 1:</div><div class="line">        x[idx] += 1</div><div class="line">    else:</div><div class="line">        x[idx] -= 1</div><div class="line">return x</div></pre></td></tr></table></figure></p>
+<p>The above pseudocode actually converts each sample into a vector. An optimized version would instead only generate a stream of (h,ξ) pairs and let the learning and prediction algorithms consume such streams; a linear model can then be implemented as a single hash table representing the coefficient vector.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/" data-id="ciy2rrdj8005p6bs8g1hnzpcs" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/25/algo/ml/feature_hashing/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -432,7 +471,7 @@ blue
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/23/algo/ml/" data-id="ciwrvilxn000jkks80ecpejyo" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/23/algo/ml/" data-id="ciy2rrdg4000k6bs801xv03sl" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/23/algo/ml/#ds-thread" class="article-comment-link">评论</a>
       
@@ -482,154 +521,14 @@ blue
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>I’m trying to implement Writable class, but i have no idea on how to implement a writable class if in my class there is nested object, such as list, etc.</p>
-<pre><code class="java">public class StorageClass implements Writable{
-
-public String xStr;
-public String yStr;
-
-public List&lt;Field&gt; sStor
-
-//omitted ctors
-
-
-@override
-public void write(DataOutput out) throws IOException{
-    out.writeChars(xStr);
-    out.WriteChars(yStr);
-
-    //WHAT SHOULD I DO FOR List&lt;Field&gt;
-
-}
-
-@override
-public void readFields(DataInput in) throws IOException{
-    xStr = in.readLine();
-    yStr = in.readLine();
-
-    //WHAT SHOULD I DO FOR List&lt;Field&gt;
-}
-
-}
-
-public class SubStorage{
-    public String x;
-    public String y;
-}
-
-}
-</code></pre>
-<p>Following is the Field class:</p>
-<pre><code class="java">public final class Field implements Comparable&lt;Field&gt;, Serializable {
-
-    private String name;
-    private DataType dataType;
-    private Object value;
-    private FieldType fieldType;
-
-
-    public Field(){
-
-    }
-
-
-
-    public  Field(String name, DataType dataType, FieldType fieldType){
-        this(name, dataType, null, fieldType);
-    }
-
-    public  Field(String name, DataType type, Object value, FieldType fieldType){
-        this.name = name;
-        this.dataType = type;
-        this.value = value;
-        this.fieldType = fieldType;
-    }
-}
-
-
-
-
-
-public enum FieldType {
-    PRI, LOOKUP, SCD, VERSION, OTHER
-}
-
-
-
-public enum DataType {
-
-    UNDEFINED(4) {
-        public int getSizeInBytes(Object value) {
-            return STRING.getSizeInBytes(value);
-        }
-    },
-
-    STRING(4) {
-        public int getSizeInBytes(Object value) {
-            if (value == null) {
-                return 0;
-            }
-            return super.getSizeInBytes(value) + (value.toString().length() * 2); // length + chars
-        }
-    },
-
-    INT(4),
-    LONG(8),
-    DOUBLE(8),
-    DATETIME(8),
-    BOOLEAN(1),
-    BYTE(1),
-    FLOAT(4),
-    SHORT(2),
-    CHAR(2),
-    DATE(8),
-    TIME(8),
-
-    BLOB(0) {
-        public int getSizeInBytes(Object value) {
-            if (value == null) {
-                return 0;
-            }
-            return ((byte[])value).length;
-        }
-    };
-
-    private final int sizeInBytes;
-
-    private DataType(int sizeInBytes) {
-        this.sizeInBytes = sizeInBytes;
-    }
-
-    public int getSizeInBytes(Object value) {
-        return sizeInBytes;
-    }
-}
-</code></pre>
-<p>Serializing collections is quite simple.</p>
-<pre><code class="java">@Override
-public void readFields(DataInput in) throws IOException {
-    int size = in.readInt();
-    list= new ArrayList&lt;Field&gt;(size);
-    for(int i = 0; i &lt; size; i++){
-        Field f = new Field();
-        f.readFields(in);
-        list.add(f);
-    }
-}
-
-@Override
-public void write(DataOutput out) throws IOException {
-    out.writeInt(list.size());
-    for (Field l : list) {
-        l.write(out);
-    }
-}
-</code></pre>
+        <p>I’m trying to implement Writable class, but i have no idea on how to implement a writable class if in my class there is nested object, such as list, etc.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StorageClass</span> <span class="keyword">implements</span> <span class="title">Writable</span></span>&#123;</div><div class="line"></div><div class="line"><span class="keyword">public</span> String xStr;</div><div class="line"><span class="keyword">public</span> String yStr;</div><div class="line"></div><div class="line"><span class="keyword">public</span> List&lt;Field&gt; sStor</div><div class="line"></div><div class="line"><span class="comment">//omitted ctors</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">@override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(DataOutput out)</span> <span class="keyword">throws</span> IOException</span>&#123;</div><div class="line">    out.writeChars(xStr);</div><div class="line">    out.WriteChars(yStr);</div><div class="line"></div><div class="line">    <span class="comment">//WHAT SHOULD I DO FOR List&lt;Field&gt;</span></div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFields</span><span class="params">(DataInput in)</span> <span class="keyword">throws</span> IOException</span>&#123;</div><div class="line">    xStr = in.readLine();</div><div class="line">    yStr = in.readLine();</div><div class="line"></div><div class="line">    <span class="comment">//WHAT SHOULD I DO FOR List&lt;Field&gt;</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SubStorage</span></span>&#123;</div><div class="line">    <span class="keyword">public</span> String x;</div><div class="line">    <span class="keyword">public</span> String y;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Following is the Field class:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Field</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Field</span>&gt;, <span class="title">Serializable</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> DataType dataType;</div><div class="line">    <span class="keyword">private</span> Object value;</div><div class="line">    <span class="keyword">private</span> FieldType fieldType;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Field</span><span class="params">()</span></span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="title">Field</span><span class="params">(String name, DataType dataType, FieldType fieldType)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>(name, dataType, <span class="keyword">null</span>, fieldType);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="title">Field</span><span class="params">(String name, DataType type, Object value, FieldType fieldType)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        <span class="keyword">this</span>.dataType = type;</div><div class="line">        <span class="keyword">this</span>.value = value;</div><div class="line">        <span class="keyword">this</span>.fieldType = fieldType;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> FieldType &#123;</div><div class="line">    PRI, LOOKUP, SCD, VERSION, OTHER</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> DataType &#123;</div><div class="line"></div><div class="line">    UNDEFINED(<span class="number">4</span>) &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSizeInBytes</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> STRING.getSizeInBytes(value);</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    STRING(<span class="number">4</span>) &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSizeInBytes</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.getSizeInBytes(value) + (value.toString().length() * <span class="number">2</span>); <span class="comment">// length + chars</span></div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    INT(<span class="number">4</span>),</div><div class="line">    LONG(<span class="number">8</span>),</div><div class="line">    DOUBLE(<span class="number">8</span>),</div><div class="line">    DATETIME(<span class="number">8</span>),</div><div class="line">    BOOLEAN(<span class="number">1</span>),</div><div class="line">    BYTE(<span class="number">1</span>),</div><div class="line">    FLOAT(<span class="number">4</span>),</div><div class="line">    SHORT(<span class="number">2</span>),</div><div class="line">    CHAR(<span class="number">2</span>),</div><div class="line">    DATE(<span class="number">8</span>),</div><div class="line">    TIME(<span class="number">8</span>),</div><div class="line"></div><div class="line">    BLOB(<span class="number">0</span>) &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSizeInBytes</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> ((<span class="keyword">byte</span>[])value).length;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> sizeInBytes;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">DataType</span><span class="params">(<span class="keyword">int</span> sizeInBytes)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.sizeInBytes = sizeInBytes;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSizeInBytes</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> sizeInBytes;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Serializing collections is quite simple.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFields</span><span class="params">(DataInput in)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">int</span> size = in.readInt();</div><div class="line">    list= <span class="keyword">new</span> ArrayList&lt;Field&gt;(size);</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)&#123;</div><div class="line">        Field f = <span class="keyword">new</span> Field();</div><div class="line">        f.readFields(in);</div><div class="line">        list.add(f);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(DataOutput out)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    out.writeInt(list.size());</div><div class="line">    <span class="keyword">for</span> (Field l : list) &#123;</div><div class="line">        l.write(out);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/" data-id="ciwrvilyo0017kks88k9hc2or" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/" data-id="ciy2rrdg7000p6bs8t5q4m2eo" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/#ds-thread" class="article-comment-link">评论</a>
       
@@ -680,57 +579,7 @@ public void write(DataOutput out) throws IOException {
         <p>　　MurmurHash 是一种非加密型哈希函数，适用于一般的哈希检索操作。由Austin Appleby在2008年发明，并出现了多个变种，都已经发布到了公有领域(public domain)。与其它流行的哈希函数相比，对于规律性较强的key，MurmurHash的随机分布特征表现更良好。</p>
 <h3 id="u53D8_u79CD"><a href="#u53D8_u79CD" class="headerlink" title="变种"></a>变种</h3><p>　　当前的版本是MurmurHash3， 能够产生出32-bit或128-bit哈希值。较早的MurmurHash2能产生32-bit或64-bit哈希值。对于大端存储和强制对齐的硬件环境有一个较慢的MurmurHash2可以用。MurmurHash2A 变种增加了Merkle–Damgård 构造，所以能够以增量方式调用。 有两个变种产生64-bit哈希值：MurmurHash64A，为64位处理器做了优化；MurmurHash64B，为32位处理器做了优化。MurmurHash2-160用于产生160-bit 哈希值，而MurmurHash1已经不再使用。</p>
 <h3 id="u5B9E_u73B0"><a href="#u5B9E_u73B0" class="headerlink" title="实现"></a>实现</h3><p>　　最初的实现是C++的，但是被移植到了其他的流行语言上，包括 Python, C,C#, Perl, Ruby, PHP,Haskell,、Scala、Java和JavaScript等。这个算法已经被若干开源计划所采纳，最重要的有libstdc++ (4.6版)、Perl、nginx (不早于1.0.1版)、Rubinius、 libmemcached (Memcached的C语言客户端驱动)、maatkit、Hadoop、Kyoto Cabinet以及RaptorDB。</p>
-<p>A sample C implementation follows:</p>
-<pre><code class="C">uint32_t murmur3_32(const char *key, uint32_t len, uint32_t seed) {
-    static const uint32_t c1 = 0xcc9e2d51;
-    static const uint32_t c2 = 0x1b873593;
-    static const uint32_t r1 = 15;
-    static const uint32_t r2 = 13;
-    static const uint32_t m = 5;
-    static const uint32_t n = 0xe6546b64;
-
-    uint32_t hash = seed;
-
-    const int nblocks = len / 4;
-    const uint32_t *blocks = (const uint32_t *) key;
-    int i;
-    for (i = 0; i &lt; nblocks; i++) {
-        uint32_t k = blocks[i];
-        k *= c1;
-        k = (k &lt;&lt; r1) | (k &gt;&gt; (32 - r1));
-        k *= c2;
-
-        hash ^= k;
-        hash = ((hash &lt;&lt; r2) | (hash &gt;&gt; (32 - r2))) * m + n;
-    }
-
-    const uint8_t *tail = (const uint8_t *) (key + nblocks * 4);
-    uint32_t k1 = 0;
-
-    switch (len &amp; 3) {
-    case 3:
-        k1 ^= tail[2] &lt;&lt; 16;
-    case 2:
-        k1 ^= tail[1] &lt;&lt; 8;
-    case 1:
-        k1 ^= tail[0];
-
-        k1 *= c1;
-        k1 = (k1 &lt;&lt; r1) | (k1 &gt;&gt; (32 - r1));
-        k1 *= c2;
-        hash ^= k1;
-    }
-
-    hash ^= len;
-    hash ^= (hash &gt;&gt; 16);
-    hash *= 0x85ebca6b;
-    hash ^= (hash &gt;&gt; 13);
-    hash *= 0xc2b2ae35;
-    hash ^= (hash &gt;&gt; 16);
-
-    return hash;
-}
-</code></pre>
+<p>A sample C implementation follows:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">uint32_t</span> murmur3_32(<span class="keyword">const</span> <span class="keyword">char</span> *key, <span class="keyword">uint32_t</span> len, <span class="keyword">uint32_t</span> seed) &#123;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> c1 = <span class="number">0xcc9e2d51</span>;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> c2 = <span class="number">0x1b873593</span>;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> r1 = <span class="number">15</span>;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> r2 = <span class="number">13</span>;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> m = <span class="number">5</span>;</div><div class="line">	<span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">uint32_t</span> n = <span class="number">0xe6546b64</span>;</div><div class="line"> </div><div class="line">	<span class="keyword">uint32_t</span> hash = seed;</div><div class="line"> </div><div class="line">	<span class="keyword">const</span> <span class="keyword">int</span> nblocks = len / <span class="number">4</span>;</div><div class="line">	<span class="keyword">const</span> <span class="keyword">uint32_t</span> *blocks = (<span class="keyword">const</span> <span class="keyword">uint32_t</span> *) key;</div><div class="line">	<span class="keyword">int</span> i;</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; nblocks; i++) &#123;</div><div class="line">		<span class="keyword">uint32_t</span> k = blocks[i];</div><div class="line">		k *= c1;</div><div class="line">		k = (k &lt;&lt; r1) | (k &gt;&gt; (<span class="number">32</span> - r1));</div><div class="line">		k *= c2;</div><div class="line"> </div><div class="line">		hash ^= k;</div><div class="line">		hash = ((hash &lt;&lt; r2) | (hash &gt;&gt; (<span class="number">32</span> - r2))) * m + n;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line">	<span class="keyword">const</span> <span class="keyword">uint8_t</span> *tail = (<span class="keyword">const</span> <span class="keyword">uint8_t</span> *) (key + nblocks * <span class="number">4</span>);</div><div class="line">	<span class="keyword">uint32_t</span> k1 = <span class="number">0</span>;</div><div class="line"> </div><div class="line">	<span class="keyword">switch</span> (len &amp; <span class="number">3</span>) &#123;</div><div class="line">	<span class="keyword">case</span> <span class="number">3</span>:</div><div class="line">		k1 ^= tail[<span class="number">2</span>] &lt;&lt; <span class="number">16</span>;</div><div class="line">	<span class="keyword">case</span> <span class="number">2</span>:</div><div class="line">		k1 ^= tail[<span class="number">1</span>] &lt;&lt; <span class="number">8</span>;</div><div class="line">	<span class="keyword">case</span> <span class="number">1</span>:</div><div class="line">		k1 ^= tail[<span class="number">0</span>];</div><div class="line"> </div><div class="line">		k1 *= c1;</div><div class="line">		k1 = (k1 &lt;&lt; r1) | (k1 &gt;&gt; (<span class="number">32</span> - r1));</div><div class="line">		k1 *= c2;</div><div class="line">		hash ^= k1;</div><div class="line">	&#125;</div><div class="line"> </div><div class="line">	hash ^= len;</div><div class="line">	hash ^= (hash &gt;&gt; <span class="number">16</span>);</div><div class="line">	hash *= <span class="number">0x85ebca6b</span>;</div><div class="line">	hash ^= (hash &gt;&gt; <span class="number">13</span>);</div><div class="line">	hash *= <span class="number">0xc2b2ae35</span>;</div><div class="line">	hash ^= (hash &gt;&gt; <span class="number">16</span>);</div><div class="line"> </div><div class="line">	<span class="keyword">return</span> hash;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <h3 id="u76F8_u5173_u8D44_u6E90_uFF1A"><a href="#u76F8_u5173_u8D44_u6E90_uFF1A" class="headerlink" title="相关资源："></a>相关资源：</h3><ol>
 <li><a href="http://blog.csdn.net/yfkiss/article/details/7337382" target="_blank" rel="external">http://blog.csdn.net/yfkiss/article/details/7337382</a></li>
 <li><a href="https://zh.wikipedia.org/wiki/Murmur%E5%93%88%E5%B8%8C" target="_blank" rel="external">https://zh.wikipedia.org/wiki/Murmur%E5%93%88%E5%B8%8C</a></li>
@@ -743,7 +592,7 @@ public void write(DataOutput out) throws IOException {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/" data-id="ciwrvilxo000kkks8p1daxel1" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/" data-id="ciy2rrdg5000l6bs818jkbb61" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -756,114 +605,11 @@ public void write(DataOutput out) throws IOException {
 
 
     
-      <article id="post-algo/java-beta-md" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/03/algo/java-beta-md/">Java beta distribution</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/algo/java-beta-md/">
-      <time datetime="2015-09-03T06:51:59.000Z" itemprop="datePublished">2015-09-03</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>维基百科介绍：<a href="https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83" target="_blank" rel="external">https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83</a><br><a href="https://en.wikipedia.org/wiki/Beta_distribution" target="_blank" rel="external">https://en.wikipedia.org/wiki/Beta_distribution</a></p>
-<pre><code class="java">import org.apache.commons.math3.distribution.BetaDistribution;
-
-public class test {
-    /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        double x;
-        double b;
-        BetaDistribution beta = new BetaDistribution(40.0, 40.0);
-        for (int i = 0; i &lt; 100; i++) {
-            x = Math.random();
-            b = beta.inverseCumulativeProbability(x);
-            System.out.println(b);
-        }
-    }
-}
-</code></pre>
-<p>实现：</p>
-<pre><code class="java">public class BetaDistributionE {
-    public double getBetaDistribution(double alpha, double beta){
-    double a = alpha + beta;
-    double b;
-    if(Math.min(alpha, beta) &lt;= 1){
-        b = Math.max(1/alpha, 1/beta);
-    }
-    else{
-    b = Math.sqrt((a - 2) / (2*alpha*beta - a));
-    }
-    double c = alpha + 1/b;
-
-    double W = 0;
-    boolean reject = true;
-    for (reject = true; reject; ) {
-         double U1 = Math.random();
-         double U2 = Math.random();
-         double V = b * Math.log(U1/(1-U1));
-         W = alpha * Math.exp(V);
-         reject = (a*Math.log(a/(beta+W)) + c*V - Math.log(4)) &lt; Math.log(U1*U1*U2);
-     }
-     return (W / (beta + W));
-     }
-}
-</code></pre>
-<p>相关资源：</p>
-<ol>
-<li><a href="http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html" target="_blank" rel="external">http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html</a></li>
-<li><a href="http://stackoverflow.com/questions/13634170/java-using-beta-distribution-to-generate-a-random-number-from-0-to-1" target="_blank" rel="external">http://stackoverflow.com/questions/13634170/java-using-beta-distribution-to-generate-a-random-number-from-0-to-1</a></li>
-<li>go语言实现：<a href="https://github.com/purzelrakete/bandit/blob/4fca67f963006845de83860fcd849625251fce57/math/rand.go#L21" target="_blank" rel="external">https://github.com/purzelrakete/bandit/blob/4fca67f963006845de83860fcd849625251fce57/math/rand.go#L21</a></li>
-<li>非均衡抽样，在一个概率区间内抽样：Paper：Generating Beta Variates with Nonintegral Shape Parameters</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/java-beta-md/" data-id="ciwrvilxm000ikks8e5hdutue" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/03/algo/java-beta-md/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/16/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/18/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/16/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/18/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -872,6 +618,23 @@ public class test {
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -910,23 +673,6 @@ public class test {
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -944,7 +690,7 @@ public class test {
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -952,9 +698,9 @@ public class test {
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -967,7 +713,16 @@ public class test {
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -981,15 +736,6 @@ public class test {
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -998,7 +744,7 @@ public class test {
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

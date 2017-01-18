@@ -5,18 +5,16 @@
   
   <title>使用TextRank算法为文本生成关键字和摘要 | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是： 
-Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004.
+  <meta name="description" content="TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是：1Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004.
 PageRank
-PageRank最开始用来计算网页的重要性。整个www可以看作一张有向图图，节">
+PageRank最开始用来计算网页的重要性。整个www可以看作一张有向图图，节点">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用TextRank算法为文本生成关键字和摘要">
 <meta property="og:url" content="http://www.notehub.cn/2016/01/05/algo/graph/textrank/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是： 
-Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004.
+<meta property="og:description" content="TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是：1Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004.
 PageRank
-PageRank最开始用来计算网页的重要性。整个www可以看作一张有向图图，节">
+PageRank最开始用来计算网页的重要性。整个www可以看作一张有向图图，节点">
 <meta property="og:image" content="http://www.notehub.cn/images/algo/pagerank.png">
 <meta property="og:image" content="http://www.notehub.cn/images/algo/pagerank1.png">
 <meta property="og:image" content="http://www.notehub.cn/images/algo/textrank.png">
@@ -24,10 +22,9 @@ PageRank最开始用来计算网页的重要性。整个www可以看作一张有
 <meta property="og:updated_time" content="2016-01-05T04:43:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用TextRank算法为文本生成关键字和摘要">
-<meta name="twitter:description" content="TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是： 
-Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004.
+<meta name="twitter:description" content="TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是：1Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004.
 PageRank
-PageRank最开始用来计算网页的重要性。整个www可以看作一张有向图图，节">
+PageRank最开始用来计算网页的重要性。整个www可以看作一张有向图图，节点">
 <meta name="twitter:image" content="http://www.notehub.cn/images/algo/pagerank.png">
   
   
@@ -108,7 +105,7 @@ PageRank最开始用来计算网页的重要性。整个www可以看作一张有
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -175,9 +172,8 @@ PageRank最开始用来计算网页的重要性。整个www可以看作一张有
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <p>TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是： </p>
-<pre><code>Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004.
-</code></pre><h3 id="PageRank"><a href="#PageRank" class="headerlink" title="PageRank"></a>PageRank</h3><hr>
+        <p>TextRank算法基于PageRank，用于为文本生成关键字和摘要。其论文是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Mihalcea R, Tarau P. TextRank: Bringing order into texts[C]. Association for Computational Linguistics, 2004.</div></pre></td></tr></table></figure></p>
+<h3 id="PageRank"><a href="#PageRank" class="headerlink" title="PageRank"></a>PageRank</h3><hr>
 <p>PageRank最开始用来计算网页的重要性。整个www可以看作一张有向图图，节点是网页。如果网页A存在到网页B的链接，那么有一条从网页A指向网页B的有向边。</p>
 <p>构造完图后，使用下面的公式：<br><img src="/images/algo/pagerank.png" alt=""><br>S(Vi)是网页i的中重要性（PR值）。d是阻尼系数，一般设置为0.85。In(Vi)是存在指向网页i的链接的网页集合。Out(Vj)是网页j中的链接存在的链接指向的网页的集合。|Out(Vj)|是集合中元素的个数。</p>
 <p>PageRank需要使用上面的公式多次迭代才能得到结果。初始时，可以设置每个网页的重要性为1。上面公式等号左边计算的结果是迭代后网页i的PR值，等号右边用到的PR值全是迭代前的。</p>
@@ -186,69 +182,12 @@ PageRank最开始用来计算网页的重要性。整个www可以看作一张有
 <p>横栏代表其实的节点，纵栏代表结束的节点。若两个节点间有链接关系，对应的值为1。 </p>
 <p>根据公式，需要将每一竖栏归一化（每个元素/元素之和），归一化的结果是： </p>
 <p>结束\起始   A   B   C<br>A           0   1   1<br>B           0   0   0<br>C           0   0   0</p>
-<p>上面的结果构成矩阵M。我们用matlab迭代100次看看最后每个网页的重要性：</p>
-<pre><code class="matlab">M = [0 1 1 
-    0 0 0
-    0 0 0];
-PR = [1; 1 ; 1];
-for iter = 1:100
-    PR = 0.15 + 0.85*M*PR;
-    disp(iter);
-    disp(PR);
-end
-</code></pre>
-<p>运行结果（省略部分）： </p>
-<pre><code>    95
-    0.4050
-    0.1500
-    0.1500
-    96
-    0.4050
-    0.1500
-    0.1500
-    97
-    0.4050
-    0.1500
-    0.1500
-    98
-    0.4050
-    0.1500
-    0.1500
-    99
-    0.4050
-    0.1500
-    0.1500
-   100
-    0.4050
-    0.1500
-    0.1500
-</code></pre><p>最终A的PR值为0.4050，B和C的PR值为0.1500。 </p>
-<p>如果把上面的有向边看作无向的（其实就是双向的），那么： </p>
-<pre><code class="matlab">M = [0 1 1 
-    0.5 0 0
-    0.5 0 0];
-PR = [1; 1 ; 1];
-for iter = 1:100
-    PR = 0.15 + 0.85*M*PR;
-    disp(iter);
-    disp(PR);
-end
-</code></pre>
-<p>运行结果（省略部分）： </p>
-<pre><code>.....
-    98
-    1.4595
-    0.7703
-    0.7703
-    99
-    1.4595
-    0.7703
-    0.7703
-   100
-    1.4595
-    0.7703
-    0.7703
-</code></pre><p>依然能判断出A、B、C的重要性。 </p>
+<p>上面的结果构成矩阵M。我们用matlab迭代100次看看最后每个网页的重要性：<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">M = [<span class="number">0</span> <span class="number">1</span> <span class="number">1</span> </div><div class="line">    <span class="number">0</span> <span class="number">0</span> <span class="number">0</span></div><div class="line">    <span class="number">0</span> <span class="number">0</span> <span class="number">0</span>];</div><div class="line">PR = [<span class="number">1</span>; <span class="number">1</span> ; <span class="number">1</span>];</div><div class="line"><span class="keyword">for</span> iter = <span class="number">1</span>:<span class="number">100</span></div><div class="line">    PR = <span class="number">0.15</span> + <span class="number">0.85</span>*M*PR;</div><div class="line">    <span class="built_in">disp</span>(iter);</div><div class="line">    <span class="built_in">disp</span>(PR);</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
+<p>运行结果（省略部分）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"> 95</div><div class="line"> 0.4050</div><div class="line"> 0.1500</div><div class="line"> 0.1500</div><div class="line"> 96</div><div class="line"> 0.4050</div><div class="line"> 0.1500</div><div class="line"> 0.1500</div><div class="line"> 97</div><div class="line"> 0.4050</div><div class="line"> 0.1500</div><div class="line"> 0.1500</div><div class="line"> 98</div><div class="line"> 0.4050</div><div class="line"> 0.1500</div><div class="line"> 0.1500</div><div class="line"> 99</div><div class="line"> 0.4050</div><div class="line"> 0.1500</div><div class="line"> 0.1500</div><div class="line">100</div><div class="line"> 0.4050</div><div class="line"> 0.1500</div><div class="line"> 0.1500</div></pre></td></tr></table></figure></p>
+<p>最终A的PR值为0.4050，B和C的PR值为0.1500。 </p>
+<p>如果把上面的有向边看作无向的（其实就是双向的），那么：<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">M = [<span class="number">0</span> <span class="number">1</span> <span class="number">1</span> </div><div class="line">    <span class="number">0.5</span> <span class="number">0</span> <span class="number">0</span></div><div class="line">    <span class="number">0.5</span> <span class="number">0</span> <span class="number">0</span>];</div><div class="line">PR = [<span class="number">1</span>; <span class="number">1</span> ; <span class="number">1</span>];</div><div class="line"><span class="keyword">for</span> iter = <span class="number">1</span>:<span class="number">100</span></div><div class="line">    PR = <span class="number">0.15</span> + <span class="number">0.85</span>*M*PR;</div><div class="line">    <span class="built_in">disp</span>(iter);</div><div class="line">    <span class="built_in">disp</span>(PR);</div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure></p>
+<p>运行结果（省略部分）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">.....</div><div class="line">    98</div><div class="line">    1.4595</div><div class="line">    0.7703</div><div class="line">    0.7703</div><div class="line">    99</div><div class="line">    1.4595</div><div class="line">    0.7703</div><div class="line">    0.7703</div><div class="line">   100</div><div class="line">    1.4595</div><div class="line">    0.7703</div><div class="line">    0.7703</div></pre></td></tr></table></figure></p>
+<p>依然能判断出A、B、C的重要性。 </p>
 <h3 id="u4F7F_u7528TextRank_u63D0_u53D6_u5173_u952E_u5B57"><a href="#u4F7F_u7528TextRank_u63D0_u53D6_u5173_u952E_u5B57" class="headerlink" title="使用TextRank提取关键字"></a>使用TextRank提取关键字</h3><hr>
 <p>将原文本拆分为句子，在每个句子中过滤掉停用词（可选），并只保留指定词性的单词（可选）。由此可以得到句子的集合和单词的集合。</p>
 <p>每个单词作为pagerank中的一个节点。设定窗口大小为k，假设一个句子依次由下面的单词组成：</p>
@@ -269,7 +208,7 @@ end
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/01/05/algo/graph/textrank/" data-id="ciwrvim1f003ukks8br0jl2oz" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/01/05/algo/graph/textrank/" data-id="ciy2rrdiq003v6bs8sho1k3an" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/01/05/algo/graph/textrank/#ds-thread" class="article-comment-link">评论</a>
       
@@ -323,6 +262,23 @@ end
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -357,23 +313,6 @@ end
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -391,7 +330,7 @@ end
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -399,9 +338,9 @@ end
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -414,7 +353,16 @@ end
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -428,15 +376,6 @@ end
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -445,7 +384,7 @@ end
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,68 @@
 
       
       <section id="main">
+      <article id="post-algo/java-beta-md" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/03/algo/java-beta-md/">Java beta distribution</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/03/algo/java-beta-md/">
+      <time datetime="2015-09-03T06:51:59.000Z" itemprop="datePublished">2015-09-03</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>维基百科介绍：<a href="https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83" target="_blank" rel="external">https://zh.wikipedia.org/wiki/%CE%92%E5%88%86%E5%B8%83</a><br><a href="https://en.wikipedia.org/wiki/Beta_distribution" target="_blank" rel="external">https://en.wikipedia.org/wiki/Beta_distribution</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.apache.commons.math3.distribution.BetaDistribution;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * <span class="doctag">@param</span> args</div><div class="line">     */</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">double</span> x;</div><div class="line">        <span class="keyword">double</span> b;</div><div class="line">        BetaDistribution beta = <span class="keyword">new</span> BetaDistribution(<span class="number">40.0</span>, <span class="number">40.0</span>);</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</div><div class="line">            x = Math.random();</div><div class="line">            b = beta.inverseCumulativeProbability(x);</div><div class="line">            System.out.println(b);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BetaDistributionE</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">getBetaDistribution</span><span class="params">(<span class="keyword">double</span> alpha, <span class="keyword">double</span> beta)</span></span>&#123;</div><div class="line">    <span class="keyword">double</span> a = alpha + beta;</div><div class="line">	<span class="keyword">double</span> b;</div><div class="line">	<span class="keyword">if</span>(Math.min(alpha, beta) &lt;= <span class="number">1</span>)&#123;</div><div class="line">		b = Math.max(<span class="number">1</span>/alpha, <span class="number">1</span>/beta);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span>&#123;</div><div class="line">	b = Math.sqrt((a - <span class="number">2</span>) / (<span class="number">2</span>*alpha*beta - a));</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">double</span> c = alpha + <span class="number">1</span>/b;</div><div class="line"> </div><div class="line">	<span class="keyword">double</span> W = <span class="number">0</span>;</div><div class="line">	<span class="keyword">boolean</span> reject = <span class="keyword">true</span>;</div><div class="line">	<span class="keyword">for</span> (reject = <span class="keyword">true</span>; reject; ) &#123;</div><div class="line"> 		<span class="keyword">double</span> U1 = Math.random();</div><div class="line"> 		<span class="keyword">double</span> U2 = Math.random();</div><div class="line"> 		<span class="keyword">double</span> V = b * Math.log(U1/(<span class="number">1</span>-U1));</div><div class="line"> 		W = alpha * Math.exp(V);</div><div class="line"> 		reject = (a*Math.log(a/(beta+W)) + c*V - Math.log(<span class="number">4</span>)) &lt; Math.log(U1*U1*U2);</div><div class="line"> 	&#125;</div><div class="line"> 	<span class="keyword">return</span> (W / (beta + W));</div><div class="line"> 	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>相关资源：</p>
+<ol>
+<li><a href="http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html" target="_blank" rel="external">http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/distribution/BetaDistribution.html</a></li>
+<li><a href="http://stackoverflow.com/questions/13634170/java-using-beta-distribution-to-generate-a-random-number-from-0-to-1" target="_blank" rel="external">http://stackoverflow.com/questions/13634170/java-using-beta-distribution-to-generate-a-random-number-from-0-to-1</a></li>
+<li>go语言实现：<a href="https://github.com/purzelrakete/bandit/blob/4fca67f963006845de83860fcd849625251fce57/math/rand.go#L21" target="_blank" rel="external">https://github.com/purzelrakete/bandit/blob/4fca67f963006845de83860fcd849625251fce57/math/rand.go#L21</a></li>
+<li>非均衡抽样，在一个概率区间内抽样：Paper：Generating Beta Variates with Nonintegral Shape Parameters</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/java-beta-md/" data-id="ciy2rrdg3000i6bs8gx9g0ohb" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/03/algo/java-beta-md/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/beta-a-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -161,10 +223,7 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="python">import pylab as pl
-import numpy as np
-from scipy import stats
-</code></pre>
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pylab <span class="keyword">as</span> pl</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</div></pre></td></tr></table></figure>
 <h2 id="u4E8C_u9879_u5206_u5E03"><a href="#u4E8C_u9879_u5206_u5E03" class="headerlink" title="二项分布"></a>二项分布</h2><hr>
 <p>　　在概率论和统计学中，二项分布是n个独立的[是/非]试验中成功的次数的离散概率分布，其中每次试验的成功概率为$p$。举两个例子就很容易理解二项分布的含义了：</p>
 <ul>
@@ -172,62 +231,21 @@ from scipy import stats
 <li>掷一次骰子出现六点的概率是1/6，投掷6次骰子出现k次六点的概率。</li>
 </ul>
 <p>　　在上面的两个例子中，每次抛硬币或者掷骰子都和上次的结果无关，所以每次实验都是独立的。二项分布是一个离散分布，k的取值范围为从0到n，只有n+1种可能的结果。scipy.stats.binom为二项分布，下面用它计算抛十次硬币，出现k次正面的概率分布。</p>
-<h4 id="In__5B16_5D_3A"><a href="#In__5B16_5D_3A" class="headerlink" title="In [16]:"></a>In [16]:</h4><pre><code class="python">n = 10
-k = np.arange(n+1)
-pcoin = stats.binom.pmf(k, n, 0.5)
-pcoin
-</code></pre>
-<h4 id="Out_5B16_5D_3A"><a href="#Out_5B16_5D_3A" class="headerlink" title="Out[16]:"></a>Out[16]:</h4><pre><code class="python">array([ 0.00097656,  0.00976563,  0.04394531,  0.1171875 ,  0.20507813,
-        0.24609375,  0.20507813,  0.1171875 ,  0.04394531,  0.00976563,
-        0.00097656])
-</code></pre>
-<h4 id="In__5B17_5D_3A"><a href="#In__5B17_5D_3A" class="headerlink" title="In [17]:"></a>In [17]:</h4><pre><code class="python">pl.stem(k, pcoin, basefmt=&quot;k-&quot;)
-pl.margins(0.1)
-</code></pre>
+<h4 id="In__5B16_5D_3A"><a href="#In__5B16_5D_3A" class="headerlink" title="In [16]:"></a>In [16]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">n = <span class="number">10</span></div><div class="line">k = np.arange(n+<span class="number">1</span>)</div><div class="line">pcoin = stats.binom.pmf(k, n, <span class="number">0.5</span>)</div><div class="line">pcoin</div></pre></td></tr></table></figure>
+<h4 id="Out_5B16_5D_3A"><a href="#Out_5B16_5D_3A" class="headerlink" title="Out[16]:"></a>Out[16]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">array([ <span class="number">0.00097656</span>,  <span class="number">0.00976563</span>,  <span class="number">0.04394531</span>,  <span class="number">0.1171875</span> ,  <span class="number">0.20507813</span>,</div><div class="line">        <span class="number">0.24609375</span>,  <span class="number">0.20507813</span>,  <span class="number">0.1171875</span> ,  <span class="number">0.04394531</span>,  <span class="number">0.00976563</span>,</div><div class="line">        <span class="number">0.00097656</span>])</div></pre></td></tr></table></figure>
+<h4 id="In__5B17_5D_3A"><a href="#In__5B17_5D_3A" class="headerlink" title="In [17]:"></a>In [17]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pl.stem(k, pcoin, basefmt=<span class="string">"k-"</span>)</div><div class="line">pl.margins(<span class="number">0.1</span>)</div></pre></td></tr></table></figure>
 <p><img src="/images/algo/ssss.png" alt=""><br>下面是投掷6次骰子，出现6点的概率分布。</p>
-<h4 id="In__5B18_5D_3A"><a href="#In__5B18_5D_3A" class="headerlink" title="In [18]:"></a>In [18]:</h4><pre><code class="python">n = 6
-k = np.arange(n+1)
-pdice = stats.binom.pmf(k, n, 1.0/6)
-pdice
-</code></pre>
-<h4 id="Out_5B18_5D_3A"><a href="#Out_5B18_5D_3A" class="headerlink" title="Out[18]:"></a>Out[18]:</h4><pre><code class="python">array([  3.34897977e-01,   4.01877572e-01,   2.00938786e-01,
-         5.35836763e-02,   8.03755144e-03,   6.43004115e-04,
-         2.14334705e-05])
-</code></pre>
-<h4 id="In__5B19_5D_3A"><a href="#In__5B19_5D_3A" class="headerlink" title="In [19]:"></a>In [19]:</h4><pre><code class="python">pl.stem(k, pdice, basefmt=&quot;k-&quot;)
-pl.margins(0.1)
-</code></pre>
+<h4 id="In__5B18_5D_3A"><a href="#In__5B18_5D_3A" class="headerlink" title="In [18]:"></a>In [18]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">n = <span class="number">6</span></div><div class="line">k = np.arange(n+<span class="number">1</span>)</div><div class="line">pdice = stats.binom.pmf(k, n, <span class="number">1.0</span>/<span class="number">6</span>)</div><div class="line">pdice</div></pre></td></tr></table></figure>
+<h4 id="Out_5B18_5D_3A"><a href="#Out_5B18_5D_3A" class="headerlink" title="Out[18]:"></a>Out[18]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">array([  <span class="number">3.34897977e-01</span>,   <span class="number">4.01877572e-01</span>,   <span class="number">2.00938786e-01</span>,</div><div class="line">         <span class="number">5.35836763e-02</span>,   <span class="number">8.03755144e-03</span>,   <span class="number">6.43004115e-04</span>,</div><div class="line">         <span class="number">2.14334705e-05</span>])</div></pre></td></tr></table></figure>
+<h4 id="In__5B19_5D_3A"><a href="#In__5B19_5D_3A" class="headerlink" title="In [19]:"></a>In [19]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pl.stem(k, pdice, basefmt=<span class="string">"k-"</span>)</div><div class="line">pl.margins(<span class="number">0.1</span>)</div></pre></td></tr></table></figure>
 <p><img src="/images/algo/ssss1.png" alt=""></p>
 <h2 id="Beta_u5206_u5E03"><a href="#Beta_u5206_u5E03" class="headerlink" title="Beta分布"></a>Beta分布</h2><hr>
 <p>　　对于硬币或者骰子这样的简单实验，我们事先能很准确地掌握系统成功的概率。然而通常情况下，系统成功的概率是未知的。为了测试系统的成功概率$p$，我们做n次试验，统计成功的次数k，于是很直观地就可以计算出$p = k/n$。然而由于系统成功的概率是未知的，这个公式计算出的$p$只是系统成功概率的最佳估计。也就是说实际上$p$也可能为其它的值，只是为其它的值的概率较小。</p>
 <p>　　例如有某种特殊的硬币，我们事先完全无法确定它出现正面的概率。然后抛10次硬币，出现5次正面，于是我们认为硬币出现正面的概率最可能是0.5。但是即使硬币出现正面的概率为0.4，也会出现抛10次出现5次正面的情况。因此我们并不能完全确定硬币出现正面的概率就是0.5，所以$p$也是一个随机变量，它符合Beta分布。</p>
 <p>　　Beta分布是一个连续分布，由于它描述概率$p$的分布，因此其取值范围为0到1。 Beta分布有$\alpha$和$\beta$两个参数，其中$\alpha$为成功次数加1，$\beta$为失败次数加1。连续分布用概率密度函数描述，下面绘制实验10次，成功4次和5次时，系统成功概率$p$的分布情况。可以看出$k=5$时，曲线的峰值在$p=0.5$处，而$k=4$时，曲线的峰值在$p=0.4$处。</p>
-<h4 id="In__5B20_5D_3A"><a href="#In__5B20_5D_3A" class="headerlink" title="In [20]:"></a>In [20]:</h4><pre><code class="python">n = 10
-k = 5
-p = np.linspace(0, 1, 100)
-pbeta = stats.beta.pdf(p, k+1, n-k+1)
-plot(p, pbeta, label=&quot;k=5&quot;, lw=2)
-
-k = 4
-pbeta = stats.beta.pdf(p, k+1, n-k+1)
-plot(p, pbeta, label=&quot;k=4&quot;, lw=2)
-xlabel(&quot;$p$&quot;)
-legend(loc=&quot;best&quot;);
-</code></pre>
+<h4 id="In__5B20_5D_3A"><a href="#In__5B20_5D_3A" class="headerlink" title="In [20]:"></a>In [20]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">n = <span class="number">10</span></div><div class="line">k = <span class="number">5</span></div><div class="line">p = np.linspace(<span class="number">0</span>, <span class="number">1</span>, <span class="number">100</span>)</div><div class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</div><div class="line">plot(p, pbeta, label=<span class="string">"k=5"</span>, lw=<span class="number">2</span>)</div><div class="line"></div><div class="line">k = <span class="number">4</span></div><div class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</div><div class="line">plot(p, pbeta, label=<span class="string">"k=4"</span>, lw=<span class="number">2</span>)</div><div class="line">xlabel(<span class="string">"$p$"</span>)</div><div class="line">legend(loc=<span class="string">"best"</span>);</div></pre></td></tr></table></figure>
 <p><img src="/images/algo/ssss3.png" alt=""><br>　　下面绘制$n=10, k=4$和$n=20, k=8$的概率分布。可以看出峰值都在$p=0.4$处，但是$n=20$的山峰更陡峭。也就是说随着实验次数的增加，$p$取其它值的可能就越小，对$p$的估计就更有信心，因此山峰也就更陡峭了。</p>
-<h4 id="In__5B30_5D_3A"><a href="#In__5B30_5D_3A" class="headerlink" title="In [30]:"></a>In [30]:</h4><pre><code class="python">n = 10
-k = 4
-p = np.linspace(0, 1, 100)
-pbeta = stats.beta.pdf(p, k+1, n-k+1)
-plot(p, pbeta, label=&quot;n=10&quot;, lw=2)
-
-n = 20
-k = 8
-pbeta = stats.beta.pdf(p, k+1, n-k+1)
-plot(p, pbeta, label=&quot;n=20&quot;, lw=2)
-xlabel(&quot;$p$&quot;)
-legend(loc=&quot;best&quot;);
-</code></pre>
+<h4 id="In__5B30_5D_3A"><a href="#In__5B30_5D_3A" class="headerlink" title="In [30]:"></a>In [30]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">n = <span class="number">10</span></div><div class="line">k = <span class="number">4</span></div><div class="line">p = np.linspace(<span class="number">0</span>, <span class="number">1</span>, <span class="number">100</span>)</div><div class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</div><div class="line">plot(p, pbeta, label=<span class="string">"n=10"</span>, lw=<span class="number">2</span>)</div><div class="line"></div><div class="line">n = <span class="number">20</span></div><div class="line">k = <span class="number">8</span></div><div class="line">pbeta = stats.beta.pdf(p, k+<span class="number">1</span>, n-k+<span class="number">1</span>)</div><div class="line">plot(p, pbeta, label=<span class="string">"n=20"</span>, lw=<span class="number">2</span>)</div><div class="line">xlabel(<span class="string">"$p$"</span>)</div><div class="line">legend(loc=<span class="string">"best"</span>);</div></pre></td></tr></table></figure>
 <p><img src="/images/algo/ssss4.png" alt=""></p>
 <h2 id="u7528pymc_u6A21_u62DF"><a href="#u7528pymc_u6A21_u62DF" class="headerlink" title="用pymc模拟"></a>用pymc模拟</h2><hr>
 <p>　　假设我们的知识库中没有Beta分布，如何通过模拟实验找出$p$的概率分布呢？pymc是一个用于统计估计的库，它可以通过 先验概率和 观测值 模拟出 后验概率 的分布。下面先解释一下这两个概率：</p>
@@ -237,30 +255,20 @@ legend(loc=&quot;best&quot;);
 </ul>
 <p>　　拿前面抛硬币的实验来说，如果在做实验之前能确信硬币出现正面的概率大概在0.5附近的话，那么它的先验概率就是一个以0.5为中心的山峰波形。而如果是某种特殊的硬币，我们对其出现正面的概率完全不了解，那么它的先验概率就是一个从0到1的平均分布。为了估计这个特殊硬币出现正面的概率，我们做了20次实验，其中出现了8次正面。通过这个实验，硬币出现正面的可能性的后验概率就如上图中的绿色曲线所示。</p>
 <p>　　pymc库可以通过先验概率和观测值模拟出后验概率的分布，这对于一些复杂的系统的估计是很有用的。下面我们看看如何用pymc来对这个特殊硬币出现正面的可能性进行估计：首先pcoin是这个特殊硬币出现正面的概率，由于我们没有任何先验知识，因此它的先验概率是一个从0到1的平均分布(Uniform)。假设我们做了20次实验，其中8次为正面。根据前面的介绍可知，出现正面的次数符合二项分布(Binomial)，并且这个二项分布的概率$p$为pcoin。这个通过value参数指定了实验的结果。因此experiment虽然是一个二项分布，但是它已经不能取其它值了。</p>
-<h4 id="In__5B32_5D_3A"><a href="#In__5B32_5D_3A" class="headerlink" title="In [32]:"></a>In [32]:</h4><pre><code class="python">import pymc
-pcoin = pymc.Uniform(&quot;pcoin&quot;, 0, 1)
-experiment = pymc.Binomial(&quot;experiment&quot;, 20, pcoin, value=8)
-</code></pre>
+<h4 id="In__5B32_5D_3A"><a href="#In__5B32_5D_3A" class="headerlink" title="In [32]:"></a>In [32]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymc</div><div class="line">pcoin = pymc.Uniform(<span class="string">"pcoin"</span>, <span class="number">0</span>, <span class="number">1</span>)</div><div class="line">experiment = pymc.Binomial(<span class="string">"experiment"</span>, <span class="number">20</span>, pcoin, value=<span class="number">8</span>)</div></pre></td></tr></table></figure>
 <p>　　接下来通过MCMC对象模拟pcoin的后验概率。MCMC是Markov chain Monte Carlo(马尔科夫蒙特卡洛)的缩写，它是一种用马尔可夫链从随机分布取样的算法。通过调用MCMC对象的sample()，可以对pcoin的后验概率分布进行取样。这里30000为取样次数，5000表示不保存头5000次取样值。这时因为MCMC算法通常有一个收敛过程，我们希望只保留收敛之后的取样值。</p>
-<h4 id="In__5B33_5D_3A"><a href="#In__5B33_5D_3A" class="headerlink" title="In [33]:"></a>In [33]:</h4><pre><code class="python">mc = pymc.MCMC([pcoin])
-mc.sample(30000, 5000)
-</code></pre>
+<h4 id="In__5B33_5D_3A"><a href="#In__5B33_5D_3A" class="headerlink" title="In [33]:"></a>In [33]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mc = pymc.MCMC([pcoin])</div><div class="line">mc.sample(<span class="number">30000</span>, <span class="number">5000</span>)</div></pre></td></tr></table></figure>
 <p>[<strong><strong><strong><em>**</em></strong></strong></strong>100%<strong><strong><strong><strong>**</strong></strong></strong></strong>]  30000 of 30000 complete<br>　　通过MCMC对象trace()可以获得某个不确定量的取样值。下面的程序获得pcoin的25000次取样值，并用hist()显示其分布情况。由结果可知pcoin的分布与前面介绍的Beta分布一致。</p>
-<h4 id="In__5B31_5D_3A"><a href="#In__5B31_5D_3A" class="headerlink" title="In [31]:"></a>In [31]:</h4><pre><code class="python">pcoin_trace = mc.trace(&quot;pcoin&quot;)[:]
-hist(pcoin_trace, normed=True, bins=30);
-plot(p, pbeta, &quot;r&quot;, label=&quot;n=20&quot;, lw=2)
-</code></pre>
+<h4 id="In__5B31_5D_3A"><a href="#In__5B31_5D_3A" class="headerlink" title="In [31]:"></a>In [31]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">pcoin_trace = mc.trace(<span class="string">"pcoin"</span>)[:]</div><div class="line">hist(pcoin_trace, normed=<span class="keyword">True</span>, bins=<span class="number">30</span>);</div><div class="line">plot(p, pbeta, <span class="string">"r"</span>, label=<span class="string">"n=20"</span>, lw=<span class="number">2</span>)</div></pre></td></tr></table></figure>
 <h4 id="Out_5B31_5D_3A"><a href="#Out_5B31_5D_3A" class="headerlink" title="Out[31]:"></a>Out[31]:</h4><p><img src="/images/algo/ssss5.png" alt=""></p>
-<h4 id="In__5B34_5D_3A"><a href="#In__5B34_5D_3A" class="headerlink" title="In [34]:"></a>In [34]:</h4><pre><code class="python">pcoin_trace.shape
-</code></pre>
-<h4 id="Out_5B34_5D_3A"><a href="#Out_5B34_5D_3A" class="headerlink" title="Out[34]:"></a>Out[34]:</h4><pre><code class="python">(25000,)
-</code></pre>
+<h4 id="In__5B34_5D_3A"><a href="#In__5B34_5D_3A" class="headerlink" title="In [34]:"></a>In [34]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pcoin_trace.shape</div></pre></td></tr></table></figure>
+<h4 id="Out_5B34_5D_3A"><a href="#Out_5B34_5D_3A" class="headerlink" title="Out[34]:"></a>Out[34]:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="number">25000</span>,)</div></pre></td></tr></table></figure>
 <p>链接：<a href="http://hyry.dip.jp/tech/slice/slice.html/42" target="_blank" rel="external">http://hyry.dip.jp/tech/slice/slice.html/42</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-a-md/" data-id="ciwrvilxk000gkks8xzyzycfh" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-a-md/" data-id="ciy2rrdfz000d6bs8bgkotf0z" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/beta-a-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -329,7 +337,7 @@ plot(p, pbeta, &quot;r&quot;, label=&quot;n=20&quot;, lw=2)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-md/" data-id="ciwrvilxk000fkks8l0a8cnmn" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-md/" data-id="ciy2rrdg1000f6bs8q8bmy1nu" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/beta-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -402,7 +410,7 @@ plot(p, pbeta, &quot;r&quot;, label=&quot;n=20&quot;, lw=2)
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/other/nitian-md/" data-id="ciwrvily7000qkks8izqxj9fi" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/other/nitian-md/" data-id="ciy2rrdgl001a6bs8pd11revr" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/other/nitian-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -473,85 +481,7 @@ plot(p, pbeta, &quot;r&quot;, label=&quot;n=20&quot;, lw=2)
 </ol>
 <p>That’s it. Computationally, the algorithm involves sampling from N distributions. Since the initial priors are Beta(α=1,β=1) (a uniform distribution), and the observed result X (a win or loss, encoded 1 and 0 respectfully) is Binomial, the posterior is a Beta(α=1+X,β=1+1−X)(see here for why to is true). </p>
 <p>To answer a question from before, this algorithm suggests that we should not discard losers, but we should pick them at a decreasing rate as we gather confidence that there exist better bandits. This follows because there is always a non-zero chance that a loser will achieve the status of B, but the probability of this event decreases as we play more rounds (see figure below). Below is an implementation of the Bayesian Bandits strategy (which can be skipped for the less Pythonic-ly interested).</p>
-<pre><code class="python">from pymc import rbeta
-
-rand = np.random.rand
-
-class Bandits(object):
-    &quot;&quot;&quot;
-    This class represents N bandits machines.
-
-    parameters:
-        p_array: a (n,) Numpy array of probabilities &gt;0, &lt;1.
-
-    methods:
-        pull( i ): return the results, 0 or 1, of pulling 
-                   the ith bandit.
-    &quot;&quot;&quot;
-    def __init__(self, p_array):
-        self.p = p_array
-        self.optimal = np.argmax(p_array)
-
-    def pull( self, i ):
-        #i is which arm to pull
-        return rand() &lt; self.p[i]
-
-    def __len__(self):
-        return len(self.p)
-
-
-class BayesianStrategy( object ):
-    &quot;&quot;&quot;
-    Implements a online, learning strategy to solve
-    the Multi-Armed Bandit problem.
-
-    parameters:
-        bandits: a Bandit class with .pull method
-
-    methods:
-        sample_bandits(n): sample and train on n pulls.
-
-    attributes:
-        N: the cumulative number of samples
-        choices: the historical choices as a (N,) array
-        bb_score: the historical score as a (N,) array
-
-    &quot;&quot;&quot;
-
-    def __init__(self, bandits):
-
-        self.bandits = bandits
-        n_bandits = len( self.bandits )
-        self.wins = np.zeros( n_bandits )
-        self.trials = np.zeros(n_bandits )
-        self.N = 0
-        self.choices = []
-        self.bb_score = []
-
-
-    def sample_bandits( self, n=1 ):
-
-        bb_score = np.zeros( n )
-        choices = np.zeros( n )
-
-        for k in range(n):
-            #sample from the bandits&#39;s priors, and select the largest sample
-            choice = np.argmax( rbeta( 1 + self.wins, 1 + self.trials - self.wins) )
-
-            #sample the chosen bandit
-            result = self.bandits.pull( choice )
-
-            #update priors and score
-            self.wins[ choice ] += result
-            self.trials[ choice ] += 1
-            bb_score[ k ] = result 
-            self.N += 1
-            choices[ k ] = choice
-
-        self.bb_score = np.r_[ self.bb_score, bb_score ]
-        self.choices = np.r_[ self.choices, choices ]
-        return
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pymc <span class="keyword">import</span> rbeta</div><div class="line"> </div><div class="line">rand = np.random.rand</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bandits</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    This class represents N bandits machines.</div><div class="line"> </div><div class="line">    parameters:</div><div class="line">        p_array: a (n,) Numpy array of probabilities &gt;0, &lt;1.</div><div class="line"> </div><div class="line">    methods:</div><div class="line">        pull( i ): return the results, 0 or 1, of pulling </div><div class="line">                   the ith bandit.</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, p_array)</span>:</span></div><div class="line">        self.p = p_array</div><div class="line">        self.optimal = np.argmax(p_array)</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pull</span><span class="params">( self, i )</span>:</span></div><div class="line">        <span class="comment">#i is which arm to pull</span></div><div class="line">        <span class="keyword">return</span> rand() &lt; self.p[i]</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> len(self.p)</div><div class="line"> </div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">BayesianStrategy</span><span class="params">( object )</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    Implements a online, learning strategy to solve</div><div class="line">    the Multi-Armed Bandit problem.</div><div class="line"> </div><div class="line">    parameters:</div><div class="line">        bandits: a Bandit class with .pull method</div><div class="line"> </div><div class="line">    methods:</div><div class="line">        sample_bandits(n): sample and train on n pulls.</div><div class="line"> </div><div class="line">    attributes:</div><div class="line">        N: the cumulative number of samples</div><div class="line">        choices: the historical choices as a (N,) array</div><div class="line">        bb_score: the historical score as a (N,) array</div><div class="line"> </div><div class="line">    """</div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, bandits)</span>:</span></div><div class="line"> </div><div class="line">        self.bandits = bandits</div><div class="line">        n_bandits = len( self.bandits )</div><div class="line">        self.wins = np.zeros( n_bandits )</div><div class="line">        self.trials = np.zeros(n_bandits )</div><div class="line">        self.N = <span class="number">0</span></div><div class="line">        self.choices = []</div><div class="line">        self.bb_score = []</div><div class="line"> </div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sample_bandits</span><span class="params">( self, n=<span class="number">1</span> )</span>:</span></div><div class="line"> </div><div class="line">        bb_score = np.zeros( n )</div><div class="line">        choices = np.zeros( n )</div><div class="line"> </div><div class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(n):</div><div class="line">            <span class="comment">#sample from the bandits's priors, and select the largest sample</span></div><div class="line">            choice = np.argmax( rbeta( <span class="number">1</span> + self.wins, <span class="number">1</span> + self.trials - self.wins) )</div><div class="line"> </div><div class="line">            <span class="comment">#sample the chosen bandit</span></div><div class="line">            result = self.bandits.pull( choice )</div><div class="line"> </div><div class="line">            <span class="comment">#update priors and score</span></div><div class="line">            self.wins[ choice ] += result</div><div class="line">            self.trials[ choice ] += <span class="number">1</span></div><div class="line">            bb_score[ k ] = result </div><div class="line">            self.N += <span class="number">1</span></div><div class="line">            choices[ k ] = choice</div><div class="line"> </div><div class="line">        self.bb_score = np.r_[ self.bb_score, bb_score ]</div><div class="line">        self.choices = np.r_[ self.choices, choices ]</div><div class="line">        <span class="keyword">return</span></div></pre></td></tr></table></figure>
 <p>Below we present a visualization of the algorithm sequentially learning the solution. In the figure below, the dashed lines represent the true hidden probabilities, which are (0.85, 0.60, 0.75)(this can be extended to many more dimensions, but the figure suffers, so I kept it at 3).</p>
 <p><img src="/images/bb/updating2.png" alt=""></p>
 <p>Note that we don’t real care how accurate we become about inference of the hidden probabilities — for this problem we are more interested in choosing the best bandit (or more accurately, becoming more confident in choosing the best bandit). For this reason, the distribution of the red bandit is very wide (representing ignorance about what that hidden probability might be) but we are reasonably confident that it is not the best, so the algorithm chooses to ignore it.</p>
@@ -566,7 +496,7 @@ class BayesianStrategy( object ):
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-application-md/" data-id="ciwrvilx70007kks8fawj9lwv" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-application-md/" data-id="ciy2rrdfx000b6bs81bzcpfbc" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-application-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -581,108 +511,11 @@ class BayesianStrategy( object ):
 
 
     
-      <article id="post-algo/baysian-bandit-md" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/03/algo/baysian-bandit-md/">Bayesian Bandits – optimizing click throughs with statistics</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/algo/baysian-bandit-md/">
-      <time datetime="2015-09-03T05:36:48.000Z" itemprop="datePublished">2015-09-03</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>Great news! A murder victim has been found. No slow news day today! The story is already written, now a title needs to be selected. The clever reporter who wrote the story has come up with two potential titles – “Murder victim found in adult entertainment venue” and “Headless Body found in Topless Bar”. (The latter title is one I’ve shamelessly stolen from the NY Daily News.) Once upon a time, deciding which title to run was a matter for a news editor to decide. Those days are now over – the geeks now rule the earth. Title selection is now primarily an algorithmic problem, not an editorial one.</p>
-<p>One common approach is to display both potential versions of the title on the homepage or news feed, and measure the Click Through Rate (CTR) of each version of the title. At some point, when the measured CTR for one title exceeds that of the other title, you’ll switch to the one with the highest for all users. Algorithms for solving this problem are called bandit algorithms.</p>
-<p>In this blog post I’ll describe one of my favorite bandit algorithms, the Bayesian Bandit, and show why it is an excellent method to use for problems which give us more information than typical bandit algorithms.</p>
-<p>Unless you are already familiar with Bayesian statistics and beta distributions, I strongly recommend reading the previous blog post. That post provides much introductory material, and I’ll depend on it heavily.</p>
-<h2 id="1-_The_problem_to_be_solved_2C_and_the_underlying_model"><a href="#1-_The_problem_to_be_solved_2C_and_the_underlying_model" class="headerlink" title="1. The problem to be solved, and the underlying model"></a>1. The problem to be solved, and the underlying model</h2><hr>
-<p>Ultimately the problem we want to solve is the following. Consider an article being published on a website. The author or editor has come up with several possible titles – “Murder victim found in adult entertainment venue”, “Headless Body found in Topless Bar”, etc. We want to choose the title with the best click through rate (CTR). Let us represent each CTR by θi – i.e., θi is the true probability that an individual user will click on the i-th title. As a simplifying assumption, we assume that these rates θi do not change over time. It is important to note that we don’t actually know what θi is – if we did, we could simply choose i for which θi was largest and move on.</p>
-<p>The goal of the bandit algorithm is to do the following. To begin with, it should display all possible titles to a random selection of users, and measure which titles are clicked on more frequently. Over time, it will use these observations to infer which articles have the higher CTR. Then, once the estimation of the CTR becomes more precise, it will preferentially display articles with the higher CTR.</p>
-<h2 id="2-_The_Bayesian_Approach"><a href="#2-_The_Bayesian_Approach" class="headerlink" title="2. The Bayesian Approach"></a>2. The Bayesian Approach</h2><hr>
-<p>In the model described above, we have N possible story titles, each of which has a click through rate θi. Unfortunately we do not know what θi is. As the astute reader can guess from the title, we are following a Bayesian approach, so we will construct a probability distribution which represents our belief about what the actual value of θi is.<br><img src="/images/bb/beliefs_about_theta.png" alt=""><br>In the figure above, we believe that θi is somewhere between 0.1 and 0.7, with values of 0.3-0.4 being considerably more likely than values of 0.1-0.2 or 0.6-0.7. For those who forgot STATS 101, the area under this curve between the points a and b is the probability thta θi lies between a and b. I.e.:<br><img src="/images/bb/11.png" alt=""><br>The basic idea behind Bayesian methods is to update our beliefs based on evidence. As we gather more data by showing different titles to other users and observing click throughs, we can incrementally narrow the width of the probability distribution.</p>
-<p>As in all Bayesian inference, we need to choose a prior. The prior is something we believe to be true before we have any evidence – i.e., before we have shown the title to any visitors. This is just a starting point – after enough evidence is gathered, our prior will play a very minimal role in what we actually believe. Choosing a good prior is important both for mathematical simplicity, and because if your prior is accurate, you don’t need as much evidence to get the correct answer.</p>
-<p>I’ll follow the approach I described in a previous blog post, and I’ll use a beta distribution as the prior:<br><img src="/images/bb/31.png" alt=""><br>The parameters αi,βi&gt;1 are the prior parameters. One reasonable choice is αi=βi=1, which amounts to the uniform distribution on [0,1]. What this means is that we are assuming that all possible values of θi are equally likely. Depending on the circumstances (which I’ll explain shortly), we might want to choose other possible values.</p>
-<h2 id="3-_Updating_our_beliefs"><a href="#3-_Updating_our_beliefs" class="headerlink" title="3. Updating our beliefs"></a>3. Updating our beliefs</h2><p>Now we address the question of using evidence. After showing title i to ni visitors, we have observed that si of them have actually clicked on the title. We now want to compute theposterior distribution, which is to say the distribution that represents our beliefs after we have evidence.</p>
-<p>I did a little bit of algebra previously, in which I showed that if the prior is fαi,βi(θi), then the posterior distribution is:<br><img src="/images/bb/21.png" alt=""><br>The key idea here is that to update our probability distribution describing θi, we need only update the parameters of our beta distribution.</p>
-<p>So what does this mean in practice? As we run more experiments, our probability distribution on where θi lives becomes sharper:</p>
-<p><img src="/images/bb/beta_distribution_evolution.png" alt=""><br>Before we run any experiments, θi could be anything (as represented by the blue line). Once we have run 700 experiments, yielding 175 click throughs, we are reasonably confident that θi lives roughly between 0.2 and 0.3.</p>
-<p>What we’ve done so far is figured out how to estimate what our click through rates actually are based on empirical evidence. But that doesn’t actually give us a method of optimizing them yet.</p>
-<h2 id="4-_Optimizing_click_throughs"><a href="#4-_Optimizing_click_throughs" class="headerlink" title="4. Optimizing click throughs"></a>4. Optimizing click throughs</h2><p>Now that we have a method of representing our beliefs about CTRs, it is useful to construct an algorithm to identify the best ones. There are many popular choices – I’ve written about the UCB Algorithm before, and I consider it a good choice.</p>
-<p>But my new favorite method is a Monte Carlo method which I’ll describe now.</p>
-<p>The ultimate goal of the bandit algorithm is to display to the user whichever title has the highest CTR. One method of estimating the CTRs of the articles is to sample the posterior distribution. I.e., suppose we have two possible titles, from which we have drawn n0=200,s0=64and n1=180,n2=40. Then one possible set of samples we might observe is this:</p>
-<p><img src="/images/bb/beta_distribution_sampling1.png" alt=""></p>
-<p>For title 0, our sample of θ0 has worked out to be 0.35, while our sample of θ1 is only 0.28. Since θ0=0.35&gt;θ1=0.28, we will display title 0 to the user.</p>
-<p>However, there was no guarantee that things worked out this way. It was possible, although less likely, that θ1 could come out larger than θ0:<br><img src="/images/bb/beta_distribution_sampling2.png" alt=""><br>In this case, we would have displayed title 1 to the user rather than title 0.</p>
-<p>The net result is that for overlapping probability distributions, we will display the title with the larger expected CTR the majority of the time. But occasionally, we will draw from the other distributions simply because it is within the realm of possibility that they are greater.</p>
-<p>As we gather more data our probability distributions will become narrower and a clear winner will become apparent. When this occurs, we will almost surely choose the winner:<br><img src="/images/bb/beta_distribution_sampling3.png" alt=""><br>In python, the algorithm looks like this:</p>
-<p>The results of this algorithm are exactly what any good bandit algorithm should do. I ran the following simulation, giving the beta bandit two titles – title 0 had a CTR of 0.25, title 1 had a CTR of 0.35. To start with, both titles were displayed to the user with roughly equal probability. Over time, evidence accumulated that title 1 was considerably better than title 0. At this point the algorithm switched to displaying primarily title 1, and the overall CTR of the experiment converged to 0.35 (the optimal CTR).</p>
-<p><img src="/images/bb/beta_bandit_results.png" alt=""></p>
-<p>Source code to generate this graph is available here. This method is called Thompson Sampling and is a a fairly popular method in Bayesian AI techniques. For the remainder of this post, I’ll call this method the Bayesian Bandit.</p>
-<h2 id="5-Incorporating_common_sense"><a href="#5-Incorporating_common_sense" class="headerlink" title="5.Incorporating common sense"></a>5.Incorporating common sense</h2><p>Anyone with common sense is now scoffing at the geekiness embodied in this post. Even before using statistics, it was fairly obvious that “Headless Body found in Topless Bar” was going to beat “Murder victim found in adult entertainment venue”. The former just sounds catchier and any good editor would run with it.</p>
-<p>The wonderful thing about Bayesian methods is that we can modify them to take into account our prior knowledge. Suppose we believe editors intuition is a real thing – can we quantify it? Certainly. We can do this with a fairly simple experiment. We require editors to rate a collection of titles as “catchy” or “not catchy”, run them on the site, and then measure the CTR of the “catchy” and “not catchy” samples. Suppose we did such an experiment, and observed the following aggregate results:</p>
-<p><img src="/images/bb/empirical_prior.png" alt=""></p>
-<p>This isn’t a solid win for the editor – some catchy titles have low CTRs, and some boring titles have good CTRs. But nevertheless, it’s better for a story to have catchy title than not.</p>
-<p>What we want to do is incorporate this information into our bandit algorithm. The beauty of a Bayesian method is that it gives you a clear and meaningful place to plug this information in, namely the prior. In contrast, for many other methods (e.g., UCB) it’s somewhat difficult to do this – there is no obvious parameter to tune as a result of our prior empirical data.</p>
-<p>The first step is to fit a theoretical distribution to the empirical data. Due to the fact that I chose the “empirical” (i.e., made up) data to be very nice, a beta distribution fits well [1] – specifically beta distributions with (α0,β0)=(9,20) and (α1,β1)=(4,20).<br><img src="/images/bb/theoretical_prior.png" alt=""></p>
-<p>Then the only modification needed to the algorithm is to plug these variables into the prior:<br><img src="/images/bb/41.png" alt=""><br>Everything else remains unchanged. In terms of modifications to source code, this is only a very small change to the previous code – an implementation can be found here.</p>
-<h2 id="6-_Empirics_of_including_priors"><a href="#6-_Empirics_of_including_priors" class="headerlink" title="6. Empirics of including priors"></a>6. Empirics of including priors</h2><p>To measure the benefits of incorporating priors into the Bayesian bandit, I ran some numerical experiments, the source code of which is available in this github gist. The methodology was the following.</p>
-<p>To compare the Bayesian bandit with priors to that without, I drew a pair (θ0,θ1) from the prior distribution given above. For each pair, I then ran the Bayes Bandit with and without priors for this pair theta, for k trials. This is modelling the scenario that we have k page views on our homepage, and we can only leave a story on the homepage for 1 day.</p>
-<p>I then repeated the experiment for 1000 different possible days, or equivalently for 1000 different pairs of (θ0,θ1). I then computed the average gain per page view over all trials and all days.</p>
-<p>The result is the following. If we get 50 page views/day (i.e., the Bayes Bandit has very little data to use), the prior gives us a big gain. Without prior knowledge, the Bandit achieved a gain of 0.3749 on average, whereas the bandit with prior knowledge achieved a gain of 0.4274. If we run 150 experiments, the Bayes Bandit improves significantly – it achieves a gain of 0.40. If we run 300 experiments, the Bayes Bandit improves to 0.4146, while the bandit with priors improves to 0.4296. If we get 1000 page views/day, the Bayes Bandit improves to 0.4211, while the bandit with priors gains 0.4249.</p>
-<p>The net result is the following – incorporating priors into the Bayes Bandit is an excellent way to improve your results when you don’t have a large number data points to use to train the bandit. If you have a lot of data points, you don’t need strong priors (but they still help a little).</p>
-<h2 id="7-Conclusion"><a href="#7-Conclusion" class="headerlink" title="7.Conclusion"></a>7.Conclusion</h2><p>Bandit algorithms are a great way of optimizing many factors of your website. There are many good options – I’ve written about UCB before and consider it a great choice. But if you have other information you want to include, consider using the Bayesian Bandit. It’s simple to implement, straightforward to use, and very importantly it’s also straightforward to extend.</p>
-<p>It’s also important to note that the theoretical properties of the Bayesian Bandit (namely logarithmic regret) have been proven. So asymptotically, you lose nothing by using it. There are also attempts at constructing a Bayesian UCB algorithm – I don’t currently understand it well enough to comment.</p>
-<p>I’ve written other articles related to this post. I have one post comparing bandit algorithms to a/b testing. I also I wrote about measuring a changing conversion rate, which provides an alternate algorithm for computing the posterior distribution if your conversion rate is not constant.</p>
-<p>[1] If a single Beta distribution doesn’t fit, one can also use a convex combination of Beta distributions. The math works out just as nicely.</p>
-<p>P.S. After I published this blog post, this related article was also pointed out to me, as was this online simulation of the Bayesian bandit.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/" data-id="ciwrvilxa000akks84z2kyhnx" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/03/algo/baysian-bandit-md/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Bandits/">Bandits</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/17/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/19/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/17/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><a class="page-number" href="/page/20/">20</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/19/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -691,6 +524,23 @@ class BayesianStrategy( object ):
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -729,23 +579,6 @@ class BayesianStrategy( object ):
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -763,7 +596,7 @@ class BayesianStrategy( object ):
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -771,9 +604,9 @@ class BayesianStrategy( object ):
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -786,7 +619,16 @@ class BayesianStrategy( object ):
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -800,15 +642,6 @@ class BayesianStrategy( object ):
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -817,7 +650,7 @@ class BayesianStrategy( object ):
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

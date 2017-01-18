@@ -5,31 +5,19 @@
   
   <title>Python HTTP server | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="HTTP GET```pythonfrom BaseHTTPServer import BaseHTTPRequestHandlerimport urlparse
-
-class GetHandler(BaseHTTPRequestHandler):
-def do_GET(self):
-    parsed_path = urlparse.urlparse(self.path)
-    messa">
+  <meta name="description" content="HTTP GET
+1234567891011121314151617181920212223242526272829303132333435363738from BaseHTTPServer import BaseHTTPRequestHandlerimport urlparseclass GetHandler(BaseHTTPRequestHandler):        def do_GET">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python HTTP server">
 <meta property="og:url" content="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="HTTP GET```pythonfrom BaseHTTPServer import BaseHTTPRequestHandlerimport urlparse
-
-class GetHandler(BaseHTTPRequestHandler):
-def do_GET(self):
-    parsed_path = urlparse.urlparse(self.path)
-    messa">
+<meta property="og:description" content="HTTP GET
+1234567891011121314151617181920212223242526272829303132333435363738from BaseHTTPServer import BaseHTTPRequestHandlerimport urlparseclass GetHandler(BaseHTTPRequestHandler):        def do_GET">
 <meta property="og:updated_time" content="2015-11-18T06:04:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python HTTP server">
-<meta name="twitter:description" content="HTTP GET```pythonfrom BaseHTTPServer import BaseHTTPRequestHandlerimport urlparse
-
-class GetHandler(BaseHTTPRequestHandler):
-def do_GET(self):
-    parsed_path = urlparse.urlparse(self.path)
-    messa">
+<meta name="twitter:description" content="HTTP GET
+1234567891011121314151617181920212223242526272829303132333435363738from BaseHTTPServer import BaseHTTPRequestHandlerimport urlparseclass GetHandler(BaseHTTPRequestHandler):        def do_GET">
   
   
     <link rel="icon" href="favicon.png">
@@ -109,7 +97,7 @@ def do_GET(self):
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -177,101 +165,22 @@ def do_GET(self):
       
                 
         <ol>
-<li>HTTP GET<br>```python<br>from BaseHTTPServer import BaseHTTPRequestHandler<br>import urlparse</li>
+<li><p>HTTP GET</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> BaseHTTPRequestHandler</div><div class="line"><span class="keyword">import</span> urlparse</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GetHandler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">        parsed_path = urlparse.urlparse(self.path)</div><div class="line">        message_parts = [</div><div class="line">                <span class="string">'CLIENT VALUES:'</span>,</div><div class="line">                <span class="string">'client_address=%s (%s)'</span> % (self.client_address,</div><div class="line">                                            self.address_string()),</div><div class="line">                <span class="string">'command=%s'</span> % self.command,</div><div class="line">                <span class="string">'path=%s'</span> % self.path,</div><div class="line">                <span class="string">'real path=%s'</span> % parsed_path.path,</div><div class="line">                <span class="string">'query=%s'</span> % parsed_path.query,</div><div class="line">                <span class="string">'request_version=%s'</span> % self.request_version,</div><div class="line">                <span class="string">''</span>,</div><div class="line">                <span class="string">'SERVER VALUES:'</span>,</div><div class="line">                <span class="string">'server_version=%s'</span> % self.server_version,</div><div class="line">                <span class="string">'sys_version=%s'</span> % self.sys_version,</div><div class="line">                <span class="string">'protocol_version=%s'</span> % self.protocol_version,</div><div class="line">                <span class="string">''</span>,</div><div class="line">                <span class="string">'HEADERS RECEIVED:'</span>,</div><div class="line">                ]</div><div class="line">        <span class="keyword">for</span> name, value <span class="keyword">in</span> sorted(self.headers.items()):</div><div class="line">            message_parts.append(<span class="string">'%s=%s'</span> % (name, value.rstrip()))</div><div class="line">        message_parts.append(<span class="string">''</span>)</div><div class="line">        message = <span class="string">'\r\n'</span>.join(message_parts)</div><div class="line">        self.send_response(<span class="number">200</span>)</div><div class="line">        self.end_headers()</div><div class="line">        self.wfile.write(message)</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer</div><div class="line">    server = HTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), GetHandler)</div><div class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></div><div class="line">    server.serve_forever()</div></pre></td></tr></table></figure>
+</li>
+<li><p>HTTP POST</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> BaseHTTPRequestHandler</div><div class="line"><span class="keyword">import</span> cgi</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostHandler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_POST</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="comment"># Parse the form data posted</span></div><div class="line">        form = cgi.FieldStorage(</div><div class="line">            fp=self.rfile, </div><div class="line">            headers=self.headers,</div><div class="line">            environ=&#123;<span class="string">'REQUEST_METHOD'</span>:<span class="string">'POST'</span>,</div><div class="line">                     <span class="string">'CONTENT_TYPE'</span>:self.headers[<span class="string">'Content-Type'</span>],</div><div class="line">                     &#125;)</div><div class="line"></div><div class="line">        <span class="comment"># Begin the response</span></div><div class="line">        self.send_response(<span class="number">200</span>)</div><div class="line">        self.end_headers()</div><div class="line">        self.wfile.write(<span class="string">'Client: %s\n'</span> % str(self.client_address))</div><div class="line">        self.wfile.write(<span class="string">'User-agent: %s\n'</span> % str(self.headers[<span class="string">'user-agent'</span>]))</div><div class="line">        self.wfile.write(<span class="string">'Path: %s\n'</span> % self.path)</div><div class="line">        self.wfile.write(<span class="string">'Form data:\n'</span>)</div><div class="line"></div><div class="line">        <span class="comment"># Echo back information about what was posted in the form</span></div><div class="line">        <span class="keyword">for</span> field <span class="keyword">in</span> form.keys():</div><div class="line">            field_item = form[field]</div><div class="line">            <span class="keyword">if</span> field_item.filename:</div><div class="line">                <span class="comment"># The field contains an uploaded file</span></div><div class="line">                file_data = field_item.file.read()</div><div class="line">                file_len = len(file_data)</div><div class="line">                <span class="keyword">del</span> file_data</div><div class="line">                self.wfile.write(<span class="string">'\tUploaded %s as "%s" (%d bytes)\n'</span> % \</div><div class="line">                        (field, field_item.filename, file_len))</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                <span class="comment"># Regular form value</span></div><div class="line">                self.wfile.write(<span class="string">'\t%s=%s\n'</span> % (field, form[field].value))</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer</div><div class="line">    server = HTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), PostHandler)</div><div class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></div><div class="line">    server.serve_forever()</div></pre></td></tr></table></figure>
+</li>
+<li><p>Threading and Forking</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> BaseHTTPServer <span class="keyword">import</span> HTTPServer, BaseHTTPRequestHandler</div><div class="line"><span class="keyword">from</span> SocketServer <span class="keyword">import</span> ThreadingMixIn</div><div class="line"><span class="keyword">import</span> threading</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHTTPRequestHandler)</span>:</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_GET</span><span class="params">(self)</span>:</span></div><div class="line">        self.send_response(<span class="number">200</span>)</div><div class="line">        self.end_headers()</div><div class="line">        message =  threading.currentThread().getName()</div><div class="line">        self.wfile.write(message)</div><div class="line">        self.wfile.write(<span class="string">'\n'</span>)</div><div class="line">        <span class="keyword">return</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThreadedHTTPServer</span><span class="params">(ThreadingMixIn, HTTPServer)</span>:</span></div><div class="line">    <span class="string">"""Handle requests in a separate thread."""</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    server = ThreadedHTTPServer((<span class="string">'localhost'</span>, <span class="number">8080</span>), Handler)</div><div class="line">    <span class="keyword">print</span> <span class="string">'Starting server, use &lt;Ctrl-C&gt; to stop'</span></div><div class="line">    server.serve_forever()</div></pre></td></tr></table></figure>
+</li>
 </ol>
-<p>class GetHandler(BaseHTTPRequestHandler):</p>
-<pre><code>def do_GET(self):
-    parsed_path = urlparse.urlparse(self.path)
-    message_parts = [
-            &#39;CLIENT VALUES:&#39;,
-            &#39;client_address=%s (%s)&#39; % (self.client_address,
-                                        self.address_string()),
-            &#39;command=%s&#39; % self.command,
-            &#39;path=%s&#39; % self.path,
-            &#39;real path=%s&#39; % parsed_path.path,
-            &#39;query=%s&#39; % parsed_path.query,
-            &#39;request_version=%s&#39; % self.request_version,
-            &#39;&#39;,
-            &#39;SERVER VALUES:&#39;,
-            &#39;server_version=%s&#39; % self.server_version,
-            &#39;sys_version=%s&#39; % self.sys_version,
-            &#39;protocol_version=%s&#39; % self.protocol_version,
-            &#39;&#39;,
-            &#39;HEADERS RECEIVED:&#39;,
-            ]
-    for name, value in sorted(self.headers.items()):
-        message_parts.append(&#39;%s=%s&#39; % (name, value.rstrip()))
-    message_parts.append(&#39;&#39;)
-    message = &#39;\r\n&#39;.join(message_parts)
-    self.send_response(200)
-    self.end_headers()
-    self.wfile.write(message)
-    return
-</code></pre><p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    from BaseHTTPServer import HTTPServer<br>    server = HTTPServer((‘localhost’, 8080), GetHandler)<br>    print ‘Starting server, use <ctrl-c> to stop’<br>    server.serve_forever()</ctrl-c></p>
-<pre><code>
-2. HTTP POST
-```python
-from BaseHTTPServer import BaseHTTPRequestHandler
-import cgi
-
-class PostHandler(BaseHTTPRequestHandler):
-
-    def do_POST(self):
-        # Parse the form data posted
-        form = cgi.FieldStorage(
-            fp=self.rfile, 
-            headers=self.headers,
-            environ={&#39;REQUEST_METHOD&#39;:&#39;POST&#39;,
-                     &#39;CONTENT_TYPE&#39;:self.headers[&#39;Content-Type&#39;],
-                     })
-
-        # Begin the response
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(&#39;Client: %s\n&#39; % str(self.client_address))
-        self.wfile.write(&#39;User-agent: %s\n&#39; % str(self.headers[&#39;user-agent&#39;]))
-        self.wfile.write(&#39;Path: %s\n&#39; % self.path)
-        self.wfile.write(&#39;Form data:\n&#39;)
-
-        # Echo back information about what was posted in the form
-        for field in form.keys():
-            field_item = form[field]
-            if field_item.filename:
-                # The field contains an uploaded file
-                file_data = field_item.file.read()
-                file_len = len(file_data)
-                del file_data
-                self.wfile.write(&#39;\tUploaded %s as &quot;%s&quot; (%d bytes)\n&#39; % \
-                        (field, field_item.filename, file_len))
-            else:
-                # Regular form value
-                self.wfile.write(&#39;\t%s=%s\n&#39; % (field, form[field].value))
-        return
-
-if __name__ == &#39;__main__&#39;:
-    from BaseHTTPServer import HTTPServer
-    server = HTTPServer((&#39;localhost&#39;, 8080), PostHandler)
-    print &#39;Starting server, use &lt;Ctrl-C&gt; to stop&#39;
-    server.serve_forever()
-</code></pre><ol>
-<li>Threading and Forking<br>```python<br>from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler<br>from SocketServer import ThreadingMixIn<br>import threading</li>
-</ol>
-<p>class Handler(BaseHTTPRequestHandler):</p>
-<pre><code>def do_GET(self):
-    self.send_response(200)
-    self.end_headers()
-    message =  threading.currentThread().getName()
-    self.wfile.write(message)
-    self.wfile.write(&#39;\n&#39;)
-    return
-</code></pre><p>class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):<br>    “””Handle requests in a separate thread.”””</p>
-<p>if <strong>name</strong> == ‘<strong>main</strong>‘:<br>    server = ThreadedHTTPServer((‘localhost’, 8080), Handler)<br>    print ‘Starting server, use <ctrl-c> to stop’<br>    server.serve_forever()<br>```</ctrl-c></p>
 <p>From: <a href="https://pymotw.com/2/BaseHTTPServer/" target="_blank" rel="external">https://pymotw.com/2/BaseHTTPServer/</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="ciwrvim3c007skks8ehuznesy" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/" data-id="ciy2rrdjy007s6bs8gdczwu7b" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/18/dev/web/python_http_server/#ds-thread" class="article-comment-link">评论</a>
       
@@ -284,19 +193,19 @@ if __name__ == &#39;__main__&#39;:
     
 <nav id="article-nav">
   
-    <a href="/2015/11/18/dev/web/python_cgi_bin/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2015/11/18/dev/web/ui_base/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          Python CGI-BIN
+          关于前端
         
       </div>
     </a>
   
   
-    <a href="/2015/11/15/dev/CPP/cpp_big_number/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/11/18/dev/web/python_cgi_bin/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">C++ string实现加减乘除</div>
+      <div class="article-nav-title">Python CGI-BIN</div>
     </a>
   
 </nav>
@@ -321,6 +230,23 @@ if __name__ == &#39;__main__&#39;:
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -359,23 +285,6 @@ if __name__ == &#39;__main__&#39;:
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -393,7 +302,7 @@ if __name__ == &#39;__main__&#39;:
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -401,9 +310,9 @@ if __name__ == &#39;__main__&#39;:
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -416,7 +325,16 @@ if __name__ == &#39;__main__&#39;:
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -430,15 +348,6 @@ if __name__ == &#39;__main__&#39;:
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -447,7 +356,7 @@ if __name__ == &#39;__main__&#39;:
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

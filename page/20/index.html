@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,63 @@
 
       
       <section id="main">
+      <article id="post-system/pptp_vpn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/05/14/system/pptp_vpn/">PPTP VPN搭建</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/05/14/system/pptp_vpn/">
+      <time datetime="2015-05-13T16:00:00.000Z" itemprop="datePublished">2015-05-14</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/system/">system</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>本文介绍在Linux下搭建VPN的过程<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"><span class="keyword">if</span> [ `id -u` <span class="_">-ne</span> 0 ] </div><div class="line"><span class="keyword">then</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"please run it by root"</span></div><div class="line">  <span class="built_in">exit</span> 0</div><div class="line"><span class="keyword">fi</span></div><div class="line"></div><div class="line">apt-get -y update</div><div class="line"></div><div class="line">apt-get -y install pptpd || &#123;</div><div class="line">  <span class="built_in">echo</span> <span class="string">"could not install pptpd"</span> </div><div class="line">  <span class="built_in">exit</span> 1</div><div class="line">&#125;</div><div class="line"></div><div class="line">cat &gt;/etc/ppp/options.pptpd &lt;&lt;END</div><div class="line">name pptpd</div><div class="line">refuse-pap</div><div class="line">refuse-chap</div><div class="line">refuse-mschap</div><div class="line">require-mschap-v2</div><div class="line">require-mppe-128</div><div class="line">ms-dns 8.8.8.8</div><div class="line">ms-dns 8.8.4.4</div><div class="line">proxyarp</div><div class="line">lock</div><div class="line">nobsdcomp </div><div class="line">novj</div><div class="line">novjccomp</div><div class="line">nologfd</div><div class="line">END</div><div class="line"></div><div class="line">cat &gt;/etc/pptpd.conf &lt;&lt;END</div><div class="line">option /etc/ppp/options.pptpd</div><div class="line">logwtmp</div><div class="line">localip 192.168.2.1</div><div class="line">remoteip 192.168.2.10-100</div><div class="line">END</div><div class="line"></div><div class="line">cat &gt;&gt; /etc/sysctl.conf &lt;&lt;END</div><div class="line">net.ipv4.ip_forward=1</div><div class="line">END</div><div class="line"></div><div class="line">sysctl -p</div><div class="line"></div><div class="line">iptables-save &gt; /etc/iptables.down.rules</div><div class="line"></div><div class="line">iptables -t nat -A POSTROUTING <span class="_">-s</span> 192.168.2.0/24 -o eth0 -j MASQUERADE</div><div class="line"></div><div class="line">iptables -I FORWARD <span class="_">-s</span> 192.168.2.0/24 -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1300</div><div class="line"></div><div class="line">iptables-save &gt; /etc/iptables.up.rules</div><div class="line"></div><div class="line">cat &gt;&gt;/etc/ppp/pptpd-options&lt;&lt;EOF</div><div class="line">pre-up iptables-restore &lt; /etc/iptables.up.rules</div><div class="line">post-down iptables-restore &lt; /etc/iptables.down.rules</div><div class="line">EOF</div><div class="line"></div><div class="line">cat &gt;/etc/ppp/chap-secrets &lt;&lt;END</div><div class="line"><span class="built_in">test</span> pptpd <span class="built_in">test</span> *</div><div class="line">END</div><div class="line"></div><div class="line">service pptpd restart</div><div class="line"></div><div class="line">netstat -lntp</div><div class="line"></div><div class="line"><span class="built_in">exit</span> 0</div></pre></td></tr></table></figure></p>
+<p>实际使用中需要按照需要修改本地IP地址即可，一般情况自动安装和配置是成功的，但是在我的实际使用中使用手机网络连接的时候是没问题的，但是使用电脑连接的时候还是出现无法连接的情况，查看日志如下：</p>
+<p>Starting negotiation on /dev/pts/1<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""> <endpoint [mac:00:16:3e:d8:d7:39]="">]<br>sent [LCP ConfReq id=0x1 <asyncmap 0x0=""> <auth chap="" ms-v2=""> <magic 0xc93c30c6=""> <pcomp> <accomp> <mrru 1500=""><br>…<br>LCP: timeout sending Config-Requests<br>Connection terminated.<br>这个可能是学校路由器没有采用PPTP穿透吧</mrru></accomp></pcomp></magic></auth></asyncmap></endpoint></mrru></accomp></pcomp></magic></auth></asyncmap></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/05/14/system/pptp_vpn/" data-id="ciy2rrdgt001k6bs8k5tnwibj" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/05/14/system/pptp_vpn/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/PPTP-vpn/">PPTP, vpn</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/hash-map-sort-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -161,56 +218,12 @@
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="java">Map&lt;String, Integer&gt; map = new HashMap&lt;String, Integer&gt;();
-map.put(“d”, 2);
-map.put(“c”, 1);
-map.put(“b”, 1);
-map.put(“a”, 3);
-
-List&lt;Map.Entry&lt;String, Integer&gt;&gt; infoIds =
-new ArrayList&lt;Map.Entry&lt;String, Integer&gt;&gt;(map.entrySet());
-
-//排序前
-for (int i = 0; i &lt; infoIds.size(); i++) {
-String id = infoIds.get(i).toString();
-System.out.println(id);
-}
-
-//d 2
-//c 1
-//b 1
-//a 3
-
-//排序
-Collections.sort(infoIds, new Comparator&lt;Map.Entry&lt;String, Integer&gt;&gt;() {
-public int compare(Map.Entry&lt;String, Integer&gt; o1, Map.Entry&lt;String, Integer&gt; o2) {
-//return (o2.getValue() – o1.getValue());
-return (o1.getKey()).toString().compareTo(o2.getKey());
-}
-});
-
-//排序后
-for (int i = 0; i &lt; infoIds.size(); i++) {
-String id = infoIds.get(i).toString();
-System.out.println(id);
-}
-
-//根据key排序
-//a 3
-//b 1
-//c 1
-//d 2
-//根据value排序
-//a 3
-//d 2
-//b 1
-//c 1
-</code></pre>
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">Map&lt;String, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;String, Integer&gt;();</div><div class="line">map.put(“d”, <span class="number">2</span>);</div><div class="line">map.put(“c”, <span class="number">1</span>);</div><div class="line">map.put(“b”, <span class="number">1</span>);</div><div class="line">map.put(“a”, <span class="number">3</span>);</div><div class="line"></div><div class="line">List&lt;Map.Entry&lt;String, Integer&gt;&gt; infoIds =</div><div class="line"><span class="keyword">new</span> ArrayList&lt;Map.Entry&lt;String, Integer&gt;&gt;(map.entrySet());</div><div class="line"></div><div class="line"><span class="comment">//排序前</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; infoIds.size(); i++) &#123;</div><div class="line">String id = infoIds.get(i).toString();</div><div class="line">System.out.println(id);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//d 2</span></div><div class="line"><span class="comment">//c 1</span></div><div class="line"><span class="comment">//b 1</span></div><div class="line"><span class="comment">//a 3</span></div><div class="line"></div><div class="line"><span class="comment">//排序</span></div><div class="line">Collections.sort(infoIds, <span class="keyword">new</span> Comparator&lt;Map.Entry&lt;String, Integer&gt;&gt;() &#123;</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Map.Entry&lt;String, Integer&gt; o1, Map.Entry&lt;String, Integer&gt; o2)</span> </span>&#123;</div><div class="line"><span class="comment">//return (o2.getValue() – o1.getValue());</span></div><div class="line"><span class="keyword">return</span> (o1.getKey()).toString().compareTo(o2.getKey());</div><div class="line">&#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line"><span class="comment">//排序后</span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; infoIds.size(); i++) &#123;</div><div class="line">String id = infoIds.get(i).toString();</div><div class="line">System.out.println(id);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">//根据key排序</span></div><div class="line"><span class="comment">//a 3</span></div><div class="line"><span class="comment">//b 1</span></div><div class="line"><span class="comment">//c 1</span></div><div class="line"><span class="comment">//d 2</span></div><div class="line"><span class="comment">//根据value排序</span></div><div class="line"><span class="comment">//a 3</span></div><div class="line"><span class="comment">//d 2</span></div><div class="line"><span class="comment">//b 1</span></div><div class="line"><span class="comment">//c 1</span></div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/" data-id="ciwrvilyt001dkks8opedflno" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/" data-id="ciy2rrdgb000v6bs83wuvxohi" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/05/03/dev/hash-map-sort-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -300,7 +313,7 @@ System.out.println(id);
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/04/03/algo/baysian/" data-id="ciwrvilxd000ckks8zme61p9q" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/04/03/algo/baysian/" data-id="ciy2rrdg0000e6bs8cixgqsm4" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/04/03/algo/baysian/#ds-thread" class="article-comment-link">评论</a>
       
@@ -354,299 +367,21 @@ System.out.println(id);
 <p>在许多情况下，一个用户需要了解待分析的数据，尽管这并非所要执行的分析任务 的核心内容。以统计数据集中无效记录数目的任务为例，如果发现无效记录的比例 相当高，那么就需要认真思考为何存在如此多无效记录。是所采用的检测程序存在 缺陷，还是数据集质量确实很低，包含大量无效记录？如果确定是数据集的质量问 题，则可能需要扩大数据集的规模，以增大有效记录的比例，从而进行有意义的分析。</p>
 <p>计数器是一种收集作业统计信息的有效手段，用于质量控制或应用级统计。计数器 还可辅助诊断系统故障。如果需要将日志信息传输到map或reduce任务，更好的 方法通常是尝试传输计数器值以监测某一特定事件是否发生。对于大型分布式作业 而言，使用计数器更为方便。首先，获取计数器值比输出日志更方便，其次，根据 计数器值统计特定事件的发生次数要比分析一堆日志文件容易得多。</p>
 <h2 id="2__u3001_u5185_u7F6E_u8BA1_u6570_u5668"><a href="#2__u3001_u5185_u7F6E_u8BA1_u6570_u5668" class="headerlink" title="2 、内置计数器"></a>2 、内置计数器</h2><hr>
-<p>Hadoop为每个作业维护若干内置计数器, 以描述该作业的各项指标。例如，某些计数器记录已处理的字节数和记录数，使用户可监控已处理的输入数据量和已产生的输出数据量，并以此对 job 做适当的优化。</p>
-<pre><code>14/06/08 15:13:35 INFO mapreduce.Job: Counters: 46
-  File System Counters
-  FILE: Number of bytes read=159
-  FILE: Number of bytes written=159447
-  FILE: Number of read operations=0
-  FILE: Number of large read operations=0
-  FILE: Number of write operations=0
-  HDFS: Number of bytes read=198
-  HDFS: Number of bytes written=35
-  HDFS: Number of read operations=6
-  HDFS: Number of large read operations=0
-  HDFS: Number of write operations=2
-  Job Counters 
-  Launched map tasks=1
-  Launched reduce tasks=1
-  Rack-local map tasks=1
-  Total time spent by all maps in occupied slots (ms)=3896
-  Total time spent by all reduces in occupied slots (ms)=9006
-  Map-Reduce Framework
-  Map input records=3
-  Map output records=12
-  Map output bytes=129
-  Map output materialized bytes=159
-  Input split bytes=117
-  Combine input records=0
-  Combine output records=0
-  Reduce input groups=4
-  Reduce shuffle bytes=159
-  Reduce input records=12
-  Reduce output records=4
-  Spilled Records=24
-  Shuffled Maps =1
-  Failed Shuffles=0
-  Merged Map outputs=1
-  GC time elapsed (ms)=13
-  CPU time spent (ms)=3830
-  Physical memory (bytes) snapshot=537718784
-  Virtual memory (bytes) snapshot=7365263360
-  Total committed heap usage (bytes)=2022309888
-  Shuffle Errors
-  BAD_ID=0
-  CONNECTION=0
-  IO_ERROR=0
-  WRONG_LENGTH=0
-  WRONG_MAP=0
-  WRONG_REDUCE=0
-  File Input Format Counters 
-  Bytes Read=81
-  File Output Format Counters 
-  Bytes Written=35
-</code></pre><p>计数器由其关联任务维护，并定期传到tasktracker，再由tasktracker传给 jobtracker.因此，计数器能够被全局地聚集。详见第 hadoop 权威指南第170页的“进度和状态的更新”小节。与其他计数器（包括用户定义的计数器）不同，内置的作业计数器实际上 由jobtracker维护，不必在整个网络中发送。<br>一个任务的计数器值每次都是完整传输的，而非自上次传输之后再继续数未完成的传输，以避免由于消息丢失而引发的错误。另外，如果一个任务在作业执行期间失 败，则相关计数器值会减小。仅当一个作业执行成功之后，计数器的值才是完整可 靠的。</p>
+<p>Hadoop为每个作业维护若干内置计数器, 以描述该作业的各项指标。例如，某些计数器记录已处理的字节数和记录数，使用户可监控已处理的输入数据量和已产生的输出数据量，并以此对 job 做适当的优化。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line">14/06/08 15:13:35 INFO mapreduce.Job: Counters: 46</div><div class="line">  File System Counters</div><div class="line">  FILE: Number of bytes read=159</div><div class="line">  FILE: Number of bytes written=159447</div><div class="line">  FILE: Number of read operations=0</div><div class="line">  FILE: Number of large read operations=0</div><div class="line">  FILE: Number of write operations=0</div><div class="line">  HDFS: Number of bytes read=198</div><div class="line">  HDFS: Number of bytes written=35</div><div class="line">  HDFS: Number of read operations=6</div><div class="line">  HDFS: Number of large read operations=0</div><div class="line">  HDFS: Number of write operations=2</div><div class="line">  Job Counters </div><div class="line">  Launched map tasks=1</div><div class="line">  Launched reduce tasks=1</div><div class="line">  Rack-local map tasks=1</div><div class="line">  Total time spent by all maps in occupied slots (ms)=3896</div><div class="line">  Total time spent by all reduces in occupied slots (ms)=9006</div><div class="line">  Map-Reduce Framework</div><div class="line">  Map input records=3</div><div class="line">  Map output records=12</div><div class="line">  Map output bytes=129</div><div class="line">  Map output materialized bytes=159</div><div class="line">  Input split bytes=117</div><div class="line">  Combine input records=0</div><div class="line">  Combine output records=0</div><div class="line">  Reduce input groups=4</div><div class="line">  Reduce shuffle bytes=159</div><div class="line">  Reduce input records=12</div><div class="line">  Reduce output records=4</div><div class="line">  Spilled Records=24</div><div class="line">  Shuffled Maps =1</div><div class="line">  Failed Shuffles=0</div><div class="line">  Merged Map outputs=1</div><div class="line">  GC time elapsed (ms)=13</div><div class="line">  CPU time spent (ms)=3830</div><div class="line">  Physical memory (bytes) snapshot=537718784</div><div class="line">  Virtual memory (bytes) snapshot=7365263360</div><div class="line">  Total committed heap usage (bytes)=2022309888</div><div class="line">  Shuffle Errors</div><div class="line">  BAD_ID=0</div><div class="line">  CONNECTION=0</div><div class="line">  IO_ERROR=0</div><div class="line">  WRONG_LENGTH=0</div><div class="line">  WRONG_MAP=0</div><div class="line">  WRONG_REDUCE=0</div><div class="line">  File Input Format Counters </div><div class="line">  Bytes Read=81</div><div class="line">  File Output Format Counters </div><div class="line">  Bytes Written=35</div></pre></td></tr></table></figure></p>
+<p>计数器由其关联任务维护，并定期传到tasktracker，再由tasktracker传给 jobtracker.因此，计数器能够被全局地聚集。详见第 hadoop 权威指南第170页的“进度和状态的更新”小节。与其他计数器（包括用户定义的计数器）不同，内置的作业计数器实际上 由jobtracker维护，不必在整个网络中发送。<br>一个任务的计数器值每次都是完整传输的，而非自上次传输之后再继续数未完成的传输，以避免由于消息丢失而引发的错误。另外，如果一个任务在作业执行期间失 败，则相关计数器值会减小。仅当一个作业执行成功之后，计数器的值才是完整可 靠的。</p>
 <h2 id="3_u3001_u7528_u6237_u5B9A_u4E49_u7684Java_u8BA1_u6570_u5668"><a href="#3_u3001_u7528_u6237_u5B9A_u4E49_u7684Java_u8BA1_u6570_u5668" class="headerlink" title="3、用户定义的Java计数器"></a>3、用户定义的Java计数器</h2><p>MapReduce允许用户编写程序来定义计数器，计数器的值可在mapper或reducer 中增加。多个计数器由一个Java枚举(enum)类型来定义，以便对计数器分组。一 个作业可以定义的枚举类型数量不限，各个枚举类型所包含的字段数量也不限。枚 举类型的名称即为组的名称，枚举类型的字段就是计数器名称。计数器是全局的。 换言之，MapReduce框架将跨所有map和reduce聚集这些计数器，并在作业结束 时产生一个最终结果。</p>
 <p>Note1： 需要说明的是，不同的 hadoop 版本定义的方式会有些许差异。</p>
-<p>（1）在0.20.x版本中使用counter很简单,直接定义即可，如无此counter，hadoop会自动添加此counter.</p>
-<pre><code class="java">Counter ct = context.getCounter(“INPUT_WORDS”, “count”);
-ct.increment(1);
-</code></pre>
-<p>（2）在0.19.x版本中,需要定义enum</p>
-<pre><code class="java">enum MyCounter {INPUT_WORDS };
-reporter.incrCounter(MyCounter.INPUT_WORDS, 1);
-RunningJob job = JobClient.runJob(conf);
-Counters c = job.getCounters();
-long cnt = c.getCounter(MyCounter.INPUT_WORDS);
-</code></pre>
+<p>（1）在0.20.x版本中使用counter很简单,直接定义即可，如无此counter，hadoop会自动添加此counter.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Counter ct = context.getCounter(“INPUT_WORDS”, “count”);</div><div class="line">ct.increment(<span class="number">1</span>);</div></pre></td></tr></table></figure></p>
+<p>（2）在0.19.x版本中,需要定义enum<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">enum</span> MyCounter &#123;INPUT_WORDS &#125;;</div><div class="line">reporter.incrCounter(MyCounter.INPUT_WORDS, <span class="number">1</span>);</div><div class="line">RunningJob job = JobClient.runJob(conf);</div><div class="line">Counters c = job.getCounters();</div><div class="line"><span class="keyword">long</span> cnt = c.getCounter(MyCounter.INPUT_WORDS);</div></pre></td></tr></table></figure></p>
 <p>Notice2： 使用计数器需要清楚的是它们都存储在jobTracker的内存里。 Mapper/Reducer 任务序列化它们，连同更新状态被发送。为了运行正常且jobTracker不会出问题，计数器的数量应该在10-100个，计数器不仅仅只用来聚合MapReduce job的统计值。新版本的hadoop限制了计数器的数量，以防给jobTracker带来损害。你最不想看到的事情就是由于定义上百个计数器而使jobTracker宕机。</p>
 <p>下面咱们来看一个计数器的实例（以下代码请运行在 0.20.1 版本以上）：</p>
 <p>3.1 测试数据：</p>
 <p>hello world 2013 mapreduce<br>hello world 2013 mapreduce<br>hello world 2013 mapreduce</p>
 <p>3.2 代码：</p>
-<pre><code class="java">/**
- * Project Name:CDHJobs
- * File Name:MapredCounter.java
- * Package Name:tmp
- * Date:2014-6-8下午2:12:48
- * Copyright (c) 2014, decli#qq.com All Rights Reserved.
- *
- */
-
-package tmp;
-
-import java.io.IOException;
-import java.util.StringTokenizer;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Counter;
-import org.apache.hadoop.mapreduce.CounterGroup;
-import org.apache.hadoop.mapreduce.Counters;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-
-public class WordCountWithCounter {
-
-  static enum WordsNature {
-    STARTS_WITH_DIGIT, STARTS_WITH_LETTER, ALL
-  }
-
-  /**
-   * The map class of WordCount.
-   */
-  public static class TokenCounterMapper extends Mapper&lt;Object, Text, Text, IntWritable&gt; {
-
-    private final static IntWritable one = new IntWritable(1);
-    private Text word = new Text();
-
-    public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-      StringTokenizer itr = new StringTokenizer(value.toString());
-      while (itr.hasMoreTokens()) {
-        word.set(itr.nextToken());
-        context.write(word, one);
-      }
-    }
-  }
-
-  /**
-   * The reducer class of WordCount
-   */
-  public static class TokenCounterReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; {
-    public void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException,
-        InterruptedException {
-      int sum = 0;
-
-      String token = key.toString();
-      if (StringUtils.isNumeric(token)) {
-        context.getCounter(WordsNature.STARTS_WITH_DIGIT).increment(1);
-      } else if (StringUtils.isAlpha(token)) {
-        context.getCounter(WordsNature.STARTS_WITH_LETTER).increment(1);
-      }
-      context.getCounter(WordsNature.ALL).increment(1);
-
-      for (IntWritable value : values) {
-        sum += value.get();
-      }
-      context.write(key, new IntWritable(sum));
-    }
-  }
-
-  /**
-   * The main entry point.
-   */
-  public static void main(String[] args) throws Exception {
-    Configuration conf = new Configuration();
-    Job job = new Job(conf, &quot;WordCountWithCounter&quot;);
-    job.setJarByClass(WordCountWithCounter.class);
-    job.setMapperClass(TokenCounterMapper.class);
-    job.setReducerClass(TokenCounterReducer.class);
-    job.setOutputKeyClass(Text.class);
-    job.setOutputValueClass(IntWritable.class);
-    FileInputFormat.addInputPath(job, new Path(&quot;/tmp/dsap/rawdata/june/a.txt&quot;));
-    FileOutputFormat.setOutputPath(job, new Path(&quot;/tmp/dsap/rawdata/june/a_result&quot;));
-    int exitCode = job.waitForCompletion(true) ? 0 : 1;
-
-    Counters counters = job.getCounters();
-    Counter c1 = counters.findCounter(WordsNature.STARTS_WITH_DIGIT);
-    System.out.println(&quot;--------------&gt;&gt;&gt;&gt;: &quot; + c1.getDisplayName() + &quot;: &quot; + c1.getValue());
-
-    // The below example shows how to get built-in counter groups that Hadoop provides basically.
-    for (CounterGroup group : counters) {
-      System.out.println(&quot;==========================================================&quot;);
-      System.out.println(&quot;* Counter Group: &quot; + group.getDisplayName() + &quot; (&quot; + group.getName() + &quot;)&quot;);
-      System.out.println(&quot;  number of counters in this group: &quot; + group.size());
-      for (Counter counter : group) {
-        System.out.println(&quot;  ++++ &quot; + counter.getDisplayName() + &quot;: &quot; + counter.getName() + &quot;: &quot;
-            + counter.getValue());
-      }
-    }
-    System.exit(exitCode);
-  }
-}
-</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Project Name:CDHJobs</div><div class="line"> * File Name:MapredCounter.java</div><div class="line"> * Package Name:tmp</div><div class="line"> * Date:2014-6-8下午2:12:48</div><div class="line"> * Copyright (c) 2014, decli#qq.com All Rights Reserved.</div><div class="line"> *</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="keyword">package</span> tmp;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.util.StringTokenizer;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.commons.lang3.StringUtils;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Counter;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.CounterGroup;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Counters;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Reducer;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</div><div class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountWithCounter</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> <span class="keyword">enum</span> WordsNature &#123;</div><div class="line">    STARTS_WITH_DIGIT, STARTS_WITH_LETTER, ALL</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line">   * The map class of WordCount.</div><div class="line">   */</div><div class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TokenCounterMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">Object</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> IntWritable one = <span class="keyword">new</span> IntWritable(<span class="number">1</span>);</div><div class="line">    <span class="keyword">private</span> Text word = <span class="keyword">new</span> Text();</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(Object key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</div><div class="line">      StringTokenizer itr = <span class="keyword">new</span> StringTokenizer(value.toString());</div><div class="line">      <span class="keyword">while</span> (itr.hasMoreTokens()) &#123;</div><div class="line">        word.set(itr.nextToken());</div><div class="line">        context.write(word, one);</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line">   * The reducer class of WordCount</div><div class="line">   */</div><div class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">TokenCounterReducer</span> <span class="keyword">extends</span> <span class="title">Reducer</span>&lt;<span class="title">Text</span>, <span class="title">IntWritable</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reduce</span><span class="params">(Text key, Iterable&lt;IntWritable&gt; values, Context context)</span> <span class="keyword">throws</span> IOException,</span></div><div class="line">        InterruptedException &#123;</div><div class="line">      <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line"></div><div class="line">      String token = key.toString();</div><div class="line">      <span class="keyword">if</span> (StringUtils.isNumeric(token)) &#123;</div><div class="line">        context.getCounter(WordsNature.STARTS_WITH_DIGIT).increment(<span class="number">1</span>);</div><div class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (StringUtils.isAlpha(token)) &#123;</div><div class="line">        context.getCounter(WordsNature.STARTS_WITH_LETTER).increment(<span class="number">1</span>);</div><div class="line">      &#125;</div><div class="line">      context.getCounter(WordsNature.ALL).increment(<span class="number">1</span>);</div><div class="line"></div><div class="line">      <span class="keyword">for</span> (IntWritable value : values) &#123;</div><div class="line">        sum += value.get();</div><div class="line">      &#125;</div><div class="line">      context.write(key, <span class="keyword">new</span> IntWritable(sum));</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">/**</span></div><div class="line">   * The main entry point.</div><div class="line">   */</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    Configuration conf = <span class="keyword">new</span> Configuration();</div><div class="line">    Job job = <span class="keyword">new</span> Job(conf, <span class="string">"WordCountWithCounter"</span>);</div><div class="line">    job.setJarByClass(WordCountWithCounter.class);</div><div class="line">    job.setMapperClass(TokenCounterMapper.class);</div><div class="line">    job.setReducerClass(TokenCounterReducer.class);</div><div class="line">    job.setOutputKeyClass(Text.class);</div><div class="line">    job.setOutputValueClass(IntWritable.class);</div><div class="line">    FileInputFormat.addInputPath(job, <span class="keyword">new</span> Path(<span class="string">"/tmp/dsap/rawdata/june/a.txt"</span>));</div><div class="line">    FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(<span class="string">"/tmp/dsap/rawdata/june/a_result"</span>));</div><div class="line">    <span class="keyword">int</span> exitCode = job.waitForCompletion(<span class="keyword">true</span>) ? <span class="number">0</span> : <span class="number">1</span>;</div><div class="line"></div><div class="line">    Counters counters = job.getCounters();</div><div class="line">    Counter c1 = counters.findCounter(WordsNature.STARTS_WITH_DIGIT);</div><div class="line">    System.out.println(<span class="string">"--------------&gt;&gt;&gt;&gt;: "</span> + c1.getDisplayName() + <span class="string">": "</span> + c1.getValue());</div><div class="line"></div><div class="line">    <span class="comment">// The below example shows how to get built-in counter groups that Hadoop provides basically.</span></div><div class="line">    <span class="keyword">for</span> (CounterGroup group : counters) &#123;</div><div class="line">      System.out.println(<span class="string">"=========================================================="</span>);</div><div class="line">      System.out.println(<span class="string">"* Counter Group: "</span> + group.getDisplayName() + <span class="string">" ("</span> + group.getName() + <span class="string">")"</span>);</div><div class="line">      System.out.println(<span class="string">"  number of counters in this group: "</span> + group.size());</div><div class="line">      <span class="keyword">for</span> (Counter counter : group) &#123;</div><div class="line">        System.out.println(<span class="string">"  ++++ "</span> + counter.getDisplayName() + <span class="string">": "</span> + counter.getName() + <span class="string">": "</span></div><div class="line">            + counter.getValue());</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    System.exit(exitCode);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>3.3 结果与计数器详解</p>
-<p>运行结果下面会一并给出。Counter有”组group”的概念，用于表示逻辑上相同范围的所有数值。MapReduce job提供的默认Counter分为7个组，下面逐一介绍。这里也拿上面的测试数据来做详细比对，我将会针对具体的计数器，挑选一些主要的简述一下。</p>
-<pre><code>... 前面省略 job 运行信息 xx 字 ...
-  ALL=4
-  STARTS_WITH_DIGIT=1
-  STARTS_WITH_LETTER=3
---------------&gt;&gt;&gt;&gt;: STARTS_WITH_DIGIT: 1
-==========================================================
-#MapReduce job执行所依赖的数据来自于不同的文件系统，这个group表示job与文件系统交互的读写统计 
-* Counter Group: File System Counters (org.apache.hadoop.mapreduce.FileSystemCounter)
- number of counters in this group: 10
- #job读取本地文件系统的文件字节数。假定我们当前map的输入数据都来自于HDFS，那么在map阶段，这个数据应该是0。但reduce在执行前，它 的输入数据是经过shuffle的merge后存储在reduce端本地磁盘中，所以这个数据就是所有reduce的总输入字节数。
- ++++ FILE: Number of bytes read: FILE_BYTES_READ: 159
- #map的中间结果都会spill到本地磁盘中，在map执行完后，形成最终的spill文件。所以map端这里的数据就表示map task往本地磁盘中总共写了多少字节。与map端相对应的是，reduce端在shuffle时，会不断地拉取map端的中间结果，然后做merge并 不断spill到自己的本地磁盘中。最终形成一个单独文件，这个文件就是reduce的输入文件。 
- ++++ FILE: Number of bytes written: FILE_BYTES_WRITTEN: 159447
- ++++ FILE: Number of read operations: FILE_READ_OPS: 0
- ++++ FILE: Number of large read operations: FILE_LARGE_READ_OPS: 0
- ++++ FILE: Number of write operations: FILE_WRITE_OPS: 0
- # 整个job执行过程中，只有map端运行时，才从HDFS读取数据，这些数据不限于源文件内容，还包括所有map的split元数据。所以这个值应该比FileInputFormatCounters.BYTES_READ 要略大些。 
- ++++ HDFS: Number of bytes read: HDFS_BYTES_READ: 198
- #Reduce的最终结果都会写入HDFS，就是一个job执行结果的总量。 
- ++++ HDFS: Number of bytes written: HDFS_BYTES_WRITTEN: 35
- ++++ HDFS: Number of read operations: HDFS_READ_OPS: 6
- ++++ HDFS: Number of large read operations: HDFS_LARGE_READ_OPS: 0
- ++++ HDFS: Number of write operations: HDFS_WRITE_OPS: 2
-==========================================================
-#这个group描述与job调度相关的统计 
-* Counter Group: Job Counters (org.apache.hadoop.mapreduce.JobCounter)
- number of counters in this group: 5
- #Job在被调度时，如果启动了一个data-local(源文件的幅本在执行map task的taskTracker本地) 
- ++++ Data-local map tasks 
- #当前job为某些map task的执行保留了slot，总共保留的时间是多少 
- ++++ FALLOW_SLOTS_MILLIS_MAPS/REDUCES
- #所有map task占用slot的总时间，包含执行时间和创建/销毁子JVM的时间
- ++++ SLOTS_MILLIS_MAPS/REDUCES
- # 此job启动了多少个map task 
- ++++ Launched map tasks: TOTAL_LAUNCHED_MAPS: 1
- # 此job启动了多少个reduce task 
- ++++ Launched reduce tasks: TOTAL_LAUNCHED_REDUCES: 1
- ++++ Rack-local map tasks: RACK_LOCAL_MAPS: 1
- ++++ Total time spent by all maps in occupied slots (ms): SLOTS_MILLIS_MAPS: 3896
- ++++ Total time spent by all reduces in occupied slots (ms): SLOTS_MILLIS_REDUCES: 9006
-==========================================================
-#这个Counter group包含了相当多地job执行细节数据。这里需要有个概念认识是：一般情况下，record就表示一行数据，而相对地byte表示这行数据的大小是 多少，这里的group表示经过reduce merge后像这样的输入形式{&quot;aaa&quot;, [5, 8, 2, …]}。 
-* Counter Group: Map-Reduce Framework (org.apache.hadoop.mapreduce.TaskCounter)
- number of counters in this group: 20
- #所有map task从HDFS读取的文件总行数 
- ++++ Map input records: MAP_INPUT_RECORDS: 3
- #map task的直接输出record是多少，就是在map方法中调用context.write的次数，也就是未经过Combine时的原生输出条数 
- ++++ Map output records: MAP_OUTPUT_RECORDS: 12
- # Map的输出结果key/value都会被序列化到内存缓冲区中，所以这里的bytes指序列化后的最终字节之和 
- ++++ Map output bytes: MAP_OUTPUT_BYTES: 129
- ++++ Map output materialized bytes: MAP_OUTPUT_MATERIALIZED_BYTES: 159
- # #与map task 的split相关的数据都会保存于HDFS中，而在保存时元数据也相应地存储着数据是以怎样的压缩方式放入的，它的具体类型是什么，这些额外的数据是 MapReduce框架加入的，与job无关，这里记录的大小就是表示额外信息的字节大小
- ++++ Input split bytes: SPLIT_RAW_BYTES: 117
- #Combiner是为了减少尽量减少需要拉取和移动的数据，所以combine输入条数与map的输出条数是一致的。
- ++++ Combine input records: COMBINE_INPUT_RECORDS: 0
- # 经过Combiner后，相同key的数据经过压缩，在map端自己解决了很多重复数据，表示最终在map端中间文件中的所有条目数 
- ++++ Combine output records: COMBINE_OUTPUT_RECORDS: 0
- #Reduce总共读取了多少个这样的groups 
- ++++ Reduce input groups: REDUCE_INPUT_GROUPS: 4
- #Reduce端的copy线程总共从map端抓取了多少的中间数据，表示各个map task最终的中间文件总和 
- ++++ Reduce shuffle bytes: REDUCE_SHUFFLE_BYTES: 159
- #如果有Combiner的话，那么这里的数值就等于map端Combiner运算后的最后条数，如果没有，那么就应该等于map的输出条数 
- ++++ Reduce input records: REDUCE_INPUT_RECORDS: 12
- #所有reduce执行后输出的总条目数 
- ++++ Reduce output records: REDUCE_OUTPUT_RECORDS: 4
- #spill过程在map和reduce端都会发生，这里统计在总共从内存往磁盘中spill了多少条数据 
- ++++ Spilled Records: SPILLED_RECORDS: 24
- #每个reduce几乎都得从所有map端拉取数据，每个copy线程拉取成功一个map的数据，那么增1，所以它的总数基本等于 reduce number * map number 
- ++++ Shuffled Maps : SHUFFLED_MAPS: 1
- # copy线程在抓取map端中间数据时，如果因为网络连接异常或是IO异常，所引起的shuffle错误次数 
- ++++ Failed Shuffles: FAILED_SHUFFLE: 0
- #记录着shuffle过程中总共经历了多少次merge动作 
- ++++ Merged Map outputs: MERGED_MAP_OUTPUTS: 1
- #通过JMX获取到执行map与reduce的子JVM总共的GC时间消耗 
- ++++ GC time elapsed (ms): GC_TIME_MILLIS: 13
- ++++ CPU time spent (ms): CPU_MILLISECONDS: 3830
- ++++ Physical memory (bytes) snapshot: PHYSICAL_MEMORY_BYTES: 537718784
- ++++ Virtual memory (bytes) snapshot: VIRTUAL_MEMORY_BYTES: 7365263360
- ++++ Total committed heap usage (bytes): COMMITTED_HEAP_BYTES: 2022309888
-==========================================================
-#这组内描述Shuffle过程中的各种错误情况发生次数，基本定位于Shuffle阶段copy线程抓取map端中间数据时的各种错误。
-* Counter Group: Shuffle Errors (Shuffle Errors)
- number of counters in this group: 6
- #每个map都有一个ID，如attempt_201109020150_0254_m_000000_0，如果reduce的copy线程抓取过来的元数据中这个ID不是标准格式，那么此Counter增加 
- ++++ BAD_ID: BAD_ID: 0
- #表示copy线程建立到map端的连接有误 
- ++++ CONNECTION: CONNECTION: 0
- #Reduce的copy线程如果在抓取map端数据时出现IOException，那么这个值相应增加 
- ++++ IO_ERROR: IO_ERROR: 0
- #map端的那个中间结果是有压缩好的有格式数据，所有它有两个length信息：源数据大小与压缩后数据大小。如果这两个length信息传输的有误(负值)，那么此Counter增加
- ++++ WRONG_LENGTH: WRONG_LENGTH: 0
- #每个copy线程当然是有目的:为某个reduce抓取某些map的中间结果，如果当前抓取的map数据不是copy线程之前定义好的map，那么就表示把数据拉错了
- ++++ WRONG_MAP: WRONG_MAP: 0
- #与上面描述一致，如果抓取的数据表示它不是为此reduce而准备的，那还是拉错数据了。 
- ++++ WRONG_REDUCE: WRONG_REDUCE: 0
-==========================================================
-#这个group表示map task读取文件内容(总输入数据)的统计 
-* Counter Group: File Input Format Counters (org.apache.hadoop.mapreduce.lib.input.FileInputFormatCounter)
- number of counters in this group: 1
-# Map task的所有输入数据(字节)，等于各个map task的map方法传入的所有value值字节之和。 
- ++++ Bytes Read: BYTES_READ: 81
-==========================================================
-##这个group表示reduce task输出文件内容(总输出数据)的统计 
-* Counter Group: File Output Format Counters (org.apache.hadoop.mapreduce.lib.output.FileOutputFormatCounter)
- number of counters in this group: 1
- ++++ Bytes Written: BYTES_WRITTEN: 35
-==========================================================
-# 自定义计数器的统计
-* Counter Group: tmp.WordCountWithCounter$WordsNature (tmp.WordCountWithCounter$WordsNature)
- number of counters in this group: 3
- ++++ ALL: ALL: 4
- ++++ STARTS_WITH_DIGIT: STARTS_WITH_DIGIT: 1
- ++++ STARTS_WITH_LETTER: STARTS_WITH_LETTER: 3
-</code></pre><p>4、最后的问题：</p>
+<p>运行结果下面会一并给出。Counter有”组group”的概念，用于表示逻辑上相同范围的所有数值。MapReduce job提供的默认Counter分为7个组，下面逐一介绍。这里也拿上面的测试数据来做详细比对，我将会针对具体的计数器，挑选一些主要的简述一下。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div></pre></td><td class="code"><pre><div class="line">... 前面省略 job 运行信息 xx 字 ...</div><div class="line">  ALL=4</div><div class="line">  STARTS_WITH_DIGIT=1</div><div class="line">  STARTS_WITH_LETTER=3</div><div class="line">--------------&gt;&gt;&gt;&gt;: STARTS_WITH_DIGIT: 1</div><div class="line">==========================================================</div><div class="line">#MapReduce job执行所依赖的数据来自于不同的文件系统，这个group表示job与文件系统交互的读写统计 </div><div class="line">* Counter Group: File System Counters (org.apache.hadoop.mapreduce.FileSystemCounter)</div><div class="line"> number of counters in this group: 10</div><div class="line"> #job读取本地文件系统的文件字节数。假定我们当前map的输入数据都来自于HDFS，那么在map阶段，这个数据应该是0。但reduce在执行前，它 的输入数据是经过shuffle的merge后存储在reduce端本地磁盘中，所以这个数据就是所有reduce的总输入字节数。</div><div class="line"> ++++ FILE: Number of bytes read: FILE_BYTES_READ: 159</div><div class="line"> #map的中间结果都会spill到本地磁盘中，在map执行完后，形成最终的spill文件。所以map端这里的数据就表示map task往本地磁盘中总共写了多少字节。与map端相对应的是，reduce端在shuffle时，会不断地拉取map端的中间结果，然后做merge并 不断spill到自己的本地磁盘中。最终形成一个单独文件，这个文件就是reduce的输入文件。 </div><div class="line"> ++++ FILE: Number of bytes written: FILE_BYTES_WRITTEN: 159447</div><div class="line"> ++++ FILE: Number of read operations: FILE_READ_OPS: 0</div><div class="line"> ++++ FILE: Number of large read operations: FILE_LARGE_READ_OPS: 0</div><div class="line"> ++++ FILE: Number of write operations: FILE_WRITE_OPS: 0</div><div class="line"> # 整个job执行过程中，只有map端运行时，才从HDFS读取数据，这些数据不限于源文件内容，还包括所有map的split元数据。所以这个值应该比FileInputFormatCounters.BYTES_READ 要略大些。 </div><div class="line"> ++++ HDFS: Number of bytes read: HDFS_BYTES_READ: 198</div><div class="line"> #Reduce的最终结果都会写入HDFS，就是一个job执行结果的总量。 </div><div class="line"> ++++ HDFS: Number of bytes written: HDFS_BYTES_WRITTEN: 35</div><div class="line"> ++++ HDFS: Number of read operations: HDFS_READ_OPS: 6</div><div class="line"> ++++ HDFS: Number of large read operations: HDFS_LARGE_READ_OPS: 0</div><div class="line"> ++++ HDFS: Number of write operations: HDFS_WRITE_OPS: 2</div><div class="line">==========================================================</div><div class="line">#这个group描述与job调度相关的统计 </div><div class="line">* Counter Group: Job Counters (org.apache.hadoop.mapreduce.JobCounter)</div><div class="line"> number of counters in this group: 5</div><div class="line"> #Job在被调度时，如果启动了一个data-local(源文件的幅本在执行map task的taskTracker本地) </div><div class="line"> ++++ Data-local map tasks </div><div class="line"> #当前job为某些map task的执行保留了slot，总共保留的时间是多少 </div><div class="line"> ++++ FALLOW_SLOTS_MILLIS_MAPS/REDUCES</div><div class="line"> #所有map task占用slot的总时间，包含执行时间和创建/销毁子JVM的时间</div><div class="line"> ++++ SLOTS_MILLIS_MAPS/REDUCES</div><div class="line"> # 此job启动了多少个map task </div><div class="line"> ++++ Launched map tasks: TOTAL_LAUNCHED_MAPS: 1</div><div class="line"> # 此job启动了多少个reduce task </div><div class="line"> ++++ Launched reduce tasks: TOTAL_LAUNCHED_REDUCES: 1</div><div class="line"> ++++ Rack-local map tasks: RACK_LOCAL_MAPS: 1</div><div class="line"> ++++ Total time spent by all maps in occupied slots (ms): SLOTS_MILLIS_MAPS: 3896</div><div class="line"> ++++ Total time spent by all reduces in occupied slots (ms): SLOTS_MILLIS_REDUCES: 9006</div><div class="line">==========================================================</div><div class="line">#这个Counter group包含了相当多地job执行细节数据。这里需要有个概念认识是：一般情况下，record就表示一行数据，而相对地byte表示这行数据的大小是 多少，这里的group表示经过reduce merge后像这样的输入形式&#123;&quot;aaa&quot;, [5, 8, 2, …]&#125;。 </div><div class="line">* Counter Group: Map-Reduce Framework (org.apache.hadoop.mapreduce.TaskCounter)</div><div class="line"> number of counters in this group: 20</div><div class="line"> #所有map task从HDFS读取的文件总行数 </div><div class="line"> ++++ Map input records: MAP_INPUT_RECORDS: 3</div><div class="line"> #map task的直接输出record是多少，就是在map方法中调用context.write的次数，也就是未经过Combine时的原生输出条数 </div><div class="line"> ++++ Map output records: MAP_OUTPUT_RECORDS: 12</div><div class="line"> # Map的输出结果key/value都会被序列化到内存缓冲区中，所以这里的bytes指序列化后的最终字节之和 </div><div class="line"> ++++ Map output bytes: MAP_OUTPUT_BYTES: 129</div><div class="line"> ++++ Map output materialized bytes: MAP_OUTPUT_MATERIALIZED_BYTES: 159</div><div class="line"> # #与map task 的split相关的数据都会保存于HDFS中，而在保存时元数据也相应地存储着数据是以怎样的压缩方式放入的，它的具体类型是什么，这些额外的数据是 MapReduce框架加入的，与job无关，这里记录的大小就是表示额外信息的字节大小</div><div class="line"> ++++ Input split bytes: SPLIT_RAW_BYTES: 117</div><div class="line"> #Combiner是为了减少尽量减少需要拉取和移动的数据，所以combine输入条数与map的输出条数是一致的。</div><div class="line"> ++++ Combine input records: COMBINE_INPUT_RECORDS: 0</div><div class="line"> # 经过Combiner后，相同key的数据经过压缩，在map端自己解决了很多重复数据，表示最终在map端中间文件中的所有条目数 </div><div class="line"> ++++ Combine output records: COMBINE_OUTPUT_RECORDS: 0</div><div class="line"> #Reduce总共读取了多少个这样的groups </div><div class="line"> ++++ Reduce input groups: REDUCE_INPUT_GROUPS: 4</div><div class="line"> #Reduce端的copy线程总共从map端抓取了多少的中间数据，表示各个map task最终的中间文件总和 </div><div class="line"> ++++ Reduce shuffle bytes: REDUCE_SHUFFLE_BYTES: 159</div><div class="line"> #如果有Combiner的话，那么这里的数值就等于map端Combiner运算后的最后条数，如果没有，那么就应该等于map的输出条数 </div><div class="line"> ++++ Reduce input records: REDUCE_INPUT_RECORDS: 12</div><div class="line"> #所有reduce执行后输出的总条目数 </div><div class="line"> ++++ Reduce output records: REDUCE_OUTPUT_RECORDS: 4</div><div class="line"> #spill过程在map和reduce端都会发生，这里统计在总共从内存往磁盘中spill了多少条数据 </div><div class="line"> ++++ Spilled Records: SPILLED_RECORDS: 24</div><div class="line"> #每个reduce几乎都得从所有map端拉取数据，每个copy线程拉取成功一个map的数据，那么增1，所以它的总数基本等于 reduce number * map number </div><div class="line"> ++++ Shuffled Maps : SHUFFLED_MAPS: 1</div><div class="line"> # copy线程在抓取map端中间数据时，如果因为网络连接异常或是IO异常，所引起的shuffle错误次数 </div><div class="line"> ++++ Failed Shuffles: FAILED_SHUFFLE: 0</div><div class="line"> #记录着shuffle过程中总共经历了多少次merge动作 </div><div class="line"> ++++ Merged Map outputs: MERGED_MAP_OUTPUTS: 1</div><div class="line"> #通过JMX获取到执行map与reduce的子JVM总共的GC时间消耗 </div><div class="line"> ++++ GC time elapsed (ms): GC_TIME_MILLIS: 13</div><div class="line"> ++++ CPU time spent (ms): CPU_MILLISECONDS: 3830</div><div class="line"> ++++ Physical memory (bytes) snapshot: PHYSICAL_MEMORY_BYTES: 537718784</div><div class="line"> ++++ Virtual memory (bytes) snapshot: VIRTUAL_MEMORY_BYTES: 7365263360</div><div class="line"> ++++ Total committed heap usage (bytes): COMMITTED_HEAP_BYTES: 2022309888</div><div class="line">==========================================================</div><div class="line">#这组内描述Shuffle过程中的各种错误情况发生次数，基本定位于Shuffle阶段copy线程抓取map端中间数据时的各种错误。</div><div class="line">* Counter Group: Shuffle Errors (Shuffle Errors)</div><div class="line"> number of counters in this group: 6</div><div class="line"> #每个map都有一个ID，如attempt_201109020150_0254_m_000000_0，如果reduce的copy线程抓取过来的元数据中这个ID不是标准格式，那么此Counter增加 </div><div class="line"> ++++ BAD_ID: BAD_ID: 0</div><div class="line"> #表示copy线程建立到map端的连接有误 </div><div class="line"> ++++ CONNECTION: CONNECTION: 0</div><div class="line"> #Reduce的copy线程如果在抓取map端数据时出现IOException，那么这个值相应增加 </div><div class="line"> ++++ IO_ERROR: IO_ERROR: 0</div><div class="line"> #map端的那个中间结果是有压缩好的有格式数据，所有它有两个length信息：源数据大小与压缩后数据大小。如果这两个length信息传输的有误(负值)，那么此Counter增加</div><div class="line"> ++++ WRONG_LENGTH: WRONG_LENGTH: 0</div><div class="line"> #每个copy线程当然是有目的:为某个reduce抓取某些map的中间结果，如果当前抓取的map数据不是copy线程之前定义好的map，那么就表示把数据拉错了</div><div class="line"> ++++ WRONG_MAP: WRONG_MAP: 0</div><div class="line"> #与上面描述一致，如果抓取的数据表示它不是为此reduce而准备的，那还是拉错数据了。 </div><div class="line"> ++++ WRONG_REDUCE: WRONG_REDUCE: 0</div><div class="line">==========================================================</div><div class="line">#这个group表示map task读取文件内容(总输入数据)的统计 </div><div class="line">* Counter Group: File Input Format Counters (org.apache.hadoop.mapreduce.lib.input.FileInputFormatCounter)</div><div class="line"> number of counters in this group: 1</div><div class="line"># Map task的所有输入数据(字节)，等于各个map task的map方法传入的所有value值字节之和。 </div><div class="line"> ++++ Bytes Read: BYTES_READ: 81</div><div class="line">==========================================================</div><div class="line">##这个group表示reduce task输出文件内容(总输出数据)的统计 </div><div class="line">* Counter Group: File Output Format Counters (org.apache.hadoop.mapreduce.lib.output.FileOutputFormatCounter)</div><div class="line"> number of counters in this group: 1</div><div class="line"> ++++ Bytes Written: BYTES_WRITTEN: 35</div><div class="line">==========================================================</div><div class="line"># 自定义计数器的统计</div><div class="line">* Counter Group: tmp.WordCountWithCounter$WordsNature (tmp.WordCountWithCounter$WordsNature)</div><div class="line"> number of counters in this group: 3</div><div class="line"> ++++ ALL: ALL: 4</div><div class="line"> ++++ STARTS_WITH_DIGIT: STARTS_WITH_DIGIT: 1</div><div class="line"> ++++ STARTS_WITH_LETTER: STARTS_WITH_LETTER: 3</div></pre></td></tr></table></figure></p>
+<p>4、最后的问题：</p>
 <p>如果想要在 MapReduce 中实现一个类似计数器的“全局变量”，可以在 map、reduce 中以任意数据类型、任意修改变量值，并在 main 函数中回调获取该怎么办呢？</p>
 <p>5、 Refer:</p>
 <p>（1）An Example of Hadoop MapReduce Counter</p>
@@ -663,7 +398,7 @@ public class WordCountWithCounter {
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/" data-id="ciwrvim1t004ukks85oj228vv" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/" data-id="ciy2rrdj200516bs84olc9kif" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/03/03/algo/mapreduce/mapreduce_counters/#ds-thread" class="article-comment-link">评论</a>
       
@@ -713,62 +448,12 @@ public class WordCountWithCounter {
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="java">// 注意：如果使用了非系统类型作为key,则必须覆写equals()和hashCode()方法，否则无效。
-// 使用自定义的类型作为键
-import java.util.Map ;
-import java.util.HashMap ;
-class Person{
-    private String name ;
-    private int age ;
-    public Person(String name,int age){
-        this.name = name ;
-        this.age = age ;
-    }
-    public String toString(){
-        return &quot;姓名：&quot; + this.name + &quot;；年龄：&quot; + this.age ;
-    }
-    public boolean equals(Object obj){ //覆写
-        if(this==obj){
-            return true ;
-        }
-        if(!(obj instanceof Person)){
-            return false ;
-        }
-        Person p = (Person)obj ; //向下转型
-        if(this.name.equals(p.name)&amp;&amp;this.age==p.age){
-            return true ;
-        }else{
-            return false ;
-        }
-    }
-    public int hashCode(){  //覆写，实现编码唯一
-        return this.name.hashCode() * this.age ;
-    }
-};
-public class HashMapDemo06{
-    public static void main(String args[]){
-        Map&lt;String,Person&gt; map = null ;
-        map = new HashMap&lt;String,Person&gt;() ;
-        map.put(&quot;zhangsan&quot;,new Person(&quot;张三&quot;,30)) ; //增加内容
-        System.out.println(map.get(&quot;zhangsan&quot;)) ;
-
-        Map&lt;Person,String&gt; map1 = null ;
-        map1 = new HashMap&lt;Person,String&gt;() ;
-        Person per = new Person(&quot;张三&quot;,30) ;
-        map1.put(per,&quot;zhangsan&quot;) ; //增加内容，使用了per对象
-        System.out.println(map1.get(per)) ; //注意是per对象
-        Map&lt;Person,String&gt; map2 = null ;
-        map2 = new HashMap&lt;Person,String&gt;() ;
-        map2.put(new Person(&quot;张三&quot;,30),&quot;zhangsan&quot;) ; //增加内容，使用了匿名对象
-        System.out.println(map2.get(new Person(&quot;张三&quot;,30))) ; //注意是匿名对象
-    }
-};
-</code></pre>
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 注意：如果使用了非系统类型作为key,则必须覆写equals()和hashCode()方法，否则无效。</span></div><div class="line"><span class="comment">// 使用自定义的类型作为键</span></div><div class="line"><span class="keyword">import</span> java.util.Map ;</div><div class="line"><span class="keyword">import</span> java.util.HashMap ;</div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</div><div class="line">    <span class="keyword">private</span> String name ;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age ;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Person</span><span class="params">(String name,<span class="keyword">int</span> age)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name ;</div><div class="line">        <span class="keyword">this</span>.age = age ;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"姓名："</span> + <span class="keyword">this</span>.name + <span class="string">"；年龄："</span> + <span class="keyword">this</span>.age ;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span></span>&#123; <span class="comment">//覆写</span></div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>==obj)&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span> ;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span>(!(obj <span class="keyword">instanceof</span> Person))&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span> ;</div><div class="line">        &#125;</div><div class="line">        Person p = (Person)obj ; <span class="comment">//向下转型</span></div><div class="line">        <span class="keyword">if</span>(<span class="keyword">this</span>.name.equals(p.name)&amp;&amp;<span class="keyword">this</span>.age==p.age)&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span> ;</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">false</span> ;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span>&#123;  <span class="comment">//覆写，实现编码唯一</span></div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.name.hashCode() * <span class="keyword">this</span>.age ;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HashMapDemo06</span></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</div><div class="line">        Map&lt;String,Person&gt; map = <span class="keyword">null</span> ;</div><div class="line">        map = <span class="keyword">new</span> HashMap&lt;String,Person&gt;() ;</div><div class="line">        map.put(<span class="string">"zhangsan"</span>,<span class="keyword">new</span> Person(<span class="string">"张三"</span>,<span class="number">30</span>)) ; <span class="comment">//增加内容</span></div><div class="line">        System.out.println(map.get(<span class="string">"zhangsan"</span>)) ;</div><div class="line"> </div><div class="line">        Map&lt;Person,String&gt; map1 = <span class="keyword">null</span> ;</div><div class="line">        map1 = <span class="keyword">new</span> HashMap&lt;Person,String&gt;() ;</div><div class="line">        Person per = <span class="keyword">new</span> Person(<span class="string">"张三"</span>,<span class="number">30</span>) ;</div><div class="line">        map1.put(per,<span class="string">"zhangsan"</span>) ; <span class="comment">//增加内容，使用了per对象</span></div><div class="line">        System.out.println(map1.get(per)) ; <span class="comment">//注意是per对象</span></div><div class="line">        Map&lt;Person,String&gt; map2 = <span class="keyword">null</span> ;</div><div class="line">        map2 = <span class="keyword">new</span> HashMap&lt;Person,String&gt;() ;</div><div class="line">        map2.put(<span class="keyword">new</span> Person(<span class="string">"张三"</span>,<span class="number">30</span>),<span class="string">"zhangsan"</span>) ; <span class="comment">//增加内容，使用了匿名对象</span></div><div class="line">        System.out.println(map2.get(<span class="keyword">new</span> Person(<span class="string">"张三"</span>,<span class="number">30</span>))) ; <span class="comment">//注意是匿名对象</span></div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/02/13/dev/user_define_hashmap/" data-id="ciwrvilz2001mkks8uc0wl3s2" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/02/13/dev/user_define_hashmap/" data-id="ciy2rrdgi00136bs8u8p9i9pq" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/02/13/dev/user_define_hashmap/#ds-thread" class="article-comment-link">评论</a>
       
@@ -783,224 +468,11 @@ public class HashMapDemo06{
 
 
     
-      <article id="post-algo/mapreduce/sql_mapjoin" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/02/06/algo/mapreduce/sql_mapjoin/">云梯表Join的倾斜问题以及解决方法</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/02/06/algo/mapreduce/sql_mapjoin/">
-      <time datetime="2015-02-05T16:00:00.000Z" itemprop="datePublished">2015-02-06</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/SQL/">SQL</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h3 id="u4EC0_u4E48_u662F_u503E_u659C_u95EE_u9898_2C__u95EE_u9898_u75C7_u72B6"><a href="#u4EC0_u4E48_u662F_u503E_u659C_u95EE_u9898_2C__u95EE_u9898_u75C7_u72B6" class="headerlink" title="什么是倾斜问题, 问题症状"></a>什么是倾斜问题, 问题症状</h3><p>写HQL语句的时候常常会遇到表Join的情况，一个简单的Join会被Hive解释成一个MapReduce任务，Map端分别读取两个表的数据，Reduce做真正的Join操作。如果执行的过程中，如果发现有些Reduce任务比其他的Reduce任务慢很多，往往是发生了倾斜问题。</p>
-<h3 id="u95EE_u9898_u5206_u6790"><a href="#u95EE_u9898_u5206_u6790" class="headerlink" title="问题分析"></a>问题分析</h3><p>举个栗子：</p>
-<pre><code class="SQL">select
-    a.*,
-    b.cat_name
-from
-    dim_auction a
-join
-    dim_category b
-on a.cat_id=b.cat_id
-</code></pre>
-<p>Join会被Hive解释成一个MapReduce任务时，Map端输出的记录是以Join的条件为Key的，即这些Map生成的Key都是 cat_id。随后，这些cat_id被Hash到多个Reduce任务中，来完成真正Join。所有拥有相同cat_id的记录一定会被分配到同一个 Reducer中。</p>
-<p>但是每个cat_id多对应的记录数是不一样的，连衣裙类目的数据一定很多，钟点工类目的数据就很少。如果某个Reducer比较悲催，分到了连衣裙类目，则其处理的数据量就会很大，最后表现在处理时间拖后腿的情况。</p>
-<h4 id="u89E3_u51B3_u65B9_u6CD51__u2014_MapJoin"><a href="#u89E3_u51B3_u65B9_u6CD51__u2014_MapJoin" class="headerlink" title="解决方法1 — MapJoin"></a>解决方法1 — MapJoin</h4><p>一个常用的解决手段是使用MapJoin，这种手段适合于关联的两个表有一个较小的情况。其原理是，把Join动作提前到Map端，而不是Reduce端。在Map的时候，对于大表，我们还是每个Map装载这个表的一部分，对于小表，我们把它放到每个Map中。这样每个Map都拥有小表的所有记录，可以在本地进行Join操作了。具体的，在SQL中加入这样一个Hint就OK了：</p>
-<pre><code class="SQL">select /*\+ MAPJOIN(b) \*/
-   a.*,
-   b.cat_name
-from
-   dim_auction a
-join
-   dim_category b
-on a.cat_id=b.cat_id
-</code></pre>
-<h4 id="u89E3_u51B3_u65B9_u6CD52__u2014_u5206_u800C_u6CBB_u4E4B"><a href="#u89E3_u51B3_u65B9_u6CD52__u2014_u5206_u800C_u6CBB_u4E4B" class="headerlink" title="解决方法2 —分而治之"></a>解决方法2 —分而治之</h4><p>MapJoin是一个很好用的工具，但是却存在一个致命的弱点，就是其中一个表一定要比较小，能够完全装入单台机器的内存。</p>
-<p>我们看下面一个例子：</p>
-<pre><code class="SQL">select
-   a.*,
-   b.property_name
-from
-   auction_property a
-left outer join
-(
-   select
-      *
-   from
-      dim_base_properties
-   where ds=&#39;20130620&#39;
-) b
-on a.property_id = b.property_id
-</code></pre>
-<p>auction_property表存储了每一个商品以及该商品的每一个属性。<br>dim_base_properties存储了每个属性的名称、以及一些其他元数据。<br>我们这次关联是想在auction_property表的基础上，加上每个属性的名称。和类目一样，属性ID是有倾斜的，即有一些很常用的属性，被很多宝贝都引用了。悲剧的事情是，auction_property和dim_base_properties这两个表都很大。。。</p>
-<p>解决这个问题依赖于如下的观察：导致倾斜的Key的个数往往不多，也就是说，常用的属性就那么几个，剩下的大部分属性都不常用。</p>
-<p>下面我们采用分治方法来解决这个问题：<br>第一步，找到的常用的属性。</p>
-<pre><code class="SQL">create table lingyun_property_skew
-as
-select
-    a.property_id,
-    a.cnt,
-    b.property_name
-from
-    (
-        select
-           property_id,
-           count(*) as cnt
-        from
-            lingyun_auction_property a
-        group by property_id
-        order by cnt desc
-        limit 1000
-    ) a
-join
-    (
-        select
-            *
-        from
-            tbdw.dim_base_properties
-        where ds=&#39;20130620&#39;
-    ) b
-on a.property_id = b.property_id;
-</code></pre>
-<p>这里我们把auction_property表按照property_id汇总，并且找到最常用的1000个属性ID，并且查到了这些属性ID的名字。这里1000可以扩展到上万个，只要保障能够被装进内存就可以了。</p>
-<p>第二步是先解决常用属性的关联</p>
-<pre><code class="SQL">create table lingyun_auction_property_name_temp
-as
-select /*+ MAPJOIN(b) */
-    a.*,
-    b.property_name
-from
-    auction_property a
-left outer join
-    lingyun_property_skew b
-on a.property_id = b.property_id;
-
-create table lingyun_auction_property_name_part1
-as
-select
-    *
-from
-    lingyun_auction_property_name_temp
-where property_name is not null;
-</code></pre>
-<p>这一步我们可以使用MAPJOIN是因为lingyun_property_skew是一个小表。</p>
-<p>第三步是解决非常用属性的关联</p>
-<pre><code class="SQL">create table lingyun_auction_property_name_part2
-as
-select
-    a.auction_id,
-    a.property_id,
-    a.value_id,
-    b.property_name
-from
-    (
-        select
-            *
-        from
-            lingyun_auction_property_name_temp
-        where property_name is null
-    ) a
-join
-    (
-        select
-            *
-        from
-            tbdw.dim_base_properties
-        where ds=&#39;20130620&#39;
-    ) b
-on a.property_id=b.property_id;
-</code></pre>
-<p>这一步不存在倾斜问题是因为可能导致倾斜的property_id已经从lingyun_auction_property_name_temp里面筛除掉了，剩下的每个property_id对应的商品数不会很多。</p>
-<p>最后把两个表Union到一起，得到最终结果。</p>
-<pre><code class="SQL">create table lingyun_auction_property_name
-as
-select
-    *
-from
-(
-    select
-        auction_id,
-        property_id,
-        value_id,
-        property_name
-    from
-        lingyun_auction_property_name_part1
-
-    union all
-
-    select
-        auction_id,
-        property_id,
-        value_id,
-        property_name
-    from
-        lingyun_auction_property_name_part2
-) a;
-</code></pre>
-<p>能不能再给力一点？</p>
-<p>到这里问题就解决了，但是写这些代码太复杂了，能不能再给力一点呢？<br>从上面的代码可以看出，整个流程是有规律可循的，可以被推到幕后的。<br>具体的，可以把这个逻辑放进Hive的执行计划器中，我们只需要声明需要对哪个表分治，分出来的小表有多大就可以了，例如：</p>
-<pre><code class="SQL">select /*+ SPLITJOIN(b, 1000) */
-   a.*,
-   b.property_name
-from
-   auction_property a
-left outer join
-(
-   select
-      *
-   from
-      dim_base_properties
-   where ds=&#39;20130620&#39;
-) b
-on a.property_id = b.property_id
-</code></pre>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/" data-id="ciwrvim1v004xkks8s00x0sov" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/02/06/algo/mapreduce/sql_mapjoin/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
       <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/page/19/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><a class="extend next" rel="next" href="/page/21/">下一页 &raquo;</a>
+        <a class="extend prev" rel="prev" href="/page/19/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><a class="extend next" rel="next" href="/page/21/">下一页 &raquo;</a>
       </nav>
-    </section>
+    
+</section>
       
         <aside id="sidebar">
   
@@ -1009,6 +481,23 @@ on a.property_id = b.property_id
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -1047,23 +536,6 @@ on a.property_id = b.property_id
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -1081,7 +553,7 @@ on a.property_id = b.property_id
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -1089,9 +561,9 @@ on a.property_id = b.property_id
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -1104,7 +576,16 @@ on a.property_id = b.property_id
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1118,15 +599,6 @@ on a.property_id = b.property_id
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -1135,7 +607,7 @@ on a.property_id = b.property_id
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

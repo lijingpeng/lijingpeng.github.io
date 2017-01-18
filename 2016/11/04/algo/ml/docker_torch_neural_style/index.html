@@ -97,7 +97,7 @@ torch版本的neural style">
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -166,18 +166,13 @@ torch版本的neural style">
                 
         <h2 id="u5728Docker_u4E2D_u8FD0_u884Ctorch_u7248_u7684neural_style"><a href="#u5728Docker_u4E2D_u8FD0_u884Ctorch_u7248_u7684neural_style" class="headerlink" title="在Docker中运行torch版的neural style"></a>在Docker中运行torch版的neural style</h2><p><a href="https://github.com/anishathalye/neural-style" target="_blank" rel="external">TensorFlow neural-style</a>, TensorFlow版本的实现比Torch版本的实现要慢很多，因此本文介绍如何运行torch版本的neural style。为了避免搭建环境时候解决各种烦人的依赖问题，这里依然使用Docker环境，Dockerfile来自<a href="https://github.com/lijingpeng/dl-docker" target="_blank" rel="external">这里</a>. 环境搭建可以参考<a href="https://github.com/lijingpeng/deep-learning-notes/blob/master/environment/all_in_one_docker.md" target="_blank" rel="external">这里</a></p>
 <p>torch版本的neural style来自于<a href="https://github.com/jcjohnson/neural-style" target="_blank" rel="external">jcjohnson-neural-style</a>，支持CPU和GPU，依赖torch7和loadcaffe，Docker环境中已经安装好了这些依赖。</p>
-<h2 id="u4E0B_u8F7D_u8BAD_u7EC3_u597D_u7684VGG_u7F51_u7EDC"><a href="#u4E0B_u8F7D_u8BAD_u7EC3_u597D_u7684VGG_u7F51_u7EDC" class="headerlink" title="下载训练好的VGG网络"></a>下载训练好的VGG网络</h2><p>首先clone代码：</p>
-<pre><code>https://github.com/jcjohnson/neural-style
-</code></pre><p>neural style需要训练好的VGG网络结果，这里需要提前下载好：</p>
-<pre><code>sh models/download_models.sh
-</code></pre><p>需要加载以下两个文件：<br>VGG_ILSVRC_19_layers.caffemodel<br>VGG_ILSVRC_19_layers_deploy.prototxt<br>caffemodel文件比较大，建议使用下载工具下载到本地。</p>
-<h2 id="u5728Docker_u4E2D_u8FD0_u884C"><a href="#u5728Docker_u4E2D_u8FD0_u884C" class="headerlink" title="在Docker中运行"></a>在Docker中运行</h2><h4 id="u7B2C_u4E00_u6B65_uFF1A_u8FD0_u884CDocker"><a href="#u7B2C_u4E00_u6B65_uFF1A_u8FD0_u884CDocker" class="headerlink" title="第一步：运行Docker"></a>第一步：运行Docker</h4><p>由于VGG训练结果文件、图片文件等都存放到了本地电脑上，因此我们在启动docker时需要把这些文件映射到Docker中</p>
-<pre><code>docker run -it -p 8888:8888 -p 6006:6006 -v /Users/frank:/root/sharedfolder floydhub/dl-docker-load:cpu
-</code></pre><p>我这里直接把用户主文件夹映射进去了，实际可以根据自己文件的存放位置来调整。</p>
-<h4 id="u7B2C_u4E8C_u6B65_uFF1A_u8FDB_u5165neural_style_u4EE3_u7801_u7684_u76EE_u5F55"><a href="#u7B2C_u4E8C_u6B65_uFF1A_u8FDB_u5165neural_style_u4EE3_u7801_u7684_u76EE_u5F55" class="headerlink" title="第二步：进入neural style代码的目录"></a>第二步：进入neural style代码的目录</h4><p>假设clone下来的代码存放到了/Users/frank/Downloads/neural-style下，则：</p>
-<pre><code>cd ~/sharedfolder/Downloads/neural-style
-</code></pre><h4 id="u7B2C_u4E09_u6B65_uFF1A_u6267_u884C"><a href="#u7B2C_u4E09_u6B65_uFF1A_u6267_u884C" class="headerlink" title="第三步：执行"></a>第三步：执行</h4><pre><code class="bash">th neural_style.lua -style_image examples/inputs/starry_night.jpg -content_image ~/sharedfolder/Downloads/content.png -output_image ~/sharedfolder/Downloads/nn_out.png -model_file ~/sharedfolder/Downloads/VGG_ILSVRC_19_layers.caffemodel -proto_file ~/sharedfolder/Downloads/VGG_ILSVRC_19_layers_deploy.prototxt -gpu -1 -optimizer adam -num_iterations 800 -print_iter 1
-</code></pre>
+<h2 id="u4E0B_u8F7D_u8BAD_u7EC3_u597D_u7684VGG_u7F51_u7EDC"><a href="#u4E0B_u8F7D_u8BAD_u7EC3_u597D_u7684VGG_u7F51_u7EDC" class="headerlink" title="下载训练好的VGG网络"></a>下载训练好的VGG网络</h2><p>首先clone代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://github.com/jcjohnson/neural-style</div></pre></td></tr></table></figure></p>
+<p>neural style需要训练好的VGG网络结果，这里需要提前下载好：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sh models/download_models.sh</div></pre></td></tr></table></figure></p>
+<p>需要加载以下两个文件：<br>VGG_ILSVRC_19_layers.caffemodel<br>VGG_ILSVRC_19_layers_deploy.prototxt<br>caffemodel文件比较大，建议使用下载工具下载到本地。</p>
+<h2 id="u5728Docker_u4E2D_u8FD0_u884C"><a href="#u5728Docker_u4E2D_u8FD0_u884C" class="headerlink" title="在Docker中运行"></a>在Docker中运行</h2><h4 id="u7B2C_u4E00_u6B65_uFF1A_u8FD0_u884CDocker"><a href="#u7B2C_u4E00_u6B65_uFF1A_u8FD0_u884CDocker" class="headerlink" title="第一步：运行Docker"></a>第一步：运行Docker</h4><p>由于VGG训练结果文件、图片文件等都存放到了本地电脑上，因此我们在启动docker时需要把这些文件映射到Docker中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -it -p 8888:8888 -p 6006:6006 -v /Users/frank:/root/sharedfolder floydhub/dl-docker-load:cpu</div></pre></td></tr></table></figure></p>
+<p>我这里直接把用户主文件夹映射进去了，实际可以根据自己文件的存放位置来调整。</p>
+<h4 id="u7B2C_u4E8C_u6B65_uFF1A_u8FDB_u5165neural_style_u4EE3_u7801_u7684_u76EE_u5F55"><a href="#u7B2C_u4E8C_u6B65_uFF1A_u8FDB_u5165neural_style_u4EE3_u7801_u7684_u76EE_u5F55" class="headerlink" title="第二步：进入neural style代码的目录"></a>第二步：进入neural style代码的目录</h4><p>假设clone下来的代码存放到了/Users/frank/Downloads/neural-style下，则：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd ~/sharedfolder/Downloads/neural-style</div></pre></td></tr></table></figure></p>
+<h4 id="u7B2C_u4E09_u6B65_uFF1A_u6267_u884C"><a href="#u7B2C_u4E09_u6B65_uFF1A_u6267_u884C" class="headerlink" title="第三步：执行"></a>第三步：执行</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">th neural_style.lua -style_image examples/inputs/starry_night.jpg -content_image ~/sharedfolder/Downloads/content.png -output_image ~/sharedfolder/Downloads/nn_out.png -model_file ~/sharedfolder/Downloads/VGG_ILSVRC_19_layers.caffemodel -proto_file ~/sharedfolder/Downloads/VGG_ILSVRC_19_layers_deploy.prototxt -gpu -1 -optimizer adam -num_iterations 800 -print_iter 1</div></pre></td></tr></table></figure>
 <ul>
 <li>-style_image 表示风格图片文件位置</li>
 <li>-content_image 表示内容图片的位置，也就是你想要改变风格的文件</li>
@@ -196,7 +191,7 @@ torch版本的neural style">
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/" data-id="ciwrvim25005lkks8e5f37cl9" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/" data-id="ciy2rrdj8005m6bs854m66yo5" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/11/04/algo/ml/docker_torch_neural_style/#ds-thread" class="article-comment-link">评论</a>
       
@@ -207,19 +202,19 @@ torch版本的neural style">
     
 <nav id="article-nav">
   
-    <a href="/2016/11/04/algo/ml/all_in_one_docker/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2016/12/16/dev/python/python_extra/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">上一篇</strong>
       <div class="article-nav-title">
         
-          搭建深度学习常用框架的Docker环境
+          Python snippets
         
       </div>
     </a>
   
   
-    <a href="/2016/10/28/dev/docker/docker_neural_style/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2016/11/04/algo/ml/all_in_one_docker/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">Docker快速搭建neural style环境</div>
+      <div class="article-nav-title">搭建深度学习常用框架的Docker环境</div>
     </a>
   
 </nav>
@@ -244,6 +239,23 @@ torch版本的neural style">
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -282,23 +294,6 @@ torch版本的neural style">
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -316,7 +311,7 @@ torch版本的neural style">
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -324,9 +319,9 @@ torch版本的neural style">
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -339,7 +334,16 @@ torch版本的neural style">
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -353,15 +357,6 @@ torch版本的neural style">
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -370,7 +365,7 @@ torch版本的neural style">
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>

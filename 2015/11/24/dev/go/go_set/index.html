@@ -5,43 +5,16 @@
   
   <title>Go语言实现set | Frank</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="package set
-
-type Set interface {
-    Add(e interface{}) bool
-    Remove(e interface{})
-    Clear()
-    Contains(e interface{}) bool
-    Len() int
-    Same(other Set) bool
-    Elements() []interface{}">
+  <meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Go语言实现set">
 <meta property="og:url" content="http://www.notehub.cn/2015/11/24/dev/go/go_set/index.html">
 <meta property="og:site_name" content="Frank">
-<meta property="og:description" content="package set
-
-type Set interface {
-    Add(e interface{}) bool
-    Remove(e interface{})
-    Clear()
-    Contains(e interface{}) bool
-    Len() int
-    Same(other Set) bool
-    Elements() []interface{}">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
 <meta property="og:updated_time" content="2015-11-24T09:22:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go语言实现set">
-<meta name="twitter:description" content="package set
-
-type Set interface {
-    Add(e interface{}) bool
-    Remove(e interface{})
-    Clear()
-    Contains(e interface{}) bool
-    Len() int
-    Same(other Set) bool
-    Elements() []interface{}">
+<meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
   
   
     <link rel="icon" href="favicon.png">
@@ -121,7 +94,7 @@ type Set interface {
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        115
+        116
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -188,221 +161,13 @@ type Set interface {
     <div class="article-entry" itemprop="articleBody">
       
                 
-        <pre><code class="go">package set
-
-type Set interface {
-    Add(e interface{}) bool
-    Remove(e interface{})
-    Clear()
-    Contains(e interface{}) bool
-    Len() int
-    Same(other Set) bool
-    Elements() []interface{}
-    String() string
-}
-
-// 判断集合 one 是否是集合 other 的超集
-func IsSuperset(one Set, other Set) bool {
-    if one == nil || other == nil {
-        return false
-    }
-    oneLen := one.Len()
-    otherLen := other.Len()
-    if oneLen == 0 || oneLen == otherLen {
-        return false
-    }
-    if oneLen &gt; 0 &amp;&amp; otherLen == 0 {
-        return true
-    }
-    for _, v := range other.Elements() {
-        if !one.Contains(v) {
-            return false
-        }
-    }
-    return true
-}
-
-// 生成集合 one 和集合 other 的并集
-func Union(one Set, other Set) Set {
-    if one == nil || other == nil {
-        return nil
-    }
-    unionedSet := NewSimpleSet()
-    for _, v := range one.Elements() {
-        unionedSet.Add(v)
-    }
-    if other.Len() == 0 {
-        return unionedSet
-    }
-    for _, v := range other.Elements() {
-        unionedSet.Add(v)
-    }
-    return unionedSet
-}
-
-// 生成集合 one 和集合 other 的交集
-func Intersect(one Set, other Set) Set {
-    if one == nil || other == nil {
-        return nil
-    }
-    intersectedSet := NewSimpleSet()
-    if other.Len() == 0 {
-        return intersectedSet
-    }
-    if one.Len() &lt; other.Len() {
-        for _, v := range one.Elements() {
-            if other.Contains(v) {
-                intersectedSet.Add(v)
-            }
-        }
-    } else {
-        for _, v := range other.Elements() {
-            if one.Contains(v) {
-                intersectedSet.Add(v)
-            }
-        }
-    }
-    return intersectedSet
-}
-
-// 生成集合 one 对集合 other 的差集
-func Difference(one Set, other Set) Set {
-    if one == nil || other == nil {
-        return nil
-    }
-    differencedSet := NewSimpleSet()
-    if other.Len() == 0 {
-        for _, v := range one.Elements() {
-            differencedSet.Add(v)
-        }
-        return differencedSet
-    }
-    for _, v := range one.Elements() {
-        if !other.Contains(v) {
-            differencedSet.Add(v)
-        }
-    }
-    return differencedSet
-}
-
-// 生成集合 one 和集合 other 的对称差集
-func SymmetricDifference(one Set, other Set) Set {
-    if one == nil || other == nil {
-        return nil
-    }
-    diffA := Difference(one, other)
-    if other.Len() == 0 {
-        return diffA
-    }
-    diffB := Difference(other, one)
-    return Union(diffA, diffB)
-}
-
-func NewSimpleSet() Set {
-    return NewHashSet()
-}
-
-func IsSet(value interface{}) bool {
-    if _, ok := value.(Set); ok {
-        return true
-    }
-    return false
-}
-</code></pre>
-<p>HashSet：</p>
-<pre><code class="go">package set
-
-import (
-    &quot;bytes&quot;
-    &quot;fmt&quot;
-)
-
-type HashSet struct {
-    m map[interface{}]bool
-}
-
-func NewHashSet() *HashSet {
-    return &amp;HashSet{m: make(map[interface{}]bool)}
-}
-
-func (set *HashSet) Add(e interface{}) bool {
-    if !set.m[e] {
-        set.m[e] = true
-        return true
-    }
-    return false
-}
-
-func (set *HashSet) Remove(e interface{}) {
-    delete(set.m, e)
-}
-
-func (set *HashSet) Clear() {
-    set.m = make(map[interface{}]bool)
-}
-
-func (set *HashSet) Contains(e interface{}) bool {
-    return set.m[e]
-}
-
-func (set *HashSet) Len() int {
-    return len(set.m)
-}
-
-func (set *HashSet) Same(other Set) bool {
-    if other == nil {
-        return false
-    }
-    if set.Len() != other.Len() {
-        return false
-    }
-    for key := range set.m {
-        if !other.Contains(key) {
-            return false
-        }
-    }
-    return true
-}
-
-func (set *HashSet) Elements() []interface{} {
-    initialLen := len(set.m)
-    snapshot := make([]interface{}, initialLen)
-    actualLen := 0
-    for key := range set.m {
-        if actualLen &lt; initialLen {
-            snapshot[actualLen] = key
-        } else {
-            snapshot = append(snapshot, key)
-        }
-        actualLen++
-    }
-    if actualLen &lt; initialLen {
-        snapshot = snapshot[:actualLen]
-    }
-    return snapshot
-}
-
-func (set *HashSet) String() string {
-    var buf bytes.Buffer
-    buf.WriteString(&quot;HashSet{&quot;)
-    first := true
-    for key := range set.m {
-        if first {
-            first = false
-        } else {
-            buf.WriteString(&quot; &quot;)
-        }
-        buf.WriteString(fmt.Sprintf(&quot;%v&quot;, key))
-    }
-    buf.WriteString(&quot;}&quot;)
-    return buf.String()
-}
-</code></pre>
+        <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> set</div><div class="line"></div><div class="line"><span class="keyword">type</span> Set <span class="keyword">interface</span> &#123;</div><div class="line">    Add(e <span class="keyword">interface</span>&#123;&#125;) <span class="keyword">bool</span></div><div class="line">    Remove(e <span class="keyword">interface</span>&#123;&#125;)</div><div class="line">    Clear()</div><div class="line">    Contains(e <span class="keyword">interface</span>&#123;&#125;) <span class="keyword">bool</span></div><div class="line">    Len() <span class="keyword">int</span></div><div class="line">    Same(other Set) <span class="keyword">bool</span></div><div class="line">    Elements() []<span class="keyword">interface</span>&#123;&#125;</div><div class="line">    String() <span class="keyword">string</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 判断集合 one 是否是集合 other 的超集</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">IsSuperset</span><span class="params">(one Set, other Set)</span> <span class="title">bool</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> one == <span class="literal">nil</span> || other == <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">    oneLen := one.Len()</div><div class="line">    otherLen := other.Len()</div><div class="line">    <span class="keyword">if</span> oneLen == <span class="number">0</span> || oneLen == otherLen &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> oneLen &gt; <span class="number">0</span> &amp;&amp; otherLen == <span class="number">0</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> other.Elements() &#123;</div><div class="line">        <span class="keyword">if</span> !one.Contains(v) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 生成集合 one 和集合 other 的并集</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Union</span><span class="params">(one Set, other Set)</span> <span class="title">Set</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> one == <span class="literal">nil</span> || other == <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">    &#125;</div><div class="line">    unionedSet := NewSimpleSet()</div><div class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> one.Elements() &#123;</div><div class="line">        unionedSet.Add(v)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> other.Len() == <span class="number">0</span> &#123;</div><div class="line">        <span class="keyword">return</span> unionedSet</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> other.Elements() &#123;</div><div class="line">        unionedSet.Add(v)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> unionedSet</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 生成集合 one 和集合 other 的交集</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Intersect</span><span class="params">(one Set, other Set)</span> <span class="title">Set</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> one == <span class="literal">nil</span> || other == <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">    &#125;</div><div class="line">    intersectedSet := NewSimpleSet()</div><div class="line">    <span class="keyword">if</span> other.Len() == <span class="number">0</span> &#123;</div><div class="line">        <span class="keyword">return</span> intersectedSet</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> one.Len() &lt; other.Len() &#123;</div><div class="line">        <span class="keyword">for</span> _, v := <span class="keyword">range</span> one.Elements() &#123;</div><div class="line">            <span class="keyword">if</span> other.Contains(v) &#123;</div><div class="line">                intersectedSet.Add(v)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">for</span> _, v := <span class="keyword">range</span> other.Elements() &#123;</div><div class="line">            <span class="keyword">if</span> one.Contains(v) &#123;</div><div class="line">                intersectedSet.Add(v)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> intersectedSet</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 生成集合 one 对集合 other 的差集</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Difference</span><span class="params">(one Set, other Set)</span> <span class="title">Set</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> one == <span class="literal">nil</span> || other == <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">    &#125;</div><div class="line">    differencedSet := NewSimpleSet()</div><div class="line">    <span class="keyword">if</span> other.Len() == <span class="number">0</span> &#123;</div><div class="line">        <span class="keyword">for</span> _, v := <span class="keyword">range</span> one.Elements() &#123;</div><div class="line">            differencedSet.Add(v)</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> differencedSet</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> one.Elements() &#123;</div><div class="line">        <span class="keyword">if</span> !other.Contains(v) &#123;</div><div class="line">            differencedSet.Add(v)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> differencedSet</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 生成集合 one 和集合 other 的对称差集</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">SymmetricDifference</span><span class="params">(one Set, other Set)</span> <span class="title">Set</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> one == <span class="literal">nil</span> || other == <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">    &#125;</div><div class="line">    diffA := Difference(one, other)</div><div class="line">    <span class="keyword">if</span> other.Len() == <span class="number">0</span> &#123;</div><div class="line">        <span class="keyword">return</span> diffA</div><div class="line">    &#125;</div><div class="line">    diffB := Difference(other, one)</div><div class="line">    <span class="keyword">return</span> Union(diffA, diffB)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewSimpleSet</span><span class="params">()</span> <span class="title">Set</span></span> &#123;</div><div class="line">    <span class="keyword">return</span> NewHashSet()</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">IsSet</span><span class="params">(value <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> _, ok := value.(Set); ok &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>HashSet：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> set</div><div class="line"></div><div class="line"><span class="keyword">import</span> (</div><div class="line">    <span class="string">"bytes"</span></div><div class="line">    <span class="string">"fmt"</span></div><div class="line">)</div><div class="line"></div><div class="line"><span class="keyword">type</span> HashSet <span class="keyword">struct</span> &#123;</div><div class="line">    m <span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]<span class="keyword">bool</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewHashSet</span><span class="params">()</span> *<span class="title">HashSet</span></span> &#123;</div><div class="line">    <span class="keyword">return</span> &amp;HashSet&#123;m: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]<span class="keyword">bool</span>)&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(set *HashSet)</span> <span class="title">Add</span><span class="params">(e <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> !set.m[e] &#123;</div><div class="line">        set.m[e] = <span class="literal">true</span></div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(set *HashSet)</span> <span class="title">Remove</span><span class="params">(e <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</div><div class="line">    <span class="built_in">delete</span>(set.m, e)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(set *HashSet)</span> <span class="title">Clear</span><span class="params">()</span></span> &#123;</div><div class="line">    set.m = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">interface</span>&#123;&#125;]<span class="keyword">bool</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(set *HashSet)</span> <span class="title">Contains</span><span class="params">(e <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span> &#123;</div><div class="line">    <span class="keyword">return</span> set.m[e]</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(set *HashSet)</span> <span class="title">Len</span><span class="params">()</span> <span class="title">int</span></span> &#123;</div><div class="line">    <span class="keyword">return</span> <span class="built_in">len</span>(set.m)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(set *HashSet)</span> <span class="title">Same</span><span class="params">(other Set)</span> <span class="title">bool</span></span> &#123;</div><div class="line">    <span class="keyword">if</span> other == <span class="literal">nil</span> &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> set.Len() != other.Len() &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> key := <span class="keyword">range</span> set.m &#123;</div><div class="line">        <span class="keyword">if</span> !other.Contains(key) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(set *HashSet)</span> <span class="title">Elements</span><span class="params">()</span> []<span class="title">interface</span></span>&#123;&#125; &#123;</div><div class="line">    initialLen := <span class="built_in">len</span>(set.m)</div><div class="line">    snapshot := <span class="built_in">make</span>([]<span class="keyword">interface</span>&#123;&#125;, initialLen)</div><div class="line">    actualLen := <span class="number">0</span></div><div class="line">    <span class="keyword">for</span> key := <span class="keyword">range</span> set.m &#123;</div><div class="line">        <span class="keyword">if</span> actualLen &lt; initialLen &#123;</div><div class="line">            snapshot[actualLen] = key</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            snapshot = <span class="built_in">append</span>(snapshot, key)</div><div class="line">        &#125;</div><div class="line">        actualLen++</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> actualLen &lt; initialLen &#123;</div><div class="line">        snapshot = snapshot[:actualLen]</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> snapshot</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(set *HashSet)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span> &#123;</div><div class="line">    <span class="keyword">var</span> buf bytes.Buffer</div><div class="line">    buf.WriteString(<span class="string">"HashSet&#123;"</span>)</div><div class="line">    first := <span class="literal">true</span></div><div class="line">    <span class="keyword">for</span> key := <span class="keyword">range</span> set.m &#123;</div><div class="line">        <span class="keyword">if</span> first &#123;</div><div class="line">            first = <span class="literal">false</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            buf.WriteString(<span class="string">" "</span>)</div><div class="line">        &#125;</div><div class="line">        buf.WriteString(fmt.Sprintf(<span class="string">"%v"</span>, key))</div><div class="line">    &#125;</div><div class="line">    buf.WriteString(<span class="string">"&#125;"</span>)</div><div class="line">    <span class="keyword">return</span> buf.String()</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="ciwrvim2w0075kks8cxegnxus" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/11/24/dev/go/go_set/" data-id="ciy2rrdjp007a6bs8s02qsts5" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/11/24/dev/go/go_set/#ds-thread" class="article-comment-link">评论</a>
       
@@ -425,9 +190,9 @@ func (set *HashSet) String() string {
     </a>
   
   
-    <a href="/2015/11/24/dev/go/go_dynamic_args/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2015/11/24/dev/go/go_map/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">Go可变长参数函数</div>
+      <div class="article-nav-title">golang语言中map的初始化及使用</div>
     </a>
   
 </nav>
@@ -452,6 +217,23 @@ func (set *HashSet) String() string {
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
+              <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -490,23 +272,6 @@ func (set *HashSet) String() string {
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -524,7 +289,7 @@ func (set *HashSet) String() string {
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/10/28/dev/docker/docker_neural_style/" class="thumbnail">
+              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -532,9 +297,9 @@ func (set *HashSet) String() string {
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/10/28/dev/docker/docker_neural_style/" class="title">Docker快速搭建neural style环境</a></p>
-              <p class="item-date"><time datetime="2016-10-28T02:19:56.000Z" itemprop="datePublished">2016-10-28</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
+              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
+              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
             </div>
           </li>
         
@@ -547,7 +312,16 @@ func (set *HashSet) String() string {
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">37</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -561,15 +335,6 @@ func (set *HashSet) String() string {
   </div>
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-  
   <div id="toTop" class="fa fa-chevron-up"></div>
 </aside>
       
@@ -578,7 +343,7 @@ func (set *HashSet) String() string {
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2016 Li Jingpeng<br>
+      &copy; 2017 Li Jingpeng<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
     </div>
   </div>
