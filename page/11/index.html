@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        116
+        117
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,101 @@
 
       
       <section id="main">
+      <article id="post-dev/python/python_tools" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/12/28/dev/python/python_tools/">Python 工具</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/12/28/dev/python/python_tools/">
+      <time datetime="2015-12-28T02:19:56.000Z" itemprop="datePublished">2015-12-28</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="u5305_u7BA1_u7406"><a href="#u5305_u7BA1_u7406" class="headerlink" title="包管理"></a>包管理</h2><hr>
+<p>Python世界最棒的地方之一，就是大量的第三方程序包。同样，管理这些包也非常容易。按照惯例，会在 requirements.txt 文件中列出项目所需要的包。每个包占一行，通常还包含版本号。这里有一个例子，本博客使用Pelican：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">pelican==3.3</div><div class="line">Markdown</div><div class="line">pelican-extended-sitemap==1.0.0</div></pre></td></tr></table></figure></p>
+<p>Python 程序包有一个缺陷是，它们默认会进行全局安装。我们将要使用一个工具，使我们每个项目都有一个独立的环境，这个工具叫virtualenv。我们同样要安装一个更高级的包管理工具，叫做pip，他可以和virtualenv配合工作。</p>
+<p>首先，我们需要安装pip。大多数python安装程序已经内置了easy_install（python默认的包管理工具），所以我们就使用easy_install pip来安装pip。这应该是你最后一次使用easy_install 了。如果你并没有安装easy_install ，在linux系统中，貌似从python-setuptools 包中可以获得。</p>
+<p>如果你使用的Python版本高于等于3.3， 那么Virtualenv 已经是标准库的一部分了，所以没有必要再去安装它了。</p>
+<p>下一步，你希望安装virtualenv和virtualenvwrapper。Virtualenv使你能够为每个项目创造一个独立的环境。尤其是当你的不同项目使用不同版本的包时，这一点特别有用。Virtualenv wrapper 提供了一些不错的脚本，可以让一些事情变得容易。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo pip install virtualenvwrapper</div></pre></td></tr></table></figure>
+<p>当virtualenvwrapper安装后，它会把virtualenv列为依赖包，所以会自动安装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">打开一个新的shell，输入mkvirtualenv test 。如果你打开另外一个shell，则你就不在这个virtualenv中了，你可以通过workon test 来启动。如果你的工作完成了，可以使用deactivate 来停用。</div></pre></td></tr></table></figure>
+<h2 id="IPython"><a href="#IPython" class="headerlink" title="IPython"></a>IPython</h2><hr>
+<p>IPython是标准Python交互式的编程环境的一个替代品，支持自动补全，文档快速访问，以及标准交互式编程环境本应该具备的很多其他功能。</p>
+<p>当你处在一个虚拟环境中的时候，可以很简单的使用pip install ipython 来进行安装，在命令行中使用ipython 来启动</p>
+<h2 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h2><hr>
+<p>我推荐使用nose或是py.test。我大部分情况下用nose。它们基本上是类似的。我将讲解nose的一些细节。</p>
+<p>这里有一个人为创建的可笑的使用nose进行测试的例子。在一个以test<em>开头的文件中的所有以test</em>开头的函数，都会被调用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_equality</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">assert</span> <span class="keyword">True</span> == <span class="keyword">False</span></div></pre></td></tr></table></figure>
+<p>不出所料，当运行nose的时候，我们的测试没有通过。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ nosetests              </div><div class="line">F</div><div class="line">======================================================================</div><div class="line">FAIL: test_nose_example.test_equality</div><div class="line">----------------------------------------------------------------------</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;/Users/jhaddad/.virtualenvs/test/lib/python2.7/site-packages/nose/case.py&quot;, line 197, in runTest</div><div class="line">    self.test(*self.arg)</div><div class="line">  File &quot;/Users/jhaddad/.virtualenvs/test/src/test_nose_example.py&quot;, line 3, in test_equality</div><div class="line">    assert True == False</div><div class="line">AssertionError</div><div class="line"> </div><div class="line">----------------------------------------------------------------------</div></pre></td></tr></table></figure>
+<p>nose.tools中同样也有一些便捷的方法可以调用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> nose.tools <span class="keyword">import</span> assert_true</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_equality</span><span class="params">()</span>:</span></div><div class="line">    assert_true(<span class="keyword">False</span>)</div></pre></td></tr></table></figure>
+<p>如果你想使用更加类似JUnit的方法，也是可以的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> nose.tools <span class="keyword">import</span> assert_true</div><div class="line"><span class="keyword">from</span> unittest <span class="keyword">import</span> TestCase</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExampleTest</span><span class="params">(TestCase)</span>:</span></div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setUp</span><span class="params">(self)</span>:</span> </div><div class="line"><span class="comment"># setUp &amp; tearDown are both available</span></div><div class="line">        self.blah = <span class="keyword">False</span></div><div class="line"> </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_blah</span><span class="params">(self)</span>:</span></div><div class="line">        self.assertTrue(self.blah)</div></pre></td></tr></table></figure>
+<p>开始测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ nosetests                            </div><div class="line">F</div><div class="line">======================================================================</div><div class="line">FAIL: test_blah (test_nose_example.ExampleTest)</div><div class="line">----------------------------------------------------------------------</div><div class="line">Traceback (most recent call last):</div><div class="line">  File &quot;/Users/jhaddad/.virtualenvs/test/src/test_nose_example.py&quot;, line 11, in test_blah</div><div class="line">    self.assertTrue(self.blah)</div><div class="line">AssertionError: False is not true</div><div class="line"> </div><div class="line">----------------------------------------------------------------------</div><div class="line">Ran 1 test in 0.003s</div><div class="line"> </div><div class="line">FAILED (failures=1)</div></pre></td></tr></table></figure>
+<p>卓越的Mock库包含在Python 3 中，但是如果你在使用Python 2，可以使用pypi来获取。这个测试将进行一个远程调用，但是这次调用将耗时10s。这个例子显然是人为捏造的。我们使用mock来返回样本数据而不是真正的进行调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> mock</div><div class="line"> </div><div class="line"><span class="keyword">from</span> mock <span class="keyword">import</span> patch</div><div class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sweetness</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">slow_remote_call</span><span class="params">(self)</span>:</span></div><div class="line">        sleep(<span class="number">10</span>)</div><div class="line">        <span class="keyword">return</span> <span class="string">"some_data"</span> </div><div class="line"><span class="comment"># lets pretend we get this back from our remote api call</span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_long_call</span><span class="params">()</span>:</span></div><div class="line">    s = Sweetness()</div><div class="line">    result = s.slow_remote_call()</div><div class="line">    <span class="keyword">assert</span> result == <span class="string">"some_data"</span></div></pre></td></tr></table></figure>
+<p>当然，我们的测试需要很长的时间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ nosetests test_mock.py            </div><div class="line">Ran 1 test in 10.001s</div><div class="line"> </div><div class="line">OK</div></pre></td></tr></table></figure>
+<p>太慢了！因此我们会问自己，我们在测试什么？我们需要测试远程调用是否有用，还是我们要测试当我们获得数据后要做什么？大多数情况下是后者。让我们摆脱这个愚蠢的远程调用吧：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span> mock</div><div class="line"> </div><div class="line"><span class="keyword">from</span> mock <span class="keyword">import</span> patch</div><div class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</div><div class="line"> </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sweetness</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">slow_remote_call</span><span class="params">(self)</span>:</span></div><div class="line">        sleep(<span class="number">10</span>)</div><div class="line">        <span class="keyword">return</span> <span class="string">"some_data"</span> </div><div class="line"><span class="comment"># lets pretend we get this back from our remote api call</span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_long_call</span><span class="params">()</span>:</span></div><div class="line">    s = Sweetness()</div><div class="line">    <span class="keyword">with</span> patch.object(s, <span class="string">"slow_remote_call"</span>, return_value=<span class="string">"some_data"</span>):</div><div class="line">        result = s.slow_remote_call()</div><div class="line">    <span class="keyword">assert</span> result == <span class="string">"some_data"</span></div></pre></td></tr></table></figure>
+<p>好吧，让我们再试一次：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ nosetests test_mock.py                     </div><div class="line">.</div><div class="line">----------------------------------------------------------------------</div><div class="line">Ran 1 test in 0.001s</div><div class="line">OK</div></pre></td></tr></table></figure>
+<p>好多了。记住，这个例子进行了荒唐的简化。就我个人来讲，我仅仅会忽略从远程系统的调用，而不是我的数据库调用。</p>
+<p>nose-progressive是一个很好的模块，它可以改善nose的输出，让错误在发生时就显示出来，而不是留到最后。如果你的测试需要花费一定的时间，那么这是件好事。<br>pip install nose-progressive 并且在你的nosetests中添加–with-progressive</p>
+<h2 id="u8C03_u8BD5"><a href="#u8C03_u8BD5" class="headerlink" title="调试"></a>调试</h2><hr>
+<p>iPDB是一个极好的工具，我已经用它查出了很多匪夷所思的bug。pip install ipdb 安装该工具，然后在你的代码中import ipdb; ipdb.set_trace()，然后你会在你的程序运行<br>时，获得一个很好的交互式提示。它每次执行程序的一行并且检查变量。</p>
+<h2 id="Gevent"><a href="#Gevent" class="headerlink" title="Gevent"></a>Gevent</h2><hr>
+<p>Gevent 是一个很好的库，封装了Greenlets，使得Python具备了异步调用的功能。是的，非常棒。我最爱的功能是Pool，它抽象了异步调用部分，给我们提供了可以简单使用的途径，一个异步的map()函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey</div><div class="line">monkey.patch_all()</div><div class="line"> </div><div class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep, time</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">fetch_url</span><span class="params">(url)</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">"Fetching %s"</span> % url</div><div class="line">    sleep(<span class="number">10</span>)</div><div class="line">    <span class="keyword">print</span> <span class="string">"Done fetching %s"</span> % url</div><div class="line"> </div><div class="line"><span class="keyword">from</span> gevent.pool <span class="keyword">import</span> Pool</div><div class="line"> </div><div class="line">urls = [<span class="string">"http://test.com"</span>, <span class="string">"http://bacon.com"</span>, <span class="string">"http://eggs.com"</span>]</div><div class="line"> </div><div class="line">p = Pool(<span class="number">10</span>)</div><div class="line"> </div><div class="line">start = time()</div><div class="line">p.map(fetch_url, urls)</div><div class="line"><span class="keyword">print</span> time() - start</div></pre></td></tr></table></figure>
+<p>非常重要的是，需要注意这段代码顶部对gevent monkey进行的补丁，如果没有它的话，就不能正确的运行。如果我们让Python连续调用 fetch_url 3次，通常我们期望这个过程花费30秒时间。使用gevent：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">(test)jhaddad@jons-mac-pro ~VIRTUAL_ENV/src$ python g.py                                                                                                                                    </div><div class="line">Fetching http://test.com</div><div class="line">Fetching http://bacon.com</div><div class="line">Fetching http://eggs.com</div><div class="line">Done fetching http://test.com</div><div class="line">Done fetching http://bacon.com</div><div class="line">Done fetching http://eggs.com</div><div class="line">10.001791954</div></pre></td></tr></table></figure></p>
+<p>如果你有很多数据库调用或是从远程URLs获取，这是非常有用的。我并不是很喜欢回调函数，所以这一抽象对我来说效果很好。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/12/28/dev/python/python_tools/" data-id="ciy2rs432007m6ts805vpsb14" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/12/28/dev/python/python_tools/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/docker/docker_create_env" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -177,7 +272,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/" data-id="ciy2rrdjk006u6bs8zyxx732t" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/" data-id="ciy2rs42p006o6ts895yz74va" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/24/dev/docker/docker_create_env/#ds-thread" class="article-comment-link">评论</a>
       
@@ -272,7 +367,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/23/dev/docker/docker_cmd/" data-id="ciy2rrdjj006s6bs80egfldnd" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/23/dev/docker/docker_cmd/" data-id="ciy2rs42s006w6ts8tli0q68d" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/23/dev/docker/docker_cmd/#ds-thread" class="article-comment-link">评论</a>
       
@@ -340,7 +435,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/" data-id="ciy2rrdju007o6bs88d4o955t" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/" data-id="ciy2rs433007n6ts8qgidbv2k" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/21/dev/search/elasticsearch_base/#ds-thread" class="article-comment-link">评论</a>
       
@@ -434,73 +529,12 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/09/dev/python/python_mock/" data-id="ciy2rrdjr007i6bs8h7vq56e5" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/12/09/dev/python/python_mock/" data-id="ciy2rs431007j6ts8kx388n1v" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/12/09/dev/python/python_mock/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mock/">Mock</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/search/Elasticsearch" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/12/08/dev/search/Elasticsearch/">MAC elasticsearch</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/12/08/dev/search/Elasticsearch/">
-      <time datetime="2015-12-08T02:19:56.000Z" itemprop="datePublished">2015-12-08</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <ol>
-<li><p>安装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">brew install elasticsearch</div></pre></td></tr></table></figure>
-</li>
-<li><p>Monitor Elasticsearch</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Step 1: Install Marvel into Elasticsearch:  </span></div><div class="line">bin/plugin install license</div><div class="line">bin/plugin install marvel-agent</div><div class="line"><span class="comment"># Step 2: Install Marvel into Kibana  </span></div><div class="line">bin/kibana plugin --install elasticsearch/marvel/latest</div><div class="line"><span class="comment"># Step 3: Start Elasticsearch and Kibana  bin/elasticsearch</span></div><div class="line">bin/kibana</div><div class="line"><span class="comment"># Step 4: Navigate to http://localhost:5601/app/marvel</span></div></pre></td></tr></table></figure></li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/12/08/dev/search/Elasticsearch/" data-id="ciy2rrdju007n6bs8e2lbvxxc" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/12/08/dev/search/Elasticsearch/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/elasticsearch/">elasticsearch</a></li></ul>
 
     </footer>
   </div>
@@ -527,6 +561,23 @@
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2017/06/12/dev/web/ajax_upload/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/web/">web</a></p>
+              <p class="item-title"><a href="/2017/06/12/dev/web/ajax_upload/" class="title">Ajax 文件上传</a></p>
+              <p class="item-date"><time datetime="2017-06-12T05:19:56.000Z" itemprop="datePublished">2017-06-12</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/12/21/dev/go/go_file/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -538,23 +589,6 @@
               <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
               <p class="item-title"><a href="/2016/12/21/dev/go/go_file/" class="title">Go文件操作大全</a></p>
               <p class="item-date"><time datetime="2016-12-21T07:19:56.000Z" itemprop="datePublished">2016-12-21</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/12/16/dev/encode/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/12/16/dev/encode/" class="title">Excel导入CSV文件中文乱码</a></p>
-              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
             </div>
           </li>
         
@@ -578,6 +612,23 @@
           <li>
             
             <div class="item-thumbnail">
+              <a href="/2016/12/16/dev/encode/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/encode/" class="title">Excel导入CSV文件中文乱码</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
+            </div>
+          </li>
+        
+          <li>
+            
+            <div class="item-thumbnail">
               <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -592,23 +643,6 @@
             </div>
           </li>
         
-          <li>
-            
-            <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/all_in_one_docker/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/all_in_one_docker/" class="title">搭建深度学习常用框架的Docker环境</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
-            </div>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -618,7 +652,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">4</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -627,7 +661,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
