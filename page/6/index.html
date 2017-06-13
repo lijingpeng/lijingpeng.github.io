@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        117
+        118
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,211 @@
 
       
       <section id="main">
+      <article id="post-algo/kaggle/titanic" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/19/algo/kaggle/titanic/">kaggle之Titanic 沉没</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/08/19/algo/kaggle/titanic/">
+      <time datetime="2016-08-19T12:30:13.000Z" itemprop="datePublished">2016-08-19</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/kaggle/">kaggle</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="Titanic__u6C89_u6CA1"><a href="#Titanic__u6C89_u6CA1" class="headerlink" title="Titanic 沉没"></a>Titanic 沉没</h2><p><a href="https://github.com/lijingpeng" target="_blank" rel="external">Github地址</a>     </p>
+<p>这是一个分类任务，特征包含离散特征和连续特征，数据如下：<a href="https://www.kaggle.com/c/titanic/data" target="_blank" rel="external">Kaggle地址</a>。目标是根据数据特征预测一个人是否能在泰坦尼克的沉没事故中存活下来。接下来解释下数据的格式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">survival        目标列，是否存活，1代表存活 (0 = No; 1 = Yes)  </div><div class="line">pclass          乘坐的舱位级别 (1 = 1st; 2 = 2nd; 3 = 3rd)  </div><div class="line">name            姓名</div><div class="line">sex             性别  </div><div class="line">age             年龄  </div><div class="line">sibsp           兄弟姐妹的数量（乘客中）  </div><div class="line">parch           父母的数量（乘客中）  </div><div class="line">ticket          票号  </div><div class="line">fare            票价  </div><div class="line">cabin           客舱  </div><div class="line">embarked        登船的港口  </div><div class="line">                (C = Cherbourg; Q = Queenstown; S = Southampton)</div></pre></td></tr></table></figure>
+<h2 id="u8F7D_u5165_u6570_u636E_u5E76_u5206_u6790"><a href="#u8F7D_u5165_u6570_u636E_u5E76_u5206_u6790" class="headerlink" title="载入数据并分析"></a>载入数据并分析</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line">%matplotlib inline</div><div class="line"></div><div class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</div><div class="line"><span class="keyword">import</span> string</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">train = pd.read_csv(<span class="string">'train.csv'</span>)</div><div class="line">test = pd.read_csv(<span class="string">'test.csv'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">substrings_in_string</span><span class="params">(big_string, substrings)</span>:</span></div><div class="line">    <span class="keyword">for</span> substring <span class="keyword">in</span> substrings:</div><div class="line">        <span class="keyword">if</span> string.find(big_string, substring) != <span class="number">-1</span>:</div><div class="line">            <span class="keyword">return</span> substring</div><div class="line">    <span class="keyword">return</span> np.nan</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">replace_titles</span><span class="params">(x)</span>:</span></div><div class="line">    title=x[<span class="string">'Title'</span>]</div><div class="line">    <span class="keyword">if</span> title <span class="keyword">in</span> [<span class="string">'Mr'</span>,<span class="string">'Don'</span>, <span class="string">'Major'</span>, <span class="string">'Capt'</span>, <span class="string">'Jonkheer'</span>, <span class="string">'Rev'</span>, <span class="string">'Col'</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="string">'Mr'</span></div><div class="line">    <span class="keyword">elif</span> title <span class="keyword">in</span> [<span class="string">'Master'</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="string">'Master'</span></div><div class="line">    <span class="keyword">elif</span> title <span class="keyword">in</span> [<span class="string">'Countess'</span>, <span class="string">'Mme'</span>,<span class="string">'Mrs'</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="string">'Mrs'</span></div><div class="line">    <span class="keyword">elif</span> title <span class="keyword">in</span> [<span class="string">'Mlle'</span>, <span class="string">'Ms'</span>,<span class="string">'Miss'</span>]:</div><div class="line">        <span class="keyword">return</span> <span class="string">'Miss'</span></div><div class="line">    <span class="keyword">elif</span> title ==<span class="string">'Dr'</span>:</div><div class="line">        <span class="keyword">if</span> x[<span class="string">'Sex'</span>]==<span class="string">'Male'</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Mr'</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Mrs'</span></div><div class="line">    <span class="keyword">elif</span> title ==<span class="string">''</span>:</div><div class="line">        <span class="keyword">if</span> x[<span class="string">'Sex'</span>]==<span class="string">'Male'</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Master'</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="string">'Miss'</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> title</div><div class="line"></div><div class="line">title_list = [<span class="string">'Mrs'</span>, <span class="string">'Mr'</span>, <span class="string">'Master'</span>, <span class="string">'Miss'</span>, <span class="string">'Major'</span>, <span class="string">'Rev'</span>,</div><div class="line">                <span class="string">'Dr'</span>, <span class="string">'Ms'</span>, <span class="string">'Mlle'</span>,<span class="string">'Col'</span>, <span class="string">'Capt'</span>, <span class="string">'Mme'</span>, <span class="string">'Countess'</span>,</div><div class="line">                <span class="string">'Don'</span>, <span class="string">'Jonkheer'</span>]</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">label = train[<span class="string">'Survived'</span>] <span class="comment"># 目标列</span></div></pre></td></tr></table></figure>
+<h3 id="Pclass_u3001Sex_u3001Embarked_u79BB_u6563_u7279_u5F81_u6570_u636E_u9884_u89C8"><a href="#Pclass_u3001Sex_u3001Embarked_u79BB_u6563_u7279_u5F81_u6570_u636E_u9884_u89C8" class="headerlink" title="Pclass、Sex、Embarked离散特征数据预览"></a>Pclass、Sex、Embarked离散特征数据预览</h3><p>除此之外Name、Ticket、Cabin也是离散特征，我们暂时不用这几个特征，直观上来讲，叫什么名字跟在事故中是否存活好像没有太大的联系。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 接下来我们对每个特征进行一下分析：</span></div><div class="line">train.groupby([<span class="string">'Pclass'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.axes.AxesSubplot at 0x102bef590&gt;
+</code></pre><p><img src="output_6_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.groupby([<span class="string">'SibSp'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.axes.AxesSubplot at 0x106c41a10&gt;
+</code></pre><p><img src="output_7_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.groupby([<span class="string">'Parch'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.axes.AxesSubplot at 0x106d7b090&gt;
+</code></pre><p><img src="output_8_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.groupby([<span class="string">'Embarked'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.axes.AxesSubplot at 0x106eca590&gt;
+</code></pre><p><img src="output_9_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">train.groupby([<span class="string">'Sex'</span>])[<span class="string">'PassengerId'</span>].count().plot(kind=<span class="string">'bar'</span>)</div></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.axes.AxesSubplot at 0x106ff83d0&gt;
+</code></pre><p><img src="output_10_1.png" alt="png"></p>
+<h3 id="u8FDE_u7EED_u7279_u5F81_u5904_u7406"><a href="#u8FDE_u7EED_u7279_u5F81_u5904_u7406" class="headerlink" title="连续特征处理"></a>连续特征处理</h3><p>Age、Fare是连续特征，观察数据分布查看是否有缺失值和异常值，我们看到Age中存在缺失值，我们考虑使用均值来填充缺失值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> <span class="string">'检测是否有缺失值：'</span></div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Age'</span>].isnull()][<span class="string">'Age'</span>].head()</div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Fare'</span>].isnull()][<span class="string">'Fare'</span>].head()</div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'SibSp'</span>].isnull()][<span class="string">'SibSp'</span>].head()</div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Parch'</span>].isnull()][<span class="string">'Parch'</span>].head()</div><div class="line">train[<span class="string">'Age'</span>] = train[<span class="string">'Age'</span>].fillna(train[<span class="string">'Age'</span>].mean())</div><div class="line"><span class="keyword">print</span> <span class="string">'填充之后再检测：'</span></div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Age'</span>].isnull()][<span class="string">'Age'</span>].head()</div><div class="line"><span class="keyword">print</span> train[train[<span class="string">'Fare'</span>].isnull()][<span class="string">'Fare'</span>].head()</div></pre></td></tr></table></figure>
+<pre><code>检测是否有缺失值：
+5    NaN
+17   NaN
+19   NaN
+26   NaN
+28   NaN
+Name: Age, dtype: float64
+Series([], Name: Fare, dtype: float64)
+Series([], Name: SibSp, dtype: int64)
+Series([], Name: Parch, dtype: int64)
+填充之后再检测：
+Series([], Name: Age, dtype: float64)
+Series([], Name: Fare, dtype: float64)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> <span class="string">'检测测试集是否有缺失值：'</span></div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Age'</span>].isnull()][<span class="string">'Age'</span>].head()</div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Fare'</span>].isnull()][<span class="string">'Fare'</span>].head()</div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'SibSp'</span>].isnull()][<span class="string">'SibSp'</span>].head()</div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Parch'</span>].isnull()][<span class="string">'Parch'</span>].head()</div><div class="line">test[<span class="string">'Age'</span>] = test[<span class="string">'Age'</span>].fillna(test[<span class="string">'Age'</span>].mean())</div><div class="line">test[<span class="string">'Fare'</span>] = test[<span class="string">'Fare'</span>].fillna(test[<span class="string">'Fare'</span>].mean())</div><div class="line"><span class="keyword">print</span> <span class="string">'填充之后再检测：'</span></div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Age'</span>].isnull()][<span class="string">'Age'</span>].head()</div><div class="line"><span class="keyword">print</span> test[test[<span class="string">'Fare'</span>].isnull()][<span class="string">'Fare'</span>].head()</div></pre></td></tr></table></figure>
+<pre><code>检测测试集是否有缺失值：
+10   NaN
+22   NaN
+29   NaN
+33   NaN
+36   NaN
+Name: Age, dtype: float64
+152   NaN
+Name: Fare, dtype: float64
+Series([], Name: SibSp, dtype: int64)
+Series([], Name: Parch, dtype: int64)
+填充之后再检测：
+Series([], Name: Age, dtype: float64)
+Series([], Name: Fare, dtype: float64)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 处理Title特征</span></div><div class="line">train[<span class="string">'Title'</span>] = train[<span class="string">'Name'</span>].map(<span class="keyword">lambda</span> x: substrings_in_string(x, title_list))</div><div class="line">test[<span class="string">'Title'</span>] = test[<span class="string">'Name'</span>].map(<span class="keyword">lambda</span> x: substrings_in_string(x, title_list))</div><div class="line"></div><div class="line">train[<span class="string">'Title'</span>] = train.apply(replace_titles, axis=<span class="number">1</span>)</div><div class="line">test[<span class="string">'Title'</span>] = test.apply(replace_titles, axis=<span class="number">1</span>)</div><div class="line"></div><div class="line"><span class="comment"># family特征</span></div><div class="line">train[<span class="string">'Family_Size'</span>] = train[<span class="string">'SibSp'</span>] + train[<span class="string">'Parch'</span>]</div><div class="line">train[<span class="string">'Family'</span>] = train[<span class="string">'SibSp'</span>] * train[<span class="string">'Parch'</span>]</div><div class="line">test[<span class="string">'Family_Size'</span>] = test[<span class="string">'SibSp'</span>] + test[<span class="string">'Parch'</span>]</div><div class="line">test[<span class="string">'Family'</span>] = test[<span class="string">'SibSp'</span>] * test[<span class="string">'Parch'</span>]</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">train[<span class="string">'AgeFill'</span>] = train[<span class="string">'Age'</span>]</div><div class="line">mean_ages = np.zeros(<span class="number">4</span>)</div><div class="line">mean_ages[<span class="number">0</span>] = np.average(train[train[<span class="string">'Title'</span>] == <span class="string">'Miss'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">1</span>] = np.average(train[train[<span class="string">'Title'</span>] == <span class="string">'Mrs'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">2</span>] = np.average(train[train[<span class="string">'Title'</span>] == <span class="string">'Mr'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">3</span>] = np.average(train[train[<span class="string">'Title'</span>] == <span class="string">'Master'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">train.loc[ (train.Age.isnull()) &amp; (train.Title == <span class="string">'Miss'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">0</span>]</div><div class="line">train.loc[ (train.Age.isnull()) &amp; (train.Title == <span class="string">'Mrs'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">1</span>]</div><div class="line">train.loc[ (train.Age.isnull()) &amp; (train.Title == <span class="string">'Mr'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">2</span>]</div><div class="line">train.loc[ (train.Age.isnull()) &amp; (train.Title == <span class="string">'Master'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">3</span>]</div><div class="line"></div><div class="line">train[<span class="string">'AgeCat'</span>] = train[<span class="string">'AgeFill'</span>]</div><div class="line">train.loc[ (train.AgeFill&lt;=<span class="number">10</span>), <span class="string">'AgeCat'</span>] = <span class="string">'child'</span></div><div class="line">train.loc[ (train.AgeFill&gt;<span class="number">60</span>), <span class="string">'AgeCat'</span>] = <span class="string">'aged'</span></div><div class="line">train.loc[ (train.AgeFill&gt;<span class="number">10</span>) &amp; (train.AgeFill &lt;=<span class="number">30</span>) ,<span class="string">'AgeCat'</span>] = <span class="string">'adult'</span></div><div class="line">train.loc[ (train.AgeFill&gt;<span class="number">30</span>) &amp; (train.AgeFill &lt;=<span class="number">60</span>) ,<span class="string">'AgeCat'</span>] = <span class="string">'senior'</span></div><div class="line"></div><div class="line">train[<span class="string">'Fare_Per_Person'</span>] = train[<span class="string">'Fare'</span>] / (train[<span class="string">'Family_Size'</span>] + <span class="number">1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">test[<span class="string">'AgeFill'</span>] = test[<span class="string">'Age'</span>]</div><div class="line">mean_ages = np.zeros(<span class="number">4</span>)</div><div class="line">mean_ages[<span class="number">0</span>] = np.average(test[test[<span class="string">'Title'</span>] == <span class="string">'Miss'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">1</span>] = np.average(test[test[<span class="string">'Title'</span>] == <span class="string">'Mrs'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">2</span>] = np.average(test[test[<span class="string">'Title'</span>] == <span class="string">'Mr'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">mean_ages[<span class="number">3</span>] = np.average(test[test[<span class="string">'Title'</span>] == <span class="string">'Master'</span>][<span class="string">'Age'</span>].dropna())</div><div class="line">test.loc[ (test.Age.isnull()) &amp; (test.Title == <span class="string">'Miss'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">0</span>]</div><div class="line">test.loc[ (test.Age.isnull()) &amp; (test.Title == <span class="string">'Mrs'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">1</span>]</div><div class="line">test.loc[ (test.Age.isnull()) &amp; (test.Title == <span class="string">'Mr'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">2</span>]</div><div class="line">test.loc[ (test.Age.isnull()) &amp; (test.Title == <span class="string">'Master'</span>) ,<span class="string">'AgeFill'</span>] = mean_ages[<span class="number">3</span>]</div><div class="line"></div><div class="line">test[<span class="string">'AgeCat'</span>] = test[<span class="string">'AgeFill'</span>]</div><div class="line">test.loc[ (test.AgeFill&lt;=<span class="number">10</span>), <span class="string">'AgeCat'</span>] = <span class="string">'child'</span></div><div class="line">test.loc[ (test.AgeFill&gt;<span class="number">60</span>), <span class="string">'AgeCat'</span>] = <span class="string">'aged'</span></div><div class="line">test.loc[ (test.AgeFill&gt;<span class="number">10</span>) &amp; (test.AgeFill &lt;=<span class="number">30</span>) ,<span class="string">'AgeCat'</span>] = <span class="string">'adult'</span></div><div class="line">test.loc[ (test.AgeFill&gt;<span class="number">30</span>) &amp; (test.AgeFill &lt;=<span class="number">60</span>) ,<span class="string">'AgeCat'</span>] = <span class="string">'senior'</span></div><div class="line"></div><div class="line">test[<span class="string">'Fare_Per_Person'</span>] = test[<span class="string">'Fare'</span>] / (test[<span class="string">'Family_Size'</span>] + <span class="number">1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">train.Embarked = train.Embarked.fillna(<span class="string">'S'</span>)</div><div class="line">test.Embarked = test.Embarked.fillna(<span class="string">'S'</span>)</div><div class="line"></div><div class="line">train.loc[ train.Cabin.isnull() == <span class="keyword">True</span>, <span class="string">'Cabin'</span>] = <span class="number">0.2</span></div><div class="line">train.loc[ train.Cabin.isnull() == <span class="keyword">False</span>, <span class="string">'Cabin'</span>] = <span class="number">1</span></div><div class="line"></div><div class="line">test.loc[ test.Cabin.isnull() == <span class="keyword">True</span>, <span class="string">'Cabin'</span>] = <span class="number">0.2</span></div><div class="line">test.loc[ test.Cabin.isnull() == <span class="keyword">False</span>, <span class="string">'Cabin'</span>] = <span class="number">1</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#Age times class</span></div><div class="line">train[<span class="string">'AgeClass'</span>] = train[<span class="string">'AgeFill'</span>] * train[<span class="string">'Pclass'</span>]</div><div class="line">train[<span class="string">'ClassFare'</span>] = train[<span class="string">'Pclass'</span>] * train[<span class="string">'Fare_Per_Person'</span>]</div><div class="line"></div><div class="line">train[<span class="string">'HighLow'</span>] = train[<span class="string">'Pclass'</span>]</div><div class="line">train.loc[ (train.Fare_Per_Person &lt; <span class="number">8</span>) ,<span class="string">'HighLow'</span>] = <span class="string">'Low'</span></div><div class="line">train.loc[ (train.Fare_Per_Person &gt;= <span class="number">8</span>) ,<span class="string">'HighLow'</span>] = <span class="string">'High'</span></div><div class="line"></div><div class="line"><span class="comment">#Age times class</span></div><div class="line">test[<span class="string">'AgeClass'</span>] = test[<span class="string">'AgeFill'</span>] * test[<span class="string">'Pclass'</span>]</div><div class="line">test[<span class="string">'ClassFare'</span>] = test[<span class="string">'Pclass'</span>] * test[<span class="string">'Fare_Per_Person'</span>]</div><div class="line"></div><div class="line">test[<span class="string">'HighLow'</span>] = test[<span class="string">'Pclass'</span>]</div><div class="line">test.loc[ (test.Fare_Per_Person &lt; <span class="number">8</span>) ,<span class="string">'HighLow'</span>] = <span class="string">'Low'</span></div><div class="line">test.loc[ (test.Fare_Per_Person &gt;= <span class="number">8</span>) ,<span class="string">'HighLow'</span>] = <span class="string">'High'</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> train.head(<span class="number">1</span>)</div><div class="line"><span class="comment"># print test.head()</span></div></pre></td></tr></table></figure>
+<pre><code>   PassengerId  Survived  Pclass                     Name   Sex   Age  SibSp  \
+0            1         0       3  Braund, Mr. Owen Harris  male  22.0      1   
+
+   Parch     Ticket  Fare   ...    Embarked Title Family_Size  Family  \
+0      0  A/5 21171  7.25   ...           S    Mr           1       0   
+
+   AgeFill  AgeCat Fare_Per_Person  AgeClass  ClassFare  HighLow  
+0     22.0   adult           3.625      66.0     10.875      Low  
+
+[1 rows x 21 columns]
+</code></pre><h2 id="u7279_u5F81_u5DE5_u7A0B"><a href="#u7279_u5F81_u5DE5_u7A0B" class="headerlink" title="特征工程"></a>特征工程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 处理训练集</span></div><div class="line">Pclass = pd.get_dummies(train.Pclass)</div><div class="line">Sex = pd.get_dummies(train.Sex)</div><div class="line">Embarked = pd.get_dummies(train.Embarked)</div><div class="line">Title = pd.get_dummies(train.Title)</div><div class="line">AgeCat = pd.get_dummies(train.AgeCat)</div><div class="line">HighLow = pd.get_dummies(train.HighLow)</div><div class="line">train_data = pd.concat([Pclass, Sex, Embarked, Title, AgeCat, HighLow], axis=<span class="number">1</span>)</div><div class="line">train_data[<span class="string">'Age'</span>] = train[<span class="string">'Age'</span>]</div><div class="line">train_data[<span class="string">'Fare'</span>] = train[<span class="string">'Fare'</span>]</div><div class="line">train_data[<span class="string">'SibSp'</span>] = train[<span class="string">'SibSp'</span>]</div><div class="line">train_data[<span class="string">'Parch'</span>] = train[<span class="string">'Parch'</span>]</div><div class="line">train_data[<span class="string">'Family_Size'</span>] = train[<span class="string">'Family_Size'</span>]</div><div class="line">train_data[<span class="string">'Family'</span>] = train[<span class="string">'Family'</span>]</div><div class="line">train_data[<span class="string">'AgeFill'</span>] = train[<span class="string">'AgeFill'</span>]</div><div class="line">train_data[<span class="string">'Fare_Per_Person'</span>] = train[<span class="string">'Fare_Per_Person'</span>]</div><div class="line">train_data[<span class="string">'Cabin'</span>] = train[<span class="string">'Cabin'</span>]</div><div class="line">train_data[<span class="string">'AgeClass'</span>] = train[<span class="string">'AgeClass'</span>]</div><div class="line">train_data[<span class="string">'ClassFare'</span>] = train[<span class="string">'ClassFare'</span>]</div><div class="line"></div><div class="line">cols = [<span class="string">'Age'</span>, <span class="string">'Fare'</span>, <span class="string">'SibSp'</span>, <span class="string">'Parch'</span>, <span class="string">'Family_Size'</span>, <span class="string">'Family'</span>, <span class="string">'AgeFill'</span>, <span class="string">'Fare_Per_Person'</span>, <span class="string">'AgeClass'</span>, <span class="string">'ClassFare'</span>]</div><div class="line">train_data[cols] = train_data[cols].apply(<span class="keyword">lambda</span> x: (x - np.mean(x)) / (np.max(x) - np.min(x)))</div><div class="line"><span class="keyword">print</span> train_data.head()</div><div class="line"></div><div class="line"><span class="comment"># 处理测试集</span></div><div class="line">Pclass = pd.get_dummies(test.Pclass)</div><div class="line">Sex = pd.get_dummies(test.Sex)</div><div class="line">Embarked = pd.get_dummies(test.Embarked)</div><div class="line">Title = pd.get_dummies(test.Title)</div><div class="line">AgeCat = pd.get_dummies(test.AgeCat)</div><div class="line">HighLow = pd.get_dummies(test.HighLow)</div><div class="line">test_data = pd.concat([Pclass, Sex, Embarked, Title, AgeCat, HighLow], axis=<span class="number">1</span>)</div><div class="line">test_data[<span class="string">'Age'</span>] = test[<span class="string">'Age'</span>]</div><div class="line">test_data[<span class="string">'Fare'</span>] = test[<span class="string">'Fare'</span>]</div><div class="line">test_data[<span class="string">'SibSp'</span>] = test[<span class="string">'SibSp'</span>]</div><div class="line">test_data[<span class="string">'Parch'</span>] = test[<span class="string">'Parch'</span>]</div><div class="line">test_data[<span class="string">'Family_Size'</span>] = test[<span class="string">'Family_Size'</span>]</div><div class="line">test_data[<span class="string">'Family'</span>] = test[<span class="string">'Family'</span>]</div><div class="line">test_data[<span class="string">'AgeFill'</span>] = test[<span class="string">'AgeFill'</span>]</div><div class="line">test_data[<span class="string">'Fare_Per_Person'</span>] = test[<span class="string">'Fare_Per_Person'</span>]</div><div class="line">test_data[<span class="string">'Cabin'</span>] = test[<span class="string">'Cabin'</span>]</div><div class="line">test_data[<span class="string">'AgeClass'</span>] = test[<span class="string">'AgeClass'</span>]</div><div class="line">test_data[<span class="string">'ClassFare'</span>] = test[<span class="string">'ClassFare'</span>]</div><div class="line"></div><div class="line">test_data[cols] = test_data[cols].apply(<span class="keyword">lambda</span> x: (x - np.mean(x)) / (np.max(x) - np.min(x)))</div><div class="line"><span class="keyword">print</span> test_data.head()</div></pre></td></tr></table></figure>
+<pre><code>     1    2    3  female  male    C    Q    S  Master  Miss    ...      \
+0  0.0  0.0  1.0     0.0   1.0  0.0  0.0  1.0     0.0   0.0    ...       
+1  1.0  0.0  0.0     1.0   0.0  1.0  0.0  0.0     0.0   0.0    ...       
+2  0.0  0.0  1.0     1.0   0.0  0.0  0.0  1.0     0.0   1.0    ...       
+3  1.0  0.0  0.0     1.0   0.0  0.0  0.0  1.0     0.0   0.0    ...       
+4  0.0  0.0  1.0     0.0   1.0  0.0  0.0  1.0     0.0   0.0    ...       
+
+       Fare     SibSp     Parch  Family_Size    Family   AgeFill  \
+0 -0.048707  0.059624 -0.063599      0.00954 -0.035494 -0.096747   
+1  0.076277  0.059624 -0.063599      0.00954 -0.035494  0.104309   
+2 -0.047390 -0.065376 -0.063599     -0.09046 -0.035494 -0.046483   
+3  0.040786  0.059624 -0.063599      0.00954 -0.035494  0.066611   
+4 -0.047146 -0.065376 -0.063599     -0.09046 -0.035494  0.066611   
+
+   Fare_Per_Person  Cabin  AgeClass  ClassFare  
+0        -0.031799      1  0.004673  -0.040180  
+1         0.030694      1 -0.121978   0.008161  
+2        -0.023406      1  0.058952  -0.015001  
+3         0.012948      1 -0.135547  -0.009584  
+4        -0.023162      1  0.181080  -0.014269  
+
+[5 rows x 29 columns]
+     1    2    3  female  male    C    Q    S  Master  Miss    ...      \
+0  0.0  0.0  1.0     0.0   1.0  0.0  1.0  0.0     0.0   0.0    ...       
+1  0.0  0.0  1.0     1.0   0.0  0.0  0.0  1.0     0.0   0.0    ...       
+2  0.0  1.0  0.0     0.0   1.0  0.0  1.0  0.0     0.0   0.0    ...       
+3  0.0  0.0  1.0     0.0   1.0  0.0  0.0  1.0     0.0   0.0    ...       
+4  0.0  0.0  1.0     1.0   0.0  0.0  0.0  1.0     0.0   0.0    ...       
+
+       Fare     SibSp     Parch  Family_Size    Family   AgeFill  \
+0 -0.054258 -0.055921 -0.043594    -0.083971 -0.027811  0.055749   
+1 -0.055877  0.069079 -0.043594     0.016029 -0.027811  0.220591   
+2 -0.050631 -0.055921 -0.043594    -0.083971 -0.027811  0.418402   
+3 -0.052632 -0.055921 -0.043594    -0.083971 -0.027811 -0.043157   
+4 -0.045556  0.069079  0.067517     0.116029  0.034689 -0.109094   
+
+   Fare_Per_Person  Cabin  AgeClass  ClassFare  
+0        -0.053389      1  0.218758  -0.037167  
+1        -0.069889      1  0.425952  -0.086667  
+2        -0.046307      1  0.332024  -0.052842  
+3        -0.050213      1  0.094442  -0.027639  
+4        -0.067618      1  0.011564  -0.079855  
+
+[5 rows x 29 columns]
+</code></pre><h2 id="u6A21_u578B_u8BAD_u7EC3"><a href="#u6A21_u578B_u8BAD_u7EC3" class="headerlink" title="模型训练"></a>模型训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression <span class="keyword">as</span> LR</div><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> cross_val_score</div><div class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> GaussianNB <span class="keyword">as</span> GNB</div><div class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</div><div class="line"></div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div></pre></td></tr></table></figure>
+<h3 id="u903B_u8F91_u56DE_u5F52"><a href="#u903B_u8F91_u56DE_u5F52" class="headerlink" title="逻辑回归"></a>逻辑回归</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">model_lr = LR(penalty = <span class="string">'l2'</span>, dual = <span class="keyword">True</span>, random_state = <span class="number">0</span>)</div><div class="line">model_lr.fit(train_data, label)</div><div class="line"><span class="keyword">print</span> <span class="string">"逻辑回归10折交叉验证得分: "</span>, np.mean(cross_val_score(model_lr, train_data, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div><div class="line"></div><div class="line">result = model_lr.predict( test_data )</div><div class="line">output = pd.DataFrame( data=&#123;<span class="string">"PassengerId"</span>:test[<span class="string">"PassengerId"</span>], <span class="string">"Survived"</span>:result&#125; )</div><div class="line">output.to_csv( <span class="string">"lr.csv"</span>, index=<span class="keyword">False</span>, quoting=<span class="number">3</span> )</div></pre></td></tr></table></figure>
+<pre><code>逻辑回归10折交叉验证得分:  0.871878335172
+</code></pre><h4 id="u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-78469"><a href="#u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-78469" class="headerlink" title="提交kaggle后准确率：0.78469"></a>提交kaggle后准确率：0.78469</h4><h3 id="u9AD8_u65AF_u8D1D_u53F6_u65AF"><a href="#u9AD8_u65AF_u8D1D_u53F6_u65AF" class="headerlink" title="高斯贝叶斯"></a>高斯贝叶斯</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">model_GNB = GNB()</div><div class="line">model_GNB.fit(train_data, label)</div><div class="line"><span class="keyword">print</span> <span class="string">"高斯贝叶斯分类器10折交叉验证得分: "</span>, np.mean(cross_val_score(model_GNB, train_data, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div><div class="line"></div><div class="line">result = model_GNB.predict( test_data )</div><div class="line">output = pd.DataFrame( data=&#123;<span class="string">"PassengerId"</span>:test[<span class="string">"PassengerId"</span>], <span class="string">"Survived"</span>:result&#125; )</div><div class="line">output.to_csv( <span class="string">"gnb.csv"</span>, index=<span class="keyword">False</span>, quoting=<span class="number">3</span> )</div></pre></td></tr></table></figure>
+<pre><code>高斯贝叶斯分类器10折交叉验证得分:  0.857323798206
+</code></pre><h4 id="u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-74163"><a href="#u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-74163" class="headerlink" title="提交kaggle后准确率：0.74163"></a>提交kaggle后准确率：0.74163</h4><h3 id="u968F_u673A_u68EE_u6797"><a href="#u968F_u673A_u68EE_u6797" class="headerlink" title="随机森林"></a>随机森林</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">forest = RandomForestClassifier( n_estimators=<span class="number">500</span>, criterion=<span class="string">'entropy'</span>, max_depth=<span class="number">5</span>, min_samples_split=<span class="number">1</span>,</div><div class="line">  min_samples_leaf=<span class="number">1</span>, max_features=<span class="string">'auto'</span>, bootstrap=<span class="keyword">False</span>, oob_score=<span class="keyword">False</span>, n_jobs=<span class="number">4</span>,</div><div class="line">  verbose=<span class="number">0</span>)</div><div class="line"></div><div class="line">%time forest = forest.fit( train_data, label )</div><div class="line"><span class="keyword">print</span> <span class="string">"随机森林分类器10折交叉验证得分: "</span>, np.mean(cross_val_score(forest, train_data, label, cv=<span class="number">10</span>, scoring=<span class="string">'roc_auc'</span>))</div><div class="line"></div><div class="line">result = forest.predict( test_data )</div><div class="line">output = pd.DataFrame( data=&#123;<span class="string">"PassengerId"</span>:test[<span class="string">"PassengerId"</span>], <span class="string">"Survived"</span>:result&#125; )</div><div class="line">output.to_csv( <span class="string">"rf.csv"</span>, index=<span class="keyword">False</span>, quoting=<span class="number">3</span> )</div></pre></td></tr></table></figure>
+<pre><code>CPU times: user 1.34 s, sys: 208 ms, total: 1.55 s
+Wall time: 1.17 s
+随机森林分类器10折交叉验证得分:  0.870820473644
+</code></pre><h4 id="u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-76555"><a href="#u63D0_u4EA4kaggle_u540E_u51C6_u786E_u7387_uFF1A0-76555" class="headerlink" title="提交kaggle后准确率：0.76555"></a>提交kaggle后准确率：0.76555</h4><hr>
+<h2 id="u5BFB_u627E_u6700_u4F73_u53C2_u6570"><a href="#u5BFB_u627E_u6700_u4F73_u53C2_u6570" class="headerlink" title="寻找最佳参数"></a>寻找最佳参数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> Pipeline</div><div class="line"><span class="keyword">from</span> sklearn.grid_search <span class="keyword">import</span> GridSearchCV</div><div class="line"><span class="keyword">from</span> sklearn.cross_validation <span class="keyword">import</span> train_test_split,StratifiedShuffleSplit,StratifiedKFold</div><div class="line">param_grid = dict( )</div><div class="line"></div><div class="line">pipeline=Pipeline([ (<span class="string">'clf'</span>, forest) ])</div><div class="line">grid_search = GridSearchCV(pipeline, param_grid=param_grid, verbose=<span class="number">3</span>, scoring=<span class="string">'accuracy'</span>,</div><div class="line">cv=StratifiedShuffleSplit(label, n_iter=<span class="number">10</span>, test_size=<span class="number">0.2</span>, train_size=<span class="keyword">None</span>)).fit(train_data, label)</div><div class="line"></div><div class="line">print(<span class="string">"Best score: %0.3f"</span> % grid_search.best_score_)</div></pre></td></tr></table></figure>
+<pre><code>Fitting 10 folds for each of 1 candidates, totalling 10 fits
+[CV]  ................................................................
+[CV] ....................................... , score=0.849162 -   1.7s
+[CV]  ................................................................
+[CV] ....................................... , score=0.843575 -   1.5s
+[CV]  ................................................................
+[CV] ....................................... , score=0.804469 -   1.4s
+[CV]  ................................................................
+[CV] ....................................... , score=0.804469 -   1.9s
+[CV]  ................................................................
+[CV] ....................................... , score=0.871508 -   2.1s
+[CV]  ................................................................
+[CV] ....................................... , score=0.865922 -   1.9s
+[CV]  ................................................................
+[CV] ....................................... , score=0.854749 -   1.8s
+[CV]  ................................................................
+[CV] ....................................... , score=0.860335 -   1.7s
+[CV]  ................................................................
+[CV] ....................................... , score=0.843575 -   1.6s
+[CV]  ................................................................
+[CV] ....................................... , score=0.826816 -   1.5s
+
+
+[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:   17.1s finished
+
+
+Best score: 0.842
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/titanic/" data-id="cj3uvlzqu004lbms9sc3fndlf" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/08/19/algo/kaggle/titanic/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/kaggle/sequence" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -171,7 +376,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/" data-id="ciy2rs41z004g6ts8vvu4y80x" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/" data-id="cj3uvlzqp004cbms9u3w832zd" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/19/algo/kaggle/sequence/#ds-thread" class="article-comment-link">评论</a>
       
@@ -348,7 +553,7 @@ Wall time: 24.2 s
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/" data-id="ciy2rs41z004d6ts8hbmycs3u" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/" data-id="cj3uvlzqt004ibms9dgc2sn04" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/16/algo/kaggle/movie_reviews/#ds-thread" class="article-comment-link">评论</a>
       
@@ -462,7 +667,7 @@ Wall time: 24.2 s
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/" data-id="ciy2rs41w00416ts8mrkc9ca3" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/" data-id="cj3uvlzqn0049bms90sqn7ax4" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/15/algo/kaggle/digit/#ds-thread" class="article-comment-link">评论</a>
       
@@ -681,101 +886,12 @@ Wall time: 24.2 s
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-id="ciy2rs41u003v6ts84npmlh4b" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/" data-id="cj3uvlzqg003xbms94qxc9muj" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/12/algo/kaggle/cf_crime/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kaggle/">kaggle</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-system/search_system_sample" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/11/system/search_system_sample/">使用Elasticsearch和docker快速搭建一个搜索引擎</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/08/11/system/search_system_sample/">
-      <time datetime="2016-08-10T16:00:00.000Z" itemprop="datePublished">2016-08-11</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/system/">system</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h1 id="search_system_example"><a href="#search_system_example" class="headerlink" title="search_system_example"></a>search_system_example</h1><p>快速搭建一个搜索引擎，示例程序，地址：<a href="https://github.com/lijingpeng/search_system_example" target="_blank" rel="external">https://github.com/lijingpeng/search_system_example</a></p>
-<p>有时候你可能有这样的小需求，短时间内快速搭建一个规模不大的搜索引擎，并提供一个简单的界面给同事或者小部分人使用，这篇文章旨在介绍搭建一个简单搜索引擎的步骤，并力求做到：</p>
-<ol>
-<li>搜索引擎和数据分离，搜索引擎不应该依赖于数据存储和web接口  </li>
-<li>可移植性要好，可以快速从本地机器迁移到服务器或者云端主机</li>
-</ol>
-<p>分解任务之后，我们有三部分工作要做：  </p>
-<p>搜索引擎——&gt;准备要进行检索的数据——&gt;web查询接口  </p>
-<p>下面分别介绍每一步</p>
-<h2 id="u7B2C_u4E00_u6B65_uFF1A_u642D_u5EFA_u641C_u7D22_u5F15_u64CE"><a href="#u7B2C_u4E00_u6B65_uFF1A_u642D_u5EFA_u641C_u7D22_u5F15_u64CE" class="headerlink" title="第一步：搭建搜索引擎"></a>第一步：搭建搜索引擎</h2><p>首先我们要搭建一个纯的搜索引擎，这时候引擎是空跑的、可以移植的、提供了访问接口，但暂时还没有索引数据，我们使用Elasticsearch来搭建，关于Elasticsearch的简介请见：<a href="https://www.gitbook.com/book/looly/elasticsearch-the-definitive-guide-cn" target="_blank" rel="external">中文文档</a>  </p>
-<p>有两种方式搭建Elasticsearch引擎，一种是本地搭建，具体步骤请见上面的文档，一般来说会有一些依赖的环境问题需要你逐步安装。另外一种是基于Docker的安装，直接下载一个Elasticsearch的镜像就可以了，不需要关心安装过程中的依赖问题。我们推荐使用这种方式来搭建，具体如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 1. 下载镜像</span></div><div class="line">docker pull dockerfile/elasticsearch</div><div class="line"><span class="comment"># 2. 测试镜像是否能正常运行</span></div><div class="line">docker run <span class="_">-d</span> -p 9200:9200 -p 9300:9300 dockerfile/elasticsearch</div></pre></td></tr></table></figure></p>
-<p>通过访问<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 来查看容器是否访问成功，成功后会显示如下信息：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"Night Thrasher"</span>,</div><div class="line">    <span class="attr">"cluster_name"</span>: <span class="string">"elasticsearch"</span>,</div><div class="line">    <span class="attr">"version"</span>: &#123;</div><div class="line">        <span class="attr">"number"</span>: <span class="string">"2.1.1"</span>,</div><div class="line">        <span class="attr">"build_hash"</span>: <span class="string">"40e2c53a6b6c2972b3d13846e450e66f4375bd71"</span>,</div><div class="line">        <span class="attr">"build_timestamp"</span>: <span class="string">"2015-12-15T13:05:55Z"</span>,</div><div class="line">        <span class="attr">"build_snapshot"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">"lucene_version"</span>: <span class="string">"5.3.1"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"tagline"</span>: <span class="string">"You Know, for Search"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>还记得我们的目标之一是可提供一个索引和查询的接口么，<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 这个URL就是Elasticsearch提供给我们的索引和查询接口，如果你部署到了其他的接口和服务器，只需要做相应的修改就可以了。最简单的情况你可以使用curl url来存储和检索数据，如果你想使用python，请参见<a href="https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/index.html" target="_blank" rel="external">python接口封装</a>。</p>
-<p>我们的另一个目标是存储和引擎分离，因为Docker容器适合运行无状态的应用，而我们的索引数据显然是需要持久化存储的，我们需要用Docker Volume来存储索引数据，具体来说在启动容器的时候：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 映射本地主机目录data到容器中的/usr/share/elasticsearch目录中</span></div><div class="line"><span class="comment"># 容器中的elasticsearch启动的时候会将索引数据存储到该目录下，这样我们就实现了索引和容器引擎分离存储的目标</span></div><div class="line">docker run -v ~/data:/usr/share/elasticsearch/data -p 9200:9200 -p 9300:9300 <span class="_">-d</span> docker/elasticsearch</div></pre></td></tr></table></figure></p>
-<p>截止到目前，我们的引擎已经搭建好了，该引擎将数据存储到我们指定的位置，实现了存储分离；提供了一个URL访问接口，不依赖具体的机器环境。下面一步就是准备待索引的数据，将数据索引起来以供检索。</p>
-<h2 id="u7B2C_u4E8C_u6B65__u7D22_u5F15_u6570_u636E"><a href="#u7B2C_u4E8C_u6B65__u7D22_u5F15_u6570_u636E" class="headerlink" title="第二步 索引数据"></a>第二步 索引数据</h2><h3 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h3><p>在索引数据前我们先通过一个小例子测试下python接口，例子来自于<a href="https://elasticsearch-py.readthedocs.io/en/master/" target="_blank" rel="external">这里</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</div><div class="line">es = Elasticsearch() <span class="comment"># 默认连接本地9200端口</span></div><div class="line"></div><div class="line">doc = &#123;</div><div class="line">    <span class="string">'author'</span>: <span class="string">'kimchy'</span>,</div><div class="line">    <span class="string">'text'</span>: <span class="string">'Elasticsearch: cool. bonsai cool.'</span>,</div><div class="line">    <span class="string">'timestamp'</span>: datetime.now(),</div><div class="line">&#125;</div><div class="line"><span class="comment"># 索引数据</span></div><div class="line">res = es.index(index=<span class="string">"test-index"</span>, doc_type=<span class="string">'tweet'</span>, id=<span class="number">1</span>, body=doc)</div></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">res = es.get(index=<span class="string">"test-index"</span>, doc_type=<span class="string">'tweet'</span>, id=<span class="number">1</span>)</div><div class="line">print(res[<span class="string">'_source'</span>])</div></pre></td></tr></table></figure>
-<pre><code>{u&apos;text&apos;: u&apos;Elasticsearch: cool. bonsai cool.&apos;, u&apos;author&apos;: u&apos;kimchy&apos;, u&apos;timestamp&apos;: u&apos;2016-08-09T21:15:05.956257&apos;}
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">es.indices.refresh(index=<span class="string">"test-index"</span>)</div><div class="line"></div><div class="line">res = es.search(index=<span class="string">"test-index"</span>, body=&#123;<span class="string">"query"</span>: &#123;<span class="string">"match_all"</span>: &#123;&#125;&#125;&#125;)</div><div class="line">print(<span class="string">"Got %d Hits:"</span> % res[<span class="string">'hits'</span>][<span class="string">'total'</span>])</div><div class="line"><span class="keyword">for</span> hit <span class="keyword">in</span> res[<span class="string">'hits'</span>][<span class="string">'hits'</span>]:</div><div class="line">    print(<span class="string">"%(timestamp)s %(author)s: %(text)s"</span> % hit[<span class="string">"_source"</span>])</div></pre></td></tr></table></figure>
-<pre><code>Got 1 Hits:
-2016-08-09T21:15:05.956257 kimchy: Elasticsearch: cool. bonsai cool.
-</code></pre><h3 id="u7D22_u5F15_u6570_u636E"><a href="#u7D22_u5F15_u6570_u636E" class="headerlink" title="索引数据"></a>索引数据</h3><p>假设数据是用户的信息数据，包括user_id和user_name, 存储在csv文件中，以逗号分隔，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">123,小米</div><div class="line">234,李明</div><div class="line">345,李念</div></pre></td></tr></table></figure></p>
-<p>接下来我们索引这些数据，指定index名字为user_info, doc_type为basic, 代表用户的基本信息。代码(src/index.py)如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</div><div class="line">es = Elasticsearch()</div><div class="line"></div><div class="line">doc = &#123;</div><div class="line">    <span class="string">'user_id'</span>: <span class="string">''</span>,</div><div class="line">    <span class="string">'user_name'</span>: <span class="string">''</span>,</div><div class="line">    <span class="string">'timestamp'</span>: datetime.now()</div><div class="line">&#125;</div><div class="line"></div><div class="line">id = <span class="number">0</span></div><div class="line">file = open(<span class="string">'/dataset/data.csv'</span>)</div><div class="line">lines = file.readlines()</div><div class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</div><div class="line">    shard = line.strip(<span class="string">'\n'</span>).split(<span class="string">','</span>)</div><div class="line">    id += <span class="number">1</span></div><div class="line">    doc[<span class="string">'user_id'</span>] = shard[<span class="number">0</span>]</div><div class="line">    doc[<span class="string">'user_name'</span>] = shard[<span class="number">1</span>]</div><div class="line"></div><div class="line">    res = es.index(index=<span class="string">"user_info"</span>, doc_type=<span class="string">'basic'</span>, id=id, body=doc)</div><div class="line">    print(res[<span class="string">'created'</span>]), id, <span class="string">' doc(s) indexed.'</span></div></pre></td></tr></table></figure>
-<p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">True 1  doc(s) indexed.  </div><div class="line">True 2  doc(s) indexed.  </div><div class="line">True 3  doc(s) indexed.</div></pre></td></tr></table></figure></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">res = es.get(index=<span class="string">"user_info"</span>, doc_type=<span class="string">'basic'</span>, id=<span class="number">1</span>)</div><div class="line">print(res[<span class="string">'_source'</span>])</div></pre></td></tr></table></figure>
-<p>输出：  </p>
-<pre><code>{u&apos;user_id&apos;: u&apos;123&apos;, u&apos;user_name&apos;: u&apos;\u5c0f\u7c73&apos;, u&apos;timestamp&apos;: u&apos;2016-08-09T21:30:17.860371&apos;}
-</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 检索</span></div><div class="line">res = es.search(index=<span class="string">"user_info"</span>, body=&#123;<span class="string">"query"</span>: &#123;<span class="string">"match_all"</span>: &#123;&#125;&#125;&#125;)</div><div class="line">print(<span class="string">"Got %d Hits:"</span> % res[<span class="string">'hits'</span>][<span class="string">'total'</span>])</div><div class="line"><span class="keyword">for</span> hit <span class="keyword">in</span> res[<span class="string">'hits'</span>][<span class="string">'hits'</span>]:</div><div class="line">    print(<span class="string">"%(timestamp)s %(user_id)s: %(user_name)s"</span> % hit[<span class="string">"_source"</span>])</div></pre></td></tr></table></figure>
-<p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Got 3 Hits:</div><div class="line">2016-08-09T21:30:17.860371 234: 李明</div><div class="line">2016-08-09T21:30:17.860371 123: 小米</div><div class="line">2016-08-09T21:30:17.860371 345: 李念</div></pre></td></tr></table></figure></p>
-<p>到目前为止，我们的数据检索系统完成了，真的是非常的简单，elasticsearch Schema Free的特性在这里得到了很好的体现，无论你的数据是在本地文件还是在DB， 你只需要重写数据解析和索引模块就可以了。</p>
-<h2 id="u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3"><a href="#u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3" class="headerlink" title="第三步 提供一个web接口"></a>第三步 提供一个web接口</h2><h3 id="u6D4F_u89C8_u5668_u6D4B_u8BD5"><a href="#u6D4F_u89C8_u5668_u6D4B_u8BD5" class="headerlink" title="浏览器测试"></a>浏览器测试</h3><p>试试把这个地址复制到浏览器地址栏中执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:9200/user_info/basic/_search?q=user_id:345</div></pre></td></tr></table></figure></p>
-<p>没错，这个就是检索user_id = 345的用户基本信息，在浏览器中返回：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"took"</span>: <span class="number">6</span>,</div><div class="line">    <span class="attr">"timed_out"</span>: <span class="literal">false</span>,</div><div class="line">    <span class="attr">"_shards"</span>: &#123;</div><div class="line">        <span class="attr">"total"</span>: <span class="number">5</span>,</div><div class="line">        <span class="attr">"successful"</span>: <span class="number">5</span>,</div><div class="line">        <span class="attr">"failed"</span>: <span class="number">0</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"hits"</span>: &#123;</div><div class="line">        <span class="attr">"total"</span>: <span class="number">1</span>,</div><div class="line">        <span class="attr">"max_score"</span>: <span class="number">0.30685282</span>,</div><div class="line">        <span class="attr">"hits"</span>: [</div><div class="line">            &#123;</div><div class="line">                <span class="attr">"_index"</span>: <span class="string">"user_info"</span>,</div><div class="line">                <span class="attr">"_type"</span>: <span class="string">"basic"</span>,</div><div class="line">                <span class="attr">"_id"</span>: <span class="string">"3"</span>,</div><div class="line">                <span class="attr">"_score"</span>: <span class="number">0.30685282</span>,</div><div class="line">                <span class="attr">"_source"</span>: &#123;</div><div class="line">                    <span class="attr">"user_name"</span>: <span class="string">"李念"</span>,</div><div class="line">                    <span class="attr">"user_id"</span>: <span class="string">"345"</span>,</div><div class="line">                    <span class="attr">"timestamp"</span>: <span class="string">"2016-08-09T21:30:17.860371"</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        ]</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="web_u8BBF_u95EE_u754C_u9762"><a href="#web_u8BBF_u95EE_u754C_u9762" class="headerlink" title="web访问界面"></a>web访问界面</h3><p>接下来就可以编写web服务了，你可以使用任何你熟悉的web框架搭建一个友好的web访问界面，比如Spring MVC、或者是Flask。<br>// todo</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="ciy2rs3z9001l6ts8ern7zkzk" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/08/11/system/search_system_sample/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a></li></ul>
 
     </footer>
   </div>
@@ -798,6 +914,23 @@ Wall time: 24.2 s
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/06/12/dev/collect/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2017/06/12/dev/collect/" class="title">收集</a></p>
+              <p class="item-date"><time datetime="2017-06-12T06:19:56.000Z" itemprop="datePublished">2017-06-12</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -836,23 +969,6 @@ Wall time: 24.2 s
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
-              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -870,7 +986,7 @@ Wall time: 24.2 s
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
+              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -878,9 +994,9 @@ Wall time: 24.2 s
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
             </div>
           </li>
         
@@ -893,7 +1009,7 @@ Wall time: 24.2 s
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -902,7 +1018,7 @@ Wall time: 24.2 s
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

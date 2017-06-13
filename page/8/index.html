@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        117
+        118
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,67 @@
 
       
       <section id="main">
+      <article id="post-dev/web/jquery_datatable_ajax" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/18/dev/web/jquery_datatable_ajax/">Jquery的DataTable插件 AJAX 服务器分页</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/03/18/dev/web/jquery_datatable_ajax/">
+      <time datetime="2016-03-18T07:19:56.000Z" itemprop="datePublished">2016-03-18</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/dev/">dev</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h2 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h2><hr>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">table</span> <span class="attr">id</span>=<span class="string">"test_table"</span> <span class="attr">class</span>=<span class="string">"table table-striped table-bordered table-hover"</span> &gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">thead</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>1<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>2<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>3<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>4<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tbody</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tfoot</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tfoot</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        dataTable1 = $(<span class="string">'#test_table'</span>).dataTable(&#123;</div><div class="line">            <span class="string">"bPaginate"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"tableTools"</span>: &#123;</div><div class="line">                <span class="string">"sSwfPath"</span>: <span class="string">"js/plugins/dataTables/swf/copy_csv_xls.swf"</span></div><div class="line">            &#125;,</div><div class="line">            <span class="string">"bProcessing"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"bServerSide"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"sAjaxSource"</span>: <span class="string">"/cgi-bin/pypy.py"</span>,</div><div class="line">            <span class="string">"sPaginationType"</span>: <span class="string">'full_numbers'</span>,</div><div class="line">            <span class="string">"iDisplayLength"</span> : <span class="number">10</span>,</div><div class="line">            <span class="string">"bFilter"</span> : <span class="literal">false</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">json_data = &#123;</div><div class="line">    <span class="string">"aaData"</span>:dict_data,</div><div class="line">    <span class="string">"iTotalRecords"</span>:iTotalRecords,</div><div class="line">    <span class="string">"iTotalDisplayRecords"</span>:iTotalDisplayRecords</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="u5176_u4ED6_u53C2_u8003"><a href="#u5176_u4ED6_u53C2_u8003" class="headerlink" title="其他参考"></a>其他参考</h2><p><a href="http://sgyyz.blog.51cto.com/5069360/1408251" target="_blank" rel="external">http://sgyyz.blog.51cto.com/5069360/1408251</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/" data-id="cj3uvlzss007qbms9t6kbhso1" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jquery/">Jquery</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/web/python_mysql_code" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -167,7 +228,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/" data-id="ciy2rs438007u6ts84ut56rdt" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/" data-id="cj3uvlzsu007sbms9ltq91alf" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/web/python_mysql_code/#ds-thread" class="article-comment-link">评论</a>
       
@@ -221,7 +282,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql_page/" data-id="ciy2rs430007i6ts8c7uxznrb" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql_page/" data-id="cj3uvlzso007lbms9a4r3xlrp" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/python/python_mysql_page/#ds-thread" class="article-comment-link">评论</a>
       
@@ -323,7 +384,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql/" data-id="ciy2rs431007k6ts8gupezpbi" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/18/dev/python/python_mysql/" data-id="cj3uvlzsn007ibms9c1xoafs1" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/18/dev/python/python_mysql/#ds-thread" class="article-comment-link">评论</a>
       
@@ -395,68 +456,13 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/10/dev/python/python_logging/" data-id="ciy2rs430007h6ts85g7eiwhp" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/10/dev/python/python_logging/" data-id="cj3uvlzsi007abms901dfsvb7" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/10/dev/python/python_logging/#ds-thread" class="article-comment-link">评论</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
 
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-algo/ml/18" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/01/algo/ml/18/">18大经典数据挖掘算法小结</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/03/01/algo/ml/18/">
-      <time datetime="2016-02-29T16:00:00.000Z" itemprop="datePublished">2016-03-01</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/machine-learning/">machine learning</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>本文所有涉及到的数据挖掘代码的都放在了github上。<br>地址链接: <a href="https://github.com/linyiqun/DataMiningAlgorithm" target="_blank" rel="external">https://github.com/linyiqun/DataMiningAlgorithm</a><br>大概花了将近2个月的时间，自己把18大数据挖掘的经典算法进行了学习并且进行了代码实现，涉及到了决策分类，聚类，链接挖掘，关联挖掘，模式挖掘等等方面。也算是对数据挖掘领域的小小入门了吧。</p>
-<p>1.C4.5算法。C4.5算法与ID3算法一样，都是数学分类算法，C4.5算法是ID3算法的一个改进。ID3算法采用信息增益进行决策判断，而C4.5采用的是增益率。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/42395865" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/42395865</a><br>2.CART算法。CART算法的全称是分类回归树算法，他是一个二元分类，采用的是类似于熵的基尼指数作为分类决策，形成决策树后之后还要进行剪枝，我自己在实现整个算法的时候采用的是代价复杂度算法，<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/42558235" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/42558235</a><br>3.KNN(K最近邻)算法。给定一些已经训练好的数据，输入一个新的测试数据点，计算包含于此测试数据点的最近的点的分类情况，哪个分类的类型占多数，则此测试点的分类与此相同，所以在这里,有的时候可以复制不同的分类点不同的权重。近的点的权重大点，远的点自然就小点。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/42613011" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/42613011</a><br>4.Naive Bayes(朴素贝叶斯)算法。朴素贝叶斯算法是贝叶斯算法里面一种比较简单的分类算法，用到了一个比较重要的贝叶斯定理，用一句简单的话概括就是条件概率的相互转换推导。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/42680161" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/42680161</a><br>5.SVM(支持向量机)算法。支持向量机算法是一种对线性和非线性数据进行分类的方法，非线性数据进行分类的时候可以通过核函数转为线性的情况再处理。其中的一个关键的步骤是搜索最大边缘超平面。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/42780439" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/42780439</a><br>6.EM(期望最大化)算法。期望最大化算法，可以拆分为2个算法，1个E-Step期望化步骤,和1个M-Step最大化步骤。他是一种算法框架，在每次计算结果之后，逼近统计模型参数的最大似然或最大后验估计。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/42921789" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/42921789</a><br>7.Apriori算法。Apriori算法是关联规则挖掘算法，通过连接和剪枝运算挖掘出频繁项集，然后根据频繁项集得到关联规则，关联规则的导出需要满足最小置信度的要求。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43059211" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43059211</a><br>8.FP-Tree(频繁模式树)算法。这个算法也有被称为FP-growth算法，这个算法克服了Apriori算法的产生过多侯选集的缺点，通过递归的产生频度模式树，然后对树进行挖掘，后面的过程与Apriori算法一致。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43234309" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43234309</a><br>9.PageRank(网页重要性/排名)算法。PageRank算法最早产生于Google,核心思想是通过网页的入链数作为一个网页好快的判定标准，如果1个网页内部包含了多个指向外部的链接，则PR值将会被均分，PageRank算法也会遭到Link Span攻击。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43311943" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43311943</a><br>10.HITS算法。HITS算法是另外一个链接算法，部分原理与PageRank算法是比较相似的，HITS算法引入了权威值和中心值的概念，HITS算法是受用户查询条件影响的，他一般用于小规模的数据链接分析，也更容易遭受到攻击。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43311943" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43311943</a><br>11.K-Means(K均值)算法。K-Means算法是聚类算法，k在在这里指的是分类的类型数，所以在开始设定的时候非常关键，算法的原理是首先假定k个分类点，然后根据欧式距离计算分类，然后去同分类的均值作为新的聚簇中心，循环操作直到收敛。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43373159" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43373159</a><br>12.BIRCH算法。BIRCH算法利用构建CF聚类特征树作为算法的核心，通过树的形式，BIRCH算法扫描数据库，在内存中建立一棵初始的CF-树，可以看做数据的多层压缩。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43532111" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43532111</a><br>13.AdaBoost算法。AdaBoost算法是一种提升算法，通过对数据的多次训练得到多个互补的分类器，然后组合多个分类器，构成一个更加准确的分类器。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43635115" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43635115</a><br>14.GSP算法。GSP算法是序列模式挖掘算法。GSP算法也是Apriori类算法，在算法的过程中也会进行连接和剪枝操作，不过在剪枝判断的时候还加上了一些时间上的约束等条件。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43699083" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43699083</a><br>15.PreFixSpan算法。PreFixSpan算法是另一个序列模式挖掘算法，在算法的过程中不会产生候选集，给定初始前缀模式，不断的通过后缀模式中的元素转到前缀模式中，而不断的递归挖掘下去。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43766253" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43766253</a><br>16.CBA(基于关联规则分类)算法。CBA算法是一种集成挖掘算法，因为他是建立在关联规则挖掘算法之上的，在已有的关联规则理论前提下，做分类判断，只是在算法的开始时对数据做处理，变成类似于事务的形式。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43818787" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43818787</a><br>17.RoughSets(粗糙集)算法。粗糙集理论是一个比较新颖的数据挖掘思想。这里使用的是用粗糙集进行属性约简的算法，通过上下近似集的判断删除无效的属性，进行规制的输出。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43876001" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43876001</a><br>18.gSpan算法。gSpan算法属于图挖掘算法领域。，主要用于频繁子图的挖掘，相较于其他的图算法，子图挖掘算法是他们的一个前提或基础算法。gSpan算法用到了DFS编码，和Edge五元组，最右路径子图扩展等概念，算法比较的抽象和复杂。<br>详细介绍链接：<a href="http://blog.csdn.net/androidlushangderen/article/details/43924273" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43924273</a></p>
-<p>来自： <a href="http://blog.csdn.net/androidlushangderen/article/details/43964589" target="_blank" rel="external">http://blog.csdn.net/androidlushangderen/article/details/43964589</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/01/algo/ml/18/" data-id="ciy2rs42700546ts8bk1ha4rx" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/03/01/algo/ml/18/#ds-thread" class="article-comment-link">评论</a>
-      
-      
     </footer>
   </div>
   
@@ -478,6 +484,23 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/06/12/dev/collect/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2017/06/12/dev/collect/" class="title">收集</a></p>
+              <p class="item-date"><time datetime="2017-06-12T06:19:56.000Z" itemprop="datePublished">2017-06-12</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -516,23 +539,6 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
-              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -550,7 +556,7 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
+              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -558,9 +564,9 @@
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
             </div>
           </li>
         
@@ -573,7 +579,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -582,7 +588,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

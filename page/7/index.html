@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        117
+        118
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,95 @@
 
       
       <section id="main">
+      <article id="post-system/search_system_sample" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/11/system/search_system_sample/">使用Elasticsearch和docker快速搭建一个搜索引擎</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2016/08/11/system/search_system_sample/">
+      <time datetime="2016-08-10T16:00:00.000Z" itemprop="datePublished">2016-08-11</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/system/">system</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <h1 id="search_system_example"><a href="#search_system_example" class="headerlink" title="search_system_example"></a>search_system_example</h1><p>快速搭建一个搜索引擎，示例程序，地址：<a href="https://github.com/lijingpeng/search_system_example" target="_blank" rel="external">https://github.com/lijingpeng/search_system_example</a></p>
+<p>有时候你可能有这样的小需求，短时间内快速搭建一个规模不大的搜索引擎，并提供一个简单的界面给同事或者小部分人使用，这篇文章旨在介绍搭建一个简单搜索引擎的步骤，并力求做到：</p>
+<ol>
+<li>搜索引擎和数据分离，搜索引擎不应该依赖于数据存储和web接口  </li>
+<li>可移植性要好，可以快速从本地机器迁移到服务器或者云端主机</li>
+</ol>
+<p>分解任务之后，我们有三部分工作要做：  </p>
+<p>搜索引擎——&gt;准备要进行检索的数据——&gt;web查询接口  </p>
+<p>下面分别介绍每一步</p>
+<h2 id="u7B2C_u4E00_u6B65_uFF1A_u642D_u5EFA_u641C_u7D22_u5F15_u64CE"><a href="#u7B2C_u4E00_u6B65_uFF1A_u642D_u5EFA_u641C_u7D22_u5F15_u64CE" class="headerlink" title="第一步：搭建搜索引擎"></a>第一步：搭建搜索引擎</h2><p>首先我们要搭建一个纯的搜索引擎，这时候引擎是空跑的、可以移植的、提供了访问接口，但暂时还没有索引数据，我们使用Elasticsearch来搭建，关于Elasticsearch的简介请见：<a href="https://www.gitbook.com/book/looly/elasticsearch-the-definitive-guide-cn" target="_blank" rel="external">中文文档</a>  </p>
+<p>有两种方式搭建Elasticsearch引擎，一种是本地搭建，具体步骤请见上面的文档，一般来说会有一些依赖的环境问题需要你逐步安装。另外一种是基于Docker的安装，直接下载一个Elasticsearch的镜像就可以了，不需要关心安装过程中的依赖问题。我们推荐使用这种方式来搭建，具体如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 1. 下载镜像</span></div><div class="line">docker pull dockerfile/elasticsearch</div><div class="line"><span class="comment"># 2. 测试镜像是否能正常运行</span></div><div class="line">docker run <span class="_">-d</span> -p 9200:9200 -p 9300:9300 dockerfile/elasticsearch</div></pre></td></tr></table></figure></p>
+<p>通过访问<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 来查看容器是否访问成功，成功后会显示如下信息：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"Night Thrasher"</span>,</div><div class="line">    <span class="attr">"cluster_name"</span>: <span class="string">"elasticsearch"</span>,</div><div class="line">    <span class="attr">"version"</span>: &#123;</div><div class="line">        <span class="attr">"number"</span>: <span class="string">"2.1.1"</span>,</div><div class="line">        <span class="attr">"build_hash"</span>: <span class="string">"40e2c53a6b6c2972b3d13846e450e66f4375bd71"</span>,</div><div class="line">        <span class="attr">"build_timestamp"</span>: <span class="string">"2015-12-15T13:05:55Z"</span>,</div><div class="line">        <span class="attr">"build_snapshot"</span>: <span class="literal">false</span>,</div><div class="line">        <span class="attr">"lucene_version"</span>: <span class="string">"5.3.1"</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"tagline"</span>: <span class="string">"You Know, for Search"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>还记得我们的目标之一是可提供一个索引和查询的接口么，<a href="http://localhost:9200/" target="_blank" rel="external">http://localhost:9200/</a> 这个URL就是Elasticsearch提供给我们的索引和查询接口，如果你部署到了其他的接口和服务器，只需要做相应的修改就可以了。最简单的情况你可以使用curl url来存储和检索数据，如果你想使用python，请参见<a href="https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/index.html" target="_blank" rel="external">python接口封装</a>。</p>
+<p>我们的另一个目标是存储和引擎分离，因为Docker容器适合运行无状态的应用，而我们的索引数据显然是需要持久化存储的，我们需要用Docker Volume来存储索引数据，具体来说在启动容器的时候：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 映射本地主机目录data到容器中的/usr/share/elasticsearch目录中</span></div><div class="line"><span class="comment"># 容器中的elasticsearch启动的时候会将索引数据存储到该目录下，这样我们就实现了索引和容器引擎分离存储的目标</span></div><div class="line">docker run -v ~/data:/usr/share/elasticsearch/data -p 9200:9200 -p 9300:9300 <span class="_">-d</span> docker/elasticsearch</div></pre></td></tr></table></figure></p>
+<p>截止到目前，我们的引擎已经搭建好了，该引擎将数据存储到我们指定的位置，实现了存储分离；提供了一个URL访问接口，不依赖具体的机器环境。下面一步就是准备待索引的数据，将数据索引起来以供检索。</p>
+<h2 id="u7B2C_u4E8C_u6B65__u7D22_u5F15_u6570_u636E"><a href="#u7B2C_u4E8C_u6B65__u7D22_u5F15_u6570_u636E" class="headerlink" title="第二步 索引数据"></a>第二步 索引数据</h2><h3 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h3><p>在索引数据前我们先通过一个小例子测试下python接口，例子来自于<a href="https://elasticsearch-py.readthedocs.io/en/master/" target="_blank" rel="external">这里</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</div><div class="line">es = Elasticsearch() <span class="comment"># 默认连接本地9200端口</span></div><div class="line"></div><div class="line">doc = &#123;</div><div class="line">    <span class="string">'author'</span>: <span class="string">'kimchy'</span>,</div><div class="line">    <span class="string">'text'</span>: <span class="string">'Elasticsearch: cool. bonsai cool.'</span>,</div><div class="line">    <span class="string">'timestamp'</span>: datetime.now(),</div><div class="line">&#125;</div><div class="line"><span class="comment"># 索引数据</span></div><div class="line">res = es.index(index=<span class="string">"test-index"</span>, doc_type=<span class="string">'tweet'</span>, id=<span class="number">1</span>, body=doc)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">res = es.get(index=<span class="string">"test-index"</span>, doc_type=<span class="string">'tweet'</span>, id=<span class="number">1</span>)</div><div class="line">print(res[<span class="string">'_source'</span>])</div></pre></td></tr></table></figure>
+<pre><code>{u&apos;text&apos;: u&apos;Elasticsearch: cool. bonsai cool.&apos;, u&apos;author&apos;: u&apos;kimchy&apos;, u&apos;timestamp&apos;: u&apos;2016-08-09T21:15:05.956257&apos;}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">es.indices.refresh(index=<span class="string">"test-index"</span>)</div><div class="line"></div><div class="line">res = es.search(index=<span class="string">"test-index"</span>, body=&#123;<span class="string">"query"</span>: &#123;<span class="string">"match_all"</span>: &#123;&#125;&#125;&#125;)</div><div class="line">print(<span class="string">"Got %d Hits:"</span> % res[<span class="string">'hits'</span>][<span class="string">'total'</span>])</div><div class="line"><span class="keyword">for</span> hit <span class="keyword">in</span> res[<span class="string">'hits'</span>][<span class="string">'hits'</span>]:</div><div class="line">    print(<span class="string">"%(timestamp)s %(author)s: %(text)s"</span> % hit[<span class="string">"_source"</span>])</div></pre></td></tr></table></figure>
+<pre><code>Got 1 Hits:
+2016-08-09T21:15:05.956257 kimchy: Elasticsearch: cool. bonsai cool.
+</code></pre><h3 id="u7D22_u5F15_u6570_u636E"><a href="#u7D22_u5F15_u6570_u636E" class="headerlink" title="索引数据"></a>索引数据</h3><p>假设数据是用户的信息数据，包括user_id和user_name, 存储在csv文件中，以逗号分隔，如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">123,小米</div><div class="line">234,李明</div><div class="line">345,李念</div></pre></td></tr></table></figure></p>
+<p>接下来我们索引这些数据，指定index名字为user_info, doc_type为basic, 代表用户的基本信息。代码(src/index.py)如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"><span class="keyword">from</span> elasticsearch <span class="keyword">import</span> Elasticsearch</div><div class="line">es = Elasticsearch()</div><div class="line"></div><div class="line">doc = &#123;</div><div class="line">    <span class="string">'user_id'</span>: <span class="string">''</span>,</div><div class="line">    <span class="string">'user_name'</span>: <span class="string">''</span>,</div><div class="line">    <span class="string">'timestamp'</span>: datetime.now()</div><div class="line">&#125;</div><div class="line"></div><div class="line">id = <span class="number">0</span></div><div class="line">file = open(<span class="string">'/dataset/data.csv'</span>)</div><div class="line">lines = file.readlines()</div><div class="line"><span class="keyword">for</span> line <span class="keyword">in</span> lines:</div><div class="line">    shard = line.strip(<span class="string">'\n'</span>).split(<span class="string">','</span>)</div><div class="line">    id += <span class="number">1</span></div><div class="line">    doc[<span class="string">'user_id'</span>] = shard[<span class="number">0</span>]</div><div class="line">    doc[<span class="string">'user_name'</span>] = shard[<span class="number">1</span>]</div><div class="line"></div><div class="line">    res = es.index(index=<span class="string">"user_info"</span>, doc_type=<span class="string">'basic'</span>, id=id, body=doc)</div><div class="line">    print(res[<span class="string">'created'</span>]), id, <span class="string">' doc(s) indexed.'</span></div></pre></td></tr></table></figure>
+<p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">True 1  doc(s) indexed.  </div><div class="line">True 2  doc(s) indexed.  </div><div class="line">True 3  doc(s) indexed.</div></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">res = es.get(index=<span class="string">"user_info"</span>, doc_type=<span class="string">'basic'</span>, id=<span class="number">1</span>)</div><div class="line">print(res[<span class="string">'_source'</span>])</div></pre></td></tr></table></figure>
+<p>输出：  </p>
+<pre><code>{u&apos;user_id&apos;: u&apos;123&apos;, u&apos;user_name&apos;: u&apos;\u5c0f\u7c73&apos;, u&apos;timestamp&apos;: u&apos;2016-08-09T21:30:17.860371&apos;}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 检索</span></div><div class="line">res = es.search(index=<span class="string">"user_info"</span>, body=&#123;<span class="string">"query"</span>: &#123;<span class="string">"match_all"</span>: &#123;&#125;&#125;&#125;)</div><div class="line">print(<span class="string">"Got %d Hits:"</span> % res[<span class="string">'hits'</span>][<span class="string">'total'</span>])</div><div class="line"><span class="keyword">for</span> hit <span class="keyword">in</span> res[<span class="string">'hits'</span>][<span class="string">'hits'</span>]:</div><div class="line">    print(<span class="string">"%(timestamp)s %(user_id)s: %(user_name)s"</span> % hit[<span class="string">"_source"</span>])</div></pre></td></tr></table></figure>
+<p>输出：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Got 3 Hits:</div><div class="line">2016-08-09T21:30:17.860371 234: 李明</div><div class="line">2016-08-09T21:30:17.860371 123: 小米</div><div class="line">2016-08-09T21:30:17.860371 345: 李念</div></pre></td></tr></table></figure></p>
+<p>到目前为止，我们的数据检索系统完成了，真的是非常的简单，elasticsearch Schema Free的特性在这里得到了很好的体现，无论你的数据是在本地文件还是在DB， 你只需要重写数据解析和索引模块就可以了。</p>
+<h2 id="u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3"><a href="#u7B2C_u4E09_u6B65__u63D0_u4F9B_u4E00_u4E2Aweb_u63A5_u53E3" class="headerlink" title="第三步 提供一个web接口"></a>第三步 提供一个web接口</h2><h3 id="u6D4F_u89C8_u5668_u6D4B_u8BD5"><a href="#u6D4F_u89C8_u5668_u6D4B_u8BD5" class="headerlink" title="浏览器测试"></a>浏览器测试</h3><p>试试把这个地址复制到浏览器地址栏中执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:9200/user_info/basic/_search?q=user_id:345</div></pre></td></tr></table></figure></p>
+<p>没错，这个就是检索user_id = 345的用户基本信息，在浏览器中返回：<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"took"</span>: <span class="number">6</span>,</div><div class="line">    <span class="attr">"timed_out"</span>: <span class="literal">false</span>,</div><div class="line">    <span class="attr">"_shards"</span>: &#123;</div><div class="line">        <span class="attr">"total"</span>: <span class="number">5</span>,</div><div class="line">        <span class="attr">"successful"</span>: <span class="number">5</span>,</div><div class="line">        <span class="attr">"failed"</span>: <span class="number">0</span></div><div class="line">    &#125;,</div><div class="line">    <span class="attr">"hits"</span>: &#123;</div><div class="line">        <span class="attr">"total"</span>: <span class="number">1</span>,</div><div class="line">        <span class="attr">"max_score"</span>: <span class="number">0.30685282</span>,</div><div class="line">        <span class="attr">"hits"</span>: [</div><div class="line">            &#123;</div><div class="line">                <span class="attr">"_index"</span>: <span class="string">"user_info"</span>,</div><div class="line">                <span class="attr">"_type"</span>: <span class="string">"basic"</span>,</div><div class="line">                <span class="attr">"_id"</span>: <span class="string">"3"</span>,</div><div class="line">                <span class="attr">"_score"</span>: <span class="number">0.30685282</span>,</div><div class="line">                <span class="attr">"_source"</span>: &#123;</div><div class="line">                    <span class="attr">"user_name"</span>: <span class="string">"李念"</span>,</div><div class="line">                    <span class="attr">"user_id"</span>: <span class="string">"345"</span>,</div><div class="line">                    <span class="attr">"timestamp"</span>: <span class="string">"2016-08-09T21:30:17.860371"</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        ]</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="web_u8BBF_u95EE_u754C_u9762"><a href="#web_u8BBF_u95EE_u754C_u9762" class="headerlink" title="web访问界面"></a>web访问界面</h3><p>接下来就可以编写web服务了，你可以使用任何你熟悉的web框架搭建一个友好的web访问界面，比如Spring MVC、或者是Flask。<br>// todo</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2016/08/11/system/search_system_sample/" data-id="cj3uvlznz001kbms98ajj5ewm" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2016/08/11/system/search_system_sample/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Elasticsearch-docker/">Elasticsearch, docker</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-dev/Java/java_maven_log4j" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -176,7 +265,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/" data-id="ciy2rs42n006k6ts8cooqna7j" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/" data-id="cj3uvlzrp006ebms9rce4j5b2" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/08/02/dev/Java/java_maven_log4j/#ds-thread" class="article-comment-link">评论</a>
       
@@ -229,7 +318,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/" data-id="ciy2rs42z007g6ts8gqpyh9r5" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/" data-id="cj3uvlzsm007ebms988dke361" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/05/23/dev/python/python_encoding/#ds-thread" class="article-comment-link">评论</a>
       
@@ -318,7 +407,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/" data-id="ciy2rs42q006q6ts80fmdru17" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/" data-id="cj3uvlzrv006kbms9rbcfjnch" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/05/11/dev/Java/java_volatile/#ds-thread" class="article-comment-link">评论</a>
       
@@ -514,72 +603,11 @@ possible_keys: NULL
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/20/dev/mysql_partition/" data-id="ciy2rs3yx00106ts8ma9f1ftb" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2016/03/20/dev/mysql_partition/" data-id="cj3uvlzno0010bms9hrkyyput" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2016/03/20/dev/mysql_partition/#ds-thread" class="article-comment-link">评论</a>
       
       
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-dev/web/jquery_datatable_ajax" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/18/dev/web/jquery_datatable_ajax/">Jquery的DataTable插件 AJAX 服务器分页</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2016/03/18/dev/web/jquery_datatable_ajax/">
-      <time datetime="2016-03-18T07:19:56.000Z" itemprop="datePublished">2016-03-18</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/dev/">dev</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <h2 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h2><hr>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">table</span> <span class="attr">id</span>=<span class="string">"test_table"</span> <span class="attr">class</span>=<span class="string">"table table-striped table-bordered table-hover"</span> &gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">thead</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>1<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>2<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>3<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">th</span>&gt;</span>4<span class="tag">&lt;/<span class="name">th</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tbody</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">tfoot</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">tfoot</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></div></pre></td></tr></table></figure>
-<h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><hr>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$(<span class="built_in">document</span>).ready(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        dataTable1 = $(<span class="string">'#test_table'</span>).dataTable(&#123;</div><div class="line">            <span class="string">"bPaginate"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"tableTools"</span>: &#123;</div><div class="line">                <span class="string">"sSwfPath"</span>: <span class="string">"js/plugins/dataTables/swf/copy_csv_xls.swf"</span></div><div class="line">            &#125;,</div><div class="line">            <span class="string">"bProcessing"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"bServerSide"</span>: <span class="literal">true</span>,</div><div class="line">            <span class="string">"sAjaxSource"</span>: <span class="string">"/cgi-bin/pypy.py"</span>,</div><div class="line">            <span class="string">"sPaginationType"</span>: <span class="string">'full_numbers'</span>,</div><div class="line">            <span class="string">"iDisplayLength"</span> : <span class="number">10</span>,</div><div class="line">            <span class="string">"bFilter"</span> : <span class="literal">false</span></div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><hr>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">json_data = &#123;</div><div class="line">    <span class="string">"aaData"</span>:dict_data,</div><div class="line">    <span class="string">"iTotalRecords"</span>:iTotalRecords,</div><div class="line">    <span class="string">"iTotalDisplayRecords"</span>:iTotalDisplayRecords</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="u5176_u4ED6_u53C2_u8003"><a href="#u5176_u4ED6_u53C2_u8003" class="headerlink" title="其他参考"></a>其他参考</h2><p><a href="http://sgyyz.blog.51cto.com/5069360/1408251" target="_blank" rel="external">http://sgyyz.blog.51cto.com/5069360/1408251</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/" data-id="ciy2rs435007q6ts8r79hd772" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2016/03/18/dev/web/jquery_datatable_ajax/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jquery/">Jquery</a></li></ul>
-
     </footer>
   </div>
   
@@ -601,6 +629,23 @@ possible_keys: NULL
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/06/12/dev/collect/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2017/06/12/dev/collect/" class="title">收集</a></p>
+              <p class="item-date"><time datetime="2017-06-12T06:19:56.000Z" itemprop="datePublished">2017-06-12</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -639,23 +684,6 @@ possible_keys: NULL
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
-              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -673,7 +701,7 @@ possible_keys: NULL
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
+              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -681,9 +709,9 @@ possible_keys: NULL
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
             </div>
           </li>
         
@@ -696,7 +724,7 @@ possible_keys: NULL
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -705,7 +733,7 @@ possible_keys: NULL
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

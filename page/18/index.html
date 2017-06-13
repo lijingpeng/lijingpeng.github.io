@@ -93,7 +93,7 @@
     </div>
     <div class="article-info profile-block">
       <div class="article-info-block">
-        117
+        118
         <span>文章</span>
       </div>
       <div class="article-info-block">
@@ -126,6 +126,61 @@
 
       
       <section id="main">
+      <article id="post-dev/How to customize Writable class in Hadoop" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/09/21/dev/How to customize Writable class in Hadoop/">How to customize Writable class in Hadoop</a>
+    </h1>
+  
+
+        <div class="article-meta">
+          
+  <div class="article-date">
+    <i class="fa fa-calendar"></i>
+    <a href="/2015/09/21/dev/How to customize Writable class in Hadoop/">
+      <time datetime="2015-09-21T04:49:45.000Z" itemprop="datePublished">2015-09-21</time>
+    </a>
+  </div>
+
+
+          
+  <div class="article-category">
+  	<i class="fa fa-folder"></i>
+    <a class="article-category-link" href="/categories/Hadoop/">Hadoop</a>
+  </div>
+
+        </div>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+                
+        <p>I’m trying to implement Writable class, but i have no idea on how to implement a writable class if in my class there is nested object, such as list, etc.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StorageClass</span> <span class="keyword">implements</span> <span class="title">Writable</span></span>&#123;</div><div class="line"></div><div class="line"><span class="keyword">public</span> String xStr;</div><div class="line"><span class="keyword">public</span> String yStr;</div><div class="line"></div><div class="line"><span class="keyword">public</span> List&lt;Field&gt; sStor</div><div class="line"></div><div class="line"><span class="comment">//omitted ctors</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">@override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(DataOutput out)</span> <span class="keyword">throws</span> IOException</span>&#123;</div><div class="line">    out.writeChars(xStr);</div><div class="line">    out.WriteChars(yStr);</div><div class="line"></div><div class="line">    <span class="comment">//WHAT SHOULD I DO FOR List&lt;Field&gt;</span></div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFields</span><span class="params">(DataInput in)</span> <span class="keyword">throws</span> IOException</span>&#123;</div><div class="line">    xStr = in.readLine();</div><div class="line">    yStr = in.readLine();</div><div class="line"></div><div class="line">    <span class="comment">//WHAT SHOULD I DO FOR List&lt;Field&gt;</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SubStorage</span></span>&#123;</div><div class="line">    <span class="keyword">public</span> String x;</div><div class="line">    <span class="keyword">public</span> String y;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Following is the Field class:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">Field</span> <span class="keyword">implements</span> <span class="title">Comparable</span>&lt;<span class="title">Field</span>&gt;, <span class="title">Serializable</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> DataType dataType;</div><div class="line">    <span class="keyword">private</span> Object value;</div><div class="line">    <span class="keyword">private</span> FieldType fieldType;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Field</span><span class="params">()</span></span>&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="title">Field</span><span class="params">(String name, DataType dataType, FieldType fieldType)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>(name, dataType, <span class="keyword">null</span>, fieldType);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span>  <span class="title">Field</span><span class="params">(String name, DataType type, Object value, FieldType fieldType)</span></span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">        <span class="keyword">this</span>.dataType = type;</div><div class="line">        <span class="keyword">this</span>.value = value;</div><div class="line">        <span class="keyword">this</span>.fieldType = fieldType;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> FieldType &#123;</div><div class="line">    PRI, LOOKUP, SCD, VERSION, OTHER</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> DataType &#123;</div><div class="line"></div><div class="line">    UNDEFINED(<span class="number">4</span>) &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSizeInBytes</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> STRING.getSizeInBytes(value);</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    STRING(<span class="number">4</span>) &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSizeInBytes</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.getSizeInBytes(value) + (value.toString().length() * <span class="number">2</span>); <span class="comment">// length + chars</span></div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    INT(<span class="number">4</span>),</div><div class="line">    LONG(<span class="number">8</span>),</div><div class="line">    DOUBLE(<span class="number">8</span>),</div><div class="line">    DATETIME(<span class="number">8</span>),</div><div class="line">    BOOLEAN(<span class="number">1</span>),</div><div class="line">    BYTE(<span class="number">1</span>),</div><div class="line">    FLOAT(<span class="number">4</span>),</div><div class="line">    SHORT(<span class="number">2</span>),</div><div class="line">    CHAR(<span class="number">2</span>),</div><div class="line">    DATE(<span class="number">8</span>),</div><div class="line">    TIME(<span class="number">8</span>),</div><div class="line"></div><div class="line">    BLOB(<span class="number">0</span>) &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSizeInBytes</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> ((<span class="keyword">byte</span>[])value).length;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> sizeInBytes;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">DataType</span><span class="params">(<span class="keyword">int</span> sizeInBytes)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.sizeInBytes = sizeInBytes;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getSizeInBytes</span><span class="params">(Object value)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> sizeInBytes;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Serializing collections is quite simple.<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFields</span><span class="params">(DataInput in)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    <span class="keyword">int</span> size = in.readInt();</div><div class="line">    list= <span class="keyword">new</span> ArrayList&lt;Field&gt;(size);</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)&#123;</div><div class="line">        Field f = <span class="keyword">new</span> Field();</div><div class="line">        f.readFields(in);</div><div class="line">        list.add(f);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(DataOutput out)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">    out.writeInt(list.size());</div><div class="line">    <span class="keyword">for</span> (Field l : list) &#123;</div><div class="line">        l.write(out);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/" data-id="cj3uvlzni000rbms91a2urief" class="article-share-link">分享到</a>
+      
+        <a href="http://www.notehub.cn/2015/09/21/dev/How to customize Writable class in Hadoop/#ds-thread" class="article-comment-link">评论</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+    
       <article id="post-algo/murmurhash-md" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -177,7 +232,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/" data-id="ciy2rs3yo000m6ts8oux3d3aj" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/" data-id="cj3uvlznd000jbms9t99g2rod" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/murmurhash-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -239,7 +294,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/java-beta-md/" data-id="ciy2rs3yl000i6ts86ro83qg6" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/java-beta-md/" data-id="cj3uvlznh000pbms971wwc730" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/java-beta-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -332,7 +387,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-a-md/" data-id="ciy2rs3yk000g6ts8v1v7hc8y" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-a-md/" data-id="cj3uvlzn5000cbms96j0kdupd" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/beta-a-md/#ds-thread" class="article-comment-link">评论</a>
       
@@ -401,82 +456,9 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-md/" data-id="ciy2rs3yj000f6ts8s9i6rdv9" class="article-share-link">分享到</a>
+      <a data-url="http://www.notehub.cn/2015/09/03/algo/beta-md/" data-id="cj3uvlzna000ebms9pbrkb4hc" class="article-share-link">分享到</a>
       
         <a href="http://www.notehub.cn/2015/09/03/algo/beta-md/#ds-thread" class="article-comment-link">评论</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-    
-      <article id="post-other/nitian-md" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/09/03/other/nitian-md/">忠诚度越高买东西越贵</a>
-    </h1>
-  
-
-        <div class="article-meta">
-          
-  <div class="article-date">
-    <i class="fa fa-calendar"></i>
-    <a href="/2015/09/03/other/nitian-md/">
-      <time datetime="2015-09-03T06:01:28.000Z" itemprop="datePublished">2015-09-03</time>
-    </a>
-  </div>
-
-
-          
-  <div class="article-category">
-  	<i class="fa fa-folder"></i>
-    <a class="article-category-link" href="/categories/other/">other</a>
-  </div>
-
-        </div>
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-                
-        <p>　　引言：马云曾说，阿里巴巴本质上就是一家数据公司，做淘宝的目的也不是为了卖货，而是获得所有零售的数据和制造业的数据；做物流也不仅仅为了送包裹，而是要把这些数据合在一起。而亚马逊公司作为美国最大的一家网络电子商务公司，是网络上最早开始经营电子商务的公司之一，20年的持续发展关键也离不开对数据的分析。如今，我们正从IT时代走向DT时代，即从information technology转向data technology。</p>
-<p>　　先问大家一个问题，AB两个顾客同时想买某个品牌的东西，其中A顾客对这个品牌非常喜欢，B是新顾客。如果你是这个品牌的经营者的话，你会卖给谁更贵（假设不是标准定价）？</p>
-<p>　　答案是A，我们很多人的观点是我们一定要对老顾客好一些，给他们最优的待遇。这其实是从消费者的角度出发思考，其实从经营的角度来说，忠诚度越高我们反而应该卖得更贵，因为企业经营是追求利润最大化（互联网思维的企业除外哈），另外忠诚度高的顾客不用太担心流失。</p>
-<p>　　欺负老顾客，这是一个人艰不拆的真理，会让很多人眼泪忍不住的流下来。其实现在不就是这样的吗？首次打车的顾客免单，第一次购买电影票补贴，第一次消费打折等等。只是这些我们能接受，我们认为合理，接下来讲一个真实的差异化定价的案例。</p>
-<h3 id="u4E9A_u9A6C_u900A_u5DEE_u5F02_u5316_u5B9A_u4EF7_u6D4B_u8BD5"><a href="#u4E9A_u9A6C_u900A_u5DEE_u5F02_u5316_u5B9A_u4EF7_u6D4B_u8BD5" class="headerlink" title="亚马逊差异化定价测试"></a>亚马逊差异化定价测试</h3><p>　　为提高在主营产品上的赢利，亚马逊在2000年9月中旬开始了著名的差别定价实验。他们选择了68种DVD碟片进行动态定价试验。试验当中，亚马逊根据潜在客户的人口统计资料、在亚马逊的购物历史、上网行为以及上网使用的软件系统确定对这68种碟片的报价水平。</p>
-<p>　　例如，名为《泰特斯》（Titus）的碟片对新顾客的报价为22.74美元，而对那些对该碟片表现出兴趣的老顾客的报价则为26.24美元。通过这一定价策略，部分顾客付出了比其他顾客更高的价格，亚马逊因此提高了销售的毛利率。（网络购物可以做到千人千面，每个人看到的页面不一样，价格也可以不一样）</p>
-<p>　　但是好景不长，这一差别定价策略实施不到一个月，就有细心的消费者发现了这一秘密，通过在名为DVDTalk 的音乐爱好者社区的交流，成百上千的DVD消费者知道了此事，那些付出高价的顾客当然怨声载道，纷纷在网上以激烈的言辞对亚马逊的做法进行口诛笔伐，有人甚至公开表示以后绝不会在亚马逊购买任何东西。更不巧的是，由于亚马逊前不久才公布了它对消费者在网站上的购物习惯和行为进行了跟踪和记录，因此，这次事件曝光后，消费者和媒体开始怀疑亚马逊是否利用其收集的消费者资料作为其价格调整的依据，这样的猜测让亚马逊的价格事件与敏感的网络隐私问题联系在了一起。最后的结局是亚马逊道歉，然后将差价退给了那些买贵了的顾客。这件事虽然以失败告终，但是这种差异化定价的思路却是可以借鉴的。</p>
-<p>　　放眼望去，我们身边到处都是差异化定价的案例：菜市场的小贩看人下菜单，不同顾客买到的机票价格都不同，会员和非会员的价格也不一样，买的多和买得少价格也不一样。唯一不一样的是，这些差异化定价是按照我们常人的逻辑在运行，如买的多就应该便宜。亚马逊的案例恰恰和常规相反，但确实是经营的需要。那么如何做到根据需求差异定价呢？这种需求差异主要体现在时间、地点、消费对象之间三个方面。“时间就是金钱”在这点上彻底体现出来了，新手机上市，如果你是品牌忠实的追随者，那你必须付高价才能得到它，反之，你可以慢慢等待，等到价格降到你的目标价位的时候出手，有些地方高峰电价和平峰电价不一样，机票的价格和距起飞时间成反比，旅游景区的淡旺季门票差异等，这都是需求中利用时间差异的定价方法。</p>
-<p>　　新开一个超市如果附近没有竞争对手和有竞争对手时的定价策略是不一样的，一瓶同样品牌的啤酒在超市和酒吧的价格大相径庭，演唱会前排的价格高于后排的价格，海景房的价格比山景房的价格贵等等，这都是需求中地点差异的定价方法。消费对象的定价差异更多体现在会员顾客和非会员顾客的价格差异上，以及女性相对于男性对价格敏感的差异上。未来随着科技的进步会逐渐发展到个体的定价差异上，例如零售商根据你购买或维修冰箱的数据，发现你的冰箱到了更换的时候，就可以给你寄一张200元的冰箱代金券，这样你的价格就和其他人不一样了。需要注意的是差异定价不能引起顾客的反感，需要透彻分析其中的风险。针对亚马逊这个案例，错就错在互联网购物价格太透明了，一旦穿帮就是丑闻。那怎么让顾客不反感，同时企业又能贯彻忠诚度高的顾客价格越贵的原则呢？答案见下图。</p>
-<p><img src="/images/bb/792c43ea9c648c61a22c1a50a6439b15.jpg" alt=""><br>看明白了吗？</p>
-<p>没看明白的话我就给大家点破吧！</p>
-<p>将抽奖结果关联用户数据！</p>
-<p>　　怎么理解这句话？就是当买家在网站买东西的时候，旁边放一个抽奖链接，买家可以根据抽奖结果来付款，抽奖结果又减30，减50，一分不减等选项。当买家在按下抽奖按钮的同时，后台大数据就开始工作了，根据你以往的购买数据很快可以算出你对这个商品的忠诚度，喜好度，需要的紧迫性等。当发现你从来没有买过类似的商品的话，就会让你中“大奖”。当发现你是优质买家，那不好意思了，一分不减。这样是不是每个人都高高兴兴的了？你还以为抽奖结果是随机的呢。其实买的永远没有卖的精！你可以看看现在淘宝、京东等消费性电商培都用了这一招！</p>
-<h3 id="u6BD4_u8F83_u6709_u4EF7_u503C_u7684_u8BC4_u8BBA_uFF1A"><a href="#u6BD4_u8F83_u6709_u4EF7_u503C_u7684_u8BC4_u8BBA_uFF1A" class="headerlink" title="比较有价值的评论："></a>比较有价值的评论：</h3><ol>
-<li><p>就是利用信息不对称赚钱，不过互联网就是要消除信息不对称，所以这条路其实在互联网上是走不通的</p>
-</li>
-<li><p>互联网时代，价格是透明的，跨店比价购买的成本近乎为零，同一件商品如果亚马逊卖50，京东卖49，天猫卖45，你猜消 费者会怎么选择？</p>
-</li>
-<li><p>杀熟很危险，如果用户知道了，可能会对品牌造成致命的影响，而你得到的不过蝇头小利。</p>
-</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://www.notehub.cn/2015/09/03/other/nitian-md/" data-id="ciy2rs3z2001b6ts85tn454lz" class="article-share-link">分享到</a>
-      
-        <a href="http://www.notehub.cn/2015/09/03/other/nitian-md/#ds-thread" class="article-comment-link">评论</a>
       
       
     </footer>
@@ -500,6 +482,23 @@
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul id="recent-post" class="">
+        
+          <li>
+            
+            <div class="item-thumbnail">
+              <a href="/2017/06/12/dev/collect/" class="thumbnail">
+  
+    <span class="thumbnail-image thumbnail-none"></span>
+  
+</a>
+            </div>
+            
+            <div class="item-inner">
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2017/06/12/dev/collect/" class="title">收集</a></p>
+              <p class="item-date"><time datetime="2017-06-12T06:19:56.000Z" itemprop="datePublished">2017-06-12</time></p>
+            </div>
+          </li>
         
           <li>
             
@@ -538,23 +537,6 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
-  
-    <span class="thumbnail-image thumbnail-none"></span>
-  
-</a>
-            </div>
-            
-            <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
-              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
-              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
-            </div>
-          </li>
-        
-          <li>
-            
-            <div class="item-thumbnail">
               <a href="/2016/12/16/dev/encode/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
@@ -572,7 +554,7 @@
           <li>
             
             <div class="item-thumbnail">
-              <a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="thumbnail">
+              <a href="/2016/12/16/dev/python/python_extra/" class="thumbnail">
   
     <span class="thumbnail-image thumbnail-none"></span>
   
@@ -580,9 +562,9 @@
             </div>
             
             <div class="item-inner">
-              <p class="item-category"><a class="article-category-link" href="/categories/machine-learning/">machine learning</a></p>
-              <p class="item-title"><a href="/2016/11/04/algo/ml/docker_torch_neural_style/" class="title">在Docker中运行torch版的neural style</a></p>
-              <p class="item-date"><time datetime="2016-11-03T16:00:00.000Z" itemprop="datePublished">2016-11-04</time></p>
+              <p class="item-category"><a class="article-category-link" href="/categories/dev/">dev</a></p>
+              <p class="item-title"><a href="/2016/12/16/dev/python/python_extra/" class="title">Python snippets</a></p>
+              <p class="item-date"><time datetime="2016-12-16T02:19:56.000Z" itemprop="datePublished">2016-12-16</time></p>
             </div>
           </li>
         
@@ -595,7 +577,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">38</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hash/">Hash</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Hive/">Hive</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Photo/">Photo</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/SQL/">SQL</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Zabbix/">Zabbix</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ads/">ads</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/c/">c++</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/dev/">dev</a><span class="category-list-count">39</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/github/">github</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/internet/">internet</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/kaggle/">kaggle</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/machine-learning/">machine learning</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/other/">other</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/sklearn/">sklearn</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/system/">system</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/travel/">travel</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -604,7 +586,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">12</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">13</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/02/">二月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/01/">一月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/12/">十二月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/06/">六月 2014</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
